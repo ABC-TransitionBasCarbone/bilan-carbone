@@ -7,6 +7,7 @@ import {
   getAccountByEmailAndOrganizationVersionId,
   getAccountById,
   getAccountFromUserOrganization,
+  getAccountsFromOrganization,
   getAccountsFromOrganizationForActivation,
   getAccountsFromUser,
   removeOtherAccountActivation,
@@ -604,17 +605,24 @@ export const answerFeeback = async () =>
 export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, environment: Environment) =>
   withServerResponse('signUpWithSiretOrCNC', async () => {
     const trimmedEmail = email.trim().toLowerCase()
-    const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
+    const isAccountCreationActiveForEnv = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
     if (
-      deactivatedFeaturesRestrictions?.active &&
-      deactivatedFeaturesRestrictions.deactivatedEnvironments?.includes(environment)
+      isAccountCreationActiveForEnv?.active &&
+      isAccountCreationActiveForEnv.deactivatedEnvironments?.includes(environment)
     ) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const accountAlreadyCreated = await getAccountByEmailAndEnvironment(trimmedEmail, environment)
-    if (accountAlreadyCreated && accountAlreadyCreated.organizationVersionId) {
-      if (environment === Environment.TILT && accountAlreadyCreated.status !== UserStatus.ACTIVE) {
+    const alreadyCreatedAccount = await getAccountByEmailAndEnvironment(trimmedEmail, environment)
+    const isAccountAlreadyLinkedToOrga =
+      alreadyCreatedAccount &&
+      alreadyCreatedAccount.organizationVersionId &&
+      ([UserStatus.ACTIVE, UserStatus.PENDING_REQUEST, UserStatus.VALIDATED] as UserStatus[]).includes(
+        alreadyCreatedAccount.status,
+      )
+    if (isAccountAlreadyLinkedToOrga) {
+      // Pour Tilt, on fait la même gestion que pour BC+ dans ce cas là
+      if (environment === Environment.TILT && alreadyCreatedAccount.status !== UserStatus.ACTIVE) {
         const activation = await activateEmail(trimmedEmail, environment)
         if (!activation.success) {
           throw new Error(activation.errorMessage)
@@ -635,7 +643,7 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
         lastName: '',
         accounts: {
           create: {
-            status: UserStatus.PENDING_REQUEST,
+            status: UserStatus.IMPORTED,
             role: Role.DEFAULT,
             environment,
           },
@@ -644,12 +652,12 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       account = user?.accounts[0]
     } else {
       account =
-        accountAlreadyCreated ||
+        alreadyCreatedAccount ||
         ((await addAccount({
           user: { connect: { id: user.id } },
           role: Role.DEFAULT,
           environment,
-          status: UserStatus.PENDING_REQUEST,
+          status: UserStatus.IMPORTED,
         })) as AccountWithUser)
     }
     if (!user || !account) {
@@ -729,28 +737,41 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const newOrganizationRole =
+    const newOrganizationRole: Role =
       isTilt(environment) || (isBC(environment) && !user.level) ? Role.GESTIONNAIRE : Role.ADMIN
-    await updateAccount(account.id, {
-      role: organization?.id ? Role.DEFAULT : newOrganizationRole,
-      organizationVersion: { connect: { id: organizationVersion.id } },
+
+    const { accounts, hasActiveAccounts } = await prismaClient.$transaction(async (transaction) => {
+      await checkIfOtherAccountHasReservationActivation(account.id, organizationVersion.id, transaction)
+
+      const accounts = await getAccountsFromOrganization(organizationVersion.id, transaction)
+      const hasActiveAccounts = accounts.some((member) => member.status === UserStatus.ACTIVE)
+
+      await updateAccount(
+        account.id,
+        {
+          organizationVersion: { connect: { id: organizationVersion.id } },
+          status: hasActiveAccounts ? UserStatus.PENDING_REQUEST : UserStatus.VALIDATED,
+          role: hasActiveAccounts ? Role.DEFAULT : newOrganizationRole,
+          activationRequestedAt: hasActiveAccounts ? null : new Date(),
+        },
+        undefined,
+        transaction,
+      )
+
+      return { accounts, hasActiveAccounts }
     })
 
-    if (organization?.id) {
-      const createdAccount = (await getAccountById(account.id || '')) as AccountWithUser
-      const accounts = await getAccountFromUserOrganization(accountWithUserToUserSession(createdAccount))
-
+    if (hasActiveAccounts) {
       await sendActivationRequest(
-        accounts.filter((a) => a.role === Role.GESTIONNAIRE || a.role === Role.ADMIN).map((a) => a.user.email),
+        accounts
+          .filter((member) => member.role === Role.GESTIONNAIRE || member.role === Role.ADMIN)
+          .map((member) => member.user.email),
         trimmedEmail,
         `${user.firstName} ${user.lastName}`,
         environment,
       )
-
       return REQUEST_SENT
     } else {
-      await validateUser(account.id)
-      await updateAccount(account.id, { activationRequestedAt: new Date() })
       await sendActivation(trimmedEmail, false, environment)
     }
     return EMAIL_SENT

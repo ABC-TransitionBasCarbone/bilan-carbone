@@ -6,6 +6,7 @@ import {
   getAccountByEmailAndEnvironment,
   getAccountById,
   getAccountFromUserOrganization,
+  getAccountsFromOrganization,
   getAccountsFromOrganizationForActivation,
   removeOtherAccountActivation,
 } from '@/db/account'
@@ -27,7 +28,7 @@ import {
 } from '@/services/permissions/check'
 import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { mockedAccountId } from '@/tests/utils/models/user'
-import { sendActivationRequest } from '@abc-transitionbascarbone/services/email/email'
+import { sendActivationEmail, sendActivationRequest } from '@abc-transitionbascarbone/services/email/email'
 import { EMAIL_SENT, NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
 import { mockedOrganizationId } from '@abc-transitionbascarbone/services/tests/models/organization'
 import { mockedUserId } from '@abc-transitionbascarbone/services/tests/models/user'
@@ -83,6 +84,7 @@ const mockAddUser = addUser as jest.Mock
 const mockAddAccount = addAccount as jest.Mock
 const mockUpdateAccount = updateAccount as jest.Mock
 const mockGetAccountById = getAccountById as jest.Mock
+const mockGetAccountsFromOrganization = getAccountsFromOrganization as jest.Mock
 const mockGetAccountsFromOrganizationForActivation = getAccountsFromOrganizationForActivation as jest.Mock
 const mockGetAccountFromUserOrganization = getAccountFromUserOrganization as jest.Mock
 const mockRemoveOtherAccountActivation = removeOtherAccountActivation as jest.Mock
@@ -96,6 +98,7 @@ const mockAddSite = addSite as jest.Mock
 const mockGetRawOrganizationBySiret = getRawOrganizationBySiret as jest.Mock
 const mockGetValidAssociationNameBySiret = getValidAssociationNameBySiret as jest.Mock
 const mockGetCompanyName = getCompanyName as jest.Mock
+const mockSendActivationEmail = sendActivationEmail as jest.Mock
 const mockSendActivationRequest = sendActivationRequest as jest.Mock
 const mockGetOrganizationVersionForRightsCheck = getOrganizationVersionForRightsCheck as jest.Mock
 const mockOrganizationVersionActiveAccountsCount = organizationVersionActiveAccountsCount as jest.Mock
@@ -110,6 +113,9 @@ describe('signUpWithSiretOrCNC', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockGetDeactivableFeatureRestrictions.mockResolvedValue({ active: false })
+    mockGetAccountsFromOrganization.mockResolvedValue([])
+    mockGetAccountsFromOrganizationForActivation.mockResolvedValue([])
+    mockRemoveOtherAccountActivation.mockResolvedValue(true)
     mockActivateEmail.mockResolvedValue({ success: true, data: EMAIL_SENT })
   })
 
@@ -383,8 +389,9 @@ describe('signUpWithSiretOrCNC', () => {
       mockGetAccountByEmailAndEnvironment.mockResolvedValue({
         id: mockedAccountId,
         organizationVersionId: mockedOrganizationVersionId,
-        status: UserStatus.IMPORTED,
+        status: UserStatus.PENDING_REQUEST,
       })
+      mockActivateEmail.mockResolvedValue({ success: true, data: REQUEST_SENT })
       mockGetUserByEmail.mockResolvedValue({
         id: mockedUserId,
         email: testEmail,
@@ -469,7 +476,7 @@ describe('signUpWithSiretOrCNC', () => {
         lastName: '',
         accounts: {
           create: {
-            status: UserStatus.PENDING_REQUEST,
+            status: UserStatus.IMPORTED,
             role: Role.DEFAULT,
             environment: Environment.TILT,
           },
@@ -499,7 +506,7 @@ describe('signUpWithSiretOrCNC', () => {
         user: { connect: { id: mockedUserId } },
         role: Role.DEFAULT,
         environment: Environment.TILT,
-        status: UserStatus.PENDING_REQUEST,
+        status: UserStatus.IMPORTED,
       })
       expect(mockGetValidAssociationNameBySiret).toHaveBeenCalledWith(testSiret)
       expect(result.success).toBe(true)
@@ -579,9 +586,10 @@ describe('signUpWithSiretOrCNC', () => {
         organizationVersion: { environment: Environment.CUT, organizationId: mockedOrganizationId },
         user: { email: testEmail, firstName: 'Test', lastName: 'User' },
       })
-      mockGetAccountFromUserOrganization.mockResolvedValue([
+      mockGetAccountsFromOrganization.mockResolvedValue([
         {
           role: Role.ADMIN,
+          status: UserStatus.ACTIVE,
           user: { email: 'admin@example.com' },
         },
       ])
@@ -594,6 +602,106 @@ describe('signUpWithSiretOrCNC', () => {
       if (result.success) {
         expect(result.data).toBe(REQUEST_SENT)
       }
+      expect(mockUpdateAccount).toHaveBeenCalledWith(
+        mockedAccountId,
+        {
+          role: Role.DEFAULT,
+          status: UserStatus.PENDING_REQUEST,
+          organizationVersion: { connect: { id: mockedOrganizationVersionId } },
+          activationRequestedAt: null,
+        },
+        undefined,
+        expect.anything(),
+      )
+    })
+
+    it('promotes and activates the requester after an expired reservation is handed off', async () => {
+      mockGetAccountByEmailAndEnvironment.mockResolvedValue(null)
+      mockGetUserByEmail.mockResolvedValue(null)
+      mockAddUser.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId }],
+      })
+      mockGetRawOrganizationBySiret.mockResolvedValue({ id: mockedOrganizationId })
+      mockGetOrganizationVersionByOrganizationIdAndEnvironment.mockResolvedValue({ id: mockedOrganizationVersionId })
+      const expiredReservation = {
+        id: 'expired-account-id',
+        role: Role.GESTIONNAIRE,
+        status: UserStatus.VALIDATED,
+        activationRequestedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+        user: { email: 'expired@example.com', firstName: 'Expired', lastName: 'User' },
+      }
+      mockGetAccountsFromOrganizationForActivation.mockResolvedValue([expiredReservation])
+      mockGetAccountsFromOrganization.mockResolvedValue([])
+      mockRemoveOtherAccountActivation.mockResolvedValue(true)
+
+      const result = await signUpWithSiretOrCNC(testEmail, testSiret, Environment.CUT)
+
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data).toBe(EMAIL_SENT)
+      }
+      expect(mockRemoveOtherAccountActivation).toHaveBeenCalledWith(
+        { id: mockedAccountId, organizationVersionId: mockedOrganizationVersionId },
+        expiredReservation,
+        expect.anything(),
+      )
+      expect(mockGetAccountsFromOrganization).toHaveBeenCalledWith(mockedOrganizationVersionId, expect.anything())
+      expect(mockUpdateAccount).toHaveBeenCalledWith(
+        mockedAccountId,
+        {
+          role: Role.ADMIN,
+          status: UserStatus.VALIDATED,
+          organizationVersion: { connect: { id: mockedOrganizationVersionId } },
+          activationRequestedAt: expect.any(Date),
+        },
+        undefined,
+        expect.anything(),
+      )
+      expect(mockSendActivationEmail).toHaveBeenCalledWith(testEmail, expect.anything(), false, Environment.CUT)
+      expect(mockSendActivationRequest).not.toHaveBeenCalled()
+    })
+
+    it('returns ORGANIZATION_ACTIVATION_IN_PROGRESS when another user started activating the organization recently', async () => {
+      mockGetAccountByEmailAndEnvironment.mockResolvedValue(null)
+      mockGetUserByEmail.mockResolvedValue(null)
+      mockAddUser.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId }],
+      })
+      mockGetRawOrganizationBySiret.mockResolvedValue({ id: mockedOrganizationId })
+      mockGetOrganizationVersionByOrganizationIdAndEnvironment.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        organizationVersion: { environment: Environment.CUT, organizationId: mockedOrganizationId },
+        user: { email: testEmail, firstName: 'Test', lastName: 'User' },
+      })
+      mockGetAccountsFromOrganizationForActivation.mockResolvedValue([
+        {
+          id: 'reserved-account-id',
+          role: Role.GESTIONNAIRE,
+          status: UserStatus.VALIDATED,
+          activationRequestedAt: new Date(),
+          user: { email: 'reserved@example.com', firstName: 'Reserved', lastName: 'User' },
+        },
+      ])
+
+      const result = await signUpWithSiretOrCNC(testEmail, testSiret, Environment.TILT)
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.errorMessage).toBe(ORGANIZATION_ACTIVATION_IN_PROGRESS)
+      }
+      expect(mockSendActivationRequest).not.toHaveBeenCalled()
     })
   })
 
@@ -701,10 +809,17 @@ describe('signUpWithSiretOrCNC', () => {
 
       const result = await signUpWithSiretOrCNC(testEmail, testSiret, Environment.TILT)
 
-      expect(mockUpdateAccount).toHaveBeenCalledWith(mockedAccountId, {
-        role: Role.GESTIONNAIRE,
-        organizationVersion: { connect: { id: mockedOrganizationVersionId } },
-      })
+      expect(mockUpdateAccount).toHaveBeenCalledWith(
+        mockedAccountId,
+        expect.objectContaining({
+          role: Role.GESTIONNAIRE,
+          status: UserStatus.VALIDATED,
+          organizationVersion: { connect: { id: mockedOrganizationVersionId } },
+          activationRequestedAt: expect.any(Date),
+        }),
+        undefined,
+        expect.anything(),
+      )
       expect(result.success).toBe(true)
       if (result.success) {
         expect(result.data).toBe(EMAIL_SENT)
@@ -730,19 +845,27 @@ describe('signUpWithSiretOrCNC', () => {
         organizationVersion: { environment: Environment.CUT, organizationId: mockedOrganizationId },
         user: { email: testEmail },
       })
-      mockGetAccountFromUserOrganization.mockResolvedValue([
+      mockGetAccountsFromOrganization.mockResolvedValue([
         {
           role: Role.ADMIN,
+          status: UserStatus.ACTIVE,
           user: { email: 'admin@example.com' },
         },
       ])
 
       const result = await signUpWithSiretOrCNC(testEmail, testSiret, Environment.CUT)
 
-      expect(mockUpdateAccount).toHaveBeenCalledWith(mockedAccountId, {
-        role: Role.DEFAULT,
-        organizationVersion: { connect: { id: mockedOrganizationVersionId } },
-      })
+      expect(mockUpdateAccount).toHaveBeenCalledWith(
+        mockedAccountId,
+        {
+          role: Role.DEFAULT,
+          status: UserStatus.PENDING_REQUEST,
+          organizationVersion: { connect: { id: mockedOrganizationVersionId } },
+          activationRequestedAt: null,
+        },
+        undefined,
+        expect.anything(),
+      )
       expect(result.success).toBe(true)
       if (result.success) {
         expect(result.data).toBe(REQUEST_SENT)
@@ -772,17 +895,20 @@ describe('signUpWithSiretOrCNC', () => {
         organizationVersion: { environment: Environment.CUT, organizationId: mockedOrganizationId },
         user: { email: testEmail, firstName: 'Test', lastName: 'User' },
       })
-      mockGetAccountFromUserOrganization.mockResolvedValue([
+      mockGetAccountsFromOrganization.mockResolvedValue([
         {
           role: Role.ADMIN,
+          status: UserStatus.ACTIVE,
           user: { email: 'admin@example.com' },
         },
         {
           role: Role.GESTIONNAIRE,
+          status: UserStatus.ACTIVE,
           user: { email: 'gestionnaire@example.com' },
         },
         {
           role: Role.DEFAULT,
+          status: UserStatus.ACTIVE,
           user: { email: 'member@example.com' },
         },
       ])
@@ -816,7 +942,16 @@ describe('signUpWithSiretOrCNC', () => {
 
       const result = await signUpWithSiretOrCNC(testEmail, testSiret, Environment.CUT)
 
-      expect(mockValidateUser).toHaveBeenCalledWith(mockedAccountId)
+      expect(mockUpdateAccount).toHaveBeenCalledWith(
+        mockedAccountId,
+        expect.objectContaining({
+          role: Role.ADMIN,
+          status: UserStatus.VALIDATED,
+          activationRequestedAt: expect.any(Date),
+        }),
+        undefined,
+        expect.anything(),
+      )
       expect(result.success).toBe(true)
       if (result.success) {
         expect(result.data).toBe(EMAIL_SENT)
