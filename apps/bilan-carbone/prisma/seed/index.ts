@@ -1088,7 +1088,7 @@ const users = async () => {
           endDate: faker.date.future(),
           isPublic: false,
           level: Level.Initial,
-          name: `Course study source ${courseEnv.toLowerCase()}`,
+          name: `course study source ${courseEnv.toLowerCase()}`,
           organizationVersionId: courseOrganizationVersionId,
           sites: {
             createMany: {
@@ -1116,7 +1116,7 @@ const users = async () => {
           endDate: faker.date.future(),
           isPublic: false,
           level: Level.Initial,
-          name: `Course study to delete ${courseEnv.toLowerCase()}`,
+          name: `course study to delete ${courseEnv.toLowerCase()}`,
           organizationVersionId: courseOrganizationVersionId,
           sites: {
             createMany: {

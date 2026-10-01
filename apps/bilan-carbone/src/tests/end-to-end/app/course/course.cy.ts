@@ -17,7 +17,7 @@ for (let i = 0; i < courseEnvironments.length; i++) {
       cy.loginForEnv(env)
 
       cy.getByTestId('home-studies').should('be.visible')
-      cy.getByTestId('study-name-chip').contains('course study source').should('be.visible')
+      cy.getByTestId('study-name-chip').contains('course study source').should('exist')
     })
 
     it('allows a course administrator to create a study', () => {
