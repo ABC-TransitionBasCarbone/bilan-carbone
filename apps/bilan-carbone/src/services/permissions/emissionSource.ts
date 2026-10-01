@@ -67,8 +67,8 @@ const canCreateEmissionSourceSimplified = async (
 export const canCreateEmissionSource = async (account: AccountWithUser, emissionSource: PartialStudyEmissionSource) => {
   switch (account.environment) {
     case Environment.BC:
-    case Environment.FORMATION_BC:
-    case Environment.FORMATION_TILT:
+    case Environment.COURSE_BC:
+    case Environment.COURSE_TILT:
     case Environment.TILT:
       return canCreateEmissionSourceBC(account, emissionSource)
     case Environment.CUT:
@@ -155,8 +155,8 @@ export const canUpdateEmissionSource = async (
   switch (account.environment) {
     case Environment.BC:
     case Environment.TILT:
-    case Environment.FORMATION_BC:
-    case Environment.FORMATION_TILT:
+    case Environment.COURSE_BC:
+    case Environment.COURSE_TILT:
       return canUpdateEmissionSourceBC(account, emissionSource, change, study)
     case Environment.CUT:
       return canUpdateEmissionSourceCUT(account, emissionSource)

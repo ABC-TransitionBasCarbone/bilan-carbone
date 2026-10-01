@@ -17,11 +17,11 @@ export const metadata: Metadata = {
 
 const PublicLayout = async ({ children }: Props) => {
   const t = await getTranslations()
-  const question = customRich(t, 'login.question', {}, Environment.FORMATION_BC)
+  const question = customRich(t, 'login.question', {}, Environment.COURSE_BC)
   return (
-    <DynamicTheme environment={Environment.FORMATION_BC}>
+    <DynamicTheme environment={Environment.COURSE_BC}>
       <main className="h100">
-        <PublicFormation question={question} environment={Environment.FORMATION_BC}>
+        <PublicFormation question={question} environment={Environment.COURSE_BC}>
           {children}
         </PublicFormation>
       </main>

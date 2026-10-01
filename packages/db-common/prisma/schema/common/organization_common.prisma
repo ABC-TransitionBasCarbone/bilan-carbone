@@ -4,8 +4,8 @@ enum Environment {
   TILT
   CLICKSON
   MIP
-  FORMATION_BC
-  FORMATION_TILT
+  COURSE_BC
+  COURSE_TILT
 
   @@schema("common")
 }
@@ -23,7 +23,7 @@ model Organization {
   sites     Site[]
   emissions EmissionFactor[]
 
-  organizationVersions OrganizationVersion[]
+  organizationVersions    OrganizationVersion[]
   organizationVersionsMip OrganizationVersionMip[]
 
   @@map("organizations")

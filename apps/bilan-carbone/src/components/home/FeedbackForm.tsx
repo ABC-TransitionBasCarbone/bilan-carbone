@@ -7,16 +7,16 @@ const typeformId = process.env.NEXT_PUBLIC_FEEDBACK_TYPEFORM_ID
 const cutTypeformId = process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_ID
 const tiltTypeformId = process.env.NEXT_PUBLIC_TILT_FEEDBACK_TYPEFORM_ID
 const clicksonTypeformId = process.env.NEXT_PUBLIC_CLICKSON_FEEDBACK_TYPEFORM_ID
-const formationBCTypeformId = process.env.NEXT_PUBLIC_FORMATION_BC_FEEDBACK_TYPEFORM_ID
-const formationTILTTypeformId = process.env.NEXT_PUBLIC_FORMATION_TILT_FEEDBACK_TYPEFORM_ID
+const formationBCTypeformId = process.env.NEXT_PUBLIC_COURSE_BC_FEEDBACK_TYPEFORM_ID
+const formationTILTTypeformId = process.env.NEXT_PUBLIC_COURSE_TILT_FEEDBACK_TYPEFORM_ID
 
 interface Props {
   environment: BCEnvironment
 }
 const formPerEnvironmentTab: Record<BCEnvironment, string | undefined> = {
   [Environment.BC]: typeformId,
-  [Environment.FORMATION_BC]: formationBCTypeformId,
-  [Environment.FORMATION_TILT]: formationTILTTypeformId,
+  [Environment.COURSE_BC]: formationBCTypeformId,
+  [Environment.COURSE_TILT]: formationTILTTypeformId,
   [Environment.CUT]: cutTypeformId,
   [Environment.TILT]: tiltTypeformId,
   [Environment.CLICKSON]: clicksonTypeformId,

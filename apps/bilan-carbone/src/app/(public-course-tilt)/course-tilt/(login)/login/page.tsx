@@ -9,7 +9,7 @@ const LoginPage = async () => {
     redirect('/')
   }
 
-  return <LoginForm environment={Environment.FORMATION_TILT} />
+  return <LoginForm environment={Environment.COURSE_TILT} />
 }
 
 export default LoginPage

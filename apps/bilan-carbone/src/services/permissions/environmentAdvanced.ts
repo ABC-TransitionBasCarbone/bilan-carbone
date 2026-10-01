@@ -1,5 +1,5 @@
 import { Environment, Level } from '@abc-transitionbascarbone/db-common/enums'
-import { formationEnvironments, isAdvanced } from '@abc-transitionbascarbone/utils/environments'
+import { courseEnvironments, isAdvanced } from '@abc-transitionbascarbone/utils/environments'
 import { hasAccessToCarbonResponsibilityIntensities, isTilt } from './environment'
 
 const { BC, CUT, TILT, CLICKSON } = Environment
@@ -11,18 +11,18 @@ export const isAdvancedAndNotTiltSimplified = (environment: Environment, simplif
   isAdvanced(environment) && !isTiltSimplified(environment, simplified)
 
 export const hasAccessToEmissionFactors = (environment: Environment, userLevel: Level | null) =>
-  ([BC, CLICKSON, ...formationEnvironments] as Environment[]).includes(environment) ||
+  ([BC, CLICKSON, ...courseEnvironments] as Environment[]).includes(environment) ||
   (environment === TILT && !!userLevel)
 
 export const hasAccessToStudies = (environment: Environment, userLevel: Level | null) =>
-  ([BC, CUT, CLICKSON, ...formationEnvironments] as Environment[]).includes(environment) ||
+  ([BC, CUT, CLICKSON, ...courseEnvironments] as Environment[]).includes(environment) ||
   (environment === TILT && !!userLevel)
 
 export const hasAccessToSettings = (environment: Environment, userLevel: Level | null) =>
-  ([BC, ...formationEnvironments] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
+  ([BC, ...courseEnvironments] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
 
 export const hasAccessToMethodology = (environment: Environment, userLevel: Level | null) =>
-  ([BC, ...formationEnvironments] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
+  ([BC, ...courseEnvironments] as Environment[]).includes(environment) || (environment === TILT && !!userLevel)
 
 export const hasAccessToCarbonResponsibilityIntensitiesAdvanced = (
   environment: Environment,

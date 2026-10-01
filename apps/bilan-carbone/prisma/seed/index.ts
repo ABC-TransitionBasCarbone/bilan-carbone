@@ -18,7 +18,7 @@ import {
   UserStatus,
 } from '@abc-transitionbascarbone/db-common/enums'
 import { signPassword } from '@abc-transitionbascarbone/utils/auth'
-import { environmentsWithChecklist, formationEnvironments } from '@abc-transitionbascarbone/utils/environments'
+import { courseEnvironments, environmentsWithChecklist } from '@abc-transitionbascarbone/utils/environments'
 import { faker } from '@faker-js/faker'
 import { PrismaPg } from '@prisma/adapter-pg'
 
@@ -279,21 +279,21 @@ const users = async () => {
     })),
   })
 
-  const organizationVersionsBCFormation = await prisma.organizationVersion.createManyAndReturn({
+  const organizationVersionsBCCourse = await prisma.organizationVersion.createManyAndReturn({
     data: organizations.map((organization) => ({
       organizationId: organization.id,
       isCR: false,
       onboarded: false,
-      environment: Environment.FORMATION_BC,
+      environment: Environment.COURSE_BC,
       activatedLicence: [],
     })),
   })
-  const organizationVersionsTILTFormation = await prisma.organizationVersion.createManyAndReturn({
+  const organizationVersionsTILTCourse = await prisma.organizationVersion.createManyAndReturn({
     data: organizations.map((organization) => ({
       organizationId: organization.id,
       isCR: false,
       onboarded: false,
-      environment: Environment.FORMATION_TILT,
+      environment: Environment.COURSE_TILT,
       activatedLicence: [],
     })),
   })
@@ -309,8 +309,8 @@ const users = async () => {
     [Environment.CUT]: organizationVersionsCUT,
     [Environment.TILT]: regularTiltOrganizationVersions,
     [Environment.CLICKSON]: organizationVersionsClickson,
-    [Environment.FORMATION_BC]: organizationVersionsBCFormation,
-    [Environment.FORMATION_TILT]: organizationVersionsTILTFormation,
+    [Environment.COURSE_BC]: organizationVersionsBCCourse,
+    [Environment.COURSE_TILT]: organizationVersionsTILTCourse,
   }
 
   const childOrganizations = await prisma.organization.createManyAndReturn({
@@ -1050,32 +1050,32 @@ const users = async () => {
     }),
   )
 
-  if (formationEnvironments.length > 9) {
-    throw new Error('Too many formation environments defined needs to change seeds to handle ids')
+  if (courseEnvironments.length > 9) {
+    throw new Error('Too many course environments defined needs to change seeds to handle ids')
   }
 
-  for (let i = 0; i < formationEnvironments.length; i++) {
-    const formationEnv = formationEnvironments[i]
-    const formationAdminWithAccount = usersWithAccounts.find(
-      (userWithAccount) => userWithAccount.user.email === `${formationEnv.toLowerCase()}-env-admin-0@yopmail.com`,
+  for (let i = 0; i < courseEnvironments.length; i++) {
+    const courseEnv = courseEnvironments[i]
+    const courseAdminWithAccount = usersWithAccounts.find(
+      (userWithAccount) => userWithAccount.user.email === `${courseEnv.toLowerCase()}-env-admin-0@yopmail.com`,
     ) as userAndAccountsAndOrganizationVersion
-    const formationDefaultWithAccount = usersWithAccounts.find(
-      (userWithAccount) => userWithAccount.user.email === `${formationEnv.toLowerCase()}-env-default-0@yopmail.com`,
+    const courseDefaultWithAccount = usersWithAccounts.find(
+      (userWithAccount) => userWithAccount.user.email === `${courseEnv.toLowerCase()}-env-default-0@yopmail.com`,
     ) as userAndAccountsAndOrganizationVersion
-    const formationAdminAccount = formationAdminWithAccount.accounts[0].account
-    const formationOrganizationVersionId = formationAdminAccount.organizationVersionId
+    const courseAdminAccount = courseAdminWithAccount.accounts[0].account
+    const courseOrganizationVersionId = courseAdminAccount.organizationVersionId
 
-    if (!formationOrganizationVersionId || !formationDefaultWithAccount?.accounts[0]) {
-      throw new Error('Formation test accounts must belong to an organization version')
+    if (!courseOrganizationVersionId || !courseDefaultWithAccount?.accounts[0]) {
+      throw new Error('Course test accounts must belong to an organization version')
     }
 
     await prisma.account.update({
-      where: { id: formationDefaultWithAccount.accounts[0].account.id },
-      data: { organizationVersionId: formationOrganizationVersionId },
+      where: { id: courseDefaultWithAccount.accounts[0].account.id },
+      data: { organizationVersionId: courseOrganizationVersionId },
     })
 
-    const formationOrganizationSites = sites.filter(
-      (site) => site.organizationId === formationAdminWithAccount.accounts[0].organizationVersion.organizationId,
+    const courseOrganizationSites = sites.filter(
+      (site) => site.organizationId === courseAdminWithAccount.accounts[0].organizationVersion.organizationId,
     )
 
     studies.push(
@@ -1083,23 +1083,23 @@ const users = async () => {
         include: { sites: true },
         data: {
           id: `88c93e88-7c80-4be4-905b-f0bbd2ccd95${i}`,
-          createdById: formationAdminAccount.id,
+          createdById: courseAdminAccount.id,
           startDate: new Date(),
           endDate: faker.date.future(),
           isPublic: false,
           level: Level.Initial,
-          name: `Formation study source ${formationEnv.toLowerCase()}`,
-          organizationVersionId: formationOrganizationVersionId,
+          name: `course study source ${courseEnv.toLowerCase()}`,
+          organizationVersionId: courseOrganizationVersionId,
           sites: {
             createMany: {
               data: faker.helpers
-                .arrayElements(formationOrganizationSites, { min: 1, max: formationOrganizationSites.length })
+                .arrayElements(courseOrganizationSites, { min: 1, max: courseOrganizationSites.length })
                 .map((site) => ({ siteId: site.id, etp: site.etp, ca: site.ca })),
             },
           },
           allowedUsers: {
             createMany: {
-              data: [{ role: StudyRole.Validator, accountId: formationAdminAccount.id }],
+              data: [{ role: StudyRole.Validator, accountId: courseAdminAccount.id }],
             },
           },
         },
@@ -1111,23 +1111,23 @@ const users = async () => {
         include: { sites: true },
         data: {
           id: `88c93e88-7c80-4be4-905b-f0bbd2ccz8${i}2`,
-          createdById: formationAdminAccount.id,
+          createdById: courseAdminAccount.id,
           startDate: new Date(),
           endDate: faker.date.future(),
           isPublic: false,
           level: Level.Initial,
-          name: `Formation study to delete ${formationEnv.toLowerCase()}`,
-          organizationVersionId: formationOrganizationVersionId,
+          name: `course study to delete ${courseEnv.toLowerCase()}`,
+          organizationVersionId: courseOrganizationVersionId,
           sites: {
             createMany: {
               data: faker.helpers
-                .arrayElements(formationOrganizationSites, { min: 1, max: formationOrganizationSites.length })
+                .arrayElements(courseOrganizationSites, { min: 1, max: courseOrganizationSites.length })
                 .map((site) => ({ siteId: site.id, etp: site.etp, ca: site.ca })),
             },
           },
           allowedUsers: {
             createMany: {
-              data: [{ role: StudyRole.Validator, accountId: formationAdminAccount.id }],
+              data: [{ role: StudyRole.Validator, accountId: courseAdminAccount.id }],
             },
           },
         },

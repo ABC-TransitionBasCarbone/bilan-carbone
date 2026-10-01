@@ -10,7 +10,7 @@ export const ClicksonRoles = {
   COLLABORATOR: Role.COLLABORATOR,
 }
 
-export const FormationRoles = {
+export const CourseRoles = {
   ADMIN: Role.ADMIN,
   COLLABORATOR: Role.COLLABORATOR,
 }
