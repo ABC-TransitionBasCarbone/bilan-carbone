@@ -5,7 +5,7 @@ Cypress.Commands.add(
 )
 
 Cypress.Commands.add('resetTestDatabase', () => {
-  cy.exec('yarn db:test:reset')
+  cy.task('resetTestDatabase')
 })
 
 Cypress.Commands.add('login', (email = 'mip-admin-0@yopmail.com', password = 'password-0') => {
