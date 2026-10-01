@@ -7,7 +7,7 @@ import Form from '@abc-transitionbascarbone/components/src/base/Form'
 import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
 import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
 import { StudyTagFamily } from '@abc-transitionbascarbone/db-common'
-import { Button } from '@abc-transitionbascarbone/ui'
+import { Button, useToast } from '@abc-transitionbascarbone/ui'
 import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
@@ -23,6 +23,8 @@ interface Props {
 
 const StudyTagFamilyModal = ({ action, studyId, family, onClose }: Props) => {
   const t = useTranslations('study.perimeter.family')
+  const tError = useTranslations('error')
+  const { showErrorToast } = useToast()
   const { getValues, control, handleSubmit, formState } = useForm<NewStudyTagFamilyCommand>({
     resolver: zodResolver(NewStudyTagFamilyCommandValidation),
     mode: 'onSubmit',
@@ -33,12 +35,18 @@ const StudyTagFamilyModal = ({ action, studyId, family, onClose }: Props) => {
     },
   })
 
-  const onSumbit = async () => {
+  const onSubmit = async () => {
     if (action === 'edit' && studyId) {
       const values = getValues()
-      await createOrUpdateStudyTagFamily(studyId, values.name, family?.id)
+      const result = await createOrUpdateStudyTagFamily(studyId, values.name, family?.id)
+      if (!result.success) {
+        showErrorToast(tError('Not authorized'))
+      }
     } else if (action === 'delete' && family?.id && studyId) {
-      await deleteStudyTagFamily(studyId, family.id)
+      const result = await deleteStudyTagFamily(studyId, family.id)
+      if (!result.success) {
+        showErrorToast(tError('Not authorized'))
+      }
     }
     onClose()
   }
@@ -48,7 +56,7 @@ const StudyTagFamilyModal = ({ action, studyId, family, onClose }: Props) => {
 
   return (
     <Dialog open aria-labelledby="emission-tag-family-title" aria-describedby="emission-tag-family-description">
-      <Form onSubmit={handleSubmit(onSumbit)}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <DialogTitle id="emission-tag-family-modal-title">{t(title)}</DialogTitle>
         <DialogContent id="emission-tag-family-modal-content">
           {customRich(t, content, { name: family?.name || '' })}

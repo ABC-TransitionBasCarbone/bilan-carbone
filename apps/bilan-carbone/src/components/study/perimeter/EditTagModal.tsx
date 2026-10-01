@@ -82,6 +82,7 @@ const EditTagModal = ({ tagId, currentName, currentColor, currentFamilyId, famil
             control={control}
             translation={t}
             data-testid="edit-tag"
+            disabled={false}
           />
         </FormControl>
       </Form>

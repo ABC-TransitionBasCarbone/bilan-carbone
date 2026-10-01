@@ -9,6 +9,7 @@ import {
   deleteEmissionSourceOnStudy,
   deleteStudyTag,
   getEmissionSourceById,
+  getTagById,
   getTagFamilyById,
   removeTagFamilyById,
   updateEmissionSourceOnStudy,
@@ -22,6 +23,7 @@ import { getAccountRoleOnStudy, hasEditionRights } from '@/utils/study'
 import type { Prisma, StudyTag } from '@abc-transitionbascarbone/db-common'
 import { Import, SubPost, UserChecklist } from '@abc-transitionbascarbone/db-common/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
+import { UserSession } from 'next-auth'
 import { revalidatePath } from 'next/cache'
 import { auth } from '../auth'
 import {
@@ -254,6 +256,31 @@ export const createTag = async ({ familyId, name, color }: NewStudyTagCommand) =
     })
   })
 
+const canUpdateTag = async (tagId: string, user: UserSession, organizationVersionId: string | null) => {
+  const tag = await getTagById(tagId)
+
+  if (!tag || !organizationVersionId) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+  const tagFamily = await getTagFamilyById(tag.familyId)
+
+  if (!tagFamily) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  const study = await getStudyById(tagFamily.studyId, organizationVersionId)
+
+  if (!study) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  const role = getAccountRoleOnStudy(user, study)
+  if (!role || !hasEditionRights(role)) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+  return true
+}
+
 export const updateTag = async (tagId: string, name: string, color: string, familyId: string) =>
   withServerResponse('updateTag', async () => {
     const session = await auth()
@@ -267,6 +294,11 @@ export const updateTag = async (tagId: string, name: string, color: string, fami
     }
 
     if (!hasAccessToCreateStudyTag(account.environment)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const hasAuthorization = await canUpdateTag(tagId, session.user, account.organizationVersionId)
+    if (!hasAuthorization) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -289,8 +321,12 @@ export const deleteTag = async (tagId: string) =>
     if (!account) {
       throw new Error(NOT_AUTHORIZED)
     }
-
     if (!hasAccessToCreateStudyTag(account.environment)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const hasAuthorization = await canUpdateTag(tagId, session.user, account.organizationVersionId)
+    if (!hasAuthorization) {
       throw new Error(NOT_AUTHORIZED)
     }
 
