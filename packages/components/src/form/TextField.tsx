@@ -4,6 +4,7 @@ import { useCallback } from 'react'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
 import { CustomFormLabel } from './CustomFormLabel'
 import styles from './Form.module.css'
+import classNames from 'classnames'
 
 interface Props<T extends FieldValues> {
   name: FieldPath<T>
@@ -14,6 +15,7 @@ interface Props<T extends FieldValues> {
   endAdornment?: React.ReactNode
   customError?: string
   trim?: boolean
+  className?: string
   expandable?: boolean
 }
 
@@ -27,6 +29,7 @@ export const FormTextField = <T extends FieldValues>({
   customError,
   trim,
   expandable = true,
+  className,
   ...textFieldProps
 }: Props<T> & TextFieldProps) => {
   const iconDiv = icon ? <div className={styles.icon}>{icon}</div> : null
@@ -54,7 +57,7 @@ export const FormTextField = <T extends FieldValues>({
       name={name}
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <FormControl fullWidth={textFieldProps.fullWidth} error={!!error || !!customError} className="inputContainer">
+        <FormControl fullWidth={textFieldProps.fullWidth} error={!!error || !!customError}  className={classNames("inputContainer", className)}>
           {label && <CustomFormLabel label={label} icon={iconDiv} iconPosition={iconPosition} />}
           <TextField
             {...textFieldProps}
