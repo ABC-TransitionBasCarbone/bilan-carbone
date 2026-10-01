@@ -16,7 +16,7 @@ import { getTransporter } from './transposter'
  * @returns Prosmise that resolves rendered HTML string.
  */
 const getHtml = async ({ file, env, data }: { file: string; env: Environment; data?: ejs.Data }) => {
-  const basePath = path.join(process.cwd(), '..', '..', 'packages', 'services', 'src', 'email', 'views')
+  const basePath = path.join(process.cwd(), '..', '..', 'packages', 'application', 'services', 'src', 'email', 'views')
   const customPath = path.join(basePath, env, `${file}.ejs`)
   const fallbackPath = path.join(basePath, 'common', `${file}.ejs`)
   const templatePath = fs.existsSync(customPath) ? customPath : fallbackPath
