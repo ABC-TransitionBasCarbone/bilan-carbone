@@ -84,6 +84,7 @@
     "syncedFromOtherUser": "Data updated by another user"
   },
   "signup": {
+    "Organization activation in progress": "Un·e collègue est déjà en train d'activer cette organisation. Merci de lui laisser jusqu'à 24h pour terminer son activation avant de réessayer.",
     "email": "Email",
     "emailPlaceholder": "Email used during your training",
     "emailRequired": "Please enter an email",

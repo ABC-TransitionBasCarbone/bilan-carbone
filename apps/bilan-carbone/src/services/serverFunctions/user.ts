@@ -738,6 +738,17 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
 
     if (organization?.id) {
       const createdAccount = (await getAccountById(account.id || '')) as AccountWithUser
+
+      if (!createdAccount.organizationVersionId) {
+        throw Error('No organization version ID found for the created account')
+      }
+
+      await checkIfOtherAccountHasReservationActivation(
+        createdAccount.id,
+        createdAccount.organizationVersionId,
+        prismaClient,
+      )
+
       const accounts = await getAccountFromUserOrganization(accountWithUserToUserSession(createdAccount))
 
       await sendActivationRequest(
