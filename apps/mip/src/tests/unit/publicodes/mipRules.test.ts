@@ -94,13 +94,14 @@ describe('mip-rules', () => {
     expect(getMosaicResetSituation(engine, [viande, legumes], { [viande]: 2 })).toEqual({ [legumes]: 0 })
   })
 
-  it('keeps answered questions visible before navigating to the next question', () => {
+  it('keeps an answered question in navigation order until navigating away', () => {
     const engine = createMipEngine(model)
     const meta = getRulesMeta(engine)
     engine.setSituation({ 'transport . voiture . présent': 'non', [viande]: 2, [legumes]: 0 })
 
     const questions = getFormQuestions(engine, meta, [])
 
+    expect(questions.remainingQuestions).toEqual(['transport . train'])
     expect(questions.relevantQuestions).toEqual([
       'transport . voiture . présent',
       'transport . train',
