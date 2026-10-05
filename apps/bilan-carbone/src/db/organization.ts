@@ -162,7 +162,6 @@ export const getOrganizationWithSitesById = (id: string) =>
       sites: {
         select: {
           name: true,
-          siret: true,
           etp: true,
           ca: true,
           id: true,
