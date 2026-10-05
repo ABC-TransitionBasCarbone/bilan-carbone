@@ -6,7 +6,7 @@ on:
     branches: [develop]
     paths:
       - 'packages/shared/i18n/translations/fr/**'
-      - 'apps/bilan-carbone/src/i18n/translations/fr/**'
+      - 'apps/bc/src/i18n/translations/fr/**'
       - 'apps/mip/src/i18n/translations/fr/**'
 
   # Manual: allows choosing a specific locale and file
@@ -43,7 +43,7 @@ jobs:
           cache: yarn
 
       - name: Copy .env (needed for postinstall scripts)
-        run: cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
+        run: cp apps/bc/.env.dist apps/bc/.env
 
       - name: Copy .env to db
         run: cp apps/bilan-carbone/.env.dist packages/data/db/.env

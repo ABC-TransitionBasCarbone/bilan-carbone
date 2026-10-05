@@ -1,17 +1,17 @@
-# Copilot Instructions for bilan-carbone and mip
+# Copilot Instructions for bc and mip
 
 ## Scope
 
 Monorepo Next.js (Yarn workspaces + Turbo) for carbon accounting products:
-- apps/bilan-carbone
+- apps/bc
 - apps/mip
-- packages/application/*, packages/data/*, packages/shared/*, packages/styles/*, packages/tooling/*
+- packages/application/*, packages/db/*, packages/shared/*, packages/styles/*, packages/tooling/*
 
 ## Architecture Essentials
 
 - UI routes/components: apps/*/src/app and apps/*/src/components
 - APIs: apps/*/src/app/api
-- DB schema: packages/data/db/prisma/schema
+- DB schema: packages/db/prisma/schema
 - DB access and business logic: apps/*/src/db and apps/*/src/services
 - Shared types/constants: src/types and src/constants (or shared packages when reusable)
 
@@ -24,7 +24,7 @@ Run from repo root unless specified:
 - Lint: yarn lint
 - Typecheck: yarn ts
 - Tests: yarn test
-- App-local tests: (cd apps/bilan-carbone && yarn test) or (cd apps/mip && yarn test)
+- App-local tests: (cd apps/bc && yarn test) or (cd apps/mip && yarn test)
 
 ## Core Conventions
 
@@ -74,7 +74,7 @@ Run from repo root unless specified:
 - Keep app tsconfig focused on app-specific overrides only.
 - Keep README footprint minimal:
   - root README.md
-  - apps/bilan-carbone/README.md
+  - apps/bc/README.md
   - apps/mip/README.md
 
 ## Authorization Logging Requirement
@@ -96,8 +96,13 @@ Never validate my claims without checking them. Prefer evidence over my approval
 
 ## Important Locations
 
+<<<<<<< HEAD
 - apps/bilan-carbone/src/db/emissionFactors.ts
 - packages/data/db/prisma/schema
+=======
+- apps/bc/src/db/emissionFactors.ts
+- packages/db/prisma/schema
+>>>>>>> 871d0f1fc (fix db path)
 - apps/*/src/components
 - apps/*/src/app/api
 - .env
