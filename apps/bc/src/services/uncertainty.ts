@@ -21,13 +21,13 @@ export const specificFEQualityKeys = [
 ] as const
 
 export const specificFEQualityKeysLinks: Record<(typeof qualityKeys)[number], (typeof specificFEQualityKeys)[number]> =
-{
-  reliability: 'feReliability',
-  technicalRepresentativeness: 'feTechnicalRepresentativeness',
-  geographicRepresentativeness: 'feGeographicRepresentativeness',
-  temporalRepresentativeness: 'feTemporalRepresentativeness',
-  completeness: 'feCompleteness',
-}
+  {
+    reliability: 'feReliability',
+    technicalRepresentativeness: 'feTechnicalRepresentativeness',
+    geographicRepresentativeness: 'feGeographicRepresentativeness',
+    temporalRepresentativeness: 'feTemporalRepresentativeness',
+    completeness: 'feCompleteness',
+  }
 
 type specificFEQualities = Pick<
   FullStudy['emissionSources'][0],
@@ -89,10 +89,10 @@ export const getSquaredStandardDeviationForEmissionSource = (emissionSource: Ful
 
   return Math.exp(
     2 *
-    Math.sqrt(
-      Math.pow(Math.log(Math.sqrt(factorSquaredStandardDeviation)), 2) +
-      Math.pow(Math.log(Math.sqrt(emissionSquaredStandardDeviation)), 2),
-    ),
+      Math.sqrt(
+        Math.pow(Math.log(Math.sqrt(factorSquaredStandardDeviation)), 2) +
+          Math.pow(Math.log(Math.sqrt(emissionSquaredStandardDeviation)), 2),
+      ),
   )
 }
 export const getSquaredStandardDeviationForEmissionSourceArray = (

@@ -8,8 +8,8 @@ declare module 'next-auth' {
 
   interface UserSession
     extends
-    Pick<PrismaMipAccount, 'id' | 'userId' | 'role' | 'organizationVersionMipId'>,
-    Pick<PrismaUser, 'firstName' | 'lastName'> {
+      Pick<PrismaMipAccount, 'id' | 'userId' | 'role' | 'organizationVersionMipId'>,
+      Pick<PrismaUser, 'firstName' | 'lastName'> {
     email: PrismaUser['email']
     accountMipId: string
     organizationId: string | null

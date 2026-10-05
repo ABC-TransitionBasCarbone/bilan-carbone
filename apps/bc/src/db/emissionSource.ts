@@ -61,12 +61,12 @@ export const getTagFamilyById = async (familyId: string) =>
 export const upsertTagFamilyById = async (studyId: string, name: string, familyId?: string) =>
   familyId
     ? prismaClient.studyTagFamily.update({
-      where: { id: familyId },
-      data: { name },
-    })
+        where: { id: familyId },
+        data: { name },
+      })
     : prismaClient.studyTagFamily.create({
-      data: { name, studyId },
-    })
+        data: { name, studyId },
+      })
 
 export const removeTagFamilyById = async (familyId: string) => {
   await prismaClient.studyTag.deleteMany({ where: { familyId } })

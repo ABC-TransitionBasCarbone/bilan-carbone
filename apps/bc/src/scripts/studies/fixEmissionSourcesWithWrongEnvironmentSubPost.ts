@@ -55,7 +55,7 @@ const fixEmissionSourcesWithWrongEnvironmentSubPost = async (dryRun = true) => {
       for (const source of envInvalidSources) {
         console.log(
           `  Study "${source.study.name}" (${source.study.id}) [${environment}]: ` +
-          `source "${source.name}" (${source.id}) has subPost "${source.subPost}"`,
+            `source "${source.name}" (${source.id}) has subPost "${source.subPost}"`,
         )
       }
 

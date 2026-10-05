@@ -40,11 +40,11 @@ const getEmissionSourceCompletion = (
 
   const caracterisations = study.exports?.types.length
     ? getCaracterisationsBySubPost(
-      emissionSource.subPost,
-      environment,
-      study.exports?.types || [],
-      study.exports?.control || ControlMode.Operational,
-    )
+        emissionSource.subPost,
+        environment,
+        study.exports?.types || [],
+        study.exports?.control || ControlMode.Operational,
+      )
     : []
 
   if (study.exports?.types && study.exports.types.length > 0 && caracterisations.length > 0) {

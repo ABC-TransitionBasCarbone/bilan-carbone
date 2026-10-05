@@ -169,26 +169,26 @@ const StudyDocument = ({ title, t, study, documents, canUpload = true, documentC
       actions={
         canUpload
           ? [
-            {
-              actionType: 'loadingButton',
-              component: 'label',
-              variant: 'contained',
-              tabIndex: -1,
-              loading: uploading,
-              children: (
-                <div className="align-center">
-                  {t('add')}
-                  <input
-                    className={styles.flowUploadButton}
-                    type="file"
-                    value=""
-                    accept={allowedFlowFileTypes.join(',')}
-                    onChange={handleUpload}
-                  />
-                </div>
-              ),
-            },
-          ]
+              {
+                actionType: 'loadingButton',
+                component: 'label',
+                variant: 'contained',
+                tabIndex: -1,
+                loading: uploading,
+                children: (
+                  <div className="align-center">
+                    {t('add')}
+                    <input
+                      className={styles.flowUploadButton}
+                      type="file"
+                      value=""
+                      accept={allowedFlowFileTypes.join(',')}
+                      onChange={handleUpload}
+                    />
+                  </div>
+                ),
+              },
+            ]
           : undefined
       }
     >

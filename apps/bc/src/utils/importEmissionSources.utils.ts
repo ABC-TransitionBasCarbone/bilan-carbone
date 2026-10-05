@@ -293,11 +293,11 @@ type ResolvedEf = { efId: string; efName: string; efValue: string; efUnit: strin
 
 export type ResolveEfRowsResult =
   | {
-    type: 'warnings'
-    warnings: ImportWarning[]
-    ambiguousRows: AmbiguousRow[]
-    resolvedByLine: Map<number, ResolvedEf>
-  }
+      type: 'warnings'
+      warnings: ImportWarning[]
+      ambiguousRows: AmbiguousRow[]
+      resolvedByLine: Map<number, ResolvedEf>
+    }
   | { type: 'ambiguous'; ambiguousRows: AmbiguousRow[] }
   | { type: 'resolved'; resolvedByLine: Map<number, ResolvedEf> }
 
@@ -357,11 +357,11 @@ function collectWarningsAndAmbiguities(
       candidates: tooMany
         ? []
         : ef.candidates.map((c) => ({
-          id: c.id,
-          foundTitle: c.foundTitle,
-          foundValue: c.foundValue,
-          foundUnit: formatPrefixedUnitDisplayOptional(locale, c.foundUnit),
-        })),
+            id: c.id,
+            foundTitle: c.foundTitle,
+            foundValue: c.foundValue,
+            foundUnit: formatPrefixedUnitDisplayOptional(locale, c.foundUnit),
+          })),
     })
     return
   }
@@ -408,7 +408,7 @@ export async function resolveEmissionFactorRows(
             efName:
               getEmissionFactorFullName(
                 chosenEf.metaData.find((m) => m.language === locale) ??
-                chosenEf.metaData[0] ?? { title: null, attribute: null, frontiere: null },
+                  chosenEf.metaData[0] ?? { title: null, attribute: null, frontiere: null },
               ) ||
               (row.emissionFactorName ?? ''),
             efValue: String(getEmissionFactorValue(chosenEf, environment)),

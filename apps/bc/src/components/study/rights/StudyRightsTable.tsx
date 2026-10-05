@@ -115,13 +115,13 @@ const StudyRightsTable = ({ user, study, canAddMember, userRoleOnStudy }: Props)
         actions={
           canAddMember
             ? [
-              {
-                actionType: 'link',
-                href: `/etudes/${study.id}/cadrage/ajouter`,
-                'data-testid': 'study-rights-change-button',
-                children: t('newRightLink'),
-              },
-            ]
+                {
+                  actionType: 'link',
+                  href: `/etudes/${study.id}/cadrage/ajouter`,
+                  'data-testid': 'study-rights-change-button',
+                  children: t('newRightLink'),
+                },
+              ]
             : undefined
         }
       >

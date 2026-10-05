@@ -8,7 +8,7 @@ import EnvironmentLoader from './EnvironmentLoader'
 
 type EnvironmentMap = {
   [key in Environment]?: ReactNode
-} & { [EnvironmentMode.SIMPLIFIED]?: ReactNode;[EnvironmentMode.ADVANCED]?: ReactNode }
+} & { [EnvironmentMode.SIMPLIFIED]?: ReactNode; [EnvironmentMode.ADVANCED]?: ReactNode }
 
 interface Props {
   defaultComponent?: ReactNode

@@ -287,8 +287,8 @@ const TrajectoryCreationStep2 = ({
           titleParams={
             glossary === 'referenceYearMethod'
               ? {
-                method: isSBTI ? 'SBTI' : 'SNBC',
-              }
+                  method: isSBTI ? 'SBTI' : 'SNBC',
+                }
               : undefined
           }
         >

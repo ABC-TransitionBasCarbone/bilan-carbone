@@ -18,21 +18,21 @@ export enum EmissionFactorMatchType {
 
 type EfMatchResult =
   | {
-    matchType:
-    | EmissionFactorMatchType.Exact
-    | EmissionFactorMatchType.NameAndUnitOnly
-    | EmissionFactorMatchType.ValueAndUnitOnly
-    id: string
-    importedId?: string | null
-    importedFrom?: string | null
-    foundTitle?: string
-    foundValue?: number
-    foundUnit?: string
-  }
+      matchType:
+        | EmissionFactorMatchType.Exact
+        | EmissionFactorMatchType.NameAndUnitOnly
+        | EmissionFactorMatchType.ValueAndUnitOnly
+      id: string
+      importedId?: string | null
+      importedFrom?: string | null
+      foundTitle?: string
+      foundValue?: number
+      foundUnit?: string
+    }
   | {
-    matchType: EmissionFactorMatchType.NameAmbiguous
-    candidates: { id: string; foundTitle?: string; foundValue?: number; foundUnit?: string }[]
-  }
+      matchType: EmissionFactorMatchType.NameAmbiguous
+      candidates: { id: string; foundTitle?: string; foundValue?: number; foundUnit?: string }[]
+    }
 
 export type EfRow = {
   id: string
@@ -53,7 +53,7 @@ export type EfRow = {
 function getEfFullName(ef: EfRow, locale: string): string {
   return getEmissionFactorFullName(
     ef.metaData.find((m) => m.language === locale) ??
-    ef.metaData[0] ?? { title: null, attribute: null, frontiere: null },
+      ef.metaData[0] ?? { title: null, attribute: null, frontiere: null },
   )
 }
 

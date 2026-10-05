@@ -156,31 +156,31 @@ export const getStudyNavbarMenu = (
         header: t('transitionPlan'),
         links: isTransitionPlanActive
           ? [
-            {
-              href: `/etudes/${studyId}/initialisation`,
-              label: t('initialization'),
-              testId: 'study-initialization-link',
-            },
-            {
-              disabled: !hasObjectives,
-              href: hasObjectives ? `/etudes/${studyId}/trajectoires` : '#',
-              label: t('trajectories'),
-              testId: 'study-trajectories-link',
-            },
-            {
-              disabled: !hasObjectives,
-              href: hasObjectives ? `/etudes/${studyId}/actions` : '#',
-              label: t('actionPlan'),
-              testId: 'study-action-plan-link',
-            },
-          ]
+              {
+                href: `/etudes/${studyId}/initialisation`,
+                label: t('initialization'),
+                testId: 'study-initialization-link',
+              },
+              {
+                disabled: !hasObjectives,
+                href: hasObjectives ? `/etudes/${studyId}/trajectoires` : '#',
+                label: t('trajectories'),
+                testId: 'study-trajectories-link',
+              },
+              {
+                disabled: !hasObjectives,
+                href: hasObjectives ? `/etudes/${studyId}/actions` : '#',
+                label: t('actionPlan'),
+                testId: 'study-action-plan-link',
+              },
+            ]
           : [
-            {
-              disabled: true,
-              href: '#',
-              label: t('commingSoon'),
-            },
-          ],
+              {
+                disabled: true,
+                href: '#',
+                label: t('commingSoon'),
+              },
+            ],
       },
     ],
   }

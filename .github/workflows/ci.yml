@@ -161,7 +161,9 @@ jobs:
         run: cp .env.dist .env
         working-directory: apps/mip
       - name: Copy .env to db
-        run: cp apps/mip/.env.dist packages/db/.env
+        run: |
+          cp apps/mip/.env.dist packages/db/.env
+          cp apps/mip/.env.dist apps/bc/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: |
@@ -204,6 +206,7 @@ jobs:
         run: yarn prebuild
       - name: Launch unit tests
         run: yarn publicodes:test:count
+        working-directory: ${{ github.workspace }}
 
   bc-build-app:
     timeout-minutes: 15

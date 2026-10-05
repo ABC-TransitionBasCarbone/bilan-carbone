@@ -9,8 +9,6 @@ export const nextJestBaseConfig: Config = {
   setupFilesAfterEnv: ['<rootDir>/src/tests/unit/setupTests.ts'],
   // Add more setup options before each test is run
   moduleNameMapper: {
-    '^@abc-transitionbascarbone/publicodes-(.*)$':
-    '<rootDir>/../../packages/publicodes-packages/publicodes-$1/',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
 }

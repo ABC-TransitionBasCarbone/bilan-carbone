@@ -86,8 +86,8 @@ export const EmissionFactorsFilters = ({
     filters.sources.length === importVersions.length
       ? t('all')
       : filters.sources
-        .map((source) => getEmissionVersionLabel(importVersions.find((importVersion) => importVersion.id === source)))
-        .join(', ')
+          .map((source) => getEmissionVersionLabel(importVersions.find((importVersion) => importVersion.id === source)))
+          .join(', ')
 
   return (
     <div ref={filtersRef} className={classNames(styles.filters, 'align-center wrap mt-2 mb1')}>

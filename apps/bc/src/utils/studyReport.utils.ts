@@ -43,8 +43,8 @@ const getActionDetails = (
       action.subPosts.length === 0
         ? bc.emissionFactors.post.allPost
         : getPostsFromSubPosts(action.subPosts.map((sp) => sp.subPost))
-          .map((p) => (bc.emissionFactors.post as unknown as Record<string, string>)[p] ?? p)
-          .join(', '),
+            .map((p) => (bc.emissionFactors.post as unknown as Record<string, string>)[p] ?? p)
+            .join(', '),
     category: action.category
       .map((c) => (bc.study.transitionPlan.actions.category as Record<string, string>)[c] ?? c)
       .join(', '),

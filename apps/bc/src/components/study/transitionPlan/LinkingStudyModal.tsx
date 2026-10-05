@@ -66,15 +66,15 @@ const LinkingStudyModal = ({
     reValidateMode: 'onChange',
     defaultValues: pastStudyToUpdate
       ? {
-        transitionPlanId,
-        externalStudyId: pastStudyToUpdate.id,
-        name: pastStudyToUpdate.name,
-        date: new Date(pastStudyToUpdate.year, 0, 1),
-        totalCo2Value: pastStudyToUpdate.totalCo2,
-      }
+          transitionPlanId,
+          externalStudyId: pastStudyToUpdate.id,
+          name: pastStudyToUpdate.name,
+          date: new Date(pastStudyToUpdate.year, 0, 1),
+          totalCo2Value: pastStudyToUpdate.totalCo2,
+        }
       : {
-        transitionPlanId,
-      },
+          transitionPlanId,
+        },
   })
 
   useEffect(() => {

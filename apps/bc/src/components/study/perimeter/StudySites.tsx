@@ -91,26 +91,26 @@ const StudySites = ({
           const existingStudySite = studySites.find((studySite) => studySite.site.id === site.id)
           return existingStudySite
             ? {
-              ...existingStudySite,
-              id: site.id,
-              name: existingStudySite.site.name,
-              selected: true,
-              postalCode: existingStudySite.site.postalCode ?? '',
-              city: existingStudySite.site.city ?? '',
-              establishmentYear: existingStudySite.site?.establishmentYear
-                ? parseInt(existingStudySite.site?.establishmentYear)
-                : 0,
-            }
+                ...existingStudySite,
+                id: site.id,
+                name: existingStudySite.site.name,
+                selected: true,
+                postalCode: existingStudySite.site.postalCode ?? '',
+                city: existingStudySite.site.city ?? '',
+                establishmentYear: existingStudySite.site?.establishmentYear
+                  ? parseInt(existingStudySite.site?.establishmentYear)
+                  : 0,
+              }
             : {
-              ...site,
-              selected: false,
-              postalCode: site.postalCode ?? '',
-              city: site.city ?? '',
-              cncId: site.cncId ?? '',
-              establishmentYear: site?.establishmentYear ? parseInt(site?.establishmentYear) : 0,
-              academy: site.academy ?? '',
-              establishmentType: site.establishmentType ?? undefined,
-            }
+                ...site,
+                selected: false,
+                postalCode: site.postalCode ?? '',
+                city: site.city ?? '',
+                cncId: site.cncId ?? '',
+                establishmentYear: site?.establishmentYear ? parseInt(site?.establishmentYear) : 0,
+                academy: site.academy ?? '',
+                establishmentType: site.establishmentType ?? undefined,
+              }
         })
         .sort((a, b) => a.name.localeCompare(b.name))
         .sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0)) || [],
@@ -213,12 +213,12 @@ const StudySites = ({
                 isEditing
                   ? sites
                   : studySites.map((site) => ({
-                    ...site,
-                    name: site.site.name,
-                    selected: false,
-                    postalCode: site.site.postalCode ?? '',
-                    city: site.site.city ?? '',
-                  }))
+                      ...site,
+                      name: site.site.name,
+                      selected: false,
+                      postalCode: site.site.postalCode ?? '',
+                      city: site.site.city ?? '',
+                    }))
               }
               form={siteForm as unknown as UseFormReturn<SitesCommand>}
               withSelection

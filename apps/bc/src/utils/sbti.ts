@@ -63,14 +63,14 @@ export const calculateSBTiData = (
   const currentTrajectory: TrajectoryDataPoint[] = withinThreshold
     ? [{ year: studyStartYear, value: totalCo2 }]
     : calculateSBTiTrajectory({
-      studyEmissions: totalCo2,
-      studyStartYear,
-      reductionRate,
-      pastStudies,
-      minYear,
-      maxYear,
-      defaultTrajectory,
-    })
+        studyEmissions: totalCo2,
+        studyStartYear,
+        reductionRate,
+        pastStudies,
+        minYear,
+        maxYear,
+        defaultTrajectory,
+      })
 
   return {
     previousTrajectoryStartYear: SBTI_START_YEAR,
@@ -101,27 +101,27 @@ export const getDefaultSBTiData = (
   return {
     sbti15Data: sbti15Enabled
       ? calculateSBTiData(
-        SBTI_REDUCTION_RATE_15,
-        emissionsAt2020,
-        totalCo2,
-        studyStartYear,
-        pastStudies,
-        minYear,
-        maxYear,
-        defaultTrajectory,
-      )
+          SBTI_REDUCTION_RATE_15,
+          emissionsAt2020,
+          totalCo2,
+          studyStartYear,
+          pastStudies,
+          minYear,
+          maxYear,
+          defaultTrajectory,
+        )
       : null,
     sbtiWB2CData: sbtiWB2CEnabled
       ? calculateSBTiData(
-        SBTI_REDUCTION_RATE_WB2C,
-        emissionsAt2020,
-        totalCo2,
-        studyStartYear,
-        pastStudies,
-        minYear,
-        maxYear,
-        defaultTrajectory,
-      )
+          SBTI_REDUCTION_RATE_WB2C,
+          emissionsAt2020,
+          totalCo2,
+          studyStartYear,
+          pastStudies,
+          minYear,
+          maxYear,
+          defaultTrajectory,
+        )
       : null,
   }
 }

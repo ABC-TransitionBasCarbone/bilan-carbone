@@ -199,9 +199,9 @@ const ConsolatedGHGPDifference = ({
 
       const otherGasEmission = emissionFactor.emissionFactorParts.length
         ? emissionFactor.emissionFactorParts.reduce(
-          (res, emissionFactorPart) => res + (emissionFactorPart.otherGES || 0) * (emissionSource.value || 0),
-          0,
-        )
+            (res, emissionFactorPart) => res + (emissionFactorPart.otherGES || 0) * (emissionSource.value || 0),
+            0,
+          )
         : emissionSource.value * (emissionFactor.otherGES || 0)
 
       return total - otherGasEmission / unitValue

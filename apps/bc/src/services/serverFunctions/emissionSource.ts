@@ -155,15 +155,15 @@ export const updateEmissionSource = async ({
       },
       ...(emissionFactorId !== undefined
         ? {
-          ...(emissionFactorId
-            ? { emissionFactor: { connect: { id: emissionFactorId } } }
-            : { emissionFactor: { disconnect: true } }),
-          feReliability: null,
-          feTechnicalRepresentativeness: null,
-          feGeographicRepresentativeness: null,
-          feTemporalRepresentativeness: null,
-          feCompleteness: null,
-        }
+            ...(emissionFactorId
+              ? { emissionFactor: { connect: { id: emissionFactorId } } }
+              : { emissionFactor: { disconnect: true } }),
+            feReliability: null,
+            feTechnicalRepresentativeness: null,
+            feGeographicRepresentativeness: null,
+            feTemporalRepresentativeness: null,
+            feCompleteness: null,
+          }
         : {}),
     }
 

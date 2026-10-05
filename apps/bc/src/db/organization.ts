@@ -56,15 +56,15 @@ export const getOrgVersionWithOrgId = async (id: string | null) => {
 export const getOrganizationVersionForRightsCheck = (id: string | null) =>
   id
     ? prismaClient.organizationVersion.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        environment: true,
-        activatedLicence: true,
-        parentId: true,
-        parent: { select: { activatedLicence: true } },
-      },
-    })
+        where: { id },
+        select: {
+          id: true,
+          environment: true,
+          activatedLicence: true,
+          parentId: true,
+          parent: { select: { activatedLicence: true } },
+        },
+      })
     : null
 
 export const getOrganizationVersionIsCR = async (id: string | null) => {
@@ -117,10 +117,10 @@ export const isOrganizationVersionCR = async (id: string | null) =>
 export const getOrganizationVersionAccounts = (id: string | null) =>
   id
     ? prismaClient.account.findMany({
-      select: { user: { select: { email: true, firstName: true, lastName: true, level: true } }, role: true },
-      where: { organizationVersionId: id, status: UserStatus.ACTIVE },
-      orderBy: { user: { email: 'asc' } },
-    })
+        select: { user: { select: { email: true, firstName: true, lastName: true, level: true } }, role: true },
+        where: { organizationVersionId: id, status: UserStatus.ACTIVE },
+        orderBy: { user: { email: 'asc' } },
+      })
     : []
 
 export const getOrganizationVersionWithSitesById = (id: string) =>

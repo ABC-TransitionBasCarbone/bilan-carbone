@@ -350,9 +350,9 @@ const TransitionPlanInitPage = ({
           { label: tNav('home'), link: '/' },
           study.organizationVersion.isCR
             ? {
-              label: study.organizationVersion.organization.name,
-              link: `/organisations/${study.organizationVersion.id}`,
-            }
+                label: study.organizationVersion.organization.name,
+                link: `/organisations/${study.organizationVersion.id}`,
+              }
             : undefined,
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}
@@ -363,15 +363,15 @@ const TransitionPlanInitPage = ({
         actions={
           canEdit && transitionPlan
             ? [
-              {
-                actionType: 'button',
-                variant: 'contained',
-                color: 'error',
-                onClick: () => setShowDeleteModal(true),
-                title: t('trajectories.delete.title'),
-                children: <DeleteIcon />,
-              },
-            ]
+                {
+                  actionType: 'button',
+                  variant: 'contained',
+                  color: 'error',
+                  onClick: () => setShowDeleteModal(true),
+                  title: t('trajectories.delete.title'),
+                  children: <DeleteIcon />,
+                },
+              ]
             : undefined
         }
       >
@@ -494,7 +494,7 @@ const TransitionPlanInitPage = ({
               selectedSbtiTrajectories={sanitizedSelectedSbtiTrajectories}
               selectedCustomTrajectories={
                 defaultSnbcSectoralTrajectory &&
-                  sanitizedSelectedSnbcTrajectories.includes(defaultSnbcSectoralTrajectory.id)
+                sanitizedSelectedSnbcTrajectories.includes(defaultSnbcSectoralTrajectory.id)
                   ? [defaultSnbcSectoralTrajectory.id]
                   : []
               }

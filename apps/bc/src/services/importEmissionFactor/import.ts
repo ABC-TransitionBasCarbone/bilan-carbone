@@ -156,7 +156,7 @@ export const mergeRowWithOverride = (
     if (normalizeValue(overrideVal) !== normalizeValue(oldVal)) {
       const key = col as keyof ImportEmissionFactor
       if (key in merged) {
-        ; (merged[key] as string | number) = numberColumns.includes(key) ? Number(overrideVal) : overrideVal
+        ;(merged[key] as string | number) = numberColumns.includes(key) ? Number(overrideVal) : overrideVal
       }
     }
   }
@@ -575,11 +575,11 @@ export const getEmissionFactorPartOverrideData = (
     metaData:
       metaData.length > 0
         ? {
-          updateMany: metaData.map((meta) => ({
-            where: { emissionFactorPartId, language: meta.language },
-            data: { title: meta.title },
-          })),
-        }
+            updateMany: metaData.map((meta) => ({
+              where: { emissionFactorPartId, language: meta.language },
+              data: { title: meta.title },
+            })),
+          }
         : undefined,
   }
 }

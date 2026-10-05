@@ -116,9 +116,9 @@ const NewStudyPage = ({
           { label: tNav('home'), link: '/' },
           defaultOrganizationVersion
             ? {
-              label: defaultOrganizationVersion.organization.name,
-              link: `/organisations/${defaultOrganizationVersion.id}`,
-            }
+                label: defaultOrganizationVersion.organization.name,
+                link: `/organisations/${defaultOrganizationVersion.id}`,
+              }
             : undefined,
         ].filter((link) => link !== undefined)}
       />

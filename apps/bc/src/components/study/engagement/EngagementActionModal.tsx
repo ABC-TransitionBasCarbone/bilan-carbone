@@ -49,10 +49,10 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
     () =>
       action
         ? {
-          ...objectWithoutNullAttributes(action),
-          date: action.date.toISOString(),
-          sites: action?.sites?.map((site) => site.id) || [],
-        }
+            ...objectWithoutNullAttributes(action),
+            date: action.date.toISOString(),
+            sites: action?.sites?.map((site) => site.id) || [],
+          }
         : {},
     [action],
   )

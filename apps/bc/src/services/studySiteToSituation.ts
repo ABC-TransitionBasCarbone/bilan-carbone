@@ -27,7 +27,7 @@ export interface TiltStudySiteFields {
   etp?: number
 }
 
-export interface StudySiteFields extends CutStudySiteFields, ClicksonStudySiteFields, TiltStudySiteFields { }
+export interface StudySiteFields extends CutStudySiteFields, ClicksonStudySiteFields, TiltStudySiteFields {}
 
 export type StudySiteToSituationFn = (studySite: StudySiteFields | undefined) => Situation<string>
 

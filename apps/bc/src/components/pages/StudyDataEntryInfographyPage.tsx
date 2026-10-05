@@ -41,9 +41,9 @@ const StudyDataEntryInfographyPage = ({
           { label: tNav('home'), link: '/' },
           study.organizationVersion.isCR
             ? {
-              label: study.organizationVersion.organization.name,
-              link: `/organisations/${study.organizationVersion.id}`,
-            }
+                label: study.organizationVersion.organization.name,
+                link: `/organisations/${study.organizationVersion.id}`,
+              }
             : undefined,
 
           { label: study.name, link: `/etudes/${study.id}` },

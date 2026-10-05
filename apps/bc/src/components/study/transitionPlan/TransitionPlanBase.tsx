@@ -154,15 +154,15 @@ const TransitionPlanBase = ({
       selectedSiteIds.length === 0 || selectedSubPosts.length === 0 || (studyHasTags && selectedTagIds.length === 0)
         ? []
         : actions.filter((action) =>
-          scopeMatchesUIFilters(
-            action.sites?.map((s) => s.studySite.siteId) ?? [],
-            action.subPosts?.map((sp) => sp.subPost) ?? [],
-            action.tags?.map((tag) => tag.studyTag.id) ?? [],
-            selectedSiteIds,
-            selectedSubPosts,
-            selectedTagIds,
+            scopeMatchesUIFilters(
+              action.sites?.map((s) => s.studySite.siteId) ?? [],
+              action.subPosts?.map((sp) => sp.subPost) ?? [],
+              action.tags?.map((tag) => tag.studyTag.id) ?? [],
+              selectedSiteIds,
+              selectedSubPosts,
+              selectedTagIds,
+            ),
           ),
-        ),
     [actions, selectedSiteIds, selectedSubPosts, selectedTagIds, studyHasTags],
   )
 
@@ -197,9 +197,9 @@ const TransitionPlanBase = ({
           { label: tNav('home'), link: '/' },
           study.organizationVersion.isCR
             ? {
-              label: study.organizationVersion.organization.name,
-              link: `/organisations/${study.organizationVersion.id}`,
-            }
+                label: study.organizationVersion.organization.name,
+                link: `/organisations/${study.organizationVersion.id}`,
+              }
             : undefined,
           { label: study.name, link: `/etudes/${study.id}` },
         ].filter((link) => link !== undefined)}

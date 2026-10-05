@@ -67,13 +67,13 @@ const EmissionFactorsFiltersAndTable = ({
   const [filters, setFilters] = useState<FeFilters>(() => {
     const initialFilters = selectEmissionFactor
       ? {
-        archived: false,
-        search: '',
-        locations: [],
-        sources: initialImportVersions,
-        units: [],
-        subPosts: defaultSubPost ? [defaultSubPost] : (['all'] as FeFilters['subPosts']),
-      }
+          archived: false,
+          search: '',
+          locations: [],
+          sources: initialImportVersions,
+          units: [],
+          subPosts: defaultSubPost ? [defaultSubPost] : (['all'] as FeFilters['subPosts']),
+        }
       : convertSearchParamsToFilters(searchParams, initialImportVersions.length > 0 ? initialImportVersions : [])
     return {
       ...initialFilters,

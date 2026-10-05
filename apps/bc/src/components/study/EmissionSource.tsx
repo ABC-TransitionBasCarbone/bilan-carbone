@@ -203,8 +203,8 @@ const EmissionSource = ({
   const currentBEVersion = useMemo(() => {
     const version = isFromOldImport
       ? study.emissionFactorVersions.find(
-        (emissionFactorVersion) => emissionFactorVersion.source === Import.BaseEmpreinte,
-      )?.importVersion.name
+          (emissionFactorVersion) => emissionFactorVersion.source === Import.BaseEmpreinte,
+        )?.importVersion.name
       : ''
     return version ?? ''
   }, [study.emissionFactorVersions, isFromOldImport])

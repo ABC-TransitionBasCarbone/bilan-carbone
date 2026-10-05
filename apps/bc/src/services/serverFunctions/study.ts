@@ -1559,11 +1559,11 @@ export const duplicateStudyCommand = async (
       const allowedSourcesForNewStudy =
         session.user.environment === Environment.BC
           ? (() => {
-            const hasGHGP = studyCommand.exports?.includes(Export.GHGP)
-            return Object.values(Import).filter(
-              (source) => source !== Import.Manual && source !== Import.CUT && (source !== Import.AIB || hasGHGP),
-            )
-          })()
+              const hasGHGP = studyCommand.exports?.includes(Export.GHGP)
+              return Object.values(Import).filter(
+                (source) => source !== Import.Manual && source !== Import.CUT && (source !== Import.AIB || hasGHGP),
+              )
+            })()
           : undefined
 
       for (const sourceVersion of sourceStudy.emissionFactorVersions) {

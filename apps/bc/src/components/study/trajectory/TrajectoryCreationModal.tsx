@@ -171,13 +171,13 @@ const TrajectoryCreationModal = ({
         sectorPercentages: trajectory.sectorPercentages
           ? (trajectory.sectorPercentages as SectorPercentages)
           : {
-            energy: 0,
-            industry: 0,
-            waste: 0,
-            buildings: 0,
-            agriculture: 0,
-            transportation: 0,
-          },
+              energy: 0,
+              industry: 0,
+              waste: 0,
+              buildings: 0,
+              agriculture: 0,
+              transportation: 0,
+            },
       })
     }
   }, [trajectory, reset])

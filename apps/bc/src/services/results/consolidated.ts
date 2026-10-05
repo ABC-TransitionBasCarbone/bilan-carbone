@@ -26,14 +26,14 @@ export const computeResultsByPostFromEmissionSources = (
   const convertToBc = type === AdditionalResultTypes.CONSOLIDATED && environment !== Environment.BC
   const convertedSiteEmissionSources = convertToBc
     ? siteEmissionSources.map((emissionSource) => {
-      return {
-        ...emissionSource,
-        subPost:
-          environment === Environment.TILT
-            ? convertTiltSubPostToBCSubPost(emissionSource.subPost)
-            : emissionSource.subPost,
-      }
-    })
+        return {
+          ...emissionSource,
+          subPost:
+            environment === Environment.TILT
+              ? convertTiltSubPostToBCSubPost(emissionSource.subPost)
+              : emissionSource.subPost,
+        }
+      })
     : siteEmissionSources
 
   const emissionSourceWithEmissionValue = convertedSiteEmissionSources.map((emissionSource) => ({
@@ -80,8 +80,8 @@ export const computeResultsByPostFromEmissionSources = (
       squaredStandardDeviation:
         subPosts.length > 0
           ? getSquaredStandardDeviationForEmissionSourceArray(
-            subPosts.map((sp) => ({ ...sp, emissionValue: sp.value })),
-          )
+              subPosts.map((sp) => ({ ...sp, emissionValue: sp.value })),
+            )
           : undefined,
       children: subPosts.sort((a, b) => tPost(a.post).localeCompare(tPost(b.post))),
       numberOfEmissionSource: subPosts.reduce((acc, subPost) => acc + subPost.numberOfEmissionSource, 0),

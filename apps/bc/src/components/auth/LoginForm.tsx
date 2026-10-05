@@ -24,9 +24,9 @@ const LoginForm = ({ environment = Environment.BC }: Props) => {
     isCourse(environment)
       ? ''
       : getEnvRoute(
-        environment === Environment.BC ? `activation?email=${email}` : `register?email=${email}`,
-        environment,
-      )
+          environment === Environment.BC ? `activation?email=${email}` : `register?email=${email}`,
+          environment,
+        )
 
   return (
     <LoginFormCommon

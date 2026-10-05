@@ -18,7 +18,7 @@ import {
   UserStatus,
 } from '@abc-transitionbascarbone/db/enums'
 import { signPassword } from '@abc-transitionbascarbone/shared/utils/auth'
-import { courseEnvironments, environmentsWithChecklist } from '@abc-transitionbascarbone/shared/utils/environments'
+import { environmentsWithChecklist } from '@abc-transitionbascarbone/shared/utils/environments'
 import { faker } from '@faker-js/faker'
 import { PrismaPg } from '@prisma/adapter-pg'
 

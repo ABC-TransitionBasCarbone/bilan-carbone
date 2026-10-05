@@ -3,12 +3,7 @@ import { unitsMatrix } from '@/services/importEmissionFactor/historyUnits'
 import { getEmissionQuality } from '@/services/importEmissionFactor/import'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import type { Prisma } from '@abc-transitionbascarbone/db'
-import {
-  EmissionFactorPartType,
-  EmissionFactorStatus,
-  Import,
-  SubPost,
-} from '@abc-transitionbascarbone/db/enums'
+import { EmissionFactorPartType, EmissionFactorStatus, Import, SubPost } from '@abc-transitionbascarbone/db/enums'
 import { removeDiacritics } from '@abc-transitionbascarbone/shared/utils/parsing'
 import { v4 } from 'uuid'
 import { OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'

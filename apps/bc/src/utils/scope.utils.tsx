@@ -25,7 +25,7 @@ const scopeKey = (siteIds: string[], subPosts: SubPost[], tagIds: string[]): str
 // Check if parentScope strictly contains childScope (wider but not identical).
 const isScopeWiderThan = (parentScope: ScopeGroup, childScope: ScopeGroup): boolean =>
   scopeKey(parentScope.siteIds, parentScope.subPosts, parentScope.tagIds) !==
-  scopeKey(childScope.siteIds, childScope.subPosts, childScope.tagIds) &&
+    scopeKey(childScope.siteIds, childScope.subPosts, childScope.tagIds) &&
   isSubset(parentScope.siteIds, childScope.siteIds) &&
   isSubset(parentScope.subPosts, childScope.subPosts) &&
   isSubset(parentScope.tagIds, childScope.tagIds)

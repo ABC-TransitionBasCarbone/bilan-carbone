@@ -134,9 +134,9 @@ const EmissionSourceFactor = ({
     setResults(
       value
         ? fuse
-          .search(value)
-          .map(({ item }) => item)
-          .slice(0, 30)
+            .search(value)
+            .map(({ item }) => item)
+            .slice(0, 30)
         : [],
     )
   }, [fuse, value])

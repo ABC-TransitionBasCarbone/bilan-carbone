@@ -53,40 +53,40 @@ const Studies = async ({
   const actions: Action[] = [
     ...(feedbackFormUrl
       ? [
-        {
-          actionType: 'node' as const,
-          node: (
-            <LinkButton
-              data-testid="feedback-form-link-home"
-              href={feedbackFormUrl}
-              color="primary"
-              variant="outlined"
-              size="large"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              {feedbackButtonLabel}
-            </LinkButton>
-          ),
-        },
-      ]
+          {
+            actionType: 'node' as const,
+            node: (
+              <LinkButton
+                data-testid="feedback-form-link-home"
+                href={feedbackFormUrl}
+                color="primary"
+                variant="outlined"
+                size="large"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                {feedbackButtonLabel}
+              </LinkButton>
+            ),
+          },
+        ]
       : []),
     ...(canAddStudy
       ? [
-        {
-          actionType: 'link' as const,
-          href: creationUrl,
-          color: 'secondary' as const,
-          variant: 'outlined' as const,
-          ['data-testid']: 'new-study',
-          children: (
-            <>
-              <AddIcon />
-              {t(simplified ? 'createSimplified' : 'create')}
-            </>
-          ),
-        },
-      ]
+          {
+            actionType: 'link' as const,
+            href: creationUrl,
+            color: 'secondary' as const,
+            variant: 'outlined' as const,
+            ['data-testid']: 'new-study',
+            children: (
+              <>
+                <AddIcon />
+                {t(simplified ? 'createSimplified' : 'create')}
+              </>
+            ),
+          },
+        ]
       : []),
   ]
 

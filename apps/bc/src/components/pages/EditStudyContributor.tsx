@@ -26,9 +26,9 @@ const EditStudyContributorPage = async ({ study, account, subPosts = [] }: Props
           { label: tNav('home'), link: '/' },
           study.organizationVersion.isCR
             ? {
-              label: study.organizationVersion.organization.name,
-              link: `/organisations/${study.organizationVersion.id}`,
-            }
+                label: study.organizationVersion.organization.name,
+                link: `/organisations/${study.organizationVersion.id}`,
+              }
             : undefined,
           { label: study.name, link: `/etudes/${study.id}` },
           { label: tNav('studyRights'), link: `/etudes/${study.id}/cadrage` },

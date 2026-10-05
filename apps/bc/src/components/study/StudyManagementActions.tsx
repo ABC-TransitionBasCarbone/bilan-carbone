@@ -71,51 +71,51 @@ const StudyManagementActions = ({
 
   const deleteAction: BlockProps['actions'] = canDeleteStudy
     ? [
-      {
-        actionType: 'button',
-        'data-testid': 'delete-study',
-        onClick: () => setDeleting(true),
-        children: <DeleteIcon />,
-        title: t('deleteStudy'),
-        variant: 'contained',
-        color: 'error',
-      },
-    ]
+        {
+          actionType: 'button',
+          'data-testid': 'delete-study',
+          onClick: () => setDeleting(true),
+          children: <DeleteIcon />,
+          title: t('deleteStudy'),
+          variant: 'contained',
+          color: 'error',
+        },
+      ]
     : []
 
   const duplicateAction: BlockProps['actions'] = canDuplicateStudy
     ? [
-      {
-        actionType: 'button',
-        'data-testid': 'duplicate-study',
-        onClick: () => setDuplicating(true),
-        children: <CopyIcon />,
-        color: 'secondary',
-        variant: 'outlined',
-        title: t('duplicate'),
-      },
-    ]
+        {
+          actionType: 'button',
+          'data-testid': 'duplicate-study',
+          onClick: () => setDuplicating(true),
+          children: <CopyIcon />,
+          color: 'secondary',
+          variant: 'outlined',
+          title: t('duplicate'),
+        },
+      ]
     : []
 
   const downloadEmissionSourceAction: BlockProps['actions'] =
     hasAccessToDownloadStudyEmissionSourcesButton(study.organizationVersion.environment) && !study.simplified
       ? [
-        {
-          actionType: 'node',
-          node: (
-            <EmissionSourceButtons
-              studyId={study.id}
-              userRole={userRole}
-              siteId={siteId}
-              hasEmissionSources={study.emissionSources.length > 0}
-              onSuccess={() => {
-                showSuccessToast(tImport('success'))
-                router.refresh()
-              }}
-            />
-          ),
-        },
-      ]
+          {
+            actionType: 'node',
+            node: (
+              <EmissionSourceButtons
+                studyId={study.id}
+                userRole={userRole}
+                siteId={siteId}
+                hasEmissionSources={study.emissionSources.length > 0}
+                onSuccess={() => {
+                  showSuccessToast(tImport('success'))
+                  router.refresh()
+                }}
+              />
+            ),
+          },
+        ]
       : []
 
   return (

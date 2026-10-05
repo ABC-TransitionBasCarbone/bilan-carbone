@@ -143,10 +143,10 @@ export const calculateActionBasedTrajectory = ({
   const maxActionsEndYear =
     quantitativeActions.length > 0
       ? Math.max(
-        ...quantitativeActions.map((action) =>
-          action.reductionEndYear ? getYearFromDateStr(action.reductionEndYear) : 0,
-        ),
-      )
+          ...quantitativeActions.map((action) =>
+            action.reductionEndYear ? getYearFromDateStr(action.reductionEndYear) : 0,
+          ),
+        )
       : 0
 
   const maxDefaultEndYear = Math.max(maxYear ?? TARGET_YEAR, TARGET_YEAR)

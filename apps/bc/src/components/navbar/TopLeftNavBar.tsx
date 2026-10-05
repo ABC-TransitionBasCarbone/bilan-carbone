@@ -47,16 +47,16 @@ const TopLeftNavBar = ({ user, hasFormation, isFootprintsEnabled, hasTrainedUser
             {(isAdmin(user.role) ||
               user.role === Role.GESTIONNAIRE ||
               hasAlwaysAccessToOrganizationVersion(user.environment)) && (
-                <MenuItem>
-                  <NavbarLink
-                    data-testid="link-edit-organisation"
-                    href={`/organisations/${user.organizationVersionId}/modifier`}
-                    onClick={handleClose}
-                  >
-                    {t('information')}
-                  </NavbarLink>
-                </MenuItem>
-              )}
+              <MenuItem>
+                <NavbarLink
+                  data-testid="link-edit-organisation"
+                  href={`/organisations/${user.organizationVersionId}/modifier`}
+                  onClick={handleClose}
+                >
+                  {t('information')}
+                </NavbarLink>
+              </MenuItem>
+            )}
             <MenuItem>
               <NavbarLink data-testid="link-equipe" href="/equipe" onClick={handleClose}>
                 {t('team')}

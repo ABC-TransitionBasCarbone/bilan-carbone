@@ -204,8 +204,8 @@ const getBaseFilterForEmissionFactors = (
     ...(filters.archived ? {} : { status: { not: EmissionFactorStatus.Archived } }),
     ...(filters.units.length > 0
       ? {
-        OR: [{ unit: { in: filters.units as Unit[] } }, { customUnit: { in: filters.units as string[] } }],
-      }
+          OR: [{ unit: { in: filters.units as Unit[] } }, { customUnit: { in: filters.units as string[] } }],
+        }
       : {}),
     ...(filters.base && filters.base.length !== Object.values(EmissionFactorBase).length
       ? { base: { in: filters.base } }
@@ -226,12 +226,12 @@ const getBaseFilterForEmissionFactors = (
         },
         filters.search
           ? {
-            OR: [
-              { title: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
-              { attribute: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
-              { frontiere: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
-            ],
-          }
+              OR: [
+                { title: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+                { attribute: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+                { frontiere: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+              ],
+            }
           : {},
         filters.locations.length > 0 ? { location: { in: filters.locations, mode: Prisma.QueryMode.insensitive } } : {},
       ],

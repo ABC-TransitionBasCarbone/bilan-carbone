@@ -61,19 +61,19 @@ const StudyPostsPage = ({ post, study, userRole, emissionSources, siteId, studyS
     () =>
       study.exports && study.exports.types.length
         ? unique(
-          subPosts.reduce(
-            (res, subPost) => [
-              ...res,
-              ...getCaracterisationsBySubPost(
-                subPost,
-                study.organizationVersion.environment,
-                study.exports?.types || [],
-                study.exports?.control || ControlMode.Operational,
-              ),
-            ],
-            [] as EmissionSourceCaracterisation[],
-          ),
-        )
+            subPosts.reduce(
+              (res, subPost) => [
+                ...res,
+                ...getCaracterisationsBySubPost(
+                  subPost,
+                  study.organizationVersion.environment,
+                  study.exports?.types || [],
+                  study.exports?.control || ControlMode.Operational,
+                ),
+              ],
+              [] as EmissionSourceCaracterisation[],
+            ),
+          )
         : [],
 
     [study.exports, study.organizationVersion.environment, subPosts],

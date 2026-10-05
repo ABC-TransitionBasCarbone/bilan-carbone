@@ -50,13 +50,13 @@ const DeactivableFeature = ({ restrictions }: Props) => {
   const featureDeactivationCriterias: Array<DeactivationCriteria<UserSource> | DeactivationCriteria<Environment>> = [
     ...(showSourcesRow
       ? [
-        {
-          title: 'source',
-          criterias: restrictions.deactivatedSources,
-          t: tSource,
-          values: Object.values(UserSource),
-        },
-      ]
+          {
+            title: 'source',
+            criterias: restrictions.deactivatedSources,
+            t: tSource,
+            values: Object.values(UserSource),
+          },
+        ]
       : []),
     {
       title: 'environment',
