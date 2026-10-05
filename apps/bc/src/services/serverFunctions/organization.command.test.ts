@@ -1,19 +1,20 @@
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { expect } from '@jest/globals'
 import { canUpdateOrganizationSiret } from './organization.command'
 
 describe('canUpdateOrganizationSiret', () => {
   it('allows changing the SIRET for a client organization', () => {
-    expect(canUpdateOrganizationSiret('parent-id', '12345678901234', '43210987654321')).toBe(true)
+    expect(canUpdateOrganizationSiret(Environment.BC, 'parent-id')).toBe(true)
   })
 
   it('does not allow changing the SIRET for a top-level organization', () => {
-    expect(canUpdateOrganizationSiret(null, '12345678901234', '43210987654321')).toBe(false)
+    expect(canUpdateOrganizationSiret(Environment.BC, null)).toBe(false)
   })
 
-  it('allows an unchanged SIRET for a top-level organization', () => {
-    expect(canUpdateOrganizationSiret(null, '12345678901234', '12345678901234')).toBe(true)
-    expect(canUpdateOrganizationSiret(null, null, '')).toBe(true)
-    expect(canUpdateOrganizationSiret(null, '', '')).toBe(true)
-    expect(canUpdateOrganizationSiret(null, '12345678901234', undefined)).toBe(true)
+  Object.values(Environment).forEach((env) => {
+    it('allows all for other environments', () => {
+      expect(canUpdateOrganizationSiret(env, 'parent-id')).toBe(true)
+      expect(canUpdateOrganizationSiret(env, null)).toBe(true)
+    })
   })
 })

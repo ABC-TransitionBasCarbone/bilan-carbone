@@ -6,10 +6,11 @@ import { getEmissionFactorWithoutQuality } from '@/db/emissionFactors'
 import {
   createOrganizationWithVersion,
   deleteClient,
+  getOrganizationVersionAccounts,
+  getOrganizationVersionById,
+  getOrganizationVersionIsCR,
   getOrgNameByOrgVersionId,
   getOrgVersionWithNameById,
-  getOrganizationVersionAccounts,
-  getOrganizationVersionIsCR,
   getRawOrganizationVersionById,
   onboardOrganizationVersion,
   setOnboarded,
@@ -103,18 +104,18 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const organizationVersion = await prismaClient.organizationVersion.findUnique({
-      where: { id: command.organizationVersionId },
-      select: { parentId: true, organization: { select: { siret: true } } },
-    })
-    if (
-      !organizationVersion ||
-      !canUpdateOrganizationSiret(organizationVersion.parentId, organizationVersion.organization.siret, command.siret)
-    ) {
-      console.error('updateOrganizationCommand: cannot update organization SIRET', {
-        organizationVersionId: command.organizationVersionId,
-        parentId: organizationVersion?.parentId,
-      })
+    const organizationVersion = await getOrganizationVersionById(command.organizationVersionId)
+
+    if (!organizationVersion) {
+      console.error('updateOrganizationCommand: cannot update organization SIRET')
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const updatingSiretButNoRights =
+      !canUpdateOrganizationSiret(organizationVersion.environment, organizationVersion.parentId) &&
+      command.siret !== organizationVersion.organization.siret
+
+    if (updatingSiretButNoRights) {
+      console.error('updateOrganizationCommand: cannot update organization SIRET')
       throw new Error(NOT_AUTHORIZED)
     }
 

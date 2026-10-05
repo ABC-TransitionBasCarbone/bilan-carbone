@@ -1,9 +1,10 @@
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import z from 'zod'
 import { SitesCommandValidation } from './study.command'
 
 export const CreateOrganizationCommandValidation = z.object({
   name: z.string().trim().min(1),
-  siret: z.string().trim().optional(),
+  siret: z.string().trim(),
 })
 
 export type CreateOrganizationCommand = z.infer<typeof CreateOrganizationCommandValidation>
@@ -20,8 +21,5 @@ export const UpdateOrganizationCommandValidation = z.intersection(
 
 export type UpdateOrganizationCommand = z.infer<typeof UpdateOrganizationCommandValidation>
 
-export const canUpdateOrganizationSiret = (
-  parentId: string | null,
-  currentSiret: string | null,
-  nextSiret: string | undefined,
-) => !!parentId || nextSiret === undefined || (nextSiret || null) === (currentSiret || null)
+export const canUpdateOrganizationSiret = (environment: Environment, parentId: string | null) =>
+  environment !== Environment.BC || !!parentId

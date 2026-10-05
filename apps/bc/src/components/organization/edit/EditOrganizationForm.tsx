@@ -4,6 +4,7 @@ import { OrganizationVersionWithOrganization } from '@/db/organization'
 import DynamicSites from '@/environments/core/organization/DynamicSites'
 import { updateOrganizationCommand } from '@/services/serverFunctions/organization'
 import {
+  canUpdateOrganizationSiret,
   UpdateOrganizationCommand,
   UpdateOrganizationCommandValidation,
 } from '@/services/serverFunctions/organization.command'
@@ -96,6 +97,8 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false, disa
     }
   }
 
+  const siretIsDisabled = !canUpdateOrganizationSiret(organizationVersion.environment, organizationVersion.parentId)
+
   const sites = form.watch('sites')
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>
@@ -113,13 +116,13 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false, disa
         {isAdvanced(organizationVersion.environment) && (
           <FormTextField
             className="pl2"
-            disabled={disabled || !organizationVersion.parentId}
+            disabled={disabled || siretIsDisabled}
             data-testid="edit-organization-siret"
             control={form.control}
             name="siret"
             label={t('siret')}
             icon={
-              !organizationVersion.parentId && (
+              siretIsDisabled && (
                 <HelpIcon
                   data-testid="edit-organization-siret-help"
                   onClick={() => setGlossary('siret')}

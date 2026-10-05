@@ -2272,7 +2272,7 @@
       "Unknown error": "Une erreur inconnue s'est produite. Veuillez contacter le support",
       "glossary": {
         "siret": "Modifier le SIRET",
-        "siretDescription": "Pour modifier le SIRET, modifiez cette information sur le site WordPress. Ce compte sera mis à jour sous une heure."
+        "siretDescription": "Pour modifier le SIRET, modifiez cette information sur le compte ABC de l'administrateur de votre organisation. Ce compte sera mis à jour sous une heure après cette modification."
       }
     },
     "sites": {

@@ -31,3 +31,7 @@
   padding-right: 0.5rem;
   color: var(--mui-palette-text-disabled);
 }
+
+.consolidatedLabel {
+  margin: 0 !important;
+}
