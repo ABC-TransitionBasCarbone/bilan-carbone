@@ -4,7 +4,7 @@ import { hasActiveLicence } from '@/utils/organization'
 import { type Account } from '@abc-transitionbascarbone/db-common'
 import { Role } from '@abc-transitionbascarbone/db-common/enums'
 
-export const canCreateEmissionFactor = async (account: Account) => {
+export const canCreateEmissionFactor = async (account: Pick<Account, 'role' | 'userId' | 'organizationVersionId'>) => {
   const hasRole = ([Role.ADMIN, Role.COLLABORATOR, Role.SUPER_ADMIN] as Role[]).includes(account.role)
 
   const user = await getUserById(account.userId)

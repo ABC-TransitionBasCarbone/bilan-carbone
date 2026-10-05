@@ -236,6 +236,16 @@ export const updateEmissionFactorCommand = async (command: UpdateEmissionFactorC
       throw new Error(NOT_AUTHORIZED)
     }
 
+    if (
+      !canCreateEmissionFactor({
+        role: session.user.role,
+        userId: session.user.id,
+        organizationVersionId: session.user.organizationVersionId,
+      })
+    ) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
     await updateEmissionFactor(session, local, command)
   })
 

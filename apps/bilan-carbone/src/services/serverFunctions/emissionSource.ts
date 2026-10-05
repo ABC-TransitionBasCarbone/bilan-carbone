@@ -256,7 +256,12 @@ export const createTag = async ({ familyId, name, color }: NewStudyTagCommand) =
     })
   })
 
-const canUpdateTag = async (tagId: string, user: UserSession, organizationVersionId: string | null) => {
+const canUpdateTag = async (
+  tagId: string,
+  user: UserSession,
+  organizationVersionId: string | null,
+  familyId?: string,
+) => {
   const tag = await getTagById(tagId)
 
   if (!tag || !organizationVersionId) {
@@ -278,6 +283,14 @@ const canUpdateTag = async (tagId: string, user: UserSession, organizationVersio
   if (!role || !hasEditionRights(role)) {
     throw new Error(NOT_AUTHORIZED)
   }
+
+  if (familyId) {
+    const newTagFamily = await getTagFamilyById(familyId)
+    if (!newTagFamily || newTagFamily.studyId !== study.id) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+  }
+
   return true
 }
 
@@ -297,7 +310,7 @@ export const updateTag = async (tagId: string, name: string, color: string, fami
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const hasAuthorization = await canUpdateTag(tagId, session.user, account.organizationVersionId)
+    const hasAuthorization = await canUpdateTag(tagId, session.user, account.organizationVersionId, familyId)
     if (!hasAuthorization) {
       throw new Error(NOT_AUTHORIZED)
     }

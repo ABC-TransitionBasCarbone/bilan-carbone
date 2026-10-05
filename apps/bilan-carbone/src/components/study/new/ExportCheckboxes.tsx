@@ -11,7 +11,7 @@ import {
   EmissionSourceCaracterisation,
   Export,
 } from '@abc-transitionbascarbone/db-common/enums'
-import { Checkbox } from '@mui/material'
+import { Checkbox, FormControlLabel } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo, useState } from 'react'
 import ExportActivationWarningModal from './ExportActivationWarningModal'
@@ -137,8 +137,10 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
     <>
       <div className="flex-col">
         <div className={styles.field}>
-          <Checkbox checked className={styles.checkbox} disabled />
-          <span className={styles.bcExport}>{t('consolidated')}</span>
+          <FormControlLabel
+            control={<Checkbox checked className={styles.checkbox} disabled />}
+            label={<span className={styles.bcExport}>{t('consolidated')}</span>}
+          />
           <HelpIcon
             onClick={(e) => {
               e.preventDefault()

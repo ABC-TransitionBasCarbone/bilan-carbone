@@ -197,7 +197,7 @@ const StudyTags = ({ studyId, userRoleOnStudy }: Props) => {
             translation={t}
             namePlaceholder={t('emissionSourceTagsPlaceholder')}
             data-testid="create-emission-source-tag"
-            disabled={!tagFamilies.length || !formState.isValid}
+            disabled={userRoleOnStudy === StudyRole.Reader}
           />
           <Button
             className="mt1"
