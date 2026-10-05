@@ -67,7 +67,8 @@
   },
   "exports": {
     "bc": {
-      "emissions": "Kibocsátás (tCO₂e)"
+      "emissions": "Kibocsátás (tCO₂e)",
+      "checkboxDisabled": "A Bilan Carbone® exportálás kötelező a BC+ használatakor."
     }
   },
   "importFileModal": {
@@ -85,5 +86,16 @@
   },
   "feedback": {
     "answer": "Ossza meg velünk visszajelzését! ✨"
+  },
+  "legalNotices": {
+    "fileStorage": {
+      "title": "Fájlok tárolása",
+      "details": "Scaleway - 8, rue de la Ville-l'Évêque, 75008 Paris, Franciaország"
+    }
+  },
+  "organization": {
+    "form": {
+      "siret": "SIRET"
+    }
   }
 }

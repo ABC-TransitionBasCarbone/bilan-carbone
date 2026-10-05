@@ -28,7 +28,8 @@
       "disclaimerExcel3": "Sin embargo, esta huella de carbono simplificada es el primer paso hacia un enfoque más completo como la Huella de Carbono®!",
       "disclaimerExcel4": "Para los años siguientes, puede renovar su medición de huella de carbono simplificada con la herramienta Count, o realizar una Huella de Carbono® completa.",
       "disclaimerExcel5": "Una Huella de Carbono® sigue una metodología muy específica y debe cumplir una serie de criterios objetivos. Por ejemplo, durante una Huella de Carbono®, la dirección debe estar comprometida, se debe movilizar a las diversas partes interesadas de la organización, se deben calcular las incertidumbres y asociarlas a las emisiones, y sobre todo, se debe construir un plan de transición sólido para comprometer a la organización en una transición baja en carbono.",
-      "disclaimerExcel6": "Si desea embarcarse en una Huella de Carbono® en los próximos años, todo comienza con la formación en la metodología, o contactándonos en count@cut-collectif.fr, o siendo apoyado por un proveedor de Huella de Carbono®!"
+      "disclaimerExcel6": "Si desea embarcarse en una Huella de Carbono® en los próximos años, todo comienza con la formación en la metodología, o contactándonos en count@cut-collectif.fr, o siendo apoyado por un proveedor de Huella de Carbono®!",
+      "checkboxDisabled": "La exportación Bilan Carbone® es obligatoria con el BC+."
     },
     "exportFilename": "resultados_estudio_{studyName}",
     "glossary": {
@@ -222,7 +223,11 @@
     "feedbackLink": "Responder al cuestionario"
   },
   "legalNotices": {
-    "profile": "Volver al perfil"
+    "profile": "Volver al perfil",
+    "fileStorage": {
+      "title": "Almacenamiento de archivos",
+      "details": "Scaleway - 8, rue de la Ville-l'Évêque, 75008 Paris, France"
+    }
   },
   "login": {
     "welcome": "Bienvenido/a a Bilan Carbone® +",
@@ -2203,7 +2208,8 @@
       "edit": "Validar la modificación",
       "name": "Nombre de la organización",
       "title": "Información sobre la nueva organización",
-      "Unknown error": "Se ha producido un error desconocido. Póngase en contacto con el soporte"
+      "Unknown error": "Se ha producido un error desconocido. Póngase en contacto con el soporte",
+      "siret": "SIRET"
     }
   },
   "emissionSource": {
