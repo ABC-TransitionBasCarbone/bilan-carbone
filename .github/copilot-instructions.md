@@ -96,13 +96,8 @@ Never validate my claims without checking them. Prefer evidence over my approval
 
 ## Important Locations
 
-<<<<<<< HEAD
-- apps/bilan-carbone/src/db/emissionFactors.ts
-- packages/data/db/prisma/schema
-=======
 - apps/bc/src/db/emissionFactors.ts
 - packages/db/prisma/schema
->>>>>>> 871d0f1fc (fix db path)
 - apps/*/src/components
 - apps/*/src/app/api
 - .env
