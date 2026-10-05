@@ -98,6 +98,7 @@ export interface ProcessedChartData {
   label: string
   value: number
   color: string
+  parentIndex?: number
 }
 
 export interface ChartDataRings {
@@ -145,17 +146,18 @@ export const processPieChartData = <T extends BasicTypeCharts>(
   }
 
   const childrenData = results
-    .flatMap((result) => result.children)
-    .map((child) => formatData(child, false))
+    .flatMap((result, parentIndex) => result.children.map((child) => ({ ...formatData(child, false), parentIndex })))
     .filter((computeResult) => computeResult.value > 0)
 
   if (type === 'tag' && !showSubLevel) {
     return { innerRingData: childrenData, outerRingData: [] }
   }
 
-  const filteredResults = results.filter((result) => result.post !== 'total' && result.label !== 'total')
+  const filteredResults = results
+    .map((result, parentIndex) => ({ result, parentIndex }))
+    .filter(({ result }) => result.post !== 'total' && result.label !== 'total')
   const innerData = filteredResults
-    .map((result, index) => formatData(result, true, index))
+    .map(({ result, parentIndex }, index) => ({ ...formatData(result, true, index), parentIndex }))
     .filter((computeResult) => computeResult.value > 0)
 
   if (!showSubLevel) {
