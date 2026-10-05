@@ -14,6 +14,12 @@ describe('Edit organization', () => {
     cy.getByTestId('link-organization').click()
     cy.getByTestId('edit-organization-button').click({ force: true })
 
+    cy.getByTestId('edit-organization-siret').find('input').should('be.disabled')
+    cy.getByTestId('edit-organization-siret-help').click()
+    cy.getByTestId('edit-organization-siret-glossary-modal')
+      .should('be.visible')
+      .and('contain.text', 'WordPress')
+
     cy.getByTestId('edit-organization-name').within(() => {
       cy.get('input').clear()
       cy.get('input').type('My new name')

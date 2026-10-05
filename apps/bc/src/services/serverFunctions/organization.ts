@@ -36,7 +36,11 @@ import {
   canDeleteOrganizationVersion,
   canUpdateOrganizationVersion,
 } from '../permissions/organization'
-import { CreateOrganizationCommand, UpdateOrganizationCommand } from './organization.command'
+import {
+  canUpdateOrganizationSiret,
+  CreateOrganizationCommand,
+  UpdateOrganizationCommand,
+} from './organization.command'
 import { getStudy } from './study'
 import { DeleteCommand, SitesCommand } from './study.command'
 import { addMember, addUserChecklistItem } from './user'
@@ -96,6 +100,21 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
     }
 
     if (!(await canUpdateOrganizationVersion(session.user, command.organizationVersionId))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const organizationVersion = await prismaClient.organizationVersion.findUnique({
+      where: { id: command.organizationVersionId },
+      select: { parentId: true, organization: { select: { siret: true } } },
+    })
+    if (
+      !organizationVersion ||
+      !canUpdateOrganizationSiret(organizationVersion.parentId, organizationVersion.organization.siret, command.siret)
+    ) {
+      console.error('updateOrganizationCommand: cannot update organization SIRET', {
+        organizationVersionId: command.organizationVersionId,
+        parentId: organizationVersion?.parentId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 

@@ -19,3 +19,9 @@ export const UpdateOrganizationCommandValidation = z.intersection(
 )
 
 export type UpdateOrganizationCommand = z.infer<typeof UpdateOrganizationCommandValidation>
+
+export const canUpdateOrganizationSiret = (
+  parentId: string | null,
+  currentSiret: string | null,
+  nextSiret: string | undefined,
+) => !!parentId || nextSiret === undefined || (nextSiret || null) === (currentSiret || null)

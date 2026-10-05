@@ -10,11 +10,13 @@ import {
 import { findStudiesWithSites } from '@/services/serverFunctions/study'
 import { handleWarningText } from '@/utils/components'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
-import Form from '@abc-transitionbascarbone/common/components/base/Form'
-import LoadingButton from '@abc-transitionbascarbone/common/components/base/LoadingButton'
+import { HelpIcon } from '@abc-transitionbascarbone/common/components'
 import { FormTextField } from '@abc-transitionbascarbone/common/components/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
+import GlossaryModal from '@abc-transitionbascarbone/common/components/modals/GlossaryModal'
 import Modal from '@abc-transitionbascarbone/common/components/modals/Modal'
+import Form from '@abc-transitionbascarbone/common/components/ui/base/Form'
+import LoadingButton from '@abc-transitionbascarbone/common/components/ui/base/LoadingButton'
 import { SiteCAUnit } from '@abc-transitionbascarbone/common/db/enums'
 import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import { isAdvanced } from '@abc-transitionbascarbone/common/utils/environments'
@@ -40,10 +42,12 @@ const emptySitesOnError = { authorizedStudySites: [], unauthorizedStudySites: []
 const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false, disabled = false }: Props) => {
   const router = useRouter()
   const t = useTranslations('organization.form')
+  const tGlossary = useTranslations('organization.form.glossary')
   const tStudySites = useTranslations('organization.studySites')
   const tAction = useTranslations('common.action')
 
   const [sitesOnError, setSitesOnError] = useState<StudiesWithSites>(emptySitesOnError)
+  const [glossary, setGlossary] = useState('')
   const { callServerFunction } = useServerFunction()
 
   const form = useForm<UpdateOrganizationCommand>({
@@ -109,11 +113,21 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false, disa
         {isAdvanced(organizationVersion.environment) && (
           <FormTextField
             className="pl2"
-            disabled={disabled}
+            disabled={disabled || !organizationVersion.parentId}
             data-testid="edit-organization-siret"
             control={form.control}
             name="siret"
             label={t('siret')}
+            icon={
+              !organizationVersion.parentId && (
+                <HelpIcon
+                  data-testid="edit-organization-siret-help"
+                  onClick={() => setGlossary('siret')}
+                  label={tGlossary('siret')}
+                />
+              )
+            }
+            iconPosition="after"
           />
         )}
       </div>
@@ -122,6 +136,16 @@ const EditOrganizationForm = ({ organizationVersion, caUnit, isCut = false, disa
         <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="edit-organization-button">
           {t('edit')}
         </LoadingButton>
+      )}
+      {glossary && (
+        <GlossaryModal
+          glossary={glossary}
+          onClose={() => setGlossary('')}
+          label="edit-organization-siret"
+          t={tGlossary}
+        >
+          {tGlossary('siretDescription')}
+        </GlossaryModal>
       )}
       <Modal
         open={!!sitesOnError.authorizedStudySites.length || !!sitesOnError.unauthorizedStudySites.length}
