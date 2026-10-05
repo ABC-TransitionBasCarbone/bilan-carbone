@@ -42,10 +42,14 @@
     "seed:all": "yarn workspace @abc-transitionbascarbone/db tsx prisma/seed/index.ts --target all",
     "seed:bc": "yarn workspace @abc-transitionbascarbone/db tsx prisma/seed/index.ts --target bc",
     "seed:mip": "yarn workspace @abc-transitionbascarbone/db tsx prisma/seed/index.ts --target mip",
-    "postinstall": "yarn db:generate",
-    "db:generate": "rm -rf packages/data/db-common/src/generated/prisma && yarn workspace @abc-transitionbascarbone/db run db:generate",
-    "compile:publicodes": "sh -c 'if [ \"$APP_TARGET\" = \"mip\" ]; then echo \"Skipping Publicodes compilation for MIP\"; else set -e; for dir in packages/publicodes-packages/publicodes-clickson packages/publicodes-packages/publicodes-count packages/publicodes-packages/publicodes-tilt; do (cd \"$dir\" && yarn compile); done; fi'",
-    "compile:publicodes-windows": "for /d %d in (\"packages\\publicodes-packages\\publicodes-*\") do (@cd /d \"%d\" && yarn install && yarn compile && cd ..\\..\\..)"
+    "postinstall": "yarn db:generate && yarn publicodes:compile",
+    "db:generate": "rm -rf packages/db/src/generated/prisma && yarn workspace @abc-transitionbascarbone/db run db:generate",
+    "publicodes:compile": "yarn workspace @abc-transitionbascarbone/publicodes-packages compile",
+    "publicodes:test": "yarn workspace @abc-transitionbascarbone/publicodes-packages test",
+    "publicodes:test:count": "yarn workspace @abc-transitionbascarbone/publicodes-packages test:count",
+    "publicodes:test:clickson": "yarn workspace @abc-transitionbascarbone/publicodes-packages test:clickson",
+    "publicodes:test:tilt": "yarn workspace @abc-transitionbascarbone/publicodes-packages test:tilt",
+    "publicodes:compile-windows": "yarn workspace @abc-transitionbascarbone/publicodes-packages compile"
   },
   "dependencies": {
     "next": "16.3.8"

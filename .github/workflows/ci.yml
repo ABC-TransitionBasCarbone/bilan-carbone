@@ -22,8 +22,8 @@ jobs:
       - name: Copy .env
         run: cp .env.dist .env
         working-directory: apps/bc
-      - name: Copy .env to db-common
-        run: cp apps/bc/.env.dist packages/data/db-common/.env
+      - name: Copy .env to db
+        run: cp apps/bc/.env.dist packages/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -57,7 +57,7 @@ jobs:
         run: cp apps/bc/.env.dist apps/bc/.env
         working-directory: ${{ github.workspace }}
       - name: Copy .env to db
-        run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
+        run: cp apps/bc/.env.dist packages/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -87,7 +87,7 @@ jobs:
         run: cp apps/bc/.env.dist apps/bc/.env
         working-directory: ${{ github.workspace }}
       - name: Copy .env to db
-        run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
+        run: cp apps/bc/.env.dist packages/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -131,8 +131,8 @@ jobs:
       - name: Copy .env
         run: cp .env.dist .env
         working-directory: apps/bc
-      - name: Copy .env to db-common
-        run: cp apps/bc/.env.dist packages/data/db-common/.env
+      - name: Copy .env to db
+        run: cp apps/bc/.env.dist packages/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -196,8 +196,8 @@ jobs:
       - name: Copy .env
         run: cp .env.dist .env
         working-directory: apps/bc
-      - name: Copy .env to db-common
-        run: cp apps/bc/.env.dist packages/data/db-common/.env
+      - name: Copy .env to db
+        run: cp apps/bc/.env.dist packages/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -223,7 +223,7 @@ jobs:
       - name: Copy .env
         run: cp .env.dist .env
       - name: Copy .env to db
-        run: cp .env.dist ../../packages/data/db/.env
+        run: cp .env.dist ../../packages/db/.env
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: ${{ github.workspace }}
@@ -285,12 +285,12 @@ jobs:
       - name: Copy .env
         run: cp .env.dist .env
       - name: Copy .env to db
-        run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
+        run: cp apps/bc/.env.dist packages/db/.env
         working-directory: ${{ github.workspace }}
       - name: Copy .env.test
         run: cp .env.dist .env.test
       - name: Copy .env.test to db
-        run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
+        run: cp apps/bc/.env.dist packages/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -364,12 +364,12 @@ jobs:
         - name: Copy .env
           run: cp .env.dist .env
         - name: Copy .env to db
-          run: cp apps/mip/.env.dist packages/data/db/.env
+          run: cp apps/mip/.env.dist packages/db/.env
           working-directory: ${{ github.workspace }}
         - name: Copy .env.test
           run: cp .env.dist .env.test
         - name: Copy .env.test to db
-          run: cp apps/mip/.env.dist packages/data/db/.env
+          run: cp apps/mip/.env.dist packages/db/.env
           working-directory: ${{ github.workspace }}
         - name: Copy .env for bc (needed for postinstall)
           run: cp apps/bc/.env.dist apps/bc/.env
@@ -439,7 +439,7 @@ jobs:
       - name: Copy .env
         run: cp .env.dist .env
       - name: Copy .env to db
-        run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
+        run: cp apps/bc/.env.dist packages/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache

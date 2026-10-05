@@ -46,7 +46,11 @@ jobs:
         run: cp apps/bc/.env.dist apps/bc/.env
 
       - name: Copy .env to db
+<<<<<<< HEAD
         run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
+=======
+        run: cp apps/bc/.env.dist packages/db/.env
+>>>>>>> d0e878d1d (fix imports + fix ts)
 
       - name: Install dependencies
         run: yarn install --immutable

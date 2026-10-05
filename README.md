@@ -24,7 +24,7 @@ yarn install
 ### 2. Variables d'environnement
 
 Create a `.env` copied from `apps/bc/.env.dist` and create a `.env.test` copied from `apps/bc/.env.test.dist`.
-Do the same in db-common folder.
+Do the same in db folder.
 
 ```bash
 cp apps/bc/.env.dist apps/bc/.env
