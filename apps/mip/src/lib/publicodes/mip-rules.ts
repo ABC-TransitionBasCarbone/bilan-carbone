@@ -246,10 +246,13 @@ export const getFormQuestions = (engine: Engine, meta: MipRulesMeta, foldedSteps
     missingVariables,
   )
 
-  const relevantAnsweredQuestions = foldedSteps.filter(
-    (foldedStep) =>
-      meta.everyQuestions.includes(foldedStep) &&
-      (foldedStep in meta.rawMissingVariables || isApplicable(engine, foldedStep)),
+  const relevantAnsweredQuestions = meta.everyQuestions.filter(
+    (question) =>
+      !mosaicChildren.has(question) &&
+      (foldedSteps.includes(question) || hasRuleAnswer(question, situation, meta.mosaicChildrenWithParent)) &&
+      (question in meta.rawMissingVariables ||
+        (meta.mosaicChildrenWithParent[question] ?? []).some((child) => child in meta.rawMissingVariables) ||
+        isApplicable(engine, question)),
   )
 
   const relevantQuestions = sortQuestions(
