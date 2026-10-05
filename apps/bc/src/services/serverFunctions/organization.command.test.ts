@@ -11,10 +11,12 @@ describe('canUpdateOrganizationSiret', () => {
     expect(canUpdateOrganizationSiret(Environment.BC, null)).toBe(false)
   })
 
-  Object.values(Environment).forEach((env) => {
-    it('allows all for other environments', () => {
-      expect(canUpdateOrganizationSiret(env, 'parent-id')).toBe(true)
-      expect(canUpdateOrganizationSiret(env, null)).toBe(true)
+  Object.values(Environment)
+    .filter((env) => env !== Environment.BC)
+    .forEach((env) => {
+      it('allows all for other environments', () => {
+        expect(canUpdateOrganizationSiret(env, 'parent-id')).toBe(true)
+        expect(canUpdateOrganizationSiret(env, null)).toBe(true)
+      })
     })
-  })
 })

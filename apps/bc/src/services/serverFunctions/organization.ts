@@ -7,7 +7,6 @@ import {
   createOrganizationWithVersion,
   deleteClient,
   getOrganizationVersionAccounts,
-  getOrganizationVersionById,
   getOrganizationVersionIsCR,
   getOrgNameByOrgVersionId,
   getOrgVersionWithNameById,
@@ -104,15 +103,15 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const organizationVersion = await getOrganizationVersionById(command.organizationVersionId)
+    const organizationVersion = await getOrgVersionWithNameById(command.organizationVersionId)
 
     if (!organizationVersion) {
-      console.error('updateOrganizationCommand: cannot update organization SIRET')
+      console.error('updateOrganizationCommand: organizationversion is not found')
       throw new Error(NOT_AUTHORIZED)
     }
     const updatingSiretButNoRights =
       !canUpdateOrganizationSiret(organizationVersion.environment, organizationVersion.parentId) &&
-      command.siret !== organizationVersion.organization.siret
+      command.siret !== (organizationVersion.organization.siret ?? '')
 
     if (updatingSiretButNoRights) {
       console.error('updateOrganizationCommand: cannot update organization SIRET')
