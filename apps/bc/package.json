@@ -32,9 +32,6 @@
   "dependencies": {
     "@abc-transitionbascarbone/application": "*",
     "@abc-transitionbascarbone/db": "*",
-    "@abc-transitionbascarbone/publicodes-clickson": "*",
-    "@abc-transitionbascarbone/publicodes-count": "*",
-    "@abc-transitionbascarbone/publicodes-tilt": "*",
     "@aws-sdk/client-s3": "^3.1144.0",
     "@aws-sdk/s3-request-presigner": "^3.1144.0",
     "@abc-transitionbascarbone/publicodes-packages": "*",
