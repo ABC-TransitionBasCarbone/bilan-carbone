@@ -67,7 +67,8 @@
   },
   "exports": {
     "bc": {
-      "emissions": "Emisii (tCO₂e)"
+      "emissions": "Emisii (tCO₂e)",
+      "checkboxDisabled": "Exportul Bilan Carbone® este obligatoriu cu BC+."
     }
   },
   "importFileModal": {
@@ -85,5 +86,16 @@
   },
   "feedback": {
     "answer": "Trimiteți-ne feedbackul dumneavoastră! ✨"
+  },
+  "legalNotices": {
+    "fileStorage": {
+      "title": "Stocarea fișierelor",
+      "details": "Scaleway - 8, rue de la Ville-l'Évêque, 75008 Paris, Franța"
+    }
+  },
+  "organization": {
+    "form": {
+      "siret": "SIRET"
+    }
   }
 }

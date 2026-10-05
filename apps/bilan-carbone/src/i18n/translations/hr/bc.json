@@ -67,7 +67,8 @@
   },
   "exports": {
     "bc": {
-      "emissions": "Emisije (tCO₂e)"
+      "emissions": "Emisije (tCO₂e)",
+      "checkboxDisabled": "Izvoz Bilan Carbone® obavezan je uz BC+."
     }
   },
   "importFileModal": {
@@ -85,5 +86,16 @@
   },
   "feedback": {
     "answer": "Podijelite s nama svoje povratne informacije! ✨"
+  },
+  "legalNotices": {
+    "fileStorage": {
+      "title": "Pohrana datoteka",
+      "details": "Scaleway - 8, rue de la Ville-l'Évêque, 75008 Pariz, Francuska"
+    }
+  },
+  "organization": {
+    "form": {
+      "siret": "SIRET"
+    }
   }
 }

@@ -67,7 +67,8 @@
   },
   "exports": {
     "bc": {
-      "emissions": "Εκπομπές (tCO₂e)"
+      "emissions": "Εκπομπές (tCO₂e)",
+      "checkboxDisabled": "Η εξαγωγή Bilan Carbone® είναι υποχρεωτική με το BC+."
     }
   },
   "importFileModal": {
@@ -85,5 +86,16 @@
   },
   "feedback": {
     "answer": "Στείλτε μας τα σχόλιά σας! ✨"
+  },
+  "legalNotices": {
+    "fileStorage": {
+      "title": "Αποθήκευση αρχείων",
+      "details": "Scaleway - 8, rue de la Ville-l'Évêque, 75008 Paris, France"
+    }
+  },
+  "organization": {
+    "form": {
+      "siret": "SIRET"
+    }
   }
 }

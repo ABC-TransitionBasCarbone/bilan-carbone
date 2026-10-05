@@ -45,7 +45,8 @@
       "disclaimerExcel3": "Al contrario, questa impronta di carbonio semplificata è il primo passo verso un percorso più completo come il Bilan Carbone®!",
       "disclaimerExcel4": "Per gli anni successivi, puoi quindi rinnovare la tua misurazione dell'impronta di carbonio semplificata con lo strumento Count oppure realizzare un Bilan Carbone®.",
       "disclaimerExcel5": "Un Bilan Carbone® segue una metodologia ben precisa e deve soddisfare un certo numero di criteri oggettivi. Ad esempio, nel corso di un Bilan Carbone®, la direzione deve essere coinvolta, le diverse parti interessate dell'organizzazione devono essere mobilitate, le incertezze devono essere calcolate e associate alle emissioni e, soprattutto, deve essere costruito un solido piano di transizione per impegnare l'organizzazione in una transizione a basse emissioni di carbonio.",
-      "disclaimerExcel6": "Se desideri intraprendere un Bilan Carbone® nei prossimi anni, tutto inizia con la formazione al metodo, contattandoci all'indirizzo count@cut-collectif.fr, oppure facendoti accompagnare da un fornitore Bilan Carbone®!"
+      "disclaimerExcel6": "Se desideri intraprendere un Bilan Carbone® nei prossimi anni, tutto inizia con la formazione al metodo, contattandoci all'indirizzo count@cut-collectif.fr, oppure facendoti accompagnare da un fornitore Bilan Carbone®!",
+      "checkboxDisabled": "L'export Bilan Carbone® è obbligatorio con il BC+."
     },
     "glossary": {
       "GHGP": {
@@ -222,7 +223,11 @@
     "feedbackLink": "Rispondi al questionario"
   },
   "legalNotices": {
-    "profile": "Torna al profilo"
+    "profile": "Torna al profilo",
+    "fileStorage": {
+      "title": "Archiviazione dei file",
+      "details": "Scaleway - 8, rue de la Ville-l'Évêque, 75008 Parigi, Francia"
+    }
   },
   "login": {
     "welcome": "Benvenuto/a su Bilan Carbone® +",
@@ -2195,7 +2200,8 @@
       "edit": "Convalida la modifica",
       "name": "Nome dell'organizzazione",
       "title": "Informazioni sulla nuova organizzazione",
-      "Unknown error": "Si è verificato un errore sconosciuto. Contatta l'assistenza"
+      "Unknown error": "Si è verificato un errore sconosciuto. Contatta l'assistenza",
+      "siret": "SIRET"
     },
     "sites": {
       "title": "Siti dell'organizzazione interessati dallo studio",
