@@ -896,7 +896,8 @@ export const OrganizationScalarFieldEnum = {
   updatedAt: 'updatedAt',
   importedFileDate: 'importedFileDate',
   name: 'name',
-  wordpressId: 'wordpressId'
+  wordpressId: 'wordpressId',
+  siret: 'siret'
 } as const
 
 export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]

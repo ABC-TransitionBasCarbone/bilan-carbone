@@ -32,6 +32,7 @@ export type OrganizationMinAggregateOutputType = {
   importedFileDate: Date | null
   name: string | null
   wordpressId: string | null
+  siret: string | null
 }
 
 export type OrganizationMaxAggregateOutputType = {
@@ -42,6 +43,7 @@ export type OrganizationMaxAggregateOutputType = {
   importedFileDate: Date | null
   name: string | null
   wordpressId: string | null
+  siret: string | null
 }
 
 export type OrganizationCountAggregateOutputType = {
@@ -52,6 +54,7 @@ export type OrganizationCountAggregateOutputType = {
   importedFileDate: number
   name: number
   wordpressId: number
+  siret: number
   _all: number
 }
 
@@ -64,6 +67,7 @@ export type OrganizationMinAggregateInputType = {
   importedFileDate?: true
   name?: true
   wordpressId?: true
+  siret?: true
 }
 
 export type OrganizationMaxAggregateInputType = {
@@ -74,6 +78,7 @@ export type OrganizationMaxAggregateInputType = {
   importedFileDate?: true
   name?: true
   wordpressId?: true
+  siret?: true
 }
 
 export type OrganizationCountAggregateInputType = {
@@ -84,6 +89,7 @@ export type OrganizationCountAggregateInputType = {
   importedFileDate?: true
   name?: true
   wordpressId?: true
+  siret?: true
   _all?: true
 }
 
@@ -167,6 +173,7 @@ export type OrganizationGroupByOutputType = {
   importedFileDate: Date | null
   name: string
   wordpressId: string | null
+  siret: string | null
   _count: OrganizationCountAggregateOutputType | null
   _min: OrganizationMinAggregateOutputType | null
   _max: OrganizationMaxAggregateOutputType | null
@@ -198,6 +205,7 @@ export type OrganizationWhereInput = {
   importedFileDate?: Prisma.DateTimeNullableFilter<"Organization"> | Date | string | null
   name?: Prisma.StringFilter<"Organization"> | string
   wordpressId?: Prisma.StringNullableFilter<"Organization"> | string | null
+  siret?: Prisma.StringNullableFilter<"Organization"> | string | null
   sites?: Prisma.SiteListRelationFilter
   emissions?: Prisma.EmissionFactorListRelationFilter
   organizationVersions?: Prisma.OrganizationVersionListRelationFilter
@@ -212,6 +220,7 @@ export type OrganizationOrderByWithRelationInput = {
   importedFileDate?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   wordpressId?: Prisma.SortOrderInput | Prisma.SortOrder
+  siret?: Prisma.SortOrderInput | Prisma.SortOrder
   sites?: Prisma.SiteOrderByRelationAggregateInput
   emissions?: Prisma.EmissionFactorOrderByRelationAggregateInput
   organizationVersions?: Prisma.OrganizationVersionOrderByRelationAggregateInput
@@ -229,6 +238,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   importedFileDate?: Prisma.DateTimeNullableFilter<"Organization"> | Date | string | null
   name?: Prisma.StringFilter<"Organization"> | string
   wordpressId?: Prisma.StringNullableFilter<"Organization"> | string | null
+  siret?: Prisma.StringNullableFilter<"Organization"> | string | null
   sites?: Prisma.SiteListRelationFilter
   emissions?: Prisma.EmissionFactorListRelationFilter
   organizationVersions?: Prisma.OrganizationVersionListRelationFilter
@@ -243,6 +253,7 @@ export type OrganizationOrderByWithAggregationInput = {
   importedFileDate?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   wordpressId?: Prisma.SortOrderInput | Prisma.SortOrder
+  siret?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.OrganizationCountOrderByAggregateInput
   _max?: Prisma.OrganizationMaxOrderByAggregateInput
   _min?: Prisma.OrganizationMinOrderByAggregateInput
@@ -259,6 +270,7 @@ export type OrganizationScalarWhereWithAggregatesInput = {
   importedFileDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Organization"> | Date | string | null
   name?: Prisma.StringWithAggregatesFilter<"Organization"> | string
   wordpressId?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
+  siret?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
 }
 
 export type OrganizationCreateInput = {
@@ -269,6 +281,7 @@ export type OrganizationCreateInput = {
   importedFileDate?: Date | string | null
   name: string
   wordpressId?: string | null
+  siret?: string | null
   sites?: Prisma.SiteCreateNestedManyWithoutOrganizationInput
   emissions?: Prisma.EmissionFactorCreateNestedManyWithoutOrganizationInput
   organizationVersions?: Prisma.OrganizationVersionCreateNestedManyWithoutOrganizationInput
@@ -283,6 +296,7 @@ export type OrganizationUncheckedCreateInput = {
   importedFileDate?: Date | string | null
   name: string
   wordpressId?: string | null
+  siret?: string | null
   sites?: Prisma.SiteUncheckedCreateNestedManyWithoutOrganizationInput
   emissions?: Prisma.EmissionFactorUncheckedCreateNestedManyWithoutOrganizationInput
   organizationVersions?: Prisma.OrganizationVersionUncheckedCreateNestedManyWithoutOrganizationInput
@@ -297,6 +311,7 @@ export type OrganizationUpdateInput = {
   importedFileDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   wordpressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  siret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sites?: Prisma.SiteUpdateManyWithoutOrganizationNestedInput
   emissions?: Prisma.EmissionFactorUpdateManyWithoutOrganizationNestedInput
   organizationVersions?: Prisma.OrganizationVersionUpdateManyWithoutOrganizationNestedInput
@@ -311,6 +326,7 @@ export type OrganizationUncheckedUpdateInput = {
   importedFileDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   wordpressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  siret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sites?: Prisma.SiteUncheckedUpdateManyWithoutOrganizationNestedInput
   emissions?: Prisma.EmissionFactorUncheckedUpdateManyWithoutOrganizationNestedInput
   organizationVersions?: Prisma.OrganizationVersionUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -325,6 +341,7 @@ export type OrganizationCreateManyInput = {
   importedFileDate?: Date | string | null
   name: string
   wordpressId?: string | null
+  siret?: string | null
 }
 
 export type OrganizationUpdateManyMutationInput = {
@@ -335,6 +352,7 @@ export type OrganizationUpdateManyMutationInput = {
   importedFileDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   wordpressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  siret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OrganizationUncheckedUpdateManyInput = {
@@ -345,6 +363,7 @@ export type OrganizationUncheckedUpdateManyInput = {
   importedFileDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   wordpressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  siret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OrganizationNullableScalarRelationFilter = {
@@ -365,6 +384,7 @@ export type OrganizationCountOrderByAggregateInput = {
   importedFileDate?: Prisma.SortOrder
   name?: Prisma.SortOrder
   wordpressId?: Prisma.SortOrder
+  siret?: Prisma.SortOrder
 }
 
 export type OrganizationMaxOrderByAggregateInput = {
@@ -375,6 +395,7 @@ export type OrganizationMaxOrderByAggregateInput = {
   importedFileDate?: Prisma.SortOrder
   name?: Prisma.SortOrder
   wordpressId?: Prisma.SortOrder
+  siret?: Prisma.SortOrder
 }
 
 export type OrganizationMinOrderByAggregateInput = {
@@ -385,6 +406,7 @@ export type OrganizationMinOrderByAggregateInput = {
   importedFileDate?: Prisma.SortOrder
   name?: Prisma.SortOrder
   wordpressId?: Prisma.SortOrder
+  siret?: Prisma.SortOrder
 }
 
 export type OrganizationCreateNestedOneWithoutEmissionsInput = {
@@ -453,6 +475,7 @@ export type OrganizationCreateWithoutEmissionsInput = {
   importedFileDate?: Date | string | null
   name: string
   wordpressId?: string | null
+  siret?: string | null
   sites?: Prisma.SiteCreateNestedManyWithoutOrganizationInput
   organizationVersions?: Prisma.OrganizationVersionCreateNestedManyWithoutOrganizationInput
   organizationVersionsMip?: Prisma.OrganizationVersionMipCreateNestedManyWithoutOrganizationInput
@@ -466,6 +489,7 @@ export type OrganizationUncheckedCreateWithoutEmissionsInput = {
   importedFileDate?: Date | string | null
   name: string
   wordpressId?: string | null
+  siret?: string | null
   sites?: Prisma.SiteUncheckedCreateNestedManyWithoutOrganizationInput
   organizationVersions?: Prisma.OrganizationVersionUncheckedCreateNestedManyWithoutOrganizationInput
   organizationVersionsMip?: Prisma.OrganizationVersionMipUncheckedCreateNestedManyWithoutOrganizationInput
@@ -495,6 +519,7 @@ export type OrganizationUpdateWithoutEmissionsInput = {
   importedFileDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   wordpressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  siret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sites?: Prisma.SiteUpdateManyWithoutOrganizationNestedInput
   organizationVersions?: Prisma.OrganizationVersionUpdateManyWithoutOrganizationNestedInput
   organizationVersionsMip?: Prisma.OrganizationVersionMipUpdateManyWithoutOrganizationNestedInput
@@ -508,6 +533,7 @@ export type OrganizationUncheckedUpdateWithoutEmissionsInput = {
   importedFileDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   wordpressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  siret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sites?: Prisma.SiteUncheckedUpdateManyWithoutOrganizationNestedInput
   organizationVersions?: Prisma.OrganizationVersionUncheckedUpdateManyWithoutOrganizationNestedInput
   organizationVersionsMip?: Prisma.OrganizationVersionMipUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -521,6 +547,7 @@ export type OrganizationCreateWithoutOrganizationVersionsInput = {
   importedFileDate?: Date | string | null
   name: string
   wordpressId?: string | null
+  siret?: string | null
   sites?: Prisma.SiteCreateNestedManyWithoutOrganizationInput
   emissions?: Prisma.EmissionFactorCreateNestedManyWithoutOrganizationInput
   organizationVersionsMip?: Prisma.OrganizationVersionMipCreateNestedManyWithoutOrganizationInput
@@ -534,6 +561,7 @@ export type OrganizationUncheckedCreateWithoutOrganizationVersionsInput = {
   importedFileDate?: Date | string | null
   name: string
   wordpressId?: string | null
+  siret?: string | null
   sites?: Prisma.SiteUncheckedCreateNestedManyWithoutOrganizationInput
   emissions?: Prisma.EmissionFactorUncheckedCreateNestedManyWithoutOrganizationInput
   organizationVersionsMip?: Prisma.OrganizationVersionMipUncheckedCreateNestedManyWithoutOrganizationInput
@@ -563,6 +591,7 @@ export type OrganizationUpdateWithoutOrganizationVersionsInput = {
   importedFileDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   wordpressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  siret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sites?: Prisma.SiteUpdateManyWithoutOrganizationNestedInput
   emissions?: Prisma.EmissionFactorUpdateManyWithoutOrganizationNestedInput
   organizationVersionsMip?: Prisma.OrganizationVersionMipUpdateManyWithoutOrganizationNestedInput
@@ -576,6 +605,7 @@ export type OrganizationUncheckedUpdateWithoutOrganizationVersionsInput = {
   importedFileDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   wordpressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  siret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sites?: Prisma.SiteUncheckedUpdateManyWithoutOrganizationNestedInput
   emissions?: Prisma.EmissionFactorUncheckedUpdateManyWithoutOrganizationNestedInput
   organizationVersionsMip?: Prisma.OrganizationVersionMipUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -589,6 +619,7 @@ export type OrganizationCreateWithoutSitesInput = {
   importedFileDate?: Date | string | null
   name: string
   wordpressId?: string | null
+  siret?: string | null
   emissions?: Prisma.EmissionFactorCreateNestedManyWithoutOrganizationInput
   organizationVersions?: Prisma.OrganizationVersionCreateNestedManyWithoutOrganizationInput
   organizationVersionsMip?: Prisma.OrganizationVersionMipCreateNestedManyWithoutOrganizationInput
@@ -602,6 +633,7 @@ export type OrganizationUncheckedCreateWithoutSitesInput = {
   importedFileDate?: Date | string | null
   name: string
   wordpressId?: string | null
+  siret?: string | null
   emissions?: Prisma.EmissionFactorUncheckedCreateNestedManyWithoutOrganizationInput
   organizationVersions?: Prisma.OrganizationVersionUncheckedCreateNestedManyWithoutOrganizationInput
   organizationVersionsMip?: Prisma.OrganizationVersionMipUncheckedCreateNestedManyWithoutOrganizationInput
@@ -631,6 +663,7 @@ export type OrganizationUpdateWithoutSitesInput = {
   importedFileDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   wordpressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  siret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emissions?: Prisma.EmissionFactorUpdateManyWithoutOrganizationNestedInput
   organizationVersions?: Prisma.OrganizationVersionUpdateManyWithoutOrganizationNestedInput
   organizationVersionsMip?: Prisma.OrganizationVersionMipUpdateManyWithoutOrganizationNestedInput
@@ -644,6 +677,7 @@ export type OrganizationUncheckedUpdateWithoutSitesInput = {
   importedFileDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   wordpressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  siret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emissions?: Prisma.EmissionFactorUncheckedUpdateManyWithoutOrganizationNestedInput
   organizationVersions?: Prisma.OrganizationVersionUncheckedUpdateManyWithoutOrganizationNestedInput
   organizationVersionsMip?: Prisma.OrganizationVersionMipUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -657,6 +691,7 @@ export type OrganizationCreateWithoutOrganizationVersionsMipInput = {
   importedFileDate?: Date | string | null
   name: string
   wordpressId?: string | null
+  siret?: string | null
   sites?: Prisma.SiteCreateNestedManyWithoutOrganizationInput
   emissions?: Prisma.EmissionFactorCreateNestedManyWithoutOrganizationInput
   organizationVersions?: Prisma.OrganizationVersionCreateNestedManyWithoutOrganizationInput
@@ -670,6 +705,7 @@ export type OrganizationUncheckedCreateWithoutOrganizationVersionsMipInput = {
   importedFileDate?: Date | string | null
   name: string
   wordpressId?: string | null
+  siret?: string | null
   sites?: Prisma.SiteUncheckedCreateNestedManyWithoutOrganizationInput
   emissions?: Prisma.EmissionFactorUncheckedCreateNestedManyWithoutOrganizationInput
   organizationVersions?: Prisma.OrganizationVersionUncheckedCreateNestedManyWithoutOrganizationInput
@@ -699,6 +735,7 @@ export type OrganizationUpdateWithoutOrganizationVersionsMipInput = {
   importedFileDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   wordpressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  siret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sites?: Prisma.SiteUpdateManyWithoutOrganizationNestedInput
   emissions?: Prisma.EmissionFactorUpdateManyWithoutOrganizationNestedInput
   organizationVersions?: Prisma.OrganizationVersionUpdateManyWithoutOrganizationNestedInput
@@ -712,6 +749,7 @@ export type OrganizationUncheckedUpdateWithoutOrganizationVersionsMipInput = {
   importedFileDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   wordpressId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  siret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sites?: Prisma.SiteUncheckedUpdateManyWithoutOrganizationNestedInput
   emissions?: Prisma.EmissionFactorUncheckedUpdateManyWithoutOrganizationNestedInput
   organizationVersions?: Prisma.OrganizationVersionUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -783,6 +821,7 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   importedFileDate?: boolean
   name?: boolean
   wordpressId?: boolean
+  siret?: boolean
   sites?: boolean | Prisma.Organization$sitesArgs<ExtArgs>
   emissions?: boolean | Prisma.Organization$emissionsArgs<ExtArgs>
   organizationVersions?: boolean | Prisma.Organization$organizationVersionsArgs<ExtArgs>
@@ -798,6 +837,7 @@ export type OrganizationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   importedFileDate?: boolean
   name?: boolean
   wordpressId?: boolean
+  siret?: boolean
 }, ExtArgs["result"]["organization"]>
 
 export type OrganizationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -808,6 +848,7 @@ export type OrganizationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   importedFileDate?: boolean
   name?: boolean
   wordpressId?: boolean
+  siret?: boolean
 }, ExtArgs["result"]["organization"]>
 
 export type OrganizationSelectScalar = {
@@ -818,9 +859,10 @@ export type OrganizationSelectScalar = {
   importedFileDate?: boolean
   name?: boolean
   wordpressId?: boolean
+  siret?: boolean
 }
 
-export type OrganizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "oldBCId" | "createdAt" | "updatedAt" | "importedFileDate" | "name" | "wordpressId", ExtArgs["result"]["organization"]>
+export type OrganizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "oldBCId" | "createdAt" | "updatedAt" | "importedFileDate" | "name" | "wordpressId" | "siret", ExtArgs["result"]["organization"]>
 export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sites?: boolean | Prisma.Organization$sitesArgs<ExtArgs>
   emissions?: boolean | Prisma.Organization$emissionsArgs<ExtArgs>
@@ -847,6 +889,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     importedFileDate: Date | null
     name: string
     wordpressId: string | null
+    siret: string | null
   }, ExtArgs["result"]["organization"]>
   composites: {}
 }
@@ -1281,6 +1324,7 @@ export interface OrganizationFieldRefs {
   readonly importedFileDate: Prisma.FieldRef<"Organization", 'DateTime'>
   readonly name: Prisma.FieldRef<"Organization", 'String'>
   readonly wordpressId: Prisma.FieldRef<"Organization", 'String'>
+  readonly siret: Prisma.FieldRef<"Organization", 'String'>
 }
     
 
