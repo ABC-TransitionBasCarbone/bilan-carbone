@@ -1,9 +1,10 @@
 import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { getEnvVar } from '@abc-transitionbascarbone/lib/environment'
+import type { Transporter } from 'nodemailer'
 import nodemailer from 'nodemailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
 
-const transposters = new Map<Environment, nodemailer.Transporter>()
+const transposters = new Map<Environment, Transporter>()
 
 export const getTransporter = async (env: Environment) => {
   if (transposters.has(env)) {
