@@ -183,6 +183,7 @@ const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
         id: organization?.id,
         name: companyName,
         wordpressId: companyNumber,
+        ...(siret && { siret }),
       } as Prisma.OrganizationCreateInput,
       isCR,
       activatedLicence,

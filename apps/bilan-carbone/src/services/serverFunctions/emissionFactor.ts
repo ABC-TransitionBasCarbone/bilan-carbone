@@ -201,7 +201,7 @@ export const createEmissionFactorCommand = async ({
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!(await canCreateEmissionFactor(account.organizationVersionId))) {
+    if (!(await canCreateEmissionFactor(account))) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -233,6 +233,16 @@ export const updateEmissionFactorCommand = async (command: UpdateEmissionFactorC
     }
 
     if (!(await isEmissionFactorFromActiveOrganization(command.id))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (
+      !canCreateEmissionFactor({
+        role: session.user.role,
+        userId: session.user.id,
+        organizationVersionId: session.user.organizationVersionId,
+      })
+    ) {
       throw new Error(NOT_AUTHORIZED)
     }
 

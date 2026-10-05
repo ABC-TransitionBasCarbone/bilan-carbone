@@ -62,6 +62,18 @@ export const getMockedDbAccount = (
 ): Prisma.AccountCreateInput =>
   ({ ...mockedDbAccount, ...props, user: { ...mockedDbAccount.user, ...userProps } }) as Prisma.AccountCreateInput
 
+export const getMockedAccount = (props?: Partial<Account>): Account => ({
+  ...mockedDbAccount,
+  createdAt: new Date('2025-01-01T00:00:00.000Z'),
+  updatedAt: new Date('2025-01-01T00:00:00.000Z'),
+  importedFileDate: null,
+  activationRequestedAt: null,
+  formationName: null,
+  formationStartDate: null,
+  formationEndDate: null,
+  ...props,
+})
+
 export const getMockedAuthUser = (props?: Partial<UserSession>): UserSession => ({
   accountId: mockedAccount.id,
   userId: mockedUserId,

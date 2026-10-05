@@ -2,16 +2,21 @@ import type { FullStudy } from '@/db/study'
 import { updateStudySpecificExportFields } from '@/services/serverFunctions/study'
 import { sortAlphabetically } from '@/services/utils'
 import { exportSpecificFields, getAllSpecificFieldsForExports } from '@/utils/study'
+import { HelpIcon } from '@abc-transitionbascarbone/components'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
 import {
   ControlMode,
   EmissionFactorBase,
   EmissionSourceCaracterisation,
   Export,
 } from '@abc-transitionbascarbone/db-common/enums'
+import { Checkbox, FormControlLabel } from '@mui/material'
+import { useTranslations } from 'next-intl'
 import { useCallback, useMemo, useState } from 'react'
 import ExportActivationWarningModal from './ExportActivationWarningModal'
 import ExportCheckbox from './ExportCheckbox'
+import styles from './ExportCheckbox.module.css'
 import ExportDeactivationWarningModal from './ExportDeactivationWarningModal'
 
 type ExportValues = {
@@ -32,8 +37,10 @@ const ghgpActivation = process.env.NEXT_PUBLIC_GHGP_ACTIVATION_DATE
 
 const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, duplicateStudyId }: Props) => {
   const { callServerFunction } = useServerFunction()
+  const t = useTranslations('exports')
   const [pendingExportCheck, setPendingExportCheck] = useState<Export | null>(null)
   const [pendingExportUncheck, setPendingExportUncheck] = useState<Export | null>(null)
+  const [openGlossary, setOpenGlossary] = useState(false)
   const isNewStudy = useMemo(() => !study && !duplicateStudyId, [duplicateStudyId, study])
 
   const hasValidatedSources = useMemo(
@@ -129,6 +136,19 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
   return (
     <>
       <div className="flex-col">
+        <div className={styles.field}>
+          <FormControlLabel
+            control={<Checkbox checked className={styles.checkbox} disabled />}
+            label={<span className={styles.bcExport}>{t('consolidated')}</span>}
+          />
+          <HelpIcon
+            onClick={(e) => {
+              e.preventDefault()
+              setOpenGlossary((prevOpen) => !prevOpen)
+            }}
+            label={t('consolidated')}
+          />
+        </div>
         {Object.keys(Export)
           .sort(sortAlphabetically)
           .map((exportType, i) => (
@@ -161,6 +181,16 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
           onConfirm={confirmExportDeactivation}
           onCancel={() => setPendingExportUncheck(null)}
         />
+      )}
+      {openGlossary && (
+        <GlossaryModal
+          label="glossary-help-school-search"
+          glossary="consolidated"
+          t={t}
+          onClose={() => setOpenGlossary(false)}
+        >
+          {t('bc.checkboxDisabled')}
+        </GlossaryModal>
       )}
     </>
   )

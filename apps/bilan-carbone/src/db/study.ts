@@ -310,6 +310,7 @@ const fullStudyInclude = {
           id: true,
           name: true,
           wordpressId: true,
+          siret: true,
         },
       },
     },

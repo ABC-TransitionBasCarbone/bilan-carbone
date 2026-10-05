@@ -20,6 +20,7 @@ interface Props {
   nameLabel?: string
   namePlaceholder?: string
   'data-testid': string
+  disabled: boolean
 }
 
 const TagForm = ({
@@ -31,6 +32,7 @@ const TagForm = ({
   nameLabel,
   namePlaceholder,
   'data-testid': dataTestId,
+  disabled,
 }: Props) => {
   const t = useTranslations('study.perimeter')
 
@@ -38,7 +40,7 @@ const TagForm = ({
     <div className="flex gapped my-2">
       <div className="flex-col">
         <CustomFormLabel label={t('color')} />
-        <ColorPicker color={color} onChange={onColorChange} disabled={!families.length} />
+        <ColorPicker color={color} onChange={onColorChange} disabled={!families.length || disabled} />
       </div>
       <div className={styles.familySelector}>
         <FormSelect
@@ -47,7 +49,7 @@ const TagForm = ({
           name="familyId"
           label={t('emissionSourceTagFamily')}
           data-testid={`${dataTestId}-family`}
-          disabled={!families.length}
+          disabled={!families.length || disabled}
           autoWidth
         >
           {families.map((family) => (
@@ -63,7 +65,7 @@ const TagForm = ({
         label={nameLabel || t('emissionSourceTagLabel')}
         placeholder={namePlaceholder}
         data-testid={`${dataTestId}-name`}
-        disabled={!families.length}
+        disabled={!families.length || disabled}
       />
     </div>
   )

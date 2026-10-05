@@ -38,7 +38,7 @@ export const getUserSourceById = (id: string) =>
   prismaClient.user.findUnique({ where: { id }, select: { source: true } })
 
 export const getUserById = (id: string) =>
-  prismaClient.user.findUnique({ where: { id }, select: { firstName: true, lastName: true, email: true } })
+  prismaClient.user.findUnique({ where: { id }, select: { firstName: true, lastName: true, email: true, level: true } })
 
 export const getUserWithAccountsAndOrganizationsById = async (id: string) => {
   const user = await prismaClient.user.findUnique({

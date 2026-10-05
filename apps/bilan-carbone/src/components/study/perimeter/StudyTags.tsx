@@ -13,7 +13,8 @@ import Title from '@abc-transitionbascarbone/components/src/base/Title'
 import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
 import GlossaryModal from '@abc-transitionbascarbone/components/src/modals/GlossaryModal'
 import { StudyTagFamily } from '@abc-transitionbascarbone/db-common'
-import { Button } from '@abc-transitionbascarbone/ui'
+import { StudyRole } from '@abc-transitionbascarbone/db-common/enums'
+import { Button, useToast } from '@abc-transitionbascarbone/ui'
 import { customRich } from '@abc-transitionbascarbone/utils/customRich'
 import { zodResolver } from '@hookform/resolvers/zod'
 import DeleteIcon from '@mui/icons-material/Cancel'
@@ -30,10 +31,13 @@ import TagForm from './TagForm'
 
 interface Props {
   studyId: string
+  userRoleOnStudy: StudyRole
 }
 
-const StudyTags = ({ studyId }: Props) => {
+const StudyTags = ({ studyId, userRoleOnStudy }: Props) => {
   const t = useTranslations('study.perimeter')
+  const tError = useTranslations('error')
+  const { showErrorToast } = useToast()
   const { callServerFunction } = useServerFunction()
   const [tagFamilies, setTagFamilies] = useState<StudyTagFamilyWithTags[]>([])
   const [editingFamily, setEditingFamily] = useState<Partial<StudyTagFamily> | null | undefined>(null)
@@ -47,6 +51,8 @@ const StudyTags = ({ studyId }: Props) => {
     const response = await getTagFamiliesByStudyId(studyId)
     if (response.success && response.data) {
       setTagFamilies([...response.data])
+    } else {
+      showErrorToast(tError('Not authorized'))
     }
   }, [studyId])
 
@@ -73,6 +79,9 @@ const StudyTags = ({ studyId }: Props) => {
         setValue('color', StudyTagColors.DEFAULT)
         getEmissionSourceTags()
       },
+      onError: () => {
+        showErrorToast(tError('Not authorized'))
+      },
     })
   }
 
@@ -81,6 +90,9 @@ const StudyTags = ({ studyId }: Props) => {
       onSuccess: () => {
         getEmissionSourceTags()
       },
+      onError: () => {
+        showErrorToast(tError('Not authorized'))
+      },
     })
   }
 
@@ -88,6 +100,9 @@ const StudyTags = ({ studyId }: Props) => {
     await callServerFunction(() => deleteTag(tagId), {
       onSuccess: () => {
         getEmissionSourceTags()
+      },
+      onError: () => {
+        showErrorToast(tError('Not authorized'))
       },
     })
   }
@@ -131,6 +146,7 @@ const StudyTags = ({ studyId }: Props) => {
                     className={styles.familyNameButton}
                     onClick={() => setEditingFamily(family)}
                     title={t('family.edit')}
+                    disabled={userRoleOnStudy === StudyRole.Reader}
                   >
                     <EditIcon />
                   </MuiButton>
@@ -140,6 +156,7 @@ const StudyTags = ({ studyId }: Props) => {
                     onClick={() => setDeletingFamily(family)}
                     color="error"
                     variant="text"
+                    disabled={userRoleOnStudy === StudyRole.Reader}
                   >
                     <DeleteIcon />
                   </Button>
@@ -154,6 +171,7 @@ const StudyTags = ({ studyId }: Props) => {
                     color={tag.color}
                     onClick={() => onEdit({ ...tag, familyId: family.id })}
                     onDelete={() => onDelete(tag.id)}
+                    disabled={userRoleOnStudy === StudyRole.Reader}
                   />
                 ))}
               </div>
@@ -161,7 +179,11 @@ const StudyTags = ({ studyId }: Props) => {
           </Box>
         ))}
       </div>
-      <Button className={classNames(styles.addFamilyButton, 'mb2')} onClick={() => setEditingFamily(undefined)}>
+      <Button
+        className={classNames(styles.addFamilyButton, 'mb2')}
+        onClick={() => setEditingFamily(undefined)}
+        disabled={userRoleOnStudy === StudyRole.Reader}
+      >
         {t('family.new')}
       </Button>
       <Title as="h5" className="mb-2" title={t('family.add')} />
@@ -175,6 +197,7 @@ const StudyTags = ({ studyId }: Props) => {
             translation={t}
             namePlaceholder={t('emissionSourceTagsPlaceholder')}
             data-testid="create-emission-source-tag"
+            disabled={userRoleOnStudy === StudyRole.Reader}
           />
           <Button
             className="mt1"

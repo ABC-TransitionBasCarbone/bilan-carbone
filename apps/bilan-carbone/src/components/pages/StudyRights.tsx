@@ -36,10 +36,6 @@ const StudyRightsPage = async ({ user, minimalStudy }: Props) => {
     return <NotFound />
   }
 
-  if (!userRoleOnStudy) {
-    return <NotFound />
-  }
-
   const studySites = await getStudySitesList(minimalStudy.id)
   if (!studySites.success || !studySites.data) {
     return <NotFound />

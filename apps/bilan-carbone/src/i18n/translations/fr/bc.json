@@ -59,7 +59,8 @@
       "disclaimerExcel3": "En revanche, cette empreinte carbone simplifiée est le premier pas vers une démarche plus complète comme le Bilan Carbone® !",
       "disclaimerExcel4": "Pour les années suivantes, vous pouvez ainsi soit renouveler votre mesure d'empreinte carbone simplifiée avec l'outil Count, soit réaliser un Bilan Carbone®.",
       "disclaimerExcel5": "Un Bilan Carbone® suit une méthodologie bien précise, et doit répondre à un certain nombre de critères objectifs. Par exemple, au cours d'un Bilan Carbone®, la direction doit être engagée, les différentes parties prenantes de l'organisation doivent être mobilisées, des incertitudes doivent être calculées et associées aux émissions, et surtout, un plan de transition solide doit être construit pour engager l'organisation dans une transition bas carbone.",
-      "disclaimerExcel6": "Si vous souhaitez vous lancer dans un Bilan Carbone® dans les années qui viennent, tout commence par se faire former à la méthode, ou par nous contacter à l'adresse count@cut-collectif.fr, ou par se faire accompagner par un prestataire Bilan Carbone® !"
+      "disclaimerExcel6": "Si vous souhaitez vous lancer dans un Bilan Carbone® dans les années qui viennent, tout commence par se faire former à la méthode, ou par nous contacter à l'adresse count@cut-collectif.fr, ou par se faire accompagner par un prestataire Bilan Carbone® !",
+      "checkboxDisabled": "L'export Bilan Carbone® est obligatoire avec le BC+."
     },
     "glossary": {
       "GHGP": {
@@ -250,6 +251,10 @@
     "provider": {
       "title": "Hébergeur",
       "details": "Scalingo - 9 Rue de la Krutenau, 67000 Strasbourg"
+    },
+    "fileStorage": {
+      "title": "Stockage des fichiers",
+      "details": "Scaleway - 8, rue de la Ville-l'Évêque, 75008 Paris, France"
     },
     "websiteOwner": {
       "title": "Propriétaire du site",
@@ -2260,6 +2265,7 @@
     "form": {
       "create": "Créer l'organisation",
       "editTitle": "Modifier mon organisation",
+      "siret": "SIRET",
       "edit": "Valider la modification",
       "name": "Nom de l'organisation",
       "title": "Informations sur la nouvelle organisation",

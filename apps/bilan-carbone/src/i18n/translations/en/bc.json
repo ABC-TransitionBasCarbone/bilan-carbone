@@ -59,7 +59,8 @@
       "disclaimerExcel3": "However, this simplified carbon footprint is the first step towards a more comprehensive approach like the Carbon Footprint®!",
       "disclaimerExcel4": "For the following years, you can either renew your simplified carbon footprint measurement with the Count tool, or carry out a full Carbon Footprint®.",
       "disclaimerExcel5": "A Carbon Footprint® follows a very specific methodology and must meet a number of objective criteria. For example, during a Carbon Footprint®, management must be engaged, the organisation's various stakeholders must be mobilized, uncertainties must be calculated and associated with emissions, and above all, a solid transition plan must be built to engage the organisation in a low-carbon transition.",
-      "disclaimerExcel6": "If you wish to embark on a Carbon Footprint® in the coming years, it all starts with training in the methodology, or by contacting us at count@cut-collectif.fr, or by being supported by a Carbon Footprint® provider!"
+      "disclaimerExcel6": "If you wish to embark on a Carbon Footprint® in the coming years, it all starts with training in the methodology, or by contacting us at count@cut-collectif.fr, or by being supported by a Carbon Footprint® provider!",
+      "checkboxDisabled": "L'export Bilan Carbone® est obligatoire avec le BC+."
     },
     "glossary": {
       "GHGP": {
@@ -250,6 +251,10 @@
     "provider": {
       "title": "Provider",
       "details": "Scalingo - 9 Rue de la Krutenau, 67000 Strasbourg"
+    },
+    "fileStorage": {
+      "title": "File storage",
+      "details": "Scaleway - 8, rue de la Ville-l'Évêque, 75008 Paris, France"
     },
     "websiteOwner": {
       "title": "Website Owner",
@@ -2261,6 +2266,7 @@
       "create": "Create organisation",
       "editTitle": "Edit my organisation",
       "edit": "Save changes",
+      "siret": "SIRET",
       "name": "Organisation name",
       "title": "Information about the new organisation",
       "Unknown error": "An unknwon error happened. Please contact the support"
