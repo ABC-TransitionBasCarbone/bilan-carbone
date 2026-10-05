@@ -57,16 +57,16 @@ web_modules/
 out
 .nuxt
 dist
-# apps/bilan-carbone/.gitignore
+# apps/bc/.gitignore
 /node_modules
 /publicodes-build
-# apps/bilan-carbone/publicodes-packages/publicodes-tilt/.gitignore
+# apps/bc/publicodes-packages/publicodes-tilt/.gitignore
 node_modules
 publicodes-build
-# apps/bilan-carbone/publicodes-packages/publicodes-count/.gitignore
+# apps/bc/publicodes-packages/publicodes-count/.gitignore
 node_modules
 publicodes-build
-# apps/bilan-carbone/publicodes-packages/publicodes-clickson/.gitignore
+# apps/bc/publicodes-packages/publicodes-clickson/.gitignore
 node_modules
 publicodes-build
 certs/*

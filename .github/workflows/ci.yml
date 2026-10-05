@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: apps/bilan-carbone
+        working-directory: apps/bc
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,9 +21,9 @@ jobs:
           cache: 'yarn'
       - name: Copy .env
         run: cp .env.dist .env
-        working-directory: apps/bilan-carbone
-      - name: Copy .env to db
-        run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
+        working-directory: apps/bc
+      - name: Copy .env to db-common
+        run: cp apps/bc/.env.dist packages/data/db-common/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -53,11 +53,16 @@ jobs:
       - name: Copy .env
         run: cp .env.dist .env
         working-directory: apps/mip
-      - name: Copy .env for bilan-carbone (needed for postinstall)
-        run: cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
+      - name: Copy .env for bc (needed for postinstall)
+        run: cp apps/bc/.env.dist apps/bc/.env
         working-directory: ${{ github.workspace }}
+<<<<<<< HEAD
       - name: Copy .env to db
         run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
+=======
+      - name: Copy .env to db-common
+        run: cp apps/bc/.env.dist packages/data/db-common/.env
+>>>>>>> f93fd5e80 (change bilan-carbone to bc)
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -83,11 +88,16 @@ jobs:
       - name: Copy .env
         run: cp .env.dist .env
         working-directory: apps/mip
-      - name: Copy .env for bilan-carbone (needed for postinstall)
-        run: cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
+      - name: Copy .env for bc (needed for postinstall)
+        run: cp apps/bc/.env.dist apps/bc/.env
         working-directory: ${{ github.workspace }}
+<<<<<<< HEAD
       - name: Copy .env to db
         run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
+=======
+      - name: Copy .env to db-common
+        run: cp apps/bc/.env.dist packages/data/db-common/.env
+>>>>>>> f93fd5e80 (change bilan-carbone to bc)
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -111,8 +121,13 @@ jobs:
         with:
           node-version: 24.18.0
           cache: 'yarn'
+<<<<<<< HEAD
       - name: Check circular dependencies (bilan-carbone)
         run: npx madge --circular --extensions ts,tsx --exclude "packages/data/db/src/generated" apps/bilan-carbone
+=======
+      - name: Check circular dependencies (bc)
+        run: npx madge --circular --extensions ts,tsx --exclude "packages/data/db-common/src/generated" apps/bc
+>>>>>>> f93fd5e80 (change bilan-carbone to bc)
       - name: Check circular dependencies (mip)
         run: npx madge --circular --extensions ts,tsx apps/mip
 
@@ -121,7 +136,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: apps/bilan-carbone
+        working-directory: apps/bc
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -130,9 +145,15 @@ jobs:
           cache: 'yarn'
       - name: Copy .env
         run: cp .env.dist .env
+<<<<<<< HEAD
         working-directory: apps/bilan-carbone
       - name: Copy .env to db
         run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
+=======
+        working-directory: apps/bc
+      - name: Copy .env to db-common
+        run: cp apps/bc/.env.dist packages/data/db-common/.env
+>>>>>>> f93fd5e80 (change bilan-carbone to bc)
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -162,8 +183,13 @@ jobs:
         working-directory: apps/mip
       - name: Copy .env to db
         run: |
+<<<<<<< HEAD
           cp apps/mip/.env.dist packages/data/db/.env
           cp apps/mip/.env.dist apps/bilan-carbone/.env
+=======
+          cp apps/mip/.env.dist packages/data/db-common/.env
+          cp apps/mip/.env.dist apps/bc/.env
+>>>>>>> f93fd5e80 (change bilan-carbone to bc)
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: |
@@ -186,7 +212,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: apps/bilan-carbone
+        working-directory: apps/bc
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -195,9 +221,15 @@ jobs:
           cache: 'yarn'
       - name: Copy .env
         run: cp .env.dist .env
+<<<<<<< HEAD
         working-directory: apps/bilan-carbone
       - name: Copy .env to db
         run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
+=======
+        working-directory: apps/bc
+      - name: Copy .env to db-common
+        run: cp apps/bc/.env.dist packages/data/db-common/.env
+>>>>>>> f93fd5e80 (change bilan-carbone to bc)
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -213,7 +245,7 @@ jobs:
     needs: [bc-lint-and-typecheck, bc-unit-tests]
     defaults:
       run:
-        working-directory: apps/bilan-carbone
+        working-directory: apps/bc
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -235,12 +267,12 @@ jobs:
       - name: Build application
         run: yarn build
       - name: Archive build output
-        run: tar -czf /tmp/bilan-carbone-next-build.tgz .next
+        run: tar -czf /tmp/bc-next-build.tgz .next
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-next-build
-          path: /tmp/bilan-carbone-next-build.tgz
+          path: /tmp/bc-next-build.tgz
 
   e2e-tests:
     timeout-minutes: 30
@@ -260,7 +292,7 @@ jobs:
           - course
     defaults:
       run:
-        working-directory: apps/bilan-carbone
+        working-directory: apps/bc
     services:
       postgres:
         image: postgres:17
@@ -284,6 +316,7 @@ jobs:
         run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
       - name: Copy .env
         run: cp .env.dist .env
+<<<<<<< HEAD
       - name: Copy .env to db
         run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
         working-directory: ${{ github.workspace }}
@@ -291,6 +324,15 @@ jobs:
         run: cp .env.dist .env.test
       - name: Copy .env.test to db
         run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
+=======
+      - name: Copy .env to db-common
+        run: cp apps/bc/.env.dist packages/data/db-common/.env
+        working-directory: ${{ github.workspace }}
+      - name: Copy .env.test
+        run: cp .env.dist .env.test
+      - name: Copy .env.test to db-common
+        run: cp apps/bc/.env.dist packages/data/db-common/.env
+>>>>>>> f93fd5e80 (change bilan-carbone to bc)
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -304,14 +346,14 @@ jobs:
         run: yarn workspace @abc-transitionbascarbone/db prisma migrate deploy
         working-directory: .
       - name: Seed DB
-        run: yarn workspace bilan-carbone prisma db seed
+        run: yarn workspace bc prisma db seed
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: app-next-build
           path: /tmp/ci-build
       - name: Extract build artifact
-        run: tar -xzf /tmp/ci-build/bilan-carbone-next-build.tgz -C .
+        run: tar -xzf /tmp/ci-build/bc-next-build.tgz -C .
       - name: Start server
         run: yarn start &
       - name: Wait for server
@@ -325,7 +367,7 @@ jobs:
         if: failure()
         with:
           name: cypress-screenshots-${{ matrix.group }}
-          path: ${{ github.workspace }}/apps/bilan-carbone/cypress/screenshots
+          path: ${{ github.workspace }}/apps/bc/cypress/screenshots
 
   mip-e2e-tests:
       timeout-minutes: 30
@@ -371,8 +413,8 @@ jobs:
         - name: Copy .env.test to db
           run: cp apps/mip/.env.dist packages/data/db/.env
           working-directory: ${{ github.workspace }}
-        - name: Copy .env for bilan-carbone (needed for postinstall)
-          run: cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
+        - name: Copy .env for bc (needed for postinstall)
+          run: cp apps/bc/.env.dist apps/bc/.env
           working-directory: ${{ github.workspace }}
         - name: Install dependencies
           run: yarn install --immutable --immutable-cache --check-cache
@@ -414,7 +456,7 @@ jobs:
     needs: [bc-lint-and-typecheck, bc-unit-tests, bc-build-app]
     defaults:
       run:
-        working-directory: apps/bilan-carbone
+        working-directory: apps/bc
     services:
       postgres:
         image: postgres:17
@@ -438,8 +480,13 @@ jobs:
         run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
       - name: Copy .env
         run: cp .env.dist .env
+<<<<<<< HEAD
       - name: Copy .env to db
         run: cp apps/bilan-carbone/.env.dist packages/data/db/.env
+=======
+      - name: Copy .env to db-common
+        run: cp apps/bc/.env.dist packages/data/db-common/.env
+>>>>>>> f93fd5e80 (change bilan-carbone to bc)
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -453,7 +500,7 @@ jobs:
         run: yarn workspace @abc-transitionbascarbone/db prisma migrate deploy
         working-directory: .
       - name: Seed DB
-        run: yarn workspace bilan-carbone prisma db seed
+        run: yarn workspace bc prisma db seed
         working-directory: .
       - name: Download build artifact
         uses: actions/download-artifact@v4
@@ -461,7 +508,7 @@ jobs:
           name: app-next-build
           path: /tmp/ci-build
       - name: Extract build artifact
-        run: tar -xzf /tmp/ci-build/bilan-carbone-next-build.tgz -C .
+        run: tar -xzf /tmp/ci-build/bc-next-build.tgz -C .
       - name: ntart server
         run: yarn start &
       - run: mkdir -p ${{ github.workspace }}/tmp/artifacts

@@ -12,7 +12,7 @@ test('identifies mip target for cron deletion', () => {
 })
 
 test('does not delete cron for non-mip targets', () => {
-  assert.equal(shouldDeleteCron('bilan-carbone'), false)
+  assert.equal(shouldDeleteCron('bc'), false)
   assert.equal(shouldDeleteCron(undefined), false)
 })
 
@@ -35,7 +35,7 @@ test('keeps cron.json unchanged for non-mip builds', () => {
 
   fs.writeFileSync(cronPath, JSON.stringify(originalConfig), 'utf8')
 
-  const config = writeCronConfig('bilan-carbone', cronPath)
+  const config = writeCronConfig('bc', cronPath)
 
   assert.deepEqual(config, { deleted: false })
   assert.deepEqual(JSON.parse(fs.readFileSync(cronPath, 'utf8')), originalConfig)

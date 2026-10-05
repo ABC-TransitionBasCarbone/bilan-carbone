@@ -31,7 +31,7 @@
     "mip:test": "yarn --cwd apps/mip test",
     "mip:lint": "yarn --cwd apps/mip lint",
     "mip:ts": "yarn --cwd apps/mip ts",
-    "build": "node packages/tooling/config/config-or-delete-cron.js && sh -c 'if [ \"$APP_TARGET\" = \"mip\" ]; then turbo run build --filter=mip; else turbo run build --filter=bilan-carbone; fi'",
+    "build": "node packages/tooling/config/config-or-delete-cron.js && sh -c 'if [ \"$APP_TARGET\" = \"mip\" ]; then turbo run build --filter=mip; else turbo run build --filter=bc; fi'",
     "test": "turbo run test",
     "start": "turbo run start",
     "ts": "turbo run ts",

@@ -53,7 +53,7 @@ yarn prisma migrate deploy
 ### 5. Seed the database (cannot use the yarn prisma shortcut)
 
 ```bash
-yarn workspace bilan-carbone prisma db seed
+yarn workspace bc prisma db seed
 ```
 
 OR use the shortcut:
@@ -78,23 +78,23 @@ The application will be available at [http://localhost:3000](http://localhost:30
 
 ## Commands by workspace
 
-### bilan-carbone application
+### bc application
 
 ```bash
 # Development
-yarn workspace bilan-carbone dev
+yarn workspace bc dev
 
 # Build
-yarn workspace bilan-carbone build
+yarn workspace bc build
 
 # Unit tests
-yarn workspace bilan-carbone test
+yarn workspace bc test
 
 # Cypress e2e tests
-yarn workspace bilan-carbone cypress
+yarn workspace bc cypress
 
 # Reset test database
-yarn workspace bilan-carbone db:test:reset
+yarn workspace bc db:test:reset
 ```
 
 ### Database (db)
@@ -159,10 +159,10 @@ npx tsx src/scripts/secten/importSectenData.ts -y ${versionYear} -f ${pathToCSVF
 ### Run Unit tests
 
 ```bash
-yarn workspace bilan-carbone test
+yarn workspace bc test
 
 # Watch mode
-yarn workspace bilan-carbone test:watch
+yarn workspace bc test:watch
 ```
 
 ## Deploy on Scalingo

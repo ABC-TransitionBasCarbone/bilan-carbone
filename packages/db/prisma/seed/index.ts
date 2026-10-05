@@ -4,7 +4,7 @@ import { parseArgs } from 'node:util'
 type SeedTarget = 'all' | 'bc' | 'mip'
 
 const WORKSPACES: Record<Exclude<SeedTarget, 'all'>, string> = {
-    bc: 'bilan-carbone',
+    bc: 'bc',
     mip: 'mip',
 }
 
