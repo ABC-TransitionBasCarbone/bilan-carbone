@@ -8,6 +8,7 @@ import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
 
 const DataEntry = async ({ study, user, studyId }: StudyProps & UserSessionProps) => {
   const userRole = await NEWGetAccountRoleOnStudyWithId(user, studyId)
+
   if (!userRole.success || !userRole.data) {
     return <NotFound />
   }
@@ -18,9 +19,6 @@ const DataEntry = async ({ study, user, studyId }: StudyProps & UserSessionProps
     isOrganizationVersionCR(user.organizationVersionId),
   ])
 
-  if (!userRole) {
-    return <NotFound />
-  }
   return (
     <StudyDataEntryInfographyPage
       study={study}

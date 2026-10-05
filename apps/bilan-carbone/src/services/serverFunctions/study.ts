@@ -2626,7 +2626,7 @@ export const getStudyExports = async (studyId: string | undefined) =>
 export const NEWGetAccountRoleOnStudyWithId = async (user: UserSession, studyId: string) =>
   withServerResponse('NEWGetAccountRoleOnStudyWithId', async () => {
     const session = await dbActualizedAuth()
-    if (!session || !session.user || !session.user.organizationVersionId) {
+    if (!session || !session.user) {
       return null
     }
 
@@ -2642,7 +2642,7 @@ export const NEWGetAccountRoleOnStudyWithId = async (user: UserSession, studyId:
 export const getStudySitesList = async (studyId: string) =>
   withServerResponse('getStudySitesList', async () => {
     const session = await dbActualizedAuth()
-    if (!session || !session.user || !session.user.organizationVersionId) {
+    if (!session || !session.user) {
       return null
     }
 
