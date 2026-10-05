@@ -5,7 +5,7 @@ import {
   StyledQuestionContent,
   StyledQuestionHeader,
   StyledQuestionTitle,
-} from '@abc-transitionbascarbone/application/lib/publicodes/form'
+} from '@abc-transitionbascarbone/application/components/publicodes/form'
 import { Box } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'

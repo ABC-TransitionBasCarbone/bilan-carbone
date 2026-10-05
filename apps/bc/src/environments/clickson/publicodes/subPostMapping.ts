@@ -1,11 +1,11 @@
+import { SubPost } from '@abc-transitionbascarbone/db/enums'
 import {
   FormLayout,
   inputLayout,
   listLayout,
   tableLayout,
-} from '@abc-transitionbascarbone/application/lib/publicodes/form/layouts'
-import { ClicksonPost } from '@abc-transitionbascarbone/application/services/results/posts.enums'
-import { SubPost } from '@abc-transitionbascarbone/db/enums'
+} from '@abc-transitionbascarbone/shared/publicodes/form/layouts'
+import { ClicksonPost } from '@abc-transitionbascarbone/shared/services/results/posts.enums'
 import { ClicksonRuleName } from './types'
 
 export const getPostRuleNameClickson = (post: ClicksonPost): ClicksonRuleName => {

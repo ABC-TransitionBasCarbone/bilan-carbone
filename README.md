@@ -210,3 +210,19 @@ Then, run the following command to check if the vulnerabilities are fixed:
 ```bash
 yarn audit
 ```
+
+## Architecture
+
+- `packages/application/components` regroupe les composants communs.
+- `packages/application/ui` regroupe les composants UI et les styles (`css/`).
+- `packages/shared` contient les services, la logique Publicodes, les traductions, les types et les utilitaires partagés. Les formulaires Publicodes et providers UI sont dans `packages/application/components`.
+- L’alias `@abc-transitionbascarbone/css` pointe vers `packages/application/ui/css`.
+
+```mermaid
+flowchart LR
+	Apps["Applications BC et MIP"] --> Application["application<br/>components + ui/css"]
+	Apps --> Shared["shared<br/>services + Publicodes + utilitaires"]
+	Application --> Shared
+```
+
+`shared` ne dépend plus de `application`; les imports UI passent par `packages/application/components`.

@@ -1,5 +1,5 @@
-import { setCustomIssue, setCustomMessage } from '@abc-transitionbascarbone/application/lib'
 import { SubPost, TrajectoryType } from '@abc-transitionbascarbone/db/enums'
+import { setCustomIssue, setCustomMessage } from '@abc-transitionbascarbone/shared'
 import { z } from 'zod'
 
 export const sectorPercentagesSchema = z

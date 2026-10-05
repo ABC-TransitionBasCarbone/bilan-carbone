@@ -1,7 +1,7 @@
 import type { BaseResultsByPost } from '@/services/posts'
-import { Translations } from '@abc-transitionbascarbone/application/lib'
 import { BarChart, PieChart } from '@abc-transitionbascarbone/application/ui'
 import { StudyResultUnit } from '@abc-transitionbascarbone/db/enums'
+import { Translations } from '@abc-transitionbascarbone/shared'
 
 interface Props {
   results: BaseResultsByPost[]

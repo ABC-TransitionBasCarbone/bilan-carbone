@@ -8,7 +8,6 @@
       "packages/application",
       "packages/db",
       "packages/shared",
-      "packages/styles/*",
       "packages/tooling/*",
       "packages/publicodes-packages"
     ],

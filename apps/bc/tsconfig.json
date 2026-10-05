@@ -10,7 +10,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@abc-transitionbascarbone/css": ["../../packages/styles/css/index.ts"],
+      "@abc-transitionbascarbone/css": ["../../packages/application/ui/css/index.ts"],
       "@abc-transitionbascarbone/publicodes-packages/count": [
         "../../packages/publicodes-packages/publicodes-count/publicodes-build"
       ],
@@ -37,7 +37,7 @@
     "**/*.cy.ts",
     "prisma/**/*.ts",
     "../../packages/shared/types/*",
-    "../../packages/application/services/src/results/posts.enums.ts",
+    "../../packages/shared/services/results/posts.enums.ts",
     "../../packages/tooling/tests/utils/models/translationsMock.tsx",
     "../../packages/shared/utils/environmentClient.ts"
   ],

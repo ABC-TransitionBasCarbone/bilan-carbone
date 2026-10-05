@@ -1,8 +1,8 @@
+import { Environment } from '@abc-transitionbascarbone/db/enums'
 import {
   mockedOrganization,
   mockedOrganizationId,
-} from '@abc-transitionbascarbone/application/services/tests/models/organization'
-import { Environment } from '@abc-transitionbascarbone/db/enums'
+} from '@abc-transitionbascarbone/shared/services/tests/models/organization'
 
 export const mockedOrganizationVersionId = 'mocked-organization-version-id'
 

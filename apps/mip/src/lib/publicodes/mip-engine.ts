@@ -1,5 +1,5 @@
 import { SURVEY_CATEGORY_KEYS } from '@/constants/survey'
-import { RULE_NAME_SEPARATOR } from '@abc-transitionbascarbone/application/lib/publicodes/form/utils'
+import { RULE_NAME_SEPARATOR } from '@abc-transitionbascarbone/shared/publicodes/form/utils'
 import { isObject } from '@abc-transitionbascarbone/shared/utils/object'
 import { normalizeCategoryKey } from '@abc-transitionbascarbone/shared/utils/parsing'
 import Engine, { parsePublicodes } from 'publicodes'

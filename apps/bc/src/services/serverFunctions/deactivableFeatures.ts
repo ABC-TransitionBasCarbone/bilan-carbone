@@ -11,8 +11,8 @@ import {
   updateFeatureRestictions,
 } from '@/db/deactivableFeatures'
 import { withServerResponse } from '@/utils/serverResponse'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/application/services/permissions/check'
 import { DeactivatableFeature, Environment, Role, UserSource } from '@abc-transitionbascarbone/db/enums'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/shared/services/permissions/check'
 import { dbActualizedAuth } from '../auth'
 
 export const getDeactivableFeaturesRestrictionValues = async () =>

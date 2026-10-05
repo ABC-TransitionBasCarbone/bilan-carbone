@@ -1,6 +1,6 @@
 import { StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db'
-import { Translations } from '@abc-transitionbascarbone/application/lib'
-import { BCPost, ClicksonPost, CutPost, TiltAdvancedPost, TiltSimplifiedPost, TiltPost } from '@abc-transitionbascarbone/application/services/results/posts.enums'
+import { Translations } from '@abc-transitionbascarbone/shared'
+import { BCPost, ClicksonPost, CutPost, TiltAdvancedPost, TiltSimplifiedPost, TiltPost } from '@abc-transitionbascarbone/shared/services/results/posts.enums'
 import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
 import { Theme } from '@mui/material'
 

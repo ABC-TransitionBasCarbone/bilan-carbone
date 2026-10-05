@@ -2,9 +2,17 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "paths": {
-      "@abc-transitionbascarbone/css": ["../../styles/css/index.ts"]
+      "@abc-transitionbascarbone/css": [
+        "../ui/css/index.ts"
+      ]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

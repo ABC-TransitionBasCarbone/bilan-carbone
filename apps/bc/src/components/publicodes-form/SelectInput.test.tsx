@@ -2,13 +2,14 @@ import type { EvaluatedSelect } from '@publicodes/forms'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-jest.mock('@abc-transitionbascarbone/application/lib/publicodes/hooks', () => ({
+jest.mock('@abc-transitionbascarbone/shared/publicodes/hooks', () => ({
   usePublicodesRuleTranslation: () => ({
     getOptionLabel: (value: string) => String(value),
   }),
 }))
 
-const SelectInput = require('../../../../../packages/application/lib/publicodes/form/inputFields/SelectInput').default
+const SelectInput =
+  require('../../../../../packages/application/components/publicodes/form/inputFields/SelectInput').default
 
 describe('SelectInput', () => {
   it('does not display option descriptions inline in the dropdown', async () => {

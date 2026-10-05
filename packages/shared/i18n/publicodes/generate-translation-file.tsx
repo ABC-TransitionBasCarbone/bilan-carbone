@@ -1,4 +1,4 @@
-import { getI18nUnitKey } from '@abc-transitionbascarbone/application/lib/publicodes/utils'
+import { getI18nUnitKey } from '@abc-transitionbascarbone/shared/publicodes/utils'
 import { isObject } from '@abc-transitionbascarbone/shared/utils/object'
 import Engine, { Rule } from 'publicodes'
 import {

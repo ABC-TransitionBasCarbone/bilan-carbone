@@ -1,5 +1,5 @@
 import { RawRules } from '@/lib/publicodes/mip-engine'
-import { FILTER_RULE_KEY } from '@abc-transitionbascarbone/application/lib/publicodes/form/utils'
+import { FILTER_RULE_KEY } from '@abc-transitionbascarbone/shared/publicodes/form/utils'
 import { doesKeyExist } from '@abc-transitionbascarbone/shared/utils/object'
 import { Situation } from 'publicodes'
 

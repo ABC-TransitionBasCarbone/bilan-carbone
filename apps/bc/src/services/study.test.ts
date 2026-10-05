@@ -5,8 +5,8 @@ import { COMMON_DATES, getMockeFullStudy, getMockedDetailedFullStudySite } from 
 import { BCEnvironment } from '@/types/environment'
 import { BaseResultsBySite } from '@/types/study.types'
 import { hasSufficientLevel } from '@/utils/study'
-import type { Translations } from '@abc-transitionbascarbone/application/lib'
 import { ControlMode, Environment, Level, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db/enums'
+import type { Translations } from '@abc-transitionbascarbone/shared'
 import { expect } from '@jest/globals'
 import { prepareExcel } from './serverFunctions/file'
 import {

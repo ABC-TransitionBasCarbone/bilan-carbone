@@ -1,4 +1,4 @@
-import { setCustomMessage } from '@abc-transitionbascarbone/application/lib'
+import { setCustomMessage } from '@abc-transitionbascarbone/shared'
 import z from 'zod'
 
 export const ExternalStudyFormValidation = z.object({

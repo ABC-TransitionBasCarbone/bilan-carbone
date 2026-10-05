@@ -110,7 +110,6 @@ import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import { LocaleType } from '@abc-transitionbascarbone/shared/i18n/config'
 import type { IsSuccess } from '@abc-transitionbascarbone/shared/utils/serverResponse'
 
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/application/services/permissions/check'
 import type {
   Account,
   Document,
@@ -135,6 +134,7 @@ import {
   UserChecklist,
   UserStatus,
 } from '@abc-transitionbascarbone/db/enums'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/shared/services/permissions/check'
 import createReport from 'docx-templates'
 import fs from 'fs/promises'
 import { UserSession } from 'next-auth'

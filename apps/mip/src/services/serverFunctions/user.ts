@@ -23,21 +23,17 @@ import { AccountMipWithUser } from '@/types/accountMip.types'
 import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
 import { userSessionToDbUser } from '@/utils/userAccounts'
+import { User } from '@abc-transitionbascarbone/db'
+import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db/db'
+import { Environment, Role, RoleMip, UserStatus } from '@abc-transitionbascarbone/db/enums'
 import {
   sendAddedActiveUserEmail,
   sendNewUserEmail,
   sendResetPassword,
-} from '@abc-transitionbascarbone/application/services/email/email'
-import {
-  EMAIL_SENT,
-  MORE_THAN_ONE,
-  NOT_AUTHORIZED,
-} from '@abc-transitionbascarbone/application/services/permissions/check'
-import { updateUserResetToken } from '@abc-transitionbascarbone/application/services/serverFunctions/user'
-import { AddMemberCommand } from '@abc-transitionbascarbone/application/services/serverFunctions/user.command'
-import { User } from '@abc-transitionbascarbone/db'
-import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/db/db'
-import { Environment, Role, RoleMip, UserStatus } from '@abc-transitionbascarbone/db/enums'
+} from '@abc-transitionbascarbone/shared/services/email/email'
+import { EMAIL_SENT, MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascarbone/shared/services/permissions/check'
+import { updateUserResetToken } from '@abc-transitionbascarbone/shared/services/serverFunctions/user'
+import { AddMemberCommand } from '@abc-transitionbascarbone/shared/services/serverFunctions/user.command'
 import { DAY, HOUR, TIME_IN_MS } from '@abc-transitionbascarbone/shared/utils'
 import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/shared/utils/user.server'
 import jwt from 'jsonwebtoken'

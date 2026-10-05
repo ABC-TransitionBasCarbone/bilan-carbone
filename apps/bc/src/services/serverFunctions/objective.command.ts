@@ -1,5 +1,5 @@
-import { setCustomIssue } from '@abc-transitionbascarbone/application/lib'
 import { SubPost } from '@abc-transitionbascarbone/db/enums'
+import { setCustomIssue } from '@abc-transitionbascarbone/shared'
 import { z } from 'zod'
 
 export const createObjectiveFormSchema = ({ referenceYear }: { referenceYear?: number } = {}) =>

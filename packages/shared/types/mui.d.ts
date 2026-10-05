@@ -1,5 +1,5 @@
 import { SubPost } from '@abc-transitionbascarbone/db/enums'
-import { CutPost } from '@abc-transitionbascarbone/application/services/results/posts.enums'
+import { CutPost } from '@abc-transitionbascarbone/shared/services/results/posts.enums'
 import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
 import '@mui/material/styles'
 import { CSSObject } from '@mui/material/styles'

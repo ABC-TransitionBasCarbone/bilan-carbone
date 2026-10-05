@@ -2,10 +2,13 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "plugins": [],
-    "types": ["node", "jest"],
-    "paths": {
-      "@abc-transitionbascarbone/css": ["../../styles/css/index.ts"]
-    }
+    "types": [
+      "node",
+      "jest"
+    ]
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.css"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ]
 }

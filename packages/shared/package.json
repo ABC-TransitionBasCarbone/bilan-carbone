@@ -3,6 +3,13 @@
     "version": "0.0.1",
     "private": true,
     "exports": {
+        ".": "./index.ts",
+        "./services/*": "./services/*.ts",
+        "./publicodes/*": "./publicodes/*.ts",
+        "./publicodes/hooks": "./publicodes/hooks/index.ts",
+        "./publicodes/state": "./publicodes/state/index.ts",
+        "./publicodes/form": "./publicodes/form/index.ts",
+        "./publicodes/form/layouts": "./publicodes/form/layouts/index.ts",
         "./i18n/config": "./i18n/config.ts",
         "./i18n/translation": "./i18n/translation.ts",
         "./i18n/translations/*": "./i18n/translations/*",
@@ -12,10 +19,11 @@
         "./utils/*": "./utils/*.ts"
     },
     "peerDependencies": {
-        "next-intl": "*"
+        "@mui/material": "*",
+        "next-intl": "*",
+        "react": "*"
     },
     "dependencies": {
-        "@abc-transitionbascarbone/application": "*",
         "@abc-transitionbascarbone/db": "*",
         "@anthropic-ai/sdk": "^0.36.0",
         "prettier": "^3.8.4",

@@ -2,7 +2,7 @@
 
 import { dbActualizedAuth } from '@/services/auth'
 import { withServerResponse } from '@/utils/serverResponse'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/application/services/permissions/check'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/shared/services/permissions/check'
 import axios, { isAxiosError } from 'axios'
 import jwt from 'jsonwebtoken'
 import { getLocale } from 'next-intl/server'

@@ -1,6 +1,6 @@
 import { getEnvironnementRessources, getFeedbackFormUrl } from '@/utils/ressources'
-import { Translations } from '@abc-transitionbascarbone/application/lib'
 import { Environment } from '@abc-transitionbascarbone/db/enums'
+import { Translations } from '@abc-transitionbascarbone/shared'
 import { getEnvVar } from '@abc-transitionbascarbone/shared/utils/environment'
 import { getTranslations } from 'next-intl/server'
 

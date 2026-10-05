@@ -1,11 +1,7 @@
-import { mockedOrganizationId } from '@abc-transitionbascarbone/application/services/tests/models/organization'
-import {
-  mockedDbUser,
-  mockedUser,
-  mockedUserId,
-} from '@abc-transitionbascarbone/application/services/tests/models/user'
 import type { Account, Prisma, User } from '@abc-transitionbascarbone/db'
 import { Environment, Level, Role, UserStatus } from '@abc-transitionbascarbone/db/enums'
+import { mockedOrganizationId } from '@abc-transitionbascarbone/shared/services/tests/models/organization'
+import { mockedDbUser, mockedUser, mockedUserId } from '@abc-transitionbascarbone/shared/services/tests/models/user'
 import { Session, UserSession } from 'next-auth'
 import { mockedOrganizationVersionId } from './organization'
 

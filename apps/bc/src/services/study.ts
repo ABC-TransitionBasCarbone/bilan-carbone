@@ -19,9 +19,9 @@ import {
   hasDeprecationPeriod,
   isCAS,
 } from '@/utils/study'
-import { Translations } from '@abc-transitionbascarbone/application/lib'
 import type { ExportRule } from '@abc-transitionbascarbone/db'
 import { EmissionFactorBase, Environment, Export, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db/enums'
+import { Translations } from '@abc-transitionbascarbone/shared'
 import { formatDateFr } from '@abc-transitionbascarbone/shared/utils'
 import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/shared/utils/charts'
 import dayjs from 'dayjs'

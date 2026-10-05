@@ -1,19 +1,19 @@
 import {
   InputQuestion,
   MosaicQuestion,
-  OnFieldChange,
   QuestionContainer,
-} from '@abc-transitionbascarbone/application/lib/publicodes/form'
+} from '@abc-transitionbascarbone/application/components/publicodes/form'
+import { OnFieldChange } from '@abc-transitionbascarbone/shared/publicodes/form'
 import {
   EvaluatedFormLayout,
   EvaluatedGroupLayout,
   EvaluatedListLayout,
   EvaluatedTableLayout,
-} from '@abc-transitionbascarbone/application/lib/publicodes/form/layouts'
+} from '@abc-transitionbascarbone/shared/publicodes/form/layouts'
 import {
   usePublicodesLayoutTranslation,
   usePublicodesRuleTranslation,
-} from '@abc-transitionbascarbone/application/lib/publicodes/hooks'
+} from '@abc-transitionbascarbone/shared/publicodes/hooks'
 import Engine from 'publicodes'
 import GroupQuestion from './GroupQuestion'
 import ListQuestion from './ListQuestion'

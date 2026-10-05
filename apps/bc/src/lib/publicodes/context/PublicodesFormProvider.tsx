@@ -2,12 +2,9 @@ import { useBeforeUnload } from '@/hooks/useBeforeUnload'
 import { useLatestRef } from '@/hooks/utils'
 import { EnvironmentWithSimplifiedStudies } from '@/services/permissions/environment'
 import { loadSituation } from '@/services/serverFunctions/situation'
-import {
-  getUpdatedSituationWithInputValue,
-  situationsAreEqual,
-} from '@abc-transitionbascarbone/application/lib/publicodes/form'
-import { aggregateSituationValues } from '@abc-transitionbascarbone/application/lib/publicodes/utils'
 import { useToast } from '@abc-transitionbascarbone/application/ui'
+import { getUpdatedSituationWithInputValue, situationsAreEqual } from '@abc-transitionbascarbone/shared/publicodes/form'
+import { aggregateSituationValues } from '@abc-transitionbascarbone/shared/publicodes/utils'
 import { useTranslations } from 'next-intl'
 import { Situation } from 'publicodes'
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef } from 'react'

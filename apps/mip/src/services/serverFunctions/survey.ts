@@ -20,7 +20,7 @@ import {
   resolveKeyStatsRules,
 } from '@/utils/survey'
 import { isAdmin } from '@/utils/user'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/application/services/permissions/check'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/shared/services/permissions/check'
 import { buildCsv, sanitizeFileName, serializeCsvValue } from '@abc-transitionbascarbone/shared/utils/csv'
 import { Situation } from 'publicodes'
 

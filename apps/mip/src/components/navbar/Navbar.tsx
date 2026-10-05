@@ -1,10 +1,10 @@
 'use client'
 
-import { signOutEnv } from '@abc-transitionbascarbone/application/services/auth/auth.utils'
 import AppBar from '@abc-transitionbascarbone/application/ui/navbar/AppBar'
 import NavbarButton from '@abc-transitionbascarbone/application/ui/navbar/NavbarButton'
 import NavbarLink from '@abc-transitionbascarbone/application/ui/navbar/NavbarLink'
 import { RoleMip } from '@abc-transitionbascarbone/db/enums'
+import { signOutEnv } from '@abc-transitionbascarbone/shared/services/auth/auth.utils'
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
 import { Box, Container, Toolbar } from '@mui/material'
 import { UserSession } from 'next-auth'

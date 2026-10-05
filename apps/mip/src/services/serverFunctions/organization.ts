@@ -3,7 +3,7 @@
 import { updateAccountMip } from '@/db/accountMip'
 import { getUserByEmail } from '@/db/user'
 import { withServerResponse } from '@/utils/serverResponse'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/application/services/permissions/check'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/shared/services/permissions/check'
 import { dbActualizedAuth } from '../auth'
 import { canDeleteMember } from '../permissions/organization'
 

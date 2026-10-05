@@ -5,7 +5,7 @@
 Monorepo Next.js (Yarn workspaces + Turbo) for carbon accounting products:
 - apps/bc
 - apps/mip
-- packages/application/*, packages/db/*, packages/shared/*, packages/styles/*, packages/tooling/*
+- packages/application/*, packages/db/*, packages/shared/*, packages/tooling/*
 
 ## Architecture Essentials
 
@@ -51,7 +51,7 @@ Run from repo root unless specified:
 
 - No inline style and no MUI sx prop in app code.
 - Use CSS modules for local styles.
-- Prefer shared utility classes from packages/styles/css/style first.
+- Prefer shared utility classes from packages/application/ui/css/style first.
 - Use classNames when composing global utilities with module classes.
 - Use shared color CSS variables (no hardcoded hex, no white/#fff literals).
 - Keep typography consistent with project theme conventions.

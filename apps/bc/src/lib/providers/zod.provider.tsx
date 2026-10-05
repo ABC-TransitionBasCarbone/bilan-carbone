@@ -1,6 +1,6 @@
 'use client'
 
-import { configureZod } from '@abc-transitionbascarbone/application/lib'
+import { configureZod } from '@abc-transitionbascarbone/shared'
 import { LocaleType } from '@abc-transitionbascarbone/shared/i18n/config'
 import { useLocale, useTranslations } from 'next-intl'
 import { useEffect } from 'react'

@@ -1,5 +1,5 @@
 import { saveSituation as saveSituationInDB } from '@/services/serverFunctions/situation'
-import { situationsAreEqual } from '@abc-transitionbascarbone/application/lib/publicodes/utils'
+import { situationsAreEqual } from '@abc-transitionbascarbone/shared/publicodes/utils'
 import { Situation } from 'publicodes'
 import { useCallback, useRef, useState } from 'react'
 import { ListLayoutSituations } from '../context/types'
