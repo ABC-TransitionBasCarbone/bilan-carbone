@@ -1,5 +1,5 @@
 import { prismaClient } from '@/db/client.node'
-import { CourseSession, User } from '@abc-transitionbascarbone/db-common'
+import { CourseSession, Prisma, User } from '@abc-transitionbascarbone/db-common'
 import { Environment, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import fs from 'fs'
 import xlsx from 'node-xlsx'
@@ -11,6 +11,9 @@ const closeMock = jest.fn()
 
 jest.mock('@/db/client.node', () => ({
   prismaClient: {
+    $transaction: jest.fn(async (operation: (transaction: Prisma.TransactionClient) => Promise<unknown>) =>
+      operation(prismaClient),
+    ),
     courseOrganism: { findMany: jest.fn() },
     courseSession: { findFirst: jest.fn(), create: jest.fn(), update: jest.fn() },
     user: { upsert: jest.fn() },
@@ -178,7 +181,7 @@ describe('getTrainingSessionsFromFTP', () => {
         courseOrganismId: 'organism-id',
         organizationVersion: { environment: Environment.COURSE_BC, organization: { name: 'BC session' } },
       },
-      select: { id: true },
+      select: { id: true, organizationVersionId: true },
     })
   })
 

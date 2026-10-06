@@ -172,62 +172,83 @@ const handleDataForOF = async (of: CourseOrganism, trainingSessions: TrainingSes
         courseOrganismId: of.id,
         organizationVersion: { environment, organization: { name } },
       },
-      select: { id: true },
+      select: { id: true, organizationVersionId: true },
     })
 
-    const courseSession = existingSession
-      ? await prismaClient.courseSession.update({
-          where: { id: existingSession.id },
-          data: { startDate, endDate },
-        })
-      : await prismaClient.courseSession.create({
-          data: {
-            startDate,
-            endDate,
-            courseOrganism: { connect: { id: of.id } },
-            organizationVersion: {
-              create: {
-                environment,
-                organization: { create: { name } },
+    let courseSession = existingSession
+    try {
+      courseSession = await prismaClient.$transaction(async (transaction) =>
+        existingSession
+          ? transaction.courseSession.update({
+              where: { id: existingSession.id },
+              data: { startDate, endDate },
+            })
+          : transaction.courseSession.create({
+              data: {
+                startDate,
+                endDate,
+                courseOrganism: { connect: { id: of.id } },
+                organizationVersion: {
+                  create: {
+                    environment,
+                    organization: { create: { name } },
+                  },
+                },
+                sessionCode: {
+                  create: {
+                    traineeCode: randomInt(99999999).toString(),
+                    professorCode: randomInt(99999999).toString(),
+                  },
+                },
               },
-            },
-            sessionCode: {
-              create: {
-                traineeCode: randomInt(99999999).toString(),
-                professorCode: randomInt(99999999).toString(),
-              },
-            },
-          },
-        })
+            }),
+      )
+    } catch (error) {
+      console.error('Failed to save training session:', { courseOrganismId: of.id, name, environment }, error)
+      if (!existingSession) {
+        throw error
+      }
+    }
 
     if (userEmails.length === 0) {
       continue
     }
 
-    const { organizationVersionId } = courseSession
+    const organizationVersionId = courseSession?.organizationVersionId
     if (!organizationVersionId) {
       throw new Error(`Missing organization version for training session: ${name}`)
     }
 
+    const promises = []
     for (const email of userEmails) {
-      const user = await prismaClient.user.upsert({
-        where: { email },
-        create: { email, firstName: '', lastName: '' },
-        update: {},
-        select: { id: true },
-      })
-      await prismaClient.account.upsert({
-        where: { userId_environment: { userId: user.id, environment } },
-        create: {
-          organizationVersionId,
-          userId: user.id,
-          environment,
-          role: Role.COLLABORATOR,
-          status: UserStatus.IMPORTED,
-        },
-        update: {},
-      })
+      promises.push(
+        prismaClient.$transaction(async (transaction) => {
+          try {
+            const user = await transaction.user.upsert({
+              where: { email },
+              create: { email, firstName: '', lastName: '' },
+              update: {},
+              select: { id: true },
+            })
+            await transaction.account.upsert({
+              where: { userId_environment: { userId: user.id, environment } },
+              create: {
+                organizationVersionId,
+                userId: user.id,
+                environment,
+                role: Role.COLLABORATOR,
+                status: UserStatus.IMPORTED,
+              },
+              update: {},
+            })
+          } catch (error) {
+            console.error('Failed to import training session trainee:', { courseOrganismId: of.id, name, email }, error)
+          }
+        }),
+      )
     }
+
+    await Promise.all(promises)
   }
 }
 
