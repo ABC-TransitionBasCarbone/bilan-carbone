@@ -12,7 +12,7 @@
     "dev:test": "dotenv -e .env.test -- next dev --port 3001",
     "start:test": "dotenv -e .env.test -- env PORT=3001 node .next/standalone/apps/bc/server.js",
     "prebuild": "yarn workspace @abc-transitionbascarbone/publicodes-packages compile",
-    "build": "next build && node ../../packages/tooling/config/copy-assets.js apps/bc",
+    "build": "next build && node ../../packages/shared/tooling/config/copy-assets.js apps/bc",
     "start": "node -r dotenv/config .next/standalone/apps/bc/server.js dotenv_config_path=.env",
     "ts": "tsc --noEmit",
     "lint": "prettier --check . && eslint .",

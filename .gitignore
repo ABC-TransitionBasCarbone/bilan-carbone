@@ -13,6 +13,7 @@ CLAUDE.md
 .env.production.local
 .env.local
 .env.test
+certs/*
 
 # Dependencies and generated output
 **/node_modules/
@@ -27,6 +28,8 @@ next-env.d.ts
 **/coverage/
 **/.nyc_output/
 *.lcov
+*.csv
+*.xlsx
 *.tsbuildinfo
 **/out/
 **/dist/

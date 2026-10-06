@@ -1,7 +1,7 @@
-@import '../../../../packages/application/ui/css/style/reset.css';
+@import '../../../../packages/application/components/ui/css/style/reset.css';
 @import './themes/themes.css';
-@import '../../../../packages/application/ui/css/style/variables.css';
-@import '../../../../packages/application/ui/css/style/globals.css';
-@import '../../../../packages/application/ui/css/style/flex.css';
-@import '../../../../packages/application/ui/css/style/var.css';
-@import '../../../../packages/application/ui/css/style/inputUnit.css';
+@import '../../../../packages/application/components/ui/css/style/variables.css';
+@import '../../../../packages/application/components/ui/css/style/globals.css';
+@import '../../../../packages/application/components/ui/css/style/flex.css';
+@import '../../../../packages/application/components/ui/css/style/var.css';
+@import '../../../../packages/application/components/ui/css/style/inputUnit.css';

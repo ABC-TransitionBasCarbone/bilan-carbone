@@ -13,7 +13,7 @@ import {
 } from '@abc-transitionbascarbone/shared/utils/charts'
 import { expect } from '@jest/globals'
 import { Theme } from '@mui/material'
-import { translationMock } from '../../../../packages/tooling/tests/utils/models/translationsMock'
+import { translationMock } from '../../../../packages/shared/tooling/tests/utils/models/translationsMock'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../services/file', () => ({ download: jest.fn() }))

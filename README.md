@@ -41,7 +41,7 @@ cd apps/bc && docker-compose up -d && cd ../..
 ### 4. Set up the database with Prisma
 
 ```bash
-yarn prisma migrate dev
+yarn db:migrate
 ```
 
 Or in production :
@@ -101,7 +101,7 @@ yarn workspace bc db:test:reset
 
 ````bash
 # Create a new migration
-yarn prisma migrate dev
+yarn db:migrate
 
 # Reset the database
 yarn prisma migrate reset
@@ -213,16 +213,13 @@ yarn audit
 
 ## Architecture
 
-- `packages/application/components` regroupe les composants communs.
-- `packages/application/ui` regroupe les composants UI et les styles (`css/`).
-- `packages/shared` contient les services, la logique Publicodes, les traductions, les types et les utilitaires partagés. Les formulaires Publicodes et providers UI sont dans `packages/application/components`.
-- L’alias `@abc-transitionbascarbone/css` pointe vers `packages/application/ui/css`.
+| Package | Rôle actuel |
+| --- | --- |
+| `packages/application` | Composants réutilisés par les applications, dont l’interface et les styles dans `components/ui`. |
+| `packages/db` | Schéma Prisma et accès à la base de données. |
+| `packages/publicodes-packages` | Modèles Publicodes `count`, `clickson` et `tilt`, consommés par BC. MIP n’a pas de dépendance directe à ce package. |
+| `packages/shared` | Code transverse consommé par BC et MIP : i18n, types, gardes de type, utilitaires et services. Tous ses modules ne sont pas nécessairement utilisés par les deux applications. |
+| `packages/shared/tooling` | Scripts de build, configuration Jest et utilitaires de test communs. |
+| `@abc-transitionbascarbone/css` | Alias vers `packages/application/components/ui/css`. |
 
-```mermaid
-flowchart LR
-	Apps["Applications BC et MIP"] --> Application["application<br/>components + ui/css"]
-	Apps --> Shared["shared<br/>services + Publicodes + utilitaires"]
-	Application --> Shared
-```
-
-`shared` ne dépend plus de `application`; les imports UI passent par `packages/application/components`.
+`shared` ne dépend pas de `application`; les imports UI passent par `packages/application/components`.

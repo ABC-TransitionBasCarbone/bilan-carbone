@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material'
 import classNames from 'classnames'
-import IconLabel from '../base/IconLabel'
+import IconLabel from '../ui/base/IconLabel'
 
 interface Props {
   label: React.ReactNode

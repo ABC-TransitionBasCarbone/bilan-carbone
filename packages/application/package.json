@@ -11,8 +11,10 @@
     "./components/publicodes/form/inputFields": "./components/publicodes/form/inputFields/index.ts",
     "./components/*.module.css": "./components/*.module.css",
     "./components/*": "./components/*.tsx",
-    "./ui": "./ui/index.ts",
-    "./ui/*": "./ui/*.tsx"
+    "./ui": "./components/ui/index.ts",
+    "./ui/*": "./components/ui/*.tsx",
+    "./components/base/*.module.css": "./components/ui/base/*.module.css",
+    "./components/base/*": "./components/ui/base/*.tsx"
   },
   "peerDependencies": {
     "react": "*",

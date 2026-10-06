@@ -8,7 +8,6 @@
       "packages/application",
       "packages/db",
       "packages/shared",
-      "packages/tooling/*",
       "packages/publicodes-packages"
     ],
     "nohoist": []
@@ -19,9 +18,8 @@
   },
   "scripts": {
     "dev": "turbo run dev",
-    "dev:bc": "yarn --cwd apps/bc dev",
-    "dev:mip": "turbo run dev --filter=mip",
-    "bc": "yarn --cwd apps/bc dev",
+    "bc:dev": "yarn --cwd apps/bc dev",
+    "mip:dev": "turbo run dev --filter=mip",
     "bc:build": "yarn --cwd apps/bc build",
     "bc:test": "yarn --cwd apps/bc test",
     "bc:lint": "yarn --cwd apps/bc lint",
@@ -30,7 +28,7 @@
     "mip:test": "yarn --cwd apps/mip test",
     "mip:lint": "yarn --cwd apps/mip lint",
     "mip:ts": "yarn --cwd apps/mip ts",
-    "build": "node packages/tooling/config/config-or-delete-cron.js && sh -c 'if [ \"$APP_TARGET\" = \"mip\" ]; then turbo run build --filter=mip; else turbo run build --filter=bc; fi'",
+    "build": "node packages/shared/tooling/config/config-or-delete-cron.js && sh -c 'if [ \"$APP_TARGET\" = \"mip\" ]; then turbo run build --filter=mip; else turbo run build --filter=bc; fi'",
     "test": "turbo run test",
     "start": "turbo run start",
     "ts": "turbo run ts",
@@ -42,6 +40,7 @@
     "seed:bc": "yarn workspace @abc-transitionbascarbone/db tsx prisma/seed/index.ts --target bc",
     "seed:mip": "yarn workspace @abc-transitionbascarbone/db tsx prisma/seed/index.ts --target mip",
     "postinstall": "yarn db:generate && yarn publicodes:compile",
+    "db:migrate": "yarn workspace @abc-transitionbascarbone/db run db:migrate",
     "db:generate": "rm -rf packages/db/src/generated/prisma && yarn workspace @abc-transitionbascarbone/db run db:generate",
     "publicodes:compile": "yarn workspace @abc-transitionbascarbone/publicodes-packages compile",
     "publicodes:test": "yarn workspace @abc-transitionbascarbone/publicodes-packages test",

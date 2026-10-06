@@ -1,5 +1,5 @@
-export * from './base/HelpIcon'
-export * from './base/Table'
-export * from './base/TablePagination'
 export { ChoiceQuestionInput } from './survey/ChoiceQuestionInput'
 export { TextQuestionInput } from './survey/TextQuestionInput'
+export * from './ui/base/HelpIcon'
+export * from './ui/base/Table'
+export * from './ui/base/TablePagination'

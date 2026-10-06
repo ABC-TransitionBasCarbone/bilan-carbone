@@ -5,7 +5,7 @@
 Monorepo Next.js (Yarn workspaces + Turbo) for carbon accounting products:
 - apps/bc
 - apps/mip
-- packages/application/*, packages/db/*, packages/shared/*, packages/tooling/*
+- packages/application/*, packages/db/*, packages/shared/*
 
 ## Architecture Essentials
 
@@ -19,8 +19,8 @@ Monorepo Next.js (Yarn workspaces + Turbo) for carbon accounting products:
 
 Run from repo root unless specified:
 - Dev all: yarn dev
-- Dev BC only: yarn dev:bc
-- Dev MIP only: yarn dev:mip
+- Dev BC only: yarn bc:dev
+- Dev MIP only: yarn mip:dev
 - Lint: yarn lint
 - Typecheck: yarn ts
 - Tests: yarn test

@@ -10,7 +10,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@abc-transitionbascarbone/css": ["../../packages/application/ui/css/index.ts"]
+      "@abc-transitionbascarbone/css": ["../../packages/application/components/ui/css/index.ts"]
     }
   },
   "include": [
