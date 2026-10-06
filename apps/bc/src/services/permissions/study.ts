@@ -1,10 +1,6 @@
 import { getAccountById } from '@/db/account'
 import { getDocumentById } from '@/db/document'
-import {
-  getOrganizationVersionForRightsCheck,
-  getOrganizationVersionsByOrganizationId,
-  getOrgVersionWithNameById,
-} from '@/db/organization'
+import { getOrganizationVersionForRightsCheck, getOrganizationVersionsByOrganizationId } from '@/db/organization'
 import { FullStudy, getStudyById, MinimalStudyForRights } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { canEditOrganizationVersion, hasActiveLicence, isInOrgaOrParent } from '@/utils/organization'
@@ -145,22 +141,16 @@ const canCreateSpecificStudySimplified = async (accountId: string, organizationV
 }
 
 const canCreateSpecificStudyBC = async (
-  accountId: string,
+  user: UserSession,
   study: Prisma.StudyCreateInput,
   organizationVersionId: string,
 ) => {
   const { allowed: commonRights, account: dbAccount } = await canCreateSpecificStudyCommon(
-    accountId,
+    user.id,
     organizationVersionId,
   )
 
-  const orgaVersion = await getOrgVersionWithNameById(organizationVersionId)
-
-  if (!orgaVersion) {
-    return false
-  }
-
-  if (!commonRights || !dbAccount || !hasSufficientLevel(dbAccount.user.level, study.level, orgaVersion.environment)) {
+  if (!commonRights || !dbAccount || !hasSufficientLevel(dbAccount.user.level, study.level, user.environment)) {
     return false
   }
 
@@ -168,14 +158,14 @@ const canCreateSpecificStudyBC = async (
 }
 
 const canCreateSpecificStudyTilt = async (
-  accountId: string,
+  user: UserSession,
   study: Prisma.StudyCreateInput,
   organizationVersionId: string,
 ) => {
   if (study.simplified) {
-    return canCreateSpecificStudySimplified(accountId, organizationVersionId)
+    return canCreateSpecificStudySimplified(user.id, organizationVersionId)
   }
-  return canCreateSpecificStudyBC(accountId, study, organizationVersionId)
+  return canCreateSpecificStudyBC(user, study, organizationVersionId)
 }
 
 export const canCreateSpecificStudy = async (
@@ -189,10 +179,10 @@ export const canCreateSpecificStudy = async (
       return canCreateSpecificStudySimplified(user.accountId, organizationVersionId)
     case Environment.TILT:
     case Environment.COURSE_TILT:
-      return canCreateSpecificStudyTilt(user.accountId, study, organizationVersionId)
+      return canCreateSpecificStudyTilt(user, study, organizationVersionId)
     case Environment.BC:
     case Environment.COURSE_BC:
-      return canCreateSpecificStudyBC(user.accountId, study, organizationVersionId)
+      return canCreateSpecificStudyBC(user, study, organizationVersionId)
     default:
       return false
   }

@@ -421,7 +421,7 @@ export const getAllowedLevels = (level: Level | null, environment: Environment) 
 }
 
 export const hasSufficientLevel = (userLevel: Level | null, targetLevel: Level, environment: Environment) => {
-  return userLevel ? getAllowedLevels(userLevel, environment).includes(targetLevel) : false
+  return getAllowedLevels(userLevel, environment).includes(targetLevel)
 }
 
 const hasCompletedTiltSimplifiedGeneralData = (situation: Record<string, unknown>) => {
