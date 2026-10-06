@@ -220,6 +220,3 @@ yarn audit
 | `packages/publicodes-packages` | Modèles Publicodes `count`, `clickson` et `tilt`, consommés par BC. MIP n’a pas de dépendance directe à ce package. |
 | `packages/shared` | Code transverse consommé par BC et MIP : i18n, types, gardes de type, utilitaires et services. Tous ses modules ne sont pas nécessairement utilisés par les deux applications. |
 | `packages/shared/tooling` | Scripts de build, configuration Jest et utilitaires de test communs. |
-| `@abc-transitionbascarbone/css` | Alias vers `packages/application/components/ui/css`. |
-
-`shared` ne dépend pas de `application`; les imports UI passent par `packages/application/components`.
