@@ -1,3 +1,5 @@
+import { prismaClient } from '@/db/client.node'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import fs from 'fs'
 import xlsx from 'node-xlsx'
 import { getTrainingSessionsFromFTP } from './importTrainingSessions'
@@ -5,6 +7,13 @@ import { getTrainingSessionsFromFTP } from './importTrainingSessions'
 const accessMock = jest.fn()
 const downloadToMock = jest.fn()
 const closeMock = jest.fn()
+
+jest.mock('@/db/client.node', () => ({
+  prismaClient: {
+    courseOrganism: { findMany: jest.fn() },
+    courseSession: { findFirst: jest.fn(), create: jest.fn(), update: jest.fn() },
+  },
+}))
 
 jest.mock('basic-ftp', () => ({
   Client: jest.fn(() => ({
@@ -38,6 +47,8 @@ jest.mock('node-xlsx', () => ({
 
 describe('getTrainingSessionsFromFTP', () => {
   const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => undefined)
+  const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined)
+  const headers = ['Nom de la session', 'Date de début', 'Date de fin', 'Stagiaires', 'Environment']
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -45,83 +56,27 @@ describe('getTrainingSessionsFromFTP', () => {
     process.env.FTP_USER = 'user'
     process.env.FTP_PASSWORD = 'password'
     process.env.FTP_PORT = '21'
+    jest.mocked(prismaClient.courseOrganism.findMany).mockResolvedValue([
+      {
+        id: 'organism-id',
+        name: 'Organism',
+        contactEmail: 'contact@example.com',
+        ftpPath: 'organism',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ])
+    jest.mocked(prismaClient.courseSession.findFirst).mockResolvedValue(null)
     jest.mocked(fs.promises.readFile).mockResolvedValue(Buffer.from('xlsx content'))
     jest.mocked(xlsx.parse).mockReturnValue([
       {
         name: 'Sessions',
         data: [
-          [
-            'Date début session',
-            'Date fin session',
-            'Organisme de formation',
-            'Organisation',
-            'Nom de Formation',
-            'Civilite',
-            'Nom',
-            'Prenom',
-            'Fonction',
-            'E-mail',
-            'Telephone fixe',
-            'Mobile',
-            'Adresse',
-            'Complement',
-            'Code Postal',
-            'Ville',
-            'Pays',
-            'SIRET',
-            'Numero Fiscal',
-            'TVA',
-            'Produits achetés',
-            'Code session',
-          ],
-          [
-            '2026-09-15',
-            '2026-09-16',
-            'IFC',
-            'Example Co',
-            'MACF - Application',
-            'M.',
-            'Martin',
-            'Alex',
-            'Consultant',
-            'alex@example.org',
-          ],
-          [
-            '2026-09-17',
-            '2026-09-18',
-            'Nepsen',
-            'Demo Corp',
-            'MACF - Initiation',
-            'Madame',
-            'Durand',
-            'Camille',
-            'Responsable',
-            'camille@example.org',
-          ],
-          [
-            '2026-09-19',
-            '2026-09-20',
-            'Sami Academy',
-            'Sample Ltd',
-            'MACF - Application',
-            'M.',
-            'Bernard',
-            'Louis',
-            'Directeur',
-            'louis@example.org',
-          ],
-          [
-            '2026-09-21',
-            '2026-09-22',
-            'take[air]',
-            'Test SARL',
-            'MACF - Initiation',
-            'Madame',
-            'Petit',
-            'Emma',
-            'Analyste',
-            'emma@example.org',
-          ],
+          headers,
+          [' BC session ', 46037, 46038, '', 'BC'],
+          ['TILT session', 46037, 46038, '', 'COURSE_TILT'],
+          [],
+          ['', '', '', '', ''],
         ],
       },
       { name: 'Liste', data: [['Nom de Formation'], ['Formation 1'], ['Formation 2']] },
@@ -131,9 +86,7 @@ describe('getTrainingSessionsFromFTP', () => {
   })
 
   it('reads the training sessions file and confirms success', async () => {
-    jest.mocked(fs.createWriteStream).mockReturnValue('stream' as unknown as fs.WriteStream)
-
-    const worksheets = await getTrainingSessionsFromFTP()
+    await getTrainingSessionsFromFTP()
 
     expect(accessMock).toHaveBeenCalledWith({
       host: 'host',
@@ -141,53 +94,112 @@ describe('getTrainingSessionsFromFTP', () => {
       password: 'password',
       port: 21,
     })
-    expect(downloadToMock).toHaveBeenCalledWith('stream', '/training/sessions.xlsx')
+    expect(downloadToMock).toHaveBeenCalledWith(undefined, '/training//organism/sessions.xlsx')
     expect(fs.promises.readFile).toHaveBeenCalledWith('sessions.xlsx')
     expect(xlsx.parse).toHaveBeenCalledWith(Buffer.from('xlsx content'))
     expect(closeMock).toHaveBeenCalledTimes(1)
-    expect(worksheets).toEqual([
-      {
-        formationStartDate: '2026-09-15',
-        formationEndDate: '2026-09-16',
-        companyName: 'Example Co',
-        formationName: 'MACF - Application',
-        lastName: 'Martin',
-        firstName: 'Alex',
-        userEmail: 'alex@example.org',
+    expect(prismaClient.courseSession.create).toHaveBeenCalledTimes(2)
+    expect(prismaClient.courseSession.create).toHaveBeenNthCalledWith(1, {
+      data: {
+        startDate: new Date('2026-01-15T00:00:00.000Z'),
+        endDate: new Date('2026-01-16T00:00:00.000Z'),
+        courseOrganism: { connect: { id: 'organism-id' } },
+        organizationVersion: {
+          create: { environment: Environment.COURSE_BC, organization: { create: { name: 'BC session' } } },
+        },
+        sessionCode: { create: { traineeCode: expect.any(String), professorCode: expect.any(String) } },
       },
-      {
-        formationStartDate: '2026-09-17',
-        formationEndDate: '2026-09-18',
-        companyName: 'Demo Corp',
-        formationName: 'MACF - Initiation',
-        lastName: 'Durand',
-        firstName: 'Camille',
-        userEmail: 'camille@example.org',
+    })
+    expect(prismaClient.courseSession.create).toHaveBeenNthCalledWith(2, {
+      data: expect.objectContaining({
+        organizationVersion: {
+          create: { environment: Environment.COURSE_TILT, organization: { create: { name: 'TILT session' } } },
+        },
+      }),
+    })
+    expect(consoleLogSpy).toHaveBeenCalledWith('Training sessions file read successfully')
+  })
+
+  it('updates existing sessions without recreating organizations or codes', async () => {
+    jest.mocked(prismaClient.courseSession.findFirst).mockResolvedValue({
+      id: 'session-id',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      startDate: new Date(),
+      endDate: new Date(),
+      courseOrganismId: 'organism-id',
+      organizationVersionId: 'version-id',
+      sessionCodeId: 'code-id',
+    })
+
+    await getTrainingSessionsFromFTP()
+
+    expect(prismaClient.courseSession.create).not.toHaveBeenCalled()
+    expect(prismaClient.courseSession.update).toHaveBeenCalledWith({
+      where: { id: 'session-id' },
+      data: { startDate: new Date('2026-01-15T00:00:00.000Z'), endDate: new Date('2026-01-16T00:00:00.000Z') },
+    })
+    expect(prismaClient.courseSession.findFirst).toHaveBeenCalledWith({
+      where: {
+        courseOrganismId: 'organism-id',
+        organizationVersion: { environment: Environment.COURSE_BC, organization: { name: 'BC session' } },
       },
+      select: { id: true },
+    })
+  })
+
+  it('accepts Date and ISO date cells and ignores unmapped columns', async () => {
+    jest.mocked(xlsx.parse).mockReturnValue([
       {
-        formationStartDate: '2026-09-19',
-        formationEndDate: '2026-09-20',
-        companyName: 'Sample Ltd',
-        formationName: 'MACF - Application',
-        lastName: 'Bernard',
-        firstName: 'Louis',
-        userEmail: 'louis@example.org',
-      },
-      {
-        formationStartDate: '2026-09-21',
-        formationEndDate: '2026-09-22',
-        companyName: 'Test SARL',
-        formationName: 'MACF - Initiation',
-        lastName: 'Petit',
-        firstName: 'Emma',
-        userEmail: 'emma@example.org',
+        name: 'Sessions',
+        data: [
+          [...headers, 'Extra column'],
+          ['Session', new Date('2026-01-15T00:00:00.000Z'), '2026-01-16T00:00:00.000Z', '', 'BC', 'ignored'],
+        ],
       },
     ])
-    expect(consoleLogSpy).toHaveBeenCalledWith(worksheets)
-    expect(consoleLogSpy).toHaveBeenCalledWith('Training sessions file read successfully')
+
+    await getTrainingSessionsFromFTP()
+
+    expect(prismaClient.courseSession.create).toHaveBeenCalledTimes(1)
+    expect(prismaClient.courseSession.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        startDate: new Date('2026-01-15T00:00:00.000Z'),
+        endDate: new Date('2026-01-16T00:00:00.000Z'),
+      }),
+    })
+  })
+
+  it.each([
+    ['missing name', ['', 46037, 46038, '', 'BC']],
+    ['invalid environment', ['Session', 46037, 46038, '', 'MIP']],
+    ['invalid date', ['Session', 'invalid', 46038, '', 'BC']],
+    ['missing start date', ['Session', undefined, 46038, '', 'BC']],
+    ['missing end date', ['Session', 46037, null, '', 'BC']],
+    ['invalid Date object', ['Session', new Date('invalid'), 46038, '', 'BC']],
+    ['reversed dates', ['Session', 46038, 46037, '', 'BC']],
+  ])('rejects a row with %s before writing sessions', async (_reason, row) => {
+    jest
+      .mocked(xlsx.parse)
+      .mockReturnValue([{ name: 'Sessions', data: [headers, ['Valid session', 46037, 46038, '', 'BC'], row] }])
+
+    await expect(getTrainingSessionsFromFTP()).rejects.toThrow('Invalid training session')
+
+    expect(prismaClient.courseSession.create).not.toHaveBeenCalled()
+    expect(closeMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('awaits database writes and propagates their failures', async () => {
+    jest.mocked(prismaClient.courseSession.create).mockRejectedValueOnce(new Error('Database failure'))
+
+    await expect(getTrainingSessionsFromFTP()).rejects.toThrow('Database failure')
+
+    expect(consoleLogSpy).not.toHaveBeenCalledWith('Training sessions file read successfully')
+    expect(closeMock).toHaveBeenCalledTimes(1)
   })
 
   afterAll(() => {
     consoleLogSpy.mockRestore()
+    consoleErrorSpy.mockRestore()
   })
 })

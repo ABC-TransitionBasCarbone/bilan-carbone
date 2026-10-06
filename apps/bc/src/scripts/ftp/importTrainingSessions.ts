@@ -1,6 +1,8 @@
 import { prismaClient } from '@/db/client.node'
 import { CourseOrganism } from '@abc-transitionbascarbone/db-common'
+import { Environment } from '@abc-transitionbascarbone/db-common/enums'
 import { AccessOptions, Client } from 'basic-ftp'
+import { randomUUID } from 'crypto'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import fs from 'fs'
 import xlsx from 'node-xlsx'
@@ -10,13 +12,22 @@ type Worksheet = {
   data: unknown[][]
 }
 
-type TrainingSession = Record<string, unknown>
-
-type TrainingSessionWorksheet = Omit<Worksheet, 'data'> & {
-  data: TrainingSession[]
+type TrainingSession = {
+  sessionId: string
+  formationStartDate: Date
+  formationEndDate: Date
+  environment: string
 }
 
-const IMPORT_FIELD_BY_HEADER: Record<string, string> = {
+type CellValue = undefined | null | Date | string
+
+type TrainingSessionRow = Partial<Record<keyof TrainingSession | 'userEmails', CellValue>>
+
+type TrainingSessionWorksheet = Omit<Worksheet, 'data'> & {
+  data: TrainingSessionRow[]
+}
+
+const IMPORT_FIELD_BY_HEADER: Partial<Record<string, keyof TrainingSessionRow>> = {
   'Nom de la session': 'sessionId',
   'Date de début': 'formationStartDate',
   'Date de fin': 'formationEndDate',
@@ -53,14 +64,20 @@ const downloadFileFromFTP = async (client: Client, of: CourseOrganism) => {
   }
 }
 
-const formatCellValue = (header: string, value: unknown) => {
+const formatCellValue = (header: string, value: unknown): CellValue => {
   if (value === undefined || value === null) {
     return value
   }
 
-  if (header === 'Date début session' || header === 'Date fin session') {
+  if (header === 'Date de début' || header === 'Date de fin') {
     if (typeof value === 'number') {
-      return getJsDateFromExcel(value).toISOString()
+      return getJsDateFromExcel(value)
+    }
+    if (value instanceof Date) {
+      return value
+    }
+    if (typeof value === 'string') {
+      return value.trim() ? new Date(value) : value
     }
   }
 
@@ -76,34 +93,100 @@ const convertWorksheetRowsToObjects = (worksheet: Worksheet): TrainingSessionWor
 
   return {
     ...worksheet,
-    data: rows.map((row) =>
-      Object.fromEntries(
-        headers
-          .map((header, index) => {
-            const headerName = String(header).trim()
-            const fieldName = IMPORT_FIELD_BY_HEADER[headerName]
-            return fieldName ? ([fieldName, formatCellValue(headerName, row[index])] as [string, unknown]) : undefined
-          })
-          .filter((entry): entry is [string, unknown] => entry !== undefined)
-          .filter(([, value]) => value !== undefined),
-      ),
-    ),
+    data: rows.map((row) => {
+      const session: TrainingSessionRow = {}
+      for (const [index, header] of headers.entries()) {
+        const headerName = String(header).trim()
+        const fieldName = IMPORT_FIELD_BY_HEADER[headerName]
+        if (fieldName) {
+          session[fieldName] = formatCellValue(headerName, row[index])
+        }
+      }
+      return session
+    }),
   }
 }
 
-const handleDataForOF = (of: CourseOrganism, trainingSessions: TrainingSessionWorksheet['data']) => {
-  const organizationVersionToCreate = trainingSessions.map((session) => ({
-    startDate: session.formationStartDate,
-    endDate: session.formationEndDate,
-    courseOrganismId: of.id,
-    environment: session.environment,
-  }))
+const isValidDate = (value: CellValue): value is Date => value instanceof Date && !Number.isNaN(value.getTime())
 
-  const courseSessionToCreate = trainingSessions.map((session) => ({
-    startDate: session.formationStartDate,
-    endDate: session.formationEndDate,
-    courseOrganismId: of.id,
-  }))
+const isTrainingSession = (session: TrainingSessionRow): session is TrainingSession => {
+  console.log('heeeere')
+  console.log(session.environment, typeof session.environment === 'string')
+  return (
+    typeof session.sessionId === 'string' &&
+    isValidDate(session.formationStartDate) &&
+    isValidDate(session.formationEndDate) &&
+    typeof session.environment === 'string'
+  )
+}
+
+const parseTrainingSession = (session: TrainingSessionRow) => {
+  const name = typeof session.sessionId === 'string' ? session.sessionId.trim() : ''
+  if (!isTrainingSession(session)) {
+    throw new Error(`Invalid training session: ${name || '(missing name)'}`)
+  }
+
+  const startDate = session.formationStartDate
+  const endDate = session.formationEndDate
+  const importedEnvironment = session.environment.trim().toUpperCase()
+  const environment =
+    importedEnvironment === Environment.BC || importedEnvironment === Environment.COURSE_BC
+      ? Environment.COURSE_BC
+      : importedEnvironment === Environment.TILT || importedEnvironment === Environment.COURSE_TILT
+        ? Environment.COURSE_TILT
+        : undefined
+
+  if (!name || !environment || endDate < startDate) {
+    throw new Error(`Invalid training session: ${name || '(missing name)'}`)
+  }
+
+  return { name, startDate, endDate, environment }
+}
+
+const handleDataForOF = async (of: CourseOrganism, trainingSessions: TrainingSessionWorksheet['data']) => {
+  const sessions = trainingSessions
+    .filter((session) => Object.values(session).some((value) => value != null && String(value).trim() !== ''))
+    .map(parseTrainingSession)
+
+  for (const { name, startDate, endDate, environment } of sessions) {
+    const existingSession = await prismaClient.courseSession.findFirst({
+      where: {
+        courseOrganismId: of.id,
+        organizationVersion: { environment, organization: { name } },
+      },
+      select: { id: true },
+    })
+
+    if (existingSession) {
+      await prismaClient.courseSession.update({
+        where: { id: existingSession.id },
+        data: { startDate, endDate },
+      })
+      continue
+    }
+
+    const test = await prismaClient.courseSession.create({
+      data: {
+        startDate,
+        endDate,
+        courseOrganism: { connect: { id: of.id } },
+        organizationVersion: {
+          create: {
+            environment,
+            organization: { create: { name } },
+          },
+        },
+        sessionCode: {
+          create: {
+            traineeCode: randomUUID(),
+            professorCode: randomUUID(),
+          },
+        },
+      },
+    })
+
+    console.log(test)
+  }
 }
 
 export const getTrainingSessionsFromFTP = async () => {
@@ -131,7 +214,7 @@ export const getTrainingSessionsFromFTP = async () => {
         .flatMap((worksheet) => worksheet.data)
 
       console.log(trainingSessions.length, 'training sessions found for', of.name)
-      handleDataForOF(of, trainingSessions)
+      await handleDataForOF(of, trainingSessions)
     }
 
     console.log('Training sessions file read successfully')
