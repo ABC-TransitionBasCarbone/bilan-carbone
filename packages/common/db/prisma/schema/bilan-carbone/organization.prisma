@@ -90,6 +90,8 @@ model OrganizationVersion {
   parent   OrganizationVersion?  @relation("childOrganizationVersions", fields: [parentId], references: [id])
   childs   OrganizationVersion[] @relation("childOrganizationVersions")
 
+  courseSessions CourseSession[]
+
   environment Environment
 
   @@unique([organizationId, environment])

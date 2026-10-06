@@ -3,10 +3,45 @@ model CourseOrganism {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  name      String
-  contactEmail String @map("contact_email")
-  ftpPath   String   @map("ftp_path")
+  name           String
+  contactEmail   String          @map("contact_email")
+  ftpPath        String          @map("ftp_path")
+  courseSessions CourseSession[]
 
   @@map("course_organism")
+  @@schema("bilan_carbone")
+}
+
+model SessionCode {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  traineeCode    String          @map("trainee_code")
+  professorCode  String?         @map("professor_code")
+  courseSessions CourseSession[]
+
+  @@map("session_code")
+  @@schema("bilan_carbone")
+}
+
+model CourseSession {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  startDate DateTime @map("start_date")
+  endDate   DateTime @map("end_date")
+
+  organizationVersion   OrganizationVersion? @relation(fields: [organizationVersionId], references: [id])
+  organizationVersionId String?              @map("organization_version_id")
+
+  courseOrganism   CourseOrganism? @relation(fields: [courseOrganismId], references: [id])
+  courseOrganismId String?         @map("course_organism_id")
+
+  sessionCode   SessionCode? @relation(fields: [sessionCodeId], references: [id])
+  sessionCodeId String?      @map("session_code_id")
+
+  @@map("course_session")
   @@schema("bilan_carbone")
 }
