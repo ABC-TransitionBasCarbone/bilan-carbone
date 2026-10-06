@@ -10,6 +10,10 @@ const staticDestPath = path.join(appPath, '.next/standalone', appPathArg, '.next
 const publicSrcPath = path.join(appPath, 'public')
 const publicDestPath = path.join(appPath, '.next/standalone', appPathArg, 'public')
 
+const emailViewsPath = 'packages/common/services/email/views'
+const emailSrcPath = path.resolve(appPath, '..', '..', emailViewsPath)
+const emailDestPath = path.join(appPath, '.next/standalone', emailViewsPath)
+
 function copyAssets(src, dest) {
   return fs
     .mkdir(dest, { recursive: true })
@@ -41,7 +45,11 @@ const i18nSrcPath = path.join(appPath, 'src', 'i18n', 'translations')
 const i18nDestPath = path.join(appPath, '.next/standalone', appPathArg, 'src/i18n/translations')
 
 async function main() {
-  const copyPromises = [copyAssets(staticSrcPath, staticDestPath), copyAssets(publicSrcPath, publicDestPath)]
+  const copyPromises = [
+    copyAssets(staticSrcPath, staticDestPath),
+    copyAssets(publicSrcPath, publicDestPath),
+    copyAssets(emailSrcPath, emailDestPath),
+  ]
 
   try {
     await fs.access(i18nSrcPath)

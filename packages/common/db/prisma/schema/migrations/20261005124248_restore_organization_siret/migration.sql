@@ -1,1 +1,1 @@
-ALTER TABLE "common"."organizations" ADD COLUMN "siret" TEXT;
+ALTER TABLE "common"."organizations" ADD COLUMN IF NOT EXISTS "siret" TEXT;
