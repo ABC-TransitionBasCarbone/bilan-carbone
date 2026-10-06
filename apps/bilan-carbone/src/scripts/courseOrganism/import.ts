@@ -1,5 +1,5 @@
 import { prismaClient } from '@/db/client.server'
-import { createCourseOrganism } from '@/db/courseOrganism'
+import { createCourseOrganismList } from '@/db/courseOrganism'
 import { CourseOrganism } from '@abc-transitionbascarbone/db-common'
 import { Command } from 'commander'
 import { parse } from 'csv-parse'
@@ -39,7 +39,7 @@ const addCourseOrganism = async (file: string) => {
       .on('end', async () => {
         try {
           console.log(`Ajout de ${createdOrganisms.length} organismes de formation...`)
-          await createCourseOrganism(createdOrganisms)
+          await createCourseOrganismList(createdOrganisms)
           console.log('Organismes de formations créés')
           resolve()
         } catch (error) {
