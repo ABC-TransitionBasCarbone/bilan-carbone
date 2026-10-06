@@ -1,11 +1,12 @@
 import { prismaClient } from '@/db/client.node'
 import { CourseOrganism } from '@abc-transitionbascarbone/db-common'
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import { AccessOptions, Client } from 'basic-ftp'
-import { randomUUID } from 'crypto'
+import { randomInt } from 'crypto'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import fs from 'fs'
 import xlsx from 'node-xlsx'
+import { z } from 'zod'
 
 type Worksheet = {
   name: string
@@ -17,11 +18,12 @@ type TrainingSession = {
   formationStartDate: Date
   formationEndDate: Date
   environment: string
+  userEmails?: string | null
 }
 
 type CellValue = undefined | null | Date | string
 
-type TrainingSessionRow = Partial<Record<keyof TrainingSession | 'userEmails', CellValue>>
+type TrainingSessionRow = Partial<Record<keyof TrainingSession, CellValue>>
 
 type TrainingSessionWorksheet = Omit<Worksheet, 'data'> & {
   data: TrainingSessionRow[]
@@ -110,13 +112,12 @@ const convertWorksheetRowsToObjects = (worksheet: Worksheet): TrainingSessionWor
 const isValidDate = (value: CellValue): value is Date => value instanceof Date && !Number.isNaN(value.getTime())
 
 const isTrainingSession = (session: TrainingSessionRow): session is TrainingSession => {
-  console.log('heeeere')
-  console.log(session.environment, typeof session.environment === 'string')
   return (
     typeof session.sessionId === 'string' &&
     isValidDate(session.formationStartDate) &&
     isValidDate(session.formationEndDate) &&
-    typeof session.environment === 'string'
+    typeof session.environment === 'string' &&
+    (session.userEmails === null || typeof session.userEmails === 'string')
   )
 }
 
@@ -140,7 +141,24 @@ const parseTrainingSession = (session: TrainingSessionRow) => {
     throw new Error(`Invalid training session: ${name || '(missing name)'}`)
   }
 
-  return { name, startDate, endDate, environment }
+  const userEmails = [
+    ...new Set(
+      (session.userEmails ?? '')
+        .split(/[;,\s]+/)
+        .filter(Boolean)
+        .filter((email) => {
+          if (!z.email().safeParse(email).success) {
+            console.error('incorrect email for of training session:', name)
+            return false
+          }
+
+          return true
+        })
+        .map((email) => email.toLowerCase()),
+    ),
+  ]
+
+  return { name, startDate, endDate, environment, userEmails }
 }
 
 const handleDataForOF = async (of: CourseOrganism, trainingSessions: TrainingSessionWorksheet['data']) => {
@@ -148,7 +166,7 @@ const handleDataForOF = async (of: CourseOrganism, trainingSessions: TrainingSes
     .filter((session) => Object.values(session).some((value) => value != null && String(value).trim() !== ''))
     .map(parseTrainingSession)
 
-  for (const { name, startDate, endDate, environment } of sessions) {
+  for (const { name, startDate, endDate, environment, userEmails } of sessions) {
     const existingSession = await prismaClient.courseSession.findFirst({
       where: {
         courseOrganismId: of.id,
@@ -157,35 +175,59 @@ const handleDataForOF = async (of: CourseOrganism, trainingSessions: TrainingSes
       select: { id: true },
     })
 
-    if (existingSession) {
-      await prismaClient.courseSession.update({
-        where: { id: existingSession.id },
-        data: { startDate, endDate },
-      })
+    const courseSession = existingSession
+      ? await prismaClient.courseSession.update({
+          where: { id: existingSession.id },
+          data: { startDate, endDate },
+        })
+      : await prismaClient.courseSession.create({
+          data: {
+            startDate,
+            endDate,
+            courseOrganism: { connect: { id: of.id } },
+            organizationVersion: {
+              create: {
+                environment,
+                organization: { create: { name } },
+              },
+            },
+            sessionCode: {
+              create: {
+                traineeCode: randomInt(99999999).toString(),
+                professorCode: randomInt(99999999).toString(),
+              },
+            },
+          },
+        })
+
+    if (userEmails.length === 0) {
       continue
     }
 
-    const test = await prismaClient.courseSession.create({
-      data: {
-        startDate,
-        endDate,
-        courseOrganism: { connect: { id: of.id } },
-        organizationVersion: {
-          create: {
-            environment,
-            organization: { create: { name } },
-          },
-        },
-        sessionCode: {
-          create: {
-            traineeCode: randomUUID(),
-            professorCode: randomUUID(),
-          },
-        },
-      },
-    })
+    const { organizationVersionId } = courseSession
+    if (!organizationVersionId) {
+      throw new Error(`Missing organization version for training session: ${name}`)
+    }
 
-    console.log(test)
+    for (const email of userEmails) {
+      const user = await prismaClient.user.upsert({
+        where: { email },
+        create: { email, firstName: '', lastName: '' },
+        update: {},
+        select: { id: true },
+      })
+      await prismaClient.account.upsert({
+        where: { userId_environment: { userId: user.id, environment } },
+        create: {
+          organizationVersionId,
+          userId: user.id,
+          environment,
+          role: Role.COLLABORATOR,
+          status: UserStatus.IMPORTED,
+        },
+        update: {},
+      })
+    }
   }
 }
 

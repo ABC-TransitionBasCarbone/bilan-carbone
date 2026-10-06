@@ -1,5 +1,6 @@
 import { prismaClient } from '@/db/client.node'
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { CourseSession, User } from '@abc-transitionbascarbone/db-common'
+import { Environment, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
 import fs from 'fs'
 import xlsx from 'node-xlsx'
 import { getTrainingSessionsFromFTP } from './importTrainingSessions'
@@ -12,6 +13,8 @@ jest.mock('@/db/client.node', () => ({
   prismaClient: {
     courseOrganism: { findMany: jest.fn() },
     courseSession: { findFirst: jest.fn(), create: jest.fn(), update: jest.fn() },
+    user: { upsert: jest.fn() },
+    account: { upsert: jest.fn() },
   },
 }))
 
@@ -49,6 +52,29 @@ describe('getTrainingSessionsFromFTP', () => {
   const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => undefined)
   const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined)
   const headers = ['Nom de la session', 'Date de début', 'Date de fin', 'Stagiaires', 'Environment']
+  const courseSession: CourseSession = {
+    id: 'session-id',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    startDate: new Date(),
+    endDate: new Date(),
+    courseOrganismId: 'organism-id',
+    organizationVersionId: 'version-id',
+    sessionCodeId: 'code-id',
+  }
+  const user: User = {
+    id: 'user-id',
+    email: 'trainee@example.com',
+    firstName: 'Existing',
+    lastName: 'Trainee',
+    level: null,
+    password: null,
+    resetToken: null,
+    source: UserSource.CRON,
+    formationFormStartTime: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -67,6 +93,9 @@ describe('getTrainingSessionsFromFTP', () => {
       },
     ])
     jest.mocked(prismaClient.courseSession.findFirst).mockResolvedValue(null)
+    jest.mocked(prismaClient.courseSession.create).mockResolvedValue(courseSession)
+    jest.mocked(prismaClient.courseSession.update).mockResolvedValue(courseSession)
+    jest.mocked(prismaClient.user.upsert).mockResolvedValue(user)
     jest.mocked(fs.promises.readFile).mockResolvedValue(Buffer.from('xlsx content'))
     jest.mocked(xlsx.parse).mockReturnValue([
       {
@@ -107,7 +136,12 @@ describe('getTrainingSessionsFromFTP', () => {
         organizationVersion: {
           create: { environment: Environment.COURSE_BC, organization: { create: { name: 'BC session' } } },
         },
-        sessionCode: { create: { traineeCode: expect.any(String), professorCode: expect.any(String) } },
+        sessionCode: {
+          create: {
+            traineeCode: expect.stringMatching(/^\d{1,8}$/),
+            professorCode: expect.stringMatching(/^\d{1,8}$/),
+          },
+        },
       },
     })
     expect(prismaClient.courseSession.create).toHaveBeenNthCalledWith(2, {
@@ -196,6 +230,104 @@ describe('getTrainingSessionsFromFTP', () => {
 
     expect(consoleLogSpy).not.toHaveBeenCalledWith('Training sessions file read successfully')
     expect(closeMock).toHaveBeenCalledTimes(1)
+  })
+
+  it.each([false, true])('imports deduplicated trainees when the session already exists: %s', async (exists) => {
+    jest.mocked(prismaClient.courseSession.findFirst).mockResolvedValue(exists ? courseSession : null)
+    jest.mocked(xlsx.parse).mockReturnValue([
+      {
+        name: 'Sessions',
+        data: [
+          headers,
+          ['Session', 46037, 46038, ' Trainee@Example.com; second@example.com, trainee@example.com\n', 'BC'],
+        ],
+      },
+    ])
+
+    await getTrainingSessionsFromFTP()
+
+    expect(prismaClient.user.upsert).toHaveBeenCalledTimes(2)
+    expect(prismaClient.user.upsert).toHaveBeenNthCalledWith(1, {
+      where: { email: 'trainee@example.com' },
+      create: { email: 'trainee@example.com', firstName: '', lastName: '' },
+      update: {},
+      select: { id: true },
+    })
+    expect(prismaClient.user.upsert).toHaveBeenNthCalledWith(2, {
+      where: { email: 'second@example.com' },
+      create: { email: 'second@example.com', firstName: '', lastName: '' },
+      update: {},
+      select: { id: true },
+    })
+    expect(prismaClient.account.upsert).toHaveBeenCalledTimes(2)
+    expect(prismaClient.account.upsert).toHaveBeenCalledWith({
+      where: { userId_environment: { userId: 'user-id', environment: Environment.COURSE_BC } },
+      create: {
+        organizationVersionId: 'version-id',
+        userId: 'user-id',
+        environment: Environment.COURSE_BC,
+        role: Role.COLLABORATOR,
+        status: UserStatus.IMPORTED,
+      },
+      update: {},
+    })
+  })
+
+  it('creates the trainee account in the TILT course environment', async () => {
+    jest
+      .mocked(xlsx.parse)
+      .mockReturnValue([
+        { name: 'Sessions', data: [headers, ['Session', 46037, 46038, 'trainee@example.com', 'TILT']] },
+      ])
+
+    await getTrainingSessionsFromFTP()
+
+    expect(prismaClient.account.upsert).toHaveBeenCalledWith({
+      where: { userId_environment: { userId: 'user-id', environment: Environment.COURSE_TILT } },
+      create: {
+        organizationVersionId: 'version-id',
+        userId: 'user-id',
+        environment: Environment.COURSE_TILT,
+        role: Role.COLLABORATOR,
+        status: UserStatus.IMPORTED,
+      },
+      update: {},
+    })
+  })
+
+  it('logs and skips invalid emails while importing valid trainees and all sessions', async () => {
+    jest.mocked(xlsx.parse).mockReturnValue([
+      {
+        name: 'Sessions',
+        data: [
+          headers,
+          ['Valid session', 46037, 46038, 'trainee@example.com; invalid-email', 'BC'],
+          ['Invalid session', 46037, 46038, 'invalid-email', 'BC'],
+        ],
+      },
+    ])
+
+    await getTrainingSessionsFromFTP()
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith('incorrect email for of training session:', 'Valid session')
+    expect(consoleErrorSpy).toHaveBeenCalledWith('incorrect email for of training session:', 'Invalid session')
+    expect(prismaClient.courseSession.create).toHaveBeenCalledTimes(2)
+    expect(prismaClient.user.upsert).toHaveBeenCalledTimes(1)
+    expect(prismaClient.user.upsert).toHaveBeenCalledWith({
+      where: { email: 'trainee@example.com' },
+      create: { email: 'trainee@example.com', firstName: '', lastName: '' },
+      update: {},
+      select: { id: true },
+    })
+    expect(prismaClient.account.upsert).toHaveBeenCalledTimes(1)
+    expect(consoleLogSpy).toHaveBeenCalledWith('Training sessions file read successfully')
+  })
+
+  it('does not create users or accounts when there are no trainee emails', async () => {
+    await getTrainingSessionsFromFTP()
+
+    expect(prismaClient.user.upsert).not.toHaveBeenCalled()
+    expect(prismaClient.account.upsert).not.toHaveBeenCalled()
   })
 
   afterAll(() => {
