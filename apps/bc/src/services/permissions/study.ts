@@ -146,7 +146,7 @@ const canCreateSpecificStudyBC = async (
   organizationVersionId: string,
 ) => {
   const { allowed: commonRights, account: dbAccount } = await canCreateSpecificStudyCommon(
-    user.id,
+    user.accountId,
     organizationVersionId,
   )
 
@@ -163,7 +163,7 @@ const canCreateSpecificStudyTilt = async (
   organizationVersionId: string,
 ) => {
   if (study.simplified) {
-    return canCreateSpecificStudySimplified(user.id, organizationVersionId)
+    return canCreateSpecificStudySimplified(user.accountId, organizationVersionId)
   }
   return canCreateSpecificStudyBC(user, study, organizationVersionId)
 }

@@ -405,7 +405,7 @@ export const getActionReductionRatio = (
 
 export const getAllowedLevels = (level: Level | null, environment: Environment) => {
   if (courseEnvironments.includes(environment)) {
-    return Object.values(Level) as Level[]
+    return [null, ...Object.values(Level)] as Level[]
   }
 
   switch (level) {
