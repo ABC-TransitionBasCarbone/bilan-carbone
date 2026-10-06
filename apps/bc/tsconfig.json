@@ -2,22 +2,15 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "tsBuildInfoFile": ".next/cache/tsbuildinfo.json",
-    "types": [
-      "cypress",
-      "node"
-    ],
+    "types": ["cypress", "node"],
     "plugins": [
       {
         "name": "next"
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@abc-transitionbascarbone/css": [
-        "../../packages/application/components/ui/css/index.ts"
-      ],
+      "@/*": ["./src/*"],
+      "@abc-transitionbascarbone/css": ["../../packages/application/components/ui/css/index.ts"],
       "@abc-transitionbascarbone/publicodes-packages/count": [
         "../../packages/publicodes-packages/publicodes-count/publicodes-build"
       ],
@@ -48,8 +41,5 @@
     "../../packages/shared/tooling/tests/utils/models/translationsMock.tsx",
     "../../packages/shared/utils/environmentClient.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "../../packages/publicodes-packages"
-  ]
+  "exclude": ["node_modules", "../../packages/publicodes-packages"]
 }
