@@ -1,4 +1,4 @@
-import { Environment } from '@abc-transitionbascarbone/db/enums'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import Engine from 'publicodes'
 
 const engineInstances = new Map<Environment, Engine>()

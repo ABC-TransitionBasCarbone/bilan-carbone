@@ -1,4 +1,4 @@
-import { DayOfWeek } from '@abc-transitionbascarbone/db/enums'
+import { DayOfWeek } from '@abc-transitionbascarbone/common/db/enums'
 import { Control, FieldPath, FieldValues } from 'react-hook-form'
 import FormDayHours from './FormDayHours'
 

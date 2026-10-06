@@ -6,7 +6,7 @@ import {
 } from '@/db/emissionFactors'
 import { getEmissionFactorFullName } from '@/utils/emissionFactors'
 import { normalizeStringForSearch } from '@/utils/string'
-import { Unit } from '@abc-transitionbascarbone/db/enums'
+import { Unit } from '@abc-transitionbascarbone/common/db/enums'
 import Fuse from 'fuse.js'
 
 export enum EmissionFactorMatchType {

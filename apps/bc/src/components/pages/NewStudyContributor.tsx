@@ -1,6 +1,6 @@
 import { getOrganizationVersionAccounts } from '@/db/organization'
 import type { FullStudy } from '@/db/study'
-import Block from '@abc-transitionbascarbone/application/components/base/Block'
+import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import { Typography } from '@mui/material'
 import { getTranslations } from 'next-intl/server'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'

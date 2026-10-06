@@ -1,6 +1,6 @@
 'use client'
 
-import { Document } from '@abc-transitionbascarbone/db'
+import { Document } from '@abc-transitionbascarbone/common/db'
 import { MenuItem, Select } from '@mui/material'
 
 interface Props {

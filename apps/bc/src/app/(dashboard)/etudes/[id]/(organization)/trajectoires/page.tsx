@@ -4,7 +4,7 @@ import withTransitionPlan, { TransitionPlanProps } from '@/components/hoc/withTr
 import TrajectoryPage from '@/components/pages/TrajectoryPage'
 import { loadTransitionPlanPageData } from '@/components/study/transitionPlan/transitionPlanPageData'
 import { hasTransitionPlan } from '@/db/transitionPlan'
-import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
+import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 import { redirect } from 'next/navigation'
 
 const TrajectoryReduction = async ({

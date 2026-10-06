@@ -1,5 +1,5 @@
 import * as studyUtilsModule from '@/utils/study'
-import { Environment, Import, StudyRole, SubPost } from '@abc-transitionbascarbone/db/enums'
+import { Environment, Import, StudyRole, SubPost } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import { v4 as uuidv4 } from 'uuid'
 import * as accountModule from '../../db/account'

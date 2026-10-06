@@ -1,4 +1,4 @@
-import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
+import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import styles from './ExportCheckbox.module.css'

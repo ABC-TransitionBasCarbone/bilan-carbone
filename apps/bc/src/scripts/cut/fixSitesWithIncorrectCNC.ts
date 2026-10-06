@@ -1,4 +1,4 @@
-import { Environment } from '@abc-transitionbascarbone/db/enums'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { Command } from 'commander'
 import { prismaClient } from '../../db/client.server'
 

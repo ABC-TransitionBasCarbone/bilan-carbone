@@ -1,5 +1,5 @@
 import { SECTEN_SECTORS, SectenSector } from '@/constants/trajectory.constants'
-import type { SectenInfo } from '@abc-transitionbascarbone/db'
+import type { SectenInfo } from '@abc-transitionbascarbone/common/db'
 
 export type SectenDiffEntry = {
   year: number

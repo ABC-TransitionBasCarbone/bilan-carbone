@@ -1,7 +1,7 @@
 import { KG_CO2E_PREFIX } from '@/constants/import'
 import { getSourceLatestImportVersionId } from '@/db/study'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
-import type { Prisma } from '@abc-transitionbascarbone/db'
+import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import {
   EmissionFactorBase,
   EmissionFactorPartType,
@@ -10,9 +10,9 @@ import {
   Import,
   SubPost,
   Unit,
-} from '@abc-transitionbascarbone/db/enums'
-import { serializeSimpleCsvRecord } from '@abc-transitionbascarbone/shared/utils/csv'
-import { getEnvVar } from '@abc-transitionbascarbone/shared/utils/environment'
+} from '@abc-transitionbascarbone/common/db/enums'
+import { serializeSimpleCsvRecord } from '@abc-transitionbascarbone/common/utils/csv'
+import { getEnvVar } from '@abc-transitionbascarbone/common/utils/environment'
 import { unitsMatrix } from './historyUnits'
 import { additionalParts } from './parts.config'
 import { elementsBySubPost } from './posts.config'

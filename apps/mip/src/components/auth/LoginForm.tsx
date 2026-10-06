@@ -1,6 +1,6 @@
 'use client'
 
-import LoginFormCommon from '@abc-transitionbascarbone/application/components/auth/LoginFormCommon'
+import LoginFormCommon from '@abc-transitionbascarbone/common/components/auth/LoginFormCommon'
 import { useTranslations } from 'next-intl'
 
 const LoginForm = () => {

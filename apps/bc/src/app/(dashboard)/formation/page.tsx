@@ -6,7 +6,7 @@ import { getFormationVideos } from '@/db/formation'
 import { getOrgNameByOrgVersionId } from '@/db/organization'
 import { auth } from '@/services/auth'
 import { hasAccessToFormation, hasLevelForFormation } from '@/services/permissions/formations'
-import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
+import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 
 const Formation = async () => {
   const session = await auth()

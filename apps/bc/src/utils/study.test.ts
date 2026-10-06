@@ -3,7 +3,7 @@ import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionS
 import { getMockedFullStudySite, mockedEmissionSourceEmissionFactor } from '@/tests/utils/models/study'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import * as UserUtilsModule from '@/utils/user'
-import { EmissionFactorBase, Environment, Level, Role } from '@abc-transitionbascarbone/db/enums'
+import { EmissionFactorBase, Environment, Level, Role } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import {
   getBaseFilteredEmissionSources,

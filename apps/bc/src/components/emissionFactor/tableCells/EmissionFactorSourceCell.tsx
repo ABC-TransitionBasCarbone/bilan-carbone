@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { canEditEmissionFactor } from '@/services/permissions/emissionFactor'
-import { Import } from '@abc-transitionbascarbone/db/enums'
+import { Import } from '@abc-transitionbascarbone/common/db/enums'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
 import HomeWorkIcon from '@mui/icons-material/HomeWork'

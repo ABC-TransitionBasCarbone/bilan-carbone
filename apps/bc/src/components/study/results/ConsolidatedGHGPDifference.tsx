@@ -8,15 +8,15 @@ import { ResultsByPost } from '@/types/study.types'
 import { getEmissionFactor } from '@/utils/emissionSources'
 import { computeDifferenceForTableEmissions, formatDifferenceTableEmissions } from '@/utils/exports'
 import { hasDeprecationPeriod, hasFabricationPart } from '@/utils/study'
-import { ExportRule } from '@abc-transitionbascarbone/db'
+import { ExportRule } from '@abc-transitionbascarbone/common/db'
 import {
   EmissionFactorBase,
   EmissionFactorPartType,
   EmissionSourceCaracterisation,
   Export,
   SubPost,
-} from '@abc-transitionbascarbone/db/enums'
-import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/shared/utils/charts'
+} from '@abc-transitionbascarbone/common/db/enums'
+import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/common/utils/charts'
 import WarningAmberIcon from '@mui/icons-material/WarningAmberOutlined'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo } from 'react'

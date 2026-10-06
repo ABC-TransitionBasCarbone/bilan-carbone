@@ -1,6 +1,6 @@
 import { getSurveyCategoryKeysFromParsedRules } from '@/lib/publicodes/mip-engine'
-import { getRuleCategoryKey, getRuleSubCategoryKey } from '@abc-transitionbascarbone/shared/publicodes/form/utils'
-import { safeEvaluate } from '@abc-transitionbascarbone/shared/publicodes/utils'
+import { getRuleCategoryKey, getRuleSubCategoryKey } from '@abc-transitionbascarbone/common/publicodes/form/utils'
+import { safeEvaluate } from '@abc-transitionbascarbone/common/publicodes/utils'
 import Engine, { Situation, utils } from 'publicodes'
 
 type RuleRawNode = {

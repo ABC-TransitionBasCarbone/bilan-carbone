@@ -107,8 +107,8 @@ import {
 import { mapStudyForReport } from '@/utils/studyReport.utils'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
-import { LocaleType } from '@abc-transitionbascarbone/shared/i18n/config'
-import type { IsSuccess } from '@abc-transitionbascarbone/shared/utils/serverResponse'
+import { LocaleType } from '@abc-transitionbascarbone/common/i18n/config'
+import type { IsSuccess } from '@abc-transitionbascarbone/common/utils/serverResponse'
 
 import type {
   Account,
@@ -117,7 +117,7 @@ import type {
   EmissionFactorImportVersion,
   Prisma,
   StudyEmissionSource,
-} from '@abc-transitionbascarbone/db'
+} from '@abc-transitionbascarbone/common/db'
 import {
   CommentStatus,
   ControlMode,
@@ -133,8 +133,8 @@ import {
   SubPost,
   UserChecklist,
   UserStatus,
-} from '@abc-transitionbascarbone/db/enums'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/shared/services/permissions/check'
+} from '@abc-transitionbascarbone/common/db/enums'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import createReport from 'docx-templates'
 import fs from 'fs/promises'
 import { UserSession } from 'next-auth'

@@ -1,7 +1,7 @@
-import { Environment } from '@abc-transitionbascarbone/db/enums'
-import { Translations } from '@abc-transitionbascarbone/shared'
-import { getEnvVar } from '@abc-transitionbascarbone/shared/utils/environment'
-import { hasTranslatedLinks } from '@abc-transitionbascarbone/shared/utils/environmentClient'
+import { Translations } from '@abc-transitionbascarbone/common'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { getEnvVar } from '@abc-transitionbascarbone/common/utils/environment'
+import { hasTranslatedLinks } from '@abc-transitionbascarbone/common/utils/environmentClient'
 import { getTranslations } from 'next-intl/server'
 
 const getUrlFromId = (typeformId: string) => `https://form.typeform.com/to/${typeformId}`

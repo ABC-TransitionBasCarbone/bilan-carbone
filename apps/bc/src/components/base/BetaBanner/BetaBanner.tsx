@@ -1,5 +1,5 @@
-import { Environment } from '@abc-transitionbascarbone/db/enums'
-import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import Chip from '@mui/material/Chip'
 import { getTranslations } from 'next-intl/server'
 import styles from './BetaBanner.module.css'

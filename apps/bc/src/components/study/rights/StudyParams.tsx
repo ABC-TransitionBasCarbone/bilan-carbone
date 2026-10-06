@@ -1,7 +1,7 @@
 'use client'
 
 import type { MinimalStudyForRights } from '@/db/study'
-import { EmissionFactorImportVersion } from '@abc-transitionbascarbone/db'
+import { EmissionFactorImportVersion } from '@abc-transitionbascarbone/common/db'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import StudyLevel from './StudyLevel'

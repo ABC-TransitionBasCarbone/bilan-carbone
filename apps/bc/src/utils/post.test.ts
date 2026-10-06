@@ -1,7 +1,7 @@
 import { BCPost, CutPost, subPostsByPost, TiltAdvancedPost } from '@/services/posts'
 import { AdditionalResultTypes } from '@/types/study.types'
-import { Environment, SubPost } from '@abc-transitionbascarbone/db/enums'
-import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
+import { Environment, SubPost } from '@abc-transitionbascarbone/common/db/enums'
+import { Post } from '@abc-transitionbascarbone/common/utils/charts'
 import { expect } from '@jest/globals'
 import { getPost, getPostValues } from './post'
 

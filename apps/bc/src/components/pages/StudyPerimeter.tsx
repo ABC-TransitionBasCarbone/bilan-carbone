@@ -9,7 +9,7 @@ import { hasAccessToPerimeterPage } from '@/services/permissions/environmentAdva
 import { canEditStudyFlows } from '@/services/permissions/study'
 import { defaultCAUnit } from '@/utils/number'
 import { getAccountRoleOnStudy } from '@/utils/study'
-import { DocumentCategory } from '@abc-transitionbascarbone/db/enums'
+import { DocumentCategory } from '@abc-transitionbascarbone/common/db/enums'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import { redirect } from 'next/navigation'

@@ -1,4 +1,4 @@
-import { Environment, Import, Unit } from '@abc-transitionbascarbone/db/enums'
+import { Environment, Import, Unit } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import { getEmissionFactorValue, isMonetaryEmissionFactor, isWasteEmissionFactor } from './emissionFactors'
 

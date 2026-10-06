@@ -1,9 +1,9 @@
 'use client'
 
 import { exportSpecificFields, getAllSpecificFieldsForExports } from '@/utils/study'
-import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
-import { Export } from '@abc-transitionbascarbone/db/enums'
-import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
+import Modal from '@abc-transitionbascarbone/common/components/modals/Modal'
+import { Export } from '@abc-transitionbascarbone/common/db/enums'
+import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
 

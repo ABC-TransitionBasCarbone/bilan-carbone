@@ -2,9 +2,9 @@
 
 import { gazKeys } from '@/constants/emissions'
 import { EmissionFactorCommand, maxParts } from '@/services/serverFunctions/emissionFactor.command'
-import { HelpIcon } from '@abc-transitionbascarbone/application/components'
-import { FormTextField } from '@abc-transitionbascarbone/application/components/form/TextField'
-import GlossaryModal from '@abc-transitionbascarbone/application/components/modals/GlossaryModal'
+import { HelpIcon } from '@abc-transitionbascarbone/common/components'
+import { FormTextField } from '@abc-transitionbascarbone/common/components/form/TextField'
+import GlossaryModal from '@abc-transitionbascarbone/common/components/modals/GlossaryModal'
 import { FormControlLabel, FormLabel, Switch, TextField } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

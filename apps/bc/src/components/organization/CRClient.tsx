@@ -1,5 +1,5 @@
 import { OrganizationVersionWithOrganization } from '@/db/organization'
-import Box from '@abc-transitionbascarbone/application/components/base/Box'
+import Box from '@abc-transitionbascarbone/common/components/base/Box'
 import CorporateFareIcon from '@mui/icons-material/CorporateFare'
 import classNames from 'classnames'
 import Link from 'next/link'

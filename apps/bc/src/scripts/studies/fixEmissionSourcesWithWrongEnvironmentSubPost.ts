@@ -1,6 +1,6 @@
 import { prismaClient } from '@/db/client.server'
 import { getValidSubPostsForEnvironment } from '@/utils/importEmissionSources.utils'
-import { Environment } from '@abc-transitionbascarbone/db/enums'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 
 /**
  * Cleanup script for emission sources assigned to subposts that do not belong

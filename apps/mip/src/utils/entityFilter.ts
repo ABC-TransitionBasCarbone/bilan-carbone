@@ -1,6 +1,6 @@
 import { RawRules } from '@/lib/publicodes/mip-engine'
-import { FILTER_RULE_KEY } from '@abc-transitionbascarbone/shared/publicodes/form/utils'
-import { doesKeyExist } from '@abc-transitionbascarbone/shared/utils/object'
+import { FILTER_RULE_KEY } from '@abc-transitionbascarbone/common/publicodes/form/utils'
+import { doesKeyExist } from '@abc-transitionbascarbone/common/utils/object'
 import { Situation } from 'publicodes'
 
 export type EntityFilterDef = {

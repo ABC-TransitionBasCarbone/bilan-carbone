@@ -1,5 +1,5 @@
 import type { FullStudy } from '@/db/study'
-import { EmissionFactorBase, Environment, Import, SubPost, Unit } from '@abc-transitionbascarbone/db/enums'
+import { EmissionFactorBase, Environment, Import, SubPost, Unit } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import { canBeValidated, getEmissionResults } from './emissionSource'
 

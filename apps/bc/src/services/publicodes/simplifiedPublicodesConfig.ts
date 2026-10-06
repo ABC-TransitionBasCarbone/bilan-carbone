@@ -18,8 +18,8 @@ import {
 } from '@/environments/tilt/publicodes/subPostMapping'
 import { getTiltEngine } from '@/environments/tilt/publicodes/tilt-engine'
 import { EnvironmentWithSimplifiedStudies } from '@/services/permissions/environment'
-import { Environment, SubPost } from '@abc-transitionbascarbone/db/enums'
-import { FormLayout } from '@abc-transitionbascarbone/shared/publicodes/form/layouts'
+import { Environment, SubPost } from '@abc-transitionbascarbone/common/db/enums'
+import { FormLayout } from '@abc-transitionbascarbone/common/publicodes/form/layouts'
 import Engine from 'publicodes'
 import {
   ClicksonPost,

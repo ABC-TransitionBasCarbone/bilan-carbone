@@ -1,6 +1,6 @@
 import { getLocale } from '@/i18n/locale'
-import { Environment } from '@abc-transitionbascarbone/db/enums'
-import { Locale } from '@abc-transitionbascarbone/shared/i18n/config'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { Locale } from '@abc-transitionbascarbone/common/i18n/config'
 import { getAllActualitiesLocale, getMainActualitiesLocale } from './actuality.server'
 import { prismaClient } from './client.server'
 

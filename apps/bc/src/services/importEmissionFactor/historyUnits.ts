@@ -1,4 +1,4 @@
-import { Unit } from '@abc-transitionbascarbone/db/enums'
+import { Unit } from '@abc-transitionbascarbone/common/db/enums'
 
 export const unitsMatrix: Record<string, Unit> = {
   '100 feuilles A4': Unit.A4_SHEET_100,

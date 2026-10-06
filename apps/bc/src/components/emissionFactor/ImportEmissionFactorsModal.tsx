@@ -7,7 +7,7 @@ import {
   importEmissionFactorsFromFile,
   previewEmissionFactorsFromFile,
 } from '@/services/serverFunctions/importEmissionFactors'
-import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
+import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import styles from './ImportEmissionFactorsModal.module.css'

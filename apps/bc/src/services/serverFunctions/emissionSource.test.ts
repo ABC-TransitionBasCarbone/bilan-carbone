@@ -26,7 +26,7 @@ jest.mock('../../db/study', () => ({
   getStudyById: jest.fn(),
 }))
 
-jest.mock('@abc-transitionbascarbone/shared/services/permissions/check', () => ({
+jest.mock('@abc-transitionbascarbone/common/services/permissions/check', () => ({
   NOT_AUTHORIZED: 'Not authorized',
 }))
 

@@ -20,7 +20,7 @@ certs/*
 /.turbo/
 **/.next/
 **/publicodes-build/
-/packages/db/src/generated/
+/packages/common/db/src/generated/
 **/cypress/screenshots/
 next-env.d.ts
 

@@ -2,7 +2,7 @@
 
 import withAuth from '@/components/hoc/withAuth'
 import ProfilePage from '@/components/pages/Profile'
-import Block from '@abc-transitionbascarbone/application/components/base/Block'
+import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import { useTranslations } from 'next-intl'
 import pakage from '../../../../package.json'
 

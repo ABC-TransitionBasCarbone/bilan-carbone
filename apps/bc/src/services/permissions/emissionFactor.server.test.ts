@@ -2,7 +2,7 @@ import * as dbOrganization from '@/db/organization'
 import * as dbUser from '@/db/user'
 import { getMockedAccount } from '@/tests/utils/models/user'
 import * as organizationUtils from '@/utils/organization'
-import { Level, Role } from '@abc-transitionbascarbone/db/enums'
+import { Level, Role } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import { canCreateEmissionFactor } from './emissionFactor.server'
 

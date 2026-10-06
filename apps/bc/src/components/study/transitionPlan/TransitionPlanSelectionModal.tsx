@@ -2,8 +2,8 @@
 
 import { getAvailableTransitionPlans } from '@/services/serverFunctions/transitionPlan'
 import type { TransitionPlanWithStudies } from '@/types/trajectory.types'
-import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
-import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
+import Modal from '@abc-transitionbascarbone/common/components/modals/Modal'
+import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import { FormControl, FormControlLabel, MenuItem, Radio, RadioGroup, Select } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

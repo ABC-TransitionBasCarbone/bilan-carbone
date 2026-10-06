@@ -1,11 +1,11 @@
-import { HelpIcon } from '@abc-transitionbascarbone/application/components'
-import GlossaryModal from '@abc-transitionbascarbone/application/components/modals/GlossaryModal'
+import { HelpIcon } from '@abc-transitionbascarbone/common/components'
+import GlossaryModal from '@abc-transitionbascarbone/common/components/modals/GlossaryModal'
 import {
   StyledQuestionContainer,
   StyledQuestionContent,
   StyledQuestionHeader,
   StyledQuestionTitle,
-} from '@abc-transitionbascarbone/application/components/publicodes/form'
+} from '@abc-transitionbascarbone/common/components/publicodes/form'
 import { Box } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'

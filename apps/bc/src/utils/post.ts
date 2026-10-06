@@ -3,9 +3,9 @@ import { hasCustomPostOrder } from '@/services/permissions/environment'
 import { BCPost, ClicksonPost, CutPost, subPostsByPost, TiltAdvancedPost } from '@/services/posts'
 import type { ResultType } from '@/types/study.types'
 import { AdditionalResultTypes } from '@/types/study.types'
-import { Environment, SubPost } from '@abc-transitionbascarbone/db/enums'
-import { Translations } from '@abc-transitionbascarbone/shared'
-import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
+import { Translations } from '@abc-transitionbascarbone/common'
+import { Environment, SubPost } from '@abc-transitionbascarbone/common/db/enums'
+import { Post } from '@abc-transitionbascarbone/common/utils/charts'
 import { sortByCustomOrder } from './array'
 
 export const getPost = (subPost?: SubPost) =>

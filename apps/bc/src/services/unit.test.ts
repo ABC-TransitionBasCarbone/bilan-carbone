@@ -1,4 +1,4 @@
-import { Unit } from '@abc-transitionbascarbone/db/enums'
+import { Unit } from '@abc-transitionbascarbone/common/db/enums'
 import { BCUnit, CUTUnit, OldUnit } from './unit'
 
 jest.mock('next-intl', () => ({

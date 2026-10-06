@@ -1,9 +1,9 @@
 import { TARGET_YEAR } from '@/constants/trajectory.constants'
 import { BCPost, subPostsByPostBC } from '@/services/posts'
 import type { PastStudy, TrajectoryDataPoint } from '@/types/trajectory.types'
-import type { Action, ActionSubPost } from '@abc-transitionbascarbone/db'
-import { ActionPotentialDeduction, StudyResultUnit } from '@abc-transitionbascarbone/db/enums'
-import { getYearFromDateStr } from '@abc-transitionbascarbone/shared/utils/time'
+import type { Action, ActionSubPost } from '@abc-transitionbascarbone/common/db'
+import { ActionPotentialDeduction, StudyResultUnit } from '@abc-transitionbascarbone/common/db/enums'
+import { getYearFromDateStr } from '@abc-transitionbascarbone/common/utils/time'
 import { getEmissionSourcesTotalCo2 } from './emissionSources'
 import { convertValue } from './study'
 import {

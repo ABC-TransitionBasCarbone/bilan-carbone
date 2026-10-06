@@ -9,7 +9,7 @@ import { canCreateAStudy } from '@/services/permissions/study'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { defaultCAUnit } from '@/utils/number'
 import { hasActiveLicence } from '@/utils/organization'
-import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
+import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 import { redirect } from 'next/navigation'
 
 const NewStudy = async ({ user, duplicateStudyId, isSimplified }: UserSessionProps & StudyCreationProps) => {

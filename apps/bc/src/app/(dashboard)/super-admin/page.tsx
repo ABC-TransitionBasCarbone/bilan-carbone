@@ -3,8 +3,8 @@
 import withAuth from '@/components/hoc/withAuth'
 import SuperAdminPage from '@/components/pages/SuperAdmin'
 import { auth } from '@/services/auth'
-import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
-import { Role } from '@abc-transitionbascarbone/db/enums'
+import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
+import { Role } from '@abc-transitionbascarbone/common/db/enums'
 
 const SuperAdmin = async () => {
   const session = await auth()

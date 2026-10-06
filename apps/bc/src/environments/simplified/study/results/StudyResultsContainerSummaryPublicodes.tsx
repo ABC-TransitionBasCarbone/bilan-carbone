@@ -4,7 +4,7 @@ import StudyName from '@/components/study/card/StudyName'
 import styles from '@/components/study/results/ResultsContainer.module.css'
 import type { FullStudy } from '@/db/study'
 import { usePublicodesResults } from '@/hooks/usePublicodesResults'
-import { BarChart, Button } from '@abc-transitionbascarbone/application/ui'
+import { BarChart, Button } from '@abc-transitionbascarbone/common/ui'
 import CircularProgress from '@mui/material/CircularProgress'
 import { useTranslations } from 'next-intl'
 

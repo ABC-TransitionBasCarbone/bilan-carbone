@@ -1,4 +1,4 @@
-import { Import } from '@abc-transitionbascarbone/db/enums'
+import { Import } from '@abc-transitionbascarbone/common/db/enums'
 import { Command } from 'commander'
 import { prismaClient } from '../../db/client.server'
 import { parseCSVRows } from '../../services/importEmissionFactor/getEmissionFactorsFromCSV'

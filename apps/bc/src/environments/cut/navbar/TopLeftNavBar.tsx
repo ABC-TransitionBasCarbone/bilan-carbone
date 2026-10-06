@@ -1,5 +1,5 @@
 import { isAdmin } from '@/utils/user'
-import NavbarLink from '@abc-transitionbascarbone/application/ui/navbar/NavbarLink'
+import NavbarLink from '@abc-transitionbascarbone/common/ui/navbar/NavbarLink'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 

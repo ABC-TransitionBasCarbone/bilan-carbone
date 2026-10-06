@@ -1,4 +1,4 @@
-import { Translations } from '@abc-transitionbascarbone/shared'
+import { Translations } from '@abc-transitionbascarbone/common'
 
 export const uniqueByKey = <T, K extends keyof T>(arr: T[], key: K) => {
   const filteredKeys = new Set<T[K]>()

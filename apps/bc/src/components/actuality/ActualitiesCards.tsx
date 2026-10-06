@@ -1,8 +1,8 @@
 'use server'
 
 import { getMainActualitiesLocale } from '@/db/actuality.server'
-import Block from '@abc-transitionbascarbone/application/components/base/Block'
-import { Environment } from '@abc-transitionbascarbone/db/enums'
+import Block from '@abc-transitionbascarbone/common/components/base/Block'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import classNames from 'classnames'
 import { getTranslations } from 'next-intl/server'
 import ActualityRow from './Actuality'

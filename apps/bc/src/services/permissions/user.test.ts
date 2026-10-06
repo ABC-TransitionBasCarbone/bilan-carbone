@@ -2,8 +2,8 @@ import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { getMockedAuthUser, getMockedDbAccount, mockedAccountId } from '@/tests/utils/models/user'
 import { AccountWithUser } from '@/types/account.types'
 import * as userUtils from '@/utils/user'
-import { Role, UserStatus } from '@abc-transitionbascarbone/db/enums'
-import * as abcUserUtils from '@abc-transitionbascarbone/shared/utils/user'
+import { Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import * as abcUserUtils from '@abc-transitionbascarbone/common/utils/user'
 import { expect } from '@jest/globals'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from './user'
 
@@ -11,7 +11,7 @@ jest.mock('@/utils/organization', () => ({}))
 jest.mock('@/utils/user', () => ({
   canEditMemberRole: jest.fn(),
 }))
-jest.mock('@abc-transitionbascarbone/shared/utils/user', () => ({
+jest.mock('@abc-transitionbascarbone/common/utils/user', () => ({
   canBeUntrainedRole: jest.fn(),
 }))
 

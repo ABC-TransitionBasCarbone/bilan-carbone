@@ -3,12 +3,12 @@ import {
   NewStudyTagFamilyCommand,
   NewStudyTagFamilyCommandValidation,
 } from '@/services/serverFunctions/emissionSource.command'
-import Form from '@abc-transitionbascarbone/application/components/base/Form'
-import LoadingButton from '@abc-transitionbascarbone/application/components/base/LoadingButton'
-import { FormTextField } from '@abc-transitionbascarbone/application/components/form/TextField'
-import { Button, useToast } from '@abc-transitionbascarbone/application/ui'
-import { StudyTagFamily } from '@abc-transitionbascarbone/db'
-import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
+import Form from '@abc-transitionbascarbone/common/components/base/Form'
+import LoadingButton from '@abc-transitionbascarbone/common/components/base/LoadingButton'
+import { FormTextField } from '@abc-transitionbascarbone/common/components/form/TextField'
+import { StudyTagFamily } from '@abc-transitionbascarbone/common/db'
+import { Button, useToast } from '@abc-transitionbascarbone/common/ui'
+import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { useTranslations } from 'next-intl'

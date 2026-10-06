@@ -1,4 +1,4 @@
-import { TrajectoryType } from '@abc-transitionbascarbone/db/enums'
+import { TrajectoryType } from '@abc-transitionbascarbone/common/db/enums'
 import TrajectoryOption from './TrajectoryOption'
 
 interface Props {

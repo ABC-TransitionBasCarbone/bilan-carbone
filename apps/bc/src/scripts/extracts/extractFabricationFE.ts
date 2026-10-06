@@ -1,5 +1,5 @@
-import { PrismaClient } from '@abc-transitionbascarbone/db'
-import { EmissionFactorPartType } from '@abc-transitionbascarbone/db/enums'
+import { PrismaClient } from '@abc-transitionbascarbone/common/db'
+import { EmissionFactorPartType } from '@abc-transitionbascarbone/common/db/enums'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { writeFileSync } from 'fs'
 

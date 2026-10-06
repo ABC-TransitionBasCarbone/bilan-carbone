@@ -2,7 +2,7 @@
 
 import { getOrganizationVersionForRightsCheck } from '@/db/organization'
 import { hasActiveLicenceForFormation } from '@/utils/organization'
-import { DeactivatableFeature } from '@abc-transitionbascarbone/db/enums'
+import { DeactivatableFeature } from '@abc-transitionbascarbone/common/db/enums'
 import { UserSession } from 'next-auth'
 import { getDeactivableFeatureRestrictions, isDeactivableFeatureActive } from '../serverFunctions/deactivableFeatures'
 import { getUserSource } from '../serverFunctions/user'

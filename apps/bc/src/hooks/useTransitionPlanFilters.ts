@@ -1,7 +1,7 @@
 import { storageKeys } from '@/constants/storage.constants'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { resolveFilterIds } from '@/utils/scopeFilter'
-import { SubPost } from '@abc-transitionbascarbone/db/enums'
+import { SubPost } from '@abc-transitionbascarbone/common/db/enums'
 import { useEffect, useState } from 'react'
 
 export const useTransitionPlanFilters = (studyId: string, validTagIds: string[] = [], validSiteIds: string[] = []) => {

@@ -11,9 +11,9 @@ import {
   TRAJECTORY_WB2C_ID,
 } from '@/constants/trajectory.constants'
 import { TrajectoryWithObjectives } from '@/types/trajectory.types'
-import Box from '@abc-transitionbascarbone/application/components/base/Box'
-import { Button } from '@abc-transitionbascarbone/application/ui'
-import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
+import Box from '@abc-transitionbascarbone/common/components/base/Box'
+import { Button } from '@abc-transitionbascarbone/common/ui'
+import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import { Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

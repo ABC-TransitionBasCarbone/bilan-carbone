@@ -1,6 +1,6 @@
 import { CutRoles } from '@/services/roles'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
-import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/db/enums'
+import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import { findUserInfo, getEnvironmentRoles, getRoleToSetForUntrained, isAdmin } from './user'
 

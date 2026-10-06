@@ -1,4 +1,4 @@
-import { DocumentCategory } from '@abc-transitionbascarbone/db/enums'
+import { DocumentCategory } from '@abc-transitionbascarbone/common/db/enums'
 
 export const DEFAULT_SAMPLE_TITLE = 'example_study_flow.jpg'
 

@@ -8,7 +8,7 @@ import type {
   EmissionFactor as EmissionFactorPrismaModel,
   ExportRule,
   Prisma,
-} from '@abc-transitionbascarbone/db'
+} from '@abc-transitionbascarbone/common/db'
 import {
   ControlMode,
   EmissionSourceCaracterisation,
@@ -18,8 +18,8 @@ import {
   Export as StudyExport,
   SubPost,
   Unit,
-} from '@abc-transitionbascarbone/db/enums'
-import { removeDiacritics } from '@abc-transitionbascarbone/shared/utils/parsing'
+} from '@abc-transitionbascarbone/common/db/enums'
+import { removeDiacritics } from '@abc-transitionbascarbone/common/utils/parsing'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import { NewPostAndSubPosts, OldNewPostAndSubPostsMapping } from './newPostAndSubPosts'
 import {

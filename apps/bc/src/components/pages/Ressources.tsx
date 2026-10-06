@@ -1,9 +1,9 @@
 'use server'
 
 import { getEnvironnementRessources } from '@/utils/ressources'
-import Block from '@abc-transitionbascarbone/application/components/base/Block'
-import { Environment } from '@abc-transitionbascarbone/db/enums'
-import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
+import Block from '@abc-transitionbascarbone/common/components/base/Block'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import { Alert } from '@mui/material'
 import classNames from 'classnames'
 import { getTranslations } from 'next-intl/server'

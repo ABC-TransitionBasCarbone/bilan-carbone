@@ -12,8 +12,8 @@ import {
   hasSufficientLevel,
   StudyWithRoleFields,
 } from '@/utils/study'
-import type { Prisma, Study, User } from '@abc-transitionbascarbone/db'
-import { DeactivatableFeature, Environment, Level, Role, StudyRole } from '@abc-transitionbascarbone/db/enums'
+import type { Prisma, Study, User } from '@abc-transitionbascarbone/common/db'
+import { DeactivatableFeature, Environment, Level, Role, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
 import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'

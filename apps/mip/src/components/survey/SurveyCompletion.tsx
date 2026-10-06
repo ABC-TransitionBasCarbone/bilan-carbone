@@ -15,9 +15,9 @@ import {
   type RawRules,
 } from '@/lib/publicodes/mip-engine'
 import { normalizeSituation, type MipSimulationState } from '@/utils/survey'
-import { getRuleCategoryKey } from '@abc-transitionbascarbone/shared/publicodes/form'
-import { safeEvaluate } from '@abc-transitionbascarbone/shared/publicodes/utils'
-import { getPositiveNodeValue } from '@abc-transitionbascarbone/shared/utils/number'
+import { getRuleCategoryKey } from '@abc-transitionbascarbone/common/publicodes/form'
+import { safeEvaluate } from '@abc-transitionbascarbone/common/publicodes/utils'
+import { getPositiveNodeValue } from '@abc-transitionbascarbone/common/utils/number'
 import { Refresh } from '@mui/icons-material'
 import { Button, Container } from '@mui/material'
 import { useTranslations } from 'next-intl'

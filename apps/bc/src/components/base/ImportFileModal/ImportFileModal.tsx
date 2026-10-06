@@ -2,8 +2,8 @@
 
 import { AmbiguousRow, FEChoices, ImportError, ImportResult, ImportWarning, Phase } from '@/types/import.types'
 import { ValidateEmissionSourcesResult } from '@/types/importEmissionSources.types'
-import LoadingButton from '@abc-transitionbascarbone/application/components/base/LoadingButton'
-import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
+import LoadingButton from '@abc-transitionbascarbone/common/components/base/LoadingButton'
+import Modal from '@abc-transitionbascarbone/common/components/modals/Modal'
 import DownloadIcon from '@mui/icons-material/Download'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 import { CircularProgress, Typography } from '@mui/material'

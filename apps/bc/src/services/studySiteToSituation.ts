@@ -1,7 +1,7 @@
 import { studySiteToClicksonSituation } from '@/environments/clickson/publicodes/studySiteToSituation'
 import { studySiteToCutSituation } from '@/environments/cut/publicodes/studySiteToSituation'
 import { studySiteToTiltSituation } from '@/environments/tilt/publicodes/studySiteToSituation'
-import { Country, Environment } from '@abc-transitionbascarbone/db/enums'
+import { Country, Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { Situation } from 'publicodes'
 import { EnvironmentWithSimplifiedStudies } from './permissions/environment'
 

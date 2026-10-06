@@ -6,7 +6,7 @@ import {
   getMockedFullStudy,
 } from '@/tests/utils/models/study'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
-import { ControlMode, Export, Level, SiteCAUnit, StudyResultUnit } from '@abc-transitionbascarbone/db/enums'
+import { ControlMode, Export, Level, SiteCAUnit, StudyResultUnit } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import dayjs from 'dayjs'
 import { createDuplicateFormData, updateSitesFromSourceStudy } from './useDuplicateStudy'
@@ -15,7 +15,7 @@ jest.mock('next-intl', () => ({
   useTranslations: () => (key: string) => key,
 }))
 
-jest.mock('@abc-transitionbascarbone/application/components/hooks/useServerFunction', () => ({
+jest.mock('@abc-transitionbascarbone/common/components/hooks/useServerFunction', () => ({
   useServerFunction: () => ({
     callServerFunction: jest.fn(),
   }),

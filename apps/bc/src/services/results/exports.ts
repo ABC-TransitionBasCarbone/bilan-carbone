@@ -2,14 +2,14 @@ import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import { toCamelCase } from '@/utils/string'
 import { getBaseFilteredEmissionSources } from '@/utils/study'
-import type { ExportRule } from '@abc-transitionbascarbone/db'
+import type { ExportRule } from '@abc-transitionbascarbone/common/db'
 import {
   EmissionFactorBase,
   EmissionFactorPartType,
   EmissionSourceCaracterisation,
   Environment,
   Import,
-} from '@abc-transitionbascarbone/db/enums'
+} from '@abc-transitionbascarbone/common/db/enums'
 import { convertTiltSubPostToBCSubPost } from '../posts'
 import {
   getSquaredStandardDeviationForEmissionSource,

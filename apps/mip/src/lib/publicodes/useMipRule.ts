@@ -1,4 +1,4 @@
-import { getUpdatedSituationWithInputValue } from '@abc-transitionbascarbone/shared/publicodes/form/utils'
+import { getUpdatedSituationWithInputValue } from '@abc-transitionbascarbone/common/publicodes/form/utils'
 import { useMipPublicodes } from './MipPublicodesProvider'
 import { getFormQuestions, getMosaicResetSituation, getPlancherWarning, getQuestionType } from './mip-rules'
 

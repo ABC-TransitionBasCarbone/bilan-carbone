@@ -1,7 +1,7 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import CommentManagementPage from '@/components/pages/CommentManagementPage'
 import { hasAccessToStudyComments } from '@/services/permissions/environment'
-import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
+import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 
 export const revalidate = 0
 

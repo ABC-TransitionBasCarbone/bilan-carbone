@@ -1,8 +1,8 @@
 'use client'
 
-import Box from '@abc-transitionbascarbone/application/components/base/Box'
-import styles from '@abc-transitionbascarbone/application/components/modals/Modal.module.css'
-import { Button } from '@abc-transitionbascarbone/application/ui'
+import Box from '@abc-transitionbascarbone/common/components/base/Box'
+import styles from '@abc-transitionbascarbone/common/components/modals/Modal.module.css'
+import { Button } from '@abc-transitionbascarbone/common/ui'
 import CloseIcon from '@mui/icons-material/Close'
 import { IconButton, Modal as MUIModal, Step, StepLabel, Stepper, Typography } from '@mui/material'
 import classNames from 'classnames'

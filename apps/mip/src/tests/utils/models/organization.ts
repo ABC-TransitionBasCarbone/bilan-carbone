@@ -1,7 +1,7 @@
 import {
   mockedOrganization,
   mockedOrganizationId,
-} from '@abc-transitionbascarbone/shared/services/tests/models/organization'
+} from '@abc-transitionbascarbone/common/services/tests/models/organization'
 export const mockedOrganizationVersionMipId = 'mocked-organization-version-mip-id'
 
 export const mockedOrganizationVersionMip = {

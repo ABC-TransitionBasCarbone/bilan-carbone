@@ -1,6 +1,6 @@
 'use client'
 
-import { PublicodesProvider, usePublicodes } from '@abc-transitionbascarbone/shared/publicodes/state'
+import { PublicodesProvider, usePublicodes } from '@abc-transitionbascarbone/common/publicodes/state'
 import { createContext, ReactNode, useContext, useMemo } from 'react'
 import { createMipEngine, RawRules } from './mip-engine'
 import { getRulesMeta } from './mip-rules'

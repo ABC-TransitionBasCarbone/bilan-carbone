@@ -1,9 +1,9 @@
 'use client'
 
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import Block from '@abc-transitionbascarbone/application/components/base/Block'
-import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
-import { getEnvVarClient } from '@abc-transitionbascarbone/shared/utils/environmentClient'
+import Block from '@abc-transitionbascarbone/common/components/base/Block'
+import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
+import { getEnvVarClient } from '@abc-transitionbascarbone/common/utils/environmentClient'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 

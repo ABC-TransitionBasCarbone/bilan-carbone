@@ -1,4 +1,4 @@
-import { EstablishmentType } from '@abc-transitionbascarbone/db/enums'
+import { EstablishmentType } from '@abc-transitionbascarbone/common/db/enums'
 
 export interface School {
   identifiant_de_l_etablissement?: string

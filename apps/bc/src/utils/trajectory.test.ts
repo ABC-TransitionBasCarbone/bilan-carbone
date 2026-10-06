@@ -5,8 +5,8 @@ import {
   TARGET_YEAR,
 } from '@/constants/trajectory.constants'
 import type { BaseObjective, PastStudy, TrajectoryDataPoint, TrajectoryWithObjectives } from '@/types/trajectory.types'
-import { Action } from '@abc-transitionbascarbone/db'
-import { StudyResultUnit, TrajectoryType } from '@abc-transitionbascarbone/db/enums'
+import { Action } from '@abc-transitionbascarbone/common/db'
+import { StudyResultUnit, TrajectoryType } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import { calculateActionBasedTrajectory } from './actionTrajectory.utils'
 import { calculateCustomTrajectory } from './customTrajectory.utils'

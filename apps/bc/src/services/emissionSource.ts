@@ -1,7 +1,7 @@
 import type { FullStudy } from '@/db/study'
 import { getEmissionFactorValue } from '@/utils/emissionFactors'
 import { hasDeprecationPeriod, isCASSubPost } from '@/utils/study'
-import type { StudyEmissionSource } from '@abc-transitionbascarbone/db'
+import type { StudyEmissionSource } from '@abc-transitionbascarbone/common/db'
 import {
   ControlMode,
   EmissionSourceCaracterisation,
@@ -9,7 +9,7 @@ import {
   Export,
   Import,
   SubPost,
-} from '@abc-transitionbascarbone/db/enums'
+} from '@abc-transitionbascarbone/common/db/enums'
 import { convertTiltSubPostToBCSubPost } from './posts'
 import { getConfidenceInterval, getSquaredStandardDeviationForEmissionSource } from './uncertainty'
 

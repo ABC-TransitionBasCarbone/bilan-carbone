@@ -6,9 +6,9 @@ import {
   ChangeStudyResultsUnitCommand,
   ChangeStudyResultsUnitCommandValidation,
 } from '@/services/serverFunctions/study.command'
-import { FormSelect } from '@abc-transitionbascarbone/application/components/form/Select'
-import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
-import { StudyResultUnit } from '@abc-transitionbascarbone/db/enums'
+import { FormSelect } from '@abc-transitionbascarbone/common/components/form/Select'
+import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
+import { StudyResultUnit } from '@abc-transitionbascarbone/common/db/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'

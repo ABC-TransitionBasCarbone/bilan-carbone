@@ -1,4 +1,4 @@
-import type { Prisma } from '@abc-transitionbascarbone/db'
+import type { Prisma } from '@abc-transitionbascarbone/common/db'
 
 export interface Delegate {
   findMany(args?: object): Promise<{ id: string; oldBCId: string | null }[]>

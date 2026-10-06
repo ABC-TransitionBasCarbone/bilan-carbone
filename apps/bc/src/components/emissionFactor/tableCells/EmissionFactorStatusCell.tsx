@@ -1,4 +1,4 @@
-import { EmissionFactorStatus } from '@abc-transitionbascarbone/db/enums'
+import { EmissionFactorStatus } from '@abc-transitionbascarbone/common/db/enums'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import InventoryIcon from '@mui/icons-material/Inventory'
 import { Getter } from '@tanstack/react-table'

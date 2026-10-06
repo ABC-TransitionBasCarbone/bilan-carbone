@@ -1,4 +1,4 @@
-import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@abc-transitionbascarbone/db/enums'
+import { EmissionSourceCaracterisation, EmissionSourceType, SubPost } from '@abc-transitionbascarbone/common/db/enums'
 import z from 'zod'
 
 export const CreateEmissionSourceCommandValidation = z.object({

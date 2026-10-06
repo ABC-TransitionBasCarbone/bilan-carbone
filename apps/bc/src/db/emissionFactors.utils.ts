@@ -1,4 +1,4 @@
-import { LocaleType } from '@abc-transitionbascarbone/shared/i18n/config'
+import { LocaleType } from '@abc-transitionbascarbone/common/i18n/config'
 import type { EmissionFactorList } from './emissionFactors'
 
 export const keepOnlyOneMetadata = <T extends { metaData: EmissionFactorList['metaData'][] }>(

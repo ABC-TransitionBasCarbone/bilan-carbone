@@ -17,7 +17,7 @@ import type {
   Trajectory,
   TransitionPlan,
   TransitionPlanStudy,
-} from '@abc-transitionbascarbone/db'
+} from '@abc-transitionbascarbone/common/db'
 import { LineSeriesType } from '@mui/x-charts'
 
 export interface TrajectoryDataPoint {

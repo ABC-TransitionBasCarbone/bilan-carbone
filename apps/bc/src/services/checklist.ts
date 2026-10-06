@@ -1,6 +1,6 @@
 import { hasEditionRole } from '@/utils/organization'
 import { isAdmin } from '@/utils/user'
-import { Level, Role, UserChecklist } from '@abc-transitionbascarbone/db/enums'
+import { Level, Role, UserChecklist } from '@abc-transitionbascarbone/common/db/enums'
 
 export const mandatoryParentSteps = (step: UserChecklist, userRole: Role, isCr: boolean, level: Level | null) => {
   let steps: UserChecklist[]

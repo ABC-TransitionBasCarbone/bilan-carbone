@@ -1,5 +1,5 @@
-import { EmissionFactorBase, EmissionFactorPartType, SubPost, Unit } from '@abc-transitionbascarbone/db/enums'
-import { setCustomIssue } from '@abc-transitionbascarbone/shared'
+import { setCustomIssue } from '@abc-transitionbascarbone/common'
+import { EmissionFactorBase, EmissionFactorPartType, SubPost, Unit } from '@abc-transitionbascarbone/common/db/enums'
 import z from 'zod'
 
 export const maxParts = 5

@@ -1,6 +1,6 @@
 import { FullStudy, getMinimalStudyForRights, getStudyById } from '@/db/study'
 import { canReadStudy, canReadStudyDetail } from '@/services/permissions/study'
-import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
+import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 import React from 'react'
 import { UserSessionProps } from './withAuth'
 

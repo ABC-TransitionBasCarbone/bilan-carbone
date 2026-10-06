@@ -1,6 +1,6 @@
 import { getAccountByEmailAndEnvironment } from '@/db/account'
 import { createUsersWithAccount, updateAccount } from '@/db/user'
-import { Environment, Level, Role, UserStatus } from '@abc-transitionbascarbone/db/enums'
+import { Environment, Level, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { processUsers } from './userImport'
 
 jest.mock('@/db/account', () => ({

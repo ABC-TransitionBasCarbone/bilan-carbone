@@ -1,5 +1,5 @@
 import { getMockedAuthUser } from '@/tests/utils/models/user'
-import { Environment, Role } from '@abc-transitionbascarbone/db/enums'
+import { Environment, Role } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import {
   canEditOrganizationVersion,

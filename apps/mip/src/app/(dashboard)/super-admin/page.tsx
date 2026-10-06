@@ -2,8 +2,8 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import SuperAdminPage from '@/components/pages/SuperAdmin'
 import { getAllModelCampaigns } from '@/db/campaign'
-import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
-import { RoleMip } from '@abc-transitionbascarbone/db/enums'
+import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
+import { RoleMip } from '@abc-transitionbascarbone/common/db/enums'
 
 const SuperAdmin = async ({ user }: UserSessionProps) => {
   if (user?.role !== RoleMip.SUPER_ADMIN) {

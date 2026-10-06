@@ -1,5 +1,5 @@
 import { StudySiteFields } from '@/services/studySiteToSituation'
-import { Country } from '@abc-transitionbascarbone/db/enums'
+import { Country } from '@abc-transitionbascarbone/common/db/enums'
 import { ClicksonSituation } from './types'
 
 const publicodesCountriesMapping: Partial<Record<Country, string>> = {

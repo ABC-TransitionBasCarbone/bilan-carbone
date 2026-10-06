@@ -7,12 +7,12 @@
     "yarn": "1.22"
   },
   "scripts": {
-    "postinstall": "rm -rf ../../packages/db/src/generated/prisma && prisma generate --config ../../packages/db/prisma.config.ts",
+    "postinstall": "rm -rf ../../packages/common/db/src/generated/prisma && prisma generate --config ../../packages/common/db/prisma.config.ts",
     "dev": "next dev",
     "dev:test": "dotenv -e .env.test -- next dev --port 3001",
     "start:test": "dotenv -e .env.test -- env PORT=3001 node .next/standalone/apps/bc/server.js",
     "prebuild": "yarn workspace @abc-transitionbascarbone/publicodes-packages compile",
-    "build": "next build && node ../../packages/shared/tooling/config/copy-assets.js apps/bc",
+    "build": "next build && node ../../packages/common/tooling/config/copy-assets.js apps/bc",
     "start": "node -r dotenv/config .next/standalone/apps/bc/server.js dotenv_config_path=.env",
     "ts": "tsc --noEmit",
     "lint": "prettier --check . && eslint .",
@@ -22,7 +22,7 @@
     "tsx": "dotenv -e .env -- tsx",
     "cypress": "cypress run",
     "cypress:gui": "cypress open",
-    "db:test:reset": "dotenv -e .env.test -- prisma migrate reset --force --config ../../packages/db/prisma.config.ts && dotenv -e .env.test -- tsx prisma/seed/index.ts",
+    "db:test:reset": "dotenv -e .env.test -- prisma migrate reset --force --config ../../packages/common/db/prisma.config.ts && dotenv -e .env.test -- tsx prisma/seed/index.ts",
     "question:import:google": "npx tsx src/scripts/cut/question/add.ts -s google -f",
     "question:import:excel": "npx tsx src/scripts/cut/question/add.ts -f"
   },
@@ -30,12 +30,10 @@
     "seed": "tsx prisma/seed/index.ts"
   },
   "dependencies": {
-    "@abc-transitionbascarbone/application": "*",
-    "@abc-transitionbascarbone/db": "*",
+    "@abc-transitionbascarbone/common": "*",
     "@aws-sdk/client-s3": "^3.1144.0",
     "@aws-sdk/s3-request-presigner": "^3.1144.0",
     "@abc-transitionbascarbone/publicodes-packages": "*",
-    "@abc-transitionbascarbone/shared": "*",
     "@base-ui-components/react": "^1.0.0-rc.0",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",

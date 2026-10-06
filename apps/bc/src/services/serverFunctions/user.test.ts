@@ -1,4 +1,4 @@
-import { DeactivatableFeature, Environment, Role, UserStatus } from '@abc-transitionbascarbone/db/enums'
+import { DeactivatableFeature, Environment, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 
 import {
@@ -28,10 +28,10 @@ import {
 } from '@/services/permissions/check'
 import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { mockedAccountId } from '@/tests/utils/models/user'
-import { sendActivationEmail, sendActivationRequest } from '@abc-transitionbascarbone/shared/services/email/email'
-import { EMAIL_SENT, NOT_AUTHORIZED } from '@abc-transitionbascarbone/shared/services/permissions/check'
-import { mockedOrganizationId } from '@abc-transitionbascarbone/shared/services/tests/models/organization'
-import { mockedUserId } from '@abc-transitionbascarbone/shared/services/tests/models/user'
+import { sendActivationEmail, sendActivationRequest } from '@abc-transitionbascarbone/common/services/email/email'
+import { EMAIL_SENT, NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
+import { mockedOrganizationId } from '@abc-transitionbascarbone/common/services/tests/models/organization'
+import { mockedUserId } from '@abc-transitionbascarbone/common/services/tests/models/user'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
 import { activateEmail, signUpWithSiretOrCNC } from './user'
@@ -62,8 +62,8 @@ jest.mock('@/db/site')
 jest.mock('@/db/study', () => ({}))
 jest.mock('@/db/user')
 jest.mock('@/services/associationApi')
-jest.mock('@abc-transitionbascarbone/db/db')
-jest.mock('@abc-transitionbascarbone/shared/services/email/email', () => ({
+jest.mock('@abc-transitionbascarbone/common/db/db')
+jest.mock('@abc-transitionbascarbone/common/services/email/email', () => ({
   sendActivationEmail: jest.fn(),
   sendActivationRequest: jest.fn(),
 }))

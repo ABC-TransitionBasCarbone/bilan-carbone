@@ -1,7 +1,7 @@
-import type { AccountMip, Prisma, User } from '@abc-transitionbascarbone/db'
-import { Environment, Level, RoleMip, UserStatus } from '@abc-transitionbascarbone/db/enums'
-import { mockedOrganizationId } from '@abc-transitionbascarbone/shared/services/tests/models/organization'
-import { mockedDbUser, mockedUser, mockedUserId } from '@abc-transitionbascarbone/shared/services/tests/models/user'
+import type { AccountMip, Prisma, User } from '@abc-transitionbascarbone/common/db'
+import { Environment, Level, RoleMip, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { mockedOrganizationId } from '@abc-transitionbascarbone/common/services/tests/models/organization'
+import { mockedDbUser, mockedUser, mockedUserId } from '@abc-transitionbascarbone/common/services/tests/models/user'
 import { Session, UserSession } from 'next-auth'
 import { mockedOrganizationVersionMipId } from './organization'
 

@@ -1,0 +1,11 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "plugins": []
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "../types/mui.d.ts"
+  ]
+}

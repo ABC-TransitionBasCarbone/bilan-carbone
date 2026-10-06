@@ -1,6 +1,6 @@
 import { getUserByEmailWithSensibleInformations, updateUserPasswordForEmail } from '@/db/user'
-import { Environment } from '@abc-transitionbascarbone/db/enums'
-import { hashResetToken } from '@abc-transitionbascarbone/shared/utils/user.server'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { hashResetToken } from '@abc-transitionbascarbone/common/utils/user.server'
 import { expect } from '@jest/globals'
 import jwt from 'jsonwebtoken'
 import { checkToken, reset } from './auth'

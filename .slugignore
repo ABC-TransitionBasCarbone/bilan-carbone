@@ -2,6 +2,7 @@
 .cache/Cypress
 apps/bc/.next/cache
 packages/*/node_modules
+packages/common/db/node_modules
 node_modules/.cache
 .cache
 cypress

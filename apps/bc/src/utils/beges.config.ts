@@ -1,5 +1,5 @@
-import type { ExportRule } from '@abc-transitionbascarbone/db'
-import { EmissionFactorPartType, SubPost } from '@abc-transitionbascarbone/db/enums'
+import type { ExportRule } from '@abc-transitionbascarbone/common/db'
+import { EmissionFactorPartType, SubPost } from '@abc-transitionbascarbone/common/db/enums'
 
 export const begesRules = [
   {

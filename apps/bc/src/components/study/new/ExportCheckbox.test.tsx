@@ -1,7 +1,7 @@
 import theme from '@/environments/base/theme/theme'
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { getMockedFullStudy } from '@/tests/utils/models/study'
-import { ControlMode, EmissionSourceCaracterisation, Export } from '@abc-transitionbascarbone/db/enums'
+import { ControlMode, EmissionSourceCaracterisation, Export } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import { ThemeProvider } from '@mui/material/styles'
 import { render, screen, waitFor } from '@testing-library/react'
@@ -18,7 +18,7 @@ jest.mock('next-intl', () => ({
   },
 }))
 
-jest.mock('@abc-transitionbascarbone/application/components/hooks/useServerFunction', () => ({
+jest.mock('@abc-transitionbascarbone/common/components/hooks/useServerFunction', () => ({
   useServerFunction: () => ({
     callServerFunction: jest.fn(async (fn, options) => {
       await fn()

@@ -1,5 +1,5 @@
 import { ActionStepCommand, AddActionFormCommand } from '@/services/serverFunctions/action.command'
-import { FormTextField } from '@abc-transitionbascarbone/application/components/form/TextField'
+import { FormTextField } from '@abc-transitionbascarbone/common/components/form/TextField'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { ArrowRight, Delete, DragIndicator } from '@mui/icons-material'

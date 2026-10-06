@@ -1,4 +1,4 @@
-import { EmissionFactorBase } from '@abc-transitionbascarbone/db/enums'
+import { EmissionFactorBase } from '@abc-transitionbascarbone/common/db/enums'
 import { LocalGroceryStore, LocationOn } from '@mui/icons-material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

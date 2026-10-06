@@ -1,4 +1,4 @@
-import { Role } from '@abc-transitionbascarbone/db/enums'
+import { Role } from '@abc-transitionbascarbone/common/db/enums'
 
 describe('Team', () => {
   before(() => {

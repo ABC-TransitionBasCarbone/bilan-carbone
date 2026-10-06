@@ -1,4 +1,4 @@
-import { SubPost } from '@abc-transitionbascarbone/db/enums'
+import { SubPost } from '@abc-transitionbascarbone/common/db/enums'
 
 const filtersMatcheScope = (scope: string[], filters: string[]): boolean => {
   return scope.some((id) => filters.includes(id))

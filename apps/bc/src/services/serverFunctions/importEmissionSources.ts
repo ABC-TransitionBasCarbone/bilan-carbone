@@ -33,12 +33,12 @@ import {
   EmissionSourceType,
   SubPost,
   Unit,
-} from '@abc-transitionbascarbone/db/enums'
-import { LocaleType } from '@abc-transitionbascarbone/shared/i18n/config'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/shared/services/permissions/check'
-import { yearToDate } from '@abc-transitionbascarbone/shared/utils'
-import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
-import { buildCsv } from '@abc-transitionbascarbone/shared/utils/csv'
+} from '@abc-transitionbascarbone/common/db/enums'
+import { LocaleType } from '@abc-transitionbascarbone/common/i18n/config'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
+import { yearToDate } from '@abc-transitionbascarbone/common/utils'
+import { Post } from '@abc-transitionbascarbone/common/utils/charts'
+import { buildCsv } from '@abc-transitionbascarbone/common/utils/csv'
 import xlsx from 'node-xlsx'
 import { canBeValidated, getCaracterisationsBySubPost, getEmissionSourceEmission } from '../emissionSource'
 import { getAuthenticatedAccount } from '../permissions/account.permissions'

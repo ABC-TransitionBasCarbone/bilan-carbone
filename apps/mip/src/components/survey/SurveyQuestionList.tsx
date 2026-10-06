@@ -1,6 +1,6 @@
 import { GroupedElement } from '@/components/survey/surveyGrouping'
 import { createMipEngine } from '@/lib/publicodes/mip-engine'
-import { InputQuestion, MosaicQuestion } from '@abc-transitionbascarbone/application/components/publicodes/form'
+import { InputQuestion, MosaicQuestion } from '@abc-transitionbascarbone/common/components/publicodes/form'
 import { Alert } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { Fragment } from 'react'

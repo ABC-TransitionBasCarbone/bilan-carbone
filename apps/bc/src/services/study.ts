@@ -19,11 +19,17 @@ import {
   hasDeprecationPeriod,
   isCAS,
 } from '@/utils/study'
-import type { ExportRule } from '@abc-transitionbascarbone/db'
-import { EmissionFactorBase, Environment, Export, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db/enums'
-import { Translations } from '@abc-transitionbascarbone/shared'
-import { formatDateFr } from '@abc-transitionbascarbone/shared/utils'
-import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/shared/utils/charts'
+import { Translations } from '@abc-transitionbascarbone/common'
+import type { ExportRule } from '@abc-transitionbascarbone/common/db'
+import {
+  EmissionFactorBase,
+  Environment,
+  Export,
+  StudyResultUnit,
+  SubPost,
+} from '@abc-transitionbascarbone/common/db/enums'
+import { formatDateFr } from '@abc-transitionbascarbone/common/utils'
+import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/common/utils/charts'
 import dayjs from 'dayjs'
 import type { ResultType } from '../types/study.types'
 import { AdditionalResultTypes, BaseResultsBySite, ResultsByPost } from '../types/study.types'

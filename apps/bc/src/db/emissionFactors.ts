@@ -4,7 +4,7 @@ import { FeFilters } from '@/types/filters'
 import { unique } from '@/utils/array'
 import { getEmissionFactorSubPostsMap, isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import { flattenSubposts } from '@/utils/post'
-import { Prisma } from '@abc-transitionbascarbone/db'
+import { Prisma } from '@abc-transitionbascarbone/common/db'
 import {
   EmissionFactorBase,
   EmissionFactorStatus,
@@ -12,8 +12,8 @@ import {
   Import,
   SubPost,
   Unit,
-} from '@abc-transitionbascarbone/db/enums'
-import { LocaleType } from '@abc-transitionbascarbone/shared/i18n/config'
+} from '@abc-transitionbascarbone/common/db/enums'
+import { LocaleType } from '@abc-transitionbascarbone/common/i18n/config'
 import { Session } from 'next-auth'
 import { prismaClient } from './client.server'
 import { getOrgVersionWithOrgId } from './organization'

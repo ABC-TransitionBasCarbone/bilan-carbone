@@ -1,8 +1,8 @@
 'use client'
 
 import { StudyTagFamilyWithTags } from '@/db/study'
-import Form from '@abc-transitionbascarbone/application/components/base/Form'
-import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
+import Form from '@abc-transitionbascarbone/common/components/base/Form'
+import Modal from '@abc-transitionbascarbone/common/components/modals/Modal'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
 import { useTranslations } from 'next-intl'

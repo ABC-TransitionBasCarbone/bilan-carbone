@@ -1,5 +1,5 @@
 import { parseFloatString } from '@/utils/number'
-import type { Prisma, PrismaClient } from '@abc-transitionbascarbone/db'
+import type { Prisma, PrismaClient } from '@abc-transitionbascarbone/common/db'
 import { parse } from 'csv-parse'
 import fs from 'fs'
 

@@ -1,9 +1,9 @@
 import { BCUnit, useUnitLabel } from '@/services/unit'
 import { FeFilters } from '@/types/filters'
-import { Button } from '@abc-transitionbascarbone/application/ui'
-import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/db'
-import { EmissionFactorBase, SubPost } from '@abc-transitionbascarbone/db/enums'
-import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
+import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/common/db'
+import { EmissionFactorBase, SubPost } from '@abc-transitionbascarbone/common/db/enums'
+import { Button } from '@abc-transitionbascarbone/common/ui'
+import { Post } from '@abc-transitionbascarbone/common/utils/charts'
 import {
   Autocomplete,
   Checkbox,

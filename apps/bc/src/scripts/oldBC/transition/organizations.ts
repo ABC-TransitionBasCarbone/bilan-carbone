@@ -1,7 +1,7 @@
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { OrganizationVersionWithOrganizationSelect } from '@/db/organization.select'
-import { Prisma } from '@abc-transitionbascarbone/db'
-import { Environment } from '@abc-transitionbascarbone/db/enums'
+import { Prisma } from '@abc-transitionbascarbone/common/db'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { OrganizationRow, OrganizationsWorkSheet } from './oldBCWorkSheetsReader'
 import { getExistingSitesIds } from './repositories'
 

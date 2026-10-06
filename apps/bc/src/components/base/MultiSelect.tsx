@@ -1,4 +1,4 @@
-import { Select } from '@abc-transitionbascarbone/application/components/base/Select'
+import { Select } from '@abc-transitionbascarbone/common/components/base/Select'
 import { MenuItem, SelectChangeEvent, SelectProps } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
 import styles from './MultiSelect.module.css'

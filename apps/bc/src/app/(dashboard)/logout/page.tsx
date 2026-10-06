@@ -1,7 +1,7 @@
 'use client'
 
 import { signOutEnv } from '@/services/auth.utils'
-import { Environment } from '@abc-transitionbascarbone/db/enums'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 

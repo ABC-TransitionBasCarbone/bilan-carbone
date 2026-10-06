@@ -1,5 +1,5 @@
-import { Environment, Level } from '@abc-transitionbascarbone/db/enums'
-import { courseEnvironments, isAdvanced } from '@abc-transitionbascarbone/shared/utils/environments'
+import { Environment, Level } from '@abc-transitionbascarbone/common/db/enums'
+import { courseEnvironments, isAdvanced } from '@abc-transitionbascarbone/common/utils/environments'
 import { hasAccessToCarbonResponsibilityIntensities, isTilt } from './environment'
 
 const { BC, CUT, TILT, CLICKSON } = Environment

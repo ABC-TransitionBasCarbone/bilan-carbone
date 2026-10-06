@@ -2,9 +2,9 @@
 
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import { EmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
-import { Select } from '@abc-transitionbascarbone/application/components/base/Select'
-import { EmissionFactorBase, SubPost } from '@abc-transitionbascarbone/db/enums'
-import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
+import { Select } from '@abc-transitionbascarbone/common/components/base/Select'
+import { EmissionFactorBase, SubPost } from '@abc-transitionbascarbone/common/db/enums'
+import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import { FormControl, FormHelperText, MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useEffect, useMemo } from 'react'

@@ -1,6 +1,6 @@
 'use server'
 
-import { Environment } from '@abc-transitionbascarbone/db/enums'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { cookies as getCookies } from 'next/headers'
 
 const COOKIE_NAME = 'ENVIRONMENT'

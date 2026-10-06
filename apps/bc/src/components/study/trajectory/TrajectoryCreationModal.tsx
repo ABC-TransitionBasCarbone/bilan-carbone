@@ -24,12 +24,12 @@ import {
   getDefaultObjectivesForTrajectoryType,
   getDisplayedReferenceYearForTrajectoryType,
 } from '@/utils/trajectory'
-import LoadingButton from '@abc-transitionbascarbone/application/components/base/LoadingButton'
-import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
-import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
-import type { SectenInfo } from '@abc-transitionbascarbone/db'
-import { TrajectoryType } from '@abc-transitionbascarbone/db/enums'
-import { getYearFromDateStr } from '@abc-transitionbascarbone/shared/utils/time'
+import LoadingButton from '@abc-transitionbascarbone/common/components/base/LoadingButton'
+import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
+import Modal from '@abc-transitionbascarbone/common/components/modals/Modal'
+import type { SectenInfo } from '@abc-transitionbascarbone/common/db'
+import { TrajectoryType } from '@abc-transitionbascarbone/common/db/enums'
+import { getYearFromDateStr } from '@abc-transitionbascarbone/common/utils/time'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Alert } from '@mui/material'
 import { useTranslations } from 'next-intl'

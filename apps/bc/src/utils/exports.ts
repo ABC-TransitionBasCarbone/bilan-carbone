@@ -3,10 +3,10 @@ import type { FullStudy } from '@/db/study'
 import { getEmissionResults } from '@/services/emissionSource'
 import { getBegesEmissionTotal } from '@/services/results/beges'
 import { getGHGPEmissionTotal } from '@/services/results/ghgp'
-import { Environment, Export, StudyResultUnit } from '@abc-transitionbascarbone/db/enums'
-import { Translations } from '@abc-transitionbascarbone/shared'
-import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/shared/utils/charts'
-import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
+import { Translations } from '@abc-transitionbascarbone/common'
+import { Environment, Export, StudyResultUnit } from '@abc-transitionbascarbone/common/db/enums'
+import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/common/utils/charts'
+import { formatNumber } from '@abc-transitionbascarbone/common/utils/number'
 
 const getExportEmissionTotal = (
   emissionSource: FullStudy['emissionSources'][number],

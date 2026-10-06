@@ -1,6 +1,10 @@
 import type { ActionWithRelations, ObjectiveWithScope, TransitionPlanWithRelations } from '@/types/trajectory.types'
-import type { ExternalStudy, Trajectory, TransitionPlanStudy } from '@abc-transitionbascarbone/db'
-import { ActionIndicatorType, ActionPotentialDeduction, TrajectoryType } from '@abc-transitionbascarbone/db/enums'
+import type { ExternalStudy, Trajectory, TransitionPlanStudy } from '@abc-transitionbascarbone/common/db'
+import {
+  ActionIndicatorType,
+  ActionPotentialDeduction,
+  TrajectoryType,
+} from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import { duplicateTransitionPlanWithRelations } from './transitionPlan'
 

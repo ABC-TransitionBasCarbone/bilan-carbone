@@ -5,7 +5,7 @@ import { getAccountById } from '@/db/account'
 import { NEWGetAccountRoleOnStudyWithId } from '@/services/serverFunctions/study'
 import { AccountWithUser } from '@/types/account.types'
 import { hasEditionRights } from '@/utils/study'
-import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
+import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 import { redirect } from 'next/navigation'
 
 interface Props {

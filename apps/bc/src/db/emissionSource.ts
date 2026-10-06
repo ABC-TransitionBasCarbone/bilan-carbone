@@ -1,4 +1,4 @@
-import type { Prisma } from '@abc-transitionbascarbone/db'
+import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { prismaClient } from './client.server'
 
 export const getEmissionSourceById = (id: string) =>

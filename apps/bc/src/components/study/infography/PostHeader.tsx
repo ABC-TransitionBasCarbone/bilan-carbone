@@ -1,6 +1,6 @@
 import Link from '@/components/base/Link'
-import { SubPost } from '@abc-transitionbascarbone/db/enums'
-import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
+import { SubPost } from '@abc-transitionbascarbone/common/db/enums'
+import { Post } from '@abc-transitionbascarbone/common/utils/charts'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import progressStyles from '../../base/ProgressBar.module.css'

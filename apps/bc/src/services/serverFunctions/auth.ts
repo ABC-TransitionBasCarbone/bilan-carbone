@@ -2,9 +2,9 @@
 
 import { getUserByEmailWithSensibleInformations, updateUserPasswordForEmail } from '@/db/user'
 import { withServerResponse } from '@/utils/serverResponse'
-import { Environment } from '@abc-transitionbascarbone/db/enums'
-import { computePasswordValidation } from '@abc-transitionbascarbone/shared/utils/auth'
-import { hashResetToken } from '@abc-transitionbascarbone/shared/utils/user.server'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { computePasswordValidation } from '@abc-transitionbascarbone/common/utils/auth'
+import { hashResetToken } from '@abc-transitionbascarbone/common/utils/user.server'
 import jwt from 'jsonwebtoken'
 
 export const checkToken = async (token: string) => {

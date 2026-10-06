@@ -1,4 +1,4 @@
-import { Translations } from '@abc-transitionbascarbone/shared'
+import { Translations } from '@abc-transitionbascarbone/common'
 import { Tabs as MuiTabs, Tab } from '@mui/material'
 import { ReactNode, useMemo, useState } from 'react'
 

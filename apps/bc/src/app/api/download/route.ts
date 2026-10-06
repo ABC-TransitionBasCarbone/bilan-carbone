@@ -1,4 +1,4 @@
-import { sanitizeFileName } from '@abc-transitionbascarbone/shared/utils/csv'
+import { sanitizeFileName } from '@abc-transitionbascarbone/common/utils/csv'
 import { NextRequest } from 'next/server'
 
 const getAllowedDownloadHosts = () => {

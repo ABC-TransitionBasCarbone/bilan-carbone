@@ -1,6 +1,6 @@
 import type { FullStudy } from '@/db/study'
-import { EmissionFactorBase, Export, Unit } from '@abc-transitionbascarbone/db/enums'
-import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
+import { EmissionFactorBase, Export, Unit } from '@abc-transitionbascarbone/common/db/enums'
+import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import GlossaryIconModal from '../modals/GlossaryIconModal'

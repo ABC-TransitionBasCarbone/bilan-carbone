@@ -1,8 +1,8 @@
 'use client'
 
 import { FullStudyComment } from '@/db/study'
-import { Button } from '@abc-transitionbascarbone/application/ui'
-import { CommentStatus } from '@abc-transitionbascarbone/db/enums'
+import { CommentStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { Button } from '@abc-transitionbascarbone/common/ui'
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'

@@ -2,15 +2,15 @@ import type { FullStudy } from '@/db/study'
 import { updateStudySpecificExportFields } from '@/services/serverFunctions/study'
 import { sortAlphabetically } from '@/services/utils'
 import { exportSpecificFields, getAllSpecificFieldsForExports } from '@/utils/study'
-import { HelpIcon } from '@abc-transitionbascarbone/application/components'
-import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
-import GlossaryModal from '@abc-transitionbascarbone/application/components/modals/GlossaryModal'
+import { HelpIcon } from '@abc-transitionbascarbone/common/components'
+import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
+import GlossaryModal from '@abc-transitionbascarbone/common/components/modals/GlossaryModal'
 import {
   ControlMode,
   EmissionFactorBase,
   EmissionSourceCaracterisation,
   Export,
-} from '@abc-transitionbascarbone/db/enums'
+} from '@abc-transitionbascarbone/common/db/enums'
 import { Checkbox, FormControlLabel } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo, useState } from 'react'

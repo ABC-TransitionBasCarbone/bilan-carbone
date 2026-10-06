@@ -2,7 +2,7 @@
 
 import PublicodesForm from '@/components/publicodes-form/PublicodesForm'
 import { usePublicodesForm } from '@/lib/publicodes/context'
-import { SubPost } from '@abc-transitionbascarbone/db/enums'
+import { SubPost } from '@abc-transitionbascarbone/common/db/enums'
 import { CircularProgress } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

@@ -1,4 +1,4 @@
-import { OrganizationVersion, Account as PrismaAccount, User as PrismaUser } from '@abc-transitionbascarbone/db'
+import { OrganizationVersion, Account as PrismaAccount, User as PrismaUser } from '@abc-transitionbascarbone/common/db'
 import 'next-auth'
 import 'next-auth/jwt'
 

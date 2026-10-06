@@ -1,7 +1,7 @@
 import { DEFAULT_FUZZY_OPTIONS } from '@/constants/fuse.constant'
 import { KG_CO2E_PREFIX } from '@/constants/import'
-import { Unit } from '@abc-transitionbascarbone/db/enums'
-import { LocaleType } from '@abc-transitionbascarbone/shared/i18n/config'
+import { Unit } from '@abc-transitionbascarbone/common/db/enums'
+import { LocaleType } from '@abc-transitionbascarbone/common/i18n/config'
 import Fuse from 'fuse.js'
 import { BcTranslations, extractAllForms, getBcTranslations, getSingularForm } from './translation.utils'
 

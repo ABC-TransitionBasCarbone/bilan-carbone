@@ -1,5 +1,5 @@
 import { setStudyTemplate } from '@/services/serverFunctions/study'
-import { DuplicableStudy, Environment } from '@abc-transitionbascarbone/db/enums'
+import { DuplicableStudy, Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { Command } from 'commander'
 
 const program = new Command()

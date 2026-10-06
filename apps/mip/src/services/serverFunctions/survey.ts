@@ -20,8 +20,8 @@ import {
   resolveKeyStatsRules,
 } from '@/utils/survey'
 import { isAdmin } from '@/utils/user'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/shared/services/permissions/check'
-import { buildCsv, sanitizeFileName, serializeCsvValue } from '@abc-transitionbascarbone/shared/utils/csv'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
+import { buildCsv, sanitizeFileName, serializeCsvValue } from '@abc-transitionbascarbone/common/utils/csv'
 import { Situation } from 'publicodes'
 
 export const getEntityFilterDefsFromModel = async (rules: RawRules) => getEntityFilterDefsFromModelFromUtil(rules)

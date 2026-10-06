@@ -3,7 +3,7 @@ import * as trajectoryDbModule from '@/db/trajectory'
 import * as transitionPlanDbModule from '@/db/transitionPlan'
 import * as authModule from '@/services/auth'
 import * as studyPermissionsModule from '@/services/permissions/study'
-import { SubPost, TrajectoryType } from '@abc-transitionbascarbone/db/enums'
+import { SubPost, TrajectoryType } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import {
   createSubObjectives,
@@ -49,7 +49,7 @@ jest.mock('../../db/transitionPlan', () => ({
   getTrajectoryWithTransitionPlan: jest.fn(),
 }))
 
-jest.mock('@abc-transitionbascarbone/shared/services/permissions/check', () => ({
+jest.mock('@abc-transitionbascarbone/common/services/permissions/check', () => ({
   NOT_AUTHORIZED: 'NOT_AUTHORIZED',
 }))
 

@@ -1,4 +1,4 @@
-import { CampaignStatus } from '@abc-transitionbascarbone/db/enums'
+import { CampaignStatus } from '@abc-transitionbascarbone/common/db/enums'
 import z from 'zod'
 
 export const UpdateCampaignCommandValidation = z.object({

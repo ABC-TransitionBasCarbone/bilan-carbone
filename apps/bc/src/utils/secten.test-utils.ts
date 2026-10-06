@@ -1,4 +1,4 @@
-import { SectenInfo } from '@abc-transitionbascarbone/db'
+import { SectenInfo } from '@abc-transitionbascarbone/common/db'
 
 interface CreateSectenInfoParams {
   year: number

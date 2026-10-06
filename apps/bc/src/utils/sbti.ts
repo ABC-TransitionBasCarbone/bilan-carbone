@@ -6,7 +6,7 @@ import {
 } from '@/constants/trajectory.constants'
 import type { PastStudy, TrajectoryDataPoint } from '@/types/trajectory.types'
 import { TrajectoryData } from '@/types/trajectory.types'
-import { TrajectoryType } from '@abc-transitionbascarbone/db/enums'
+import { TrajectoryType } from '@abc-transitionbascarbone/common/db/enums'
 import {
   buildTrajectoryFromHistoricalPoints,
   calculateLinearTrajectoryIntegral,

@@ -1,7 +1,7 @@
 import * as organizationDb from '@/db/organization'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import * as organizationUtils from '@/utils/organization'
-import { Environment, Level, UserSource } from '@abc-transitionbascarbone/db/enums'
+import { Environment, Level, UserSource } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import * as featuresModule from '../serverFunctions/deactivableFeatures'
 import * as userModule from '../serverFunctions/user'

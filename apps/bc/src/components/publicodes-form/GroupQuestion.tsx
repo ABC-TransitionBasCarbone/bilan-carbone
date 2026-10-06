@@ -1,6 +1,6 @@
-import { CheckboxInput } from '@abc-transitionbascarbone/application/components/publicodes/form/inputFields'
-import { OnFieldChange } from '@abc-transitionbascarbone/shared/publicodes/form'
-import { EvaluatedGroupLayout } from '@abc-transitionbascarbone/shared/publicodes/form/layouts'
+import { CheckboxInput } from '@abc-transitionbascarbone/common/components/publicodes/form/inputFields'
+import { OnFieldChange } from '@abc-transitionbascarbone/common/publicodes/form'
+import { EvaluatedGroupLayout } from '@abc-transitionbascarbone/common/publicodes/form/layouts'
 import { FormControl } from '@mui/material'
 
 interface GroupQuestionProps<RuleName extends string> {

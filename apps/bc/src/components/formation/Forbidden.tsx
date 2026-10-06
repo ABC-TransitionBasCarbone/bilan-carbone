@@ -1,6 +1,6 @@
-import Block from '@abc-transitionbascarbone/application/components/base/Block'
-import { Environment } from '@abc-transitionbascarbone/db/enums'
-import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
+import Block from '@abc-transitionbascarbone/common/components/base/Block'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 

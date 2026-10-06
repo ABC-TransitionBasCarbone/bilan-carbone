@@ -1,5 +1,5 @@
 import { ImportError, ImportWarning } from '@/types/import.types'
-import { EmissionFactorBase, SubPost, Unit } from '@abc-transitionbascarbone/db'
+import { EmissionFactorBase, SubPost, Unit } from '@abc-transitionbascarbone/common/db'
 
 export type { ImportError }
 

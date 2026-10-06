@@ -1,7 +1,7 @@
 import type { FullStudy } from '@/db/study'
 import type { BaseObjective, ObjectiveGroup, ObjectiveWithScope } from '@/types/trajectory.types'
 import { getUIFilteredEmissions } from '@/utils/study'
-import { SubPost } from '@abc-transitionbascarbone/db/enums'
+import { SubPost } from '@abc-transitionbascarbone/common/db/enums'
 import { isSubset } from './array'
 
 export const toScopedValues = <T,>(selected: T[], all: T[]) =>

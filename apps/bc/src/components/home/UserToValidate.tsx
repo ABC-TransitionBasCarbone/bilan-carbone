@@ -1,4 +1,4 @@
-import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
+import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import { Alert } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'

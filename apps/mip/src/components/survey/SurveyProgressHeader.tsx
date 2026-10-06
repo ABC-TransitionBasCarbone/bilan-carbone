@@ -1,4 +1,4 @@
-import { getCategoryClassSuffix } from '@abc-transitionbascarbone/shared/publicodes/form'
+import { getCategoryClassSuffix } from '@abc-transitionbascarbone/common/publicodes/form'
 import { LinearProgress, Typography } from '@mui/material'
 import classNames from 'classnames'
 import styles from './Survey.module.css'

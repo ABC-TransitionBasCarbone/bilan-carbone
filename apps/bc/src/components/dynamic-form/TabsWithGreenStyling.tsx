@@ -1,5 +1,5 @@
-import { Translations } from '@abc-transitionbascarbone/shared'
-import type { Post } from '@abc-transitionbascarbone/shared/utils/charts'
+import { Translations } from '@abc-transitionbascarbone/common'
+import type { Post } from '@abc-transitionbascarbone/common/utils/charts'
 import { Box, Tabs as MuiTabs, Tab, styled } from '@mui/material'
 import { ReactNode, useMemo, useState } from 'react'
 

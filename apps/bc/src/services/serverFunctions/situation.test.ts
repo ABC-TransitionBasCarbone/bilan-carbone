@@ -2,7 +2,7 @@ import * as situationDbModule from '@/db/situation'
 import * as studyDbModule from '@/db/study'
 import * as authModule from '@/services/auth'
 import * as situationPermissionsModule from '@/services/permissions/situation'
-import { Environment } from '@abc-transitionbascarbone/db/enums'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { saveSituation } from './situation'
 
 jest.mock('../auth', () => ({
@@ -28,7 +28,7 @@ jest.mock('../permissions/situation', () => ({
   canSaveSituationOnStudy: jest.fn(),
 }))
 
-jest.mock('@abc-transitionbascarbone/shared/services/permissions/check', () => ({
+jest.mock('@abc-transitionbascarbone/common/services/permissions/check', () => ({
   NOT_AUTHORIZED: 'NOT_AUTHORIZED',
 }))
 

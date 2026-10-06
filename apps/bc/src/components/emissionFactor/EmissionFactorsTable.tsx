@@ -5,7 +5,7 @@ import { EmissionFactorWithMetaData } from '@/services/serverFunctions/emissionF
 import { BCUnit, useUnitLabel } from '@/services/unit'
 import { getEmissionFactorFullName, getEmissionFactorValue, isWasteEmissionFactor } from '@/utils/emissionFactors'
 import { formatEmissionFactorNumber } from '@/utils/number'
-import { Environment, StudyResultUnit } from '@abc-transitionbascarbone/db/enums'
+import { Environment, StudyResultUnit } from '@abc-transitionbascarbone/common/db/enums'
 import {
   FormControl,
   InputLabel,

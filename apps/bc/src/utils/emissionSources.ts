@@ -9,8 +9,8 @@ import {
 } from '@/services/uncertainty'
 import { EmissionSourcesStatus } from '@/types/emissionSource.types'
 import type { EmissionSourcesSort } from '@/types/filters'
-import { Environment } from '@abc-transitionbascarbone/db/enums'
-import type { Translations } from '@abc-transitionbascarbone/shared'
+import type { Translations } from '@abc-transitionbascarbone/common'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 
 export const getEmissionSourcesFuseOptions = (
   tQuality: Translations,

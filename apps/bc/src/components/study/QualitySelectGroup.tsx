@@ -2,8 +2,8 @@
 
 import type { FullStudy } from '@/db/study'
 import { qualityKeys, specificFEQualityKeys, specificFEQualityKeysLinks } from '@/services/uncertainty'
-import { HelpIcon } from '@abc-transitionbascarbone/application/components'
-import { Button } from '@abc-transitionbascarbone/application/ui'
+import { HelpIcon } from '@abc-transitionbascarbone/common/components'
+import { Button } from '@abc-transitionbascarbone/common/ui'
 import ZoomInMapIcon from '@mui/icons-material/ZoomInMap'
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap'
 import { FormControl, FormHelperText } from '@mui/material'

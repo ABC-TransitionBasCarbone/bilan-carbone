@@ -1,4 +1,4 @@
-import { Country, Role, SiteCAUnit } from '@abc-transitionbascarbone/db/enums'
+import { Country, Role, SiteCAUnit } from '@abc-transitionbascarbone/common/db/enums'
 import z from 'zod'
 
 export const EditProfileCommandValidation = z.object({

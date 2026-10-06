@@ -3,6 +3,9 @@
 Ce monorepo contient les applications et packages partagés du projet Bilan Carbone.
 This monorepo contains apps and shared packages for Bilan Carbone & MEP Pro
 
+`packages/common` contains the database, components, translations and shared services in a single workspace.
+`packages/publicodes-packages` contains the Publicodes models.
+
 ## Get started
 
 ### Prerequisites
@@ -29,7 +32,7 @@ Do the same in db folder.
 ```bash
 cp apps/bc/.env.dist apps/bc/.env
 cp apps/bc/.env.test.dist apps/bc/.env.test
-cp packages/db/.env.dist packages/db/.env
+cp packages/common/db/.env.dist packages/common/db/.env
 ```
 
 ### 3. Start the database
@@ -213,10 +216,10 @@ yarn audit
 
 ## Architecture
 
-| Package | Rôle actuel |
-| --- | --- |
-| `packages/application` | Composants réutilisés par les applications, dont l’interface et les styles dans `components/ui`. |
-| `packages/db` | Schéma Prisma et accès à la base de données. |
-| `packages/publicodes-packages` | Modèles Publicodes `count`, `clickson` et `tilt`, consommés par BC. MIP n’a pas de dépendance directe à ce package. |
-| `packages/shared` | Code transverse consommé par BC et MIP : i18n, types, gardes de type, utilitaires et services. Tous ses modules ne sont pas nécessairement utilisés par les deux applications. |
-| `packages/shared/tooling` | Scripts de build, configuration Jest et utilitaires de test communs. |
+| Package                        | Rôle actuel                                                                                                                                                                    |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `packages/common`                | Composants réutilisés par les applications, dont l’interface et les styles dans `components/ui`.                                                                               |
+| `packages/common/db`             | Schéma Prisma et accès à la base de données.                                                                                                                                   |
+| `packages/publicodes-packages` | Modèles Publicodes `count`, `clickson` et `tilt`, consommés par BC. MIP n’a pas de dépendance directe à ce package.                                                            |
+| `packages/common`                | Code transverse consommé par BC et MIP : i18n, types, gardes de type, utilitaires et services. Tous ses modules ne sont pas nécessairement utilisés par les deux applications. |
+| `packages/common/tooling`        | Scripts de build, configuration Jest et utilitaires de test communs.                                                                                                           |

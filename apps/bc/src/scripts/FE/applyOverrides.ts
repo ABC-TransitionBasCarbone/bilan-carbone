@@ -1,4 +1,4 @@
-import { Import } from '@abc-transitionbascarbone/db/enums'
+import { Import } from '@abc-transitionbascarbone/common/db/enums'
 import { Command } from 'commander'
 import * as XLSX from 'xlsx'
 import { applyOverridesFromRows } from '../../services/importEmissionFactor/applyOverrides'

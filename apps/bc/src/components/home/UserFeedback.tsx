@@ -2,8 +2,8 @@
 
 import { answerFeeback, delayFeeback } from '@/services/serverFunctions/user'
 import { BCEnvironment } from '@/types/environment'
-import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
-import { DAY, TIME_IN_MS } from '@abc-transitionbascarbone/shared/utils'
+import Modal from '@abc-transitionbascarbone/common/components/modals/Modal'
+import { DAY, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import FeedbackForm from './FeedbackForm'

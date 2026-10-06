@@ -1,4 +1,4 @@
-import { downloadFile, DownloadFileType } from '@abc-transitionbascarbone/shared/utils/download'
+import { downloadFile, DownloadFileType } from '@abc-transitionbascarbone/common/utils/download'
 import { fileTypeFromBlob } from 'file-type'
 
 const KB = 1024

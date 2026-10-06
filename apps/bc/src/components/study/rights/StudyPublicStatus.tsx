@@ -7,9 +7,9 @@ import {
   ChangeStudyPublicStatusCommand,
   ChangeStudyPublicStatusCommandValidation,
 } from '@/services/serverFunctions/study.command'
-import { HelpIcon } from '@abc-transitionbascarbone/application/components'
-import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
-import GlossaryModal from '@abc-transitionbascarbone/application/components/modals/GlossaryModal'
+import { HelpIcon } from '@abc-transitionbascarbone/common/components'
+import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
+import GlossaryModal from '@abc-transitionbascarbone/common/components/modals/GlossaryModal'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControlLabel, Radio } from '@mui/material'
 import { UserSession } from 'next-auth'

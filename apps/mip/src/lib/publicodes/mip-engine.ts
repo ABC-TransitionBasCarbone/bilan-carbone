@@ -1,7 +1,7 @@
 import { SURVEY_CATEGORY_KEYS } from '@/constants/survey'
-import { RULE_NAME_SEPARATOR } from '@abc-transitionbascarbone/shared/publicodes/form/utils'
-import { isObject } from '@abc-transitionbascarbone/shared/utils/object'
-import { normalizeCategoryKey } from '@abc-transitionbascarbone/shared/utils/parsing'
+import { RULE_NAME_SEPARATOR } from '@abc-transitionbascarbone/common/publicodes/form/utils'
+import { isObject } from '@abc-transitionbascarbone/common/utils/object'
+import { normalizeCategoryKey } from '@abc-transitionbascarbone/common/utils/parsing'
 import Engine, { parsePublicodes } from 'publicodes'
 
 export type RawRules = Parameters<typeof parsePublicodes>[0]

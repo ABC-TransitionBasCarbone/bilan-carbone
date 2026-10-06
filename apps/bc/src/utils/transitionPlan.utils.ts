@@ -1,8 +1,8 @@
 import type { FullStudy } from '@/db/study'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import type { PastStudy } from '@/types/trajectory.types'
-import type { ExternalStudy } from '@abc-transitionbascarbone/db'
-import { StudyResultUnit } from '@abc-transitionbascarbone/db/enums'
+import type { ExternalStudy } from '@abc-transitionbascarbone/common/db'
+import { StudyResultUnit } from '@abc-transitionbascarbone/common/db/enums'
 import { filterStringArray } from './array'
 import { convertValue } from './study'
 

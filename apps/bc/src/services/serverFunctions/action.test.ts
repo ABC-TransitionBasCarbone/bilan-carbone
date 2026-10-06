@@ -1,7 +1,7 @@
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { getMockeFullStudy, mockedEmissionSourceEmissionFactor } from '@/tests/utils/models/study'
 import { getActionReductionRatio, getUIFilteredEmissions } from '@/utils/study'
-import { StudyResultUnit, SubPost } from '@abc-transitionbascarbone/db/enums'
+import { StudyResultUnit, SubPost } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 
 jest.mock('../file', () => ({ download: jest.fn() }))

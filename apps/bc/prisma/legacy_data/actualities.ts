@@ -1,4 +1,4 @@
-import { Environment } from '@abc-transitionbascarbone/db/enums'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 
 export const ACTUALITIES = [
   {

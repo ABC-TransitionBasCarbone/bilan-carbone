@@ -1,6 +1,6 @@
 'use client'
 import { PARTNER_LOGOS } from '@/constants/logos'
-import PublicContainer from '@abc-transitionbascarbone/application/components/base/PublicContainer'
+import PublicContainer from '@abc-transitionbascarbone/common/components/base/PublicContainer'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'

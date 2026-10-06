@@ -1,7 +1,7 @@
 import { COLUMNS } from '@/types/importEmissionFactors.types'
-import { EmissionFactorBase, Environment, SubPost, Unit } from '@abc-transitionbascarbone/db/enums'
-import { Locale } from '@abc-transitionbascarbone/shared/i18n/config'
-import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
+import { EmissionFactorBase, Environment, SubPost, Unit } from '@abc-transitionbascarbone/common/db/enums'
+import { Locale } from '@abc-transitionbascarbone/common/i18n/config'
+import { Post } from '@abc-transitionbascarbone/common/utils/charts'
 import { expect } from '@jest/globals'
 import xlsx from 'node-xlsx'
 import {

@@ -1,8 +1,8 @@
 'use server'
-import { Environment } from '@abc-transitionbascarbone/db/enums'
-import { Locale, LocaleType } from '@abc-transitionbascarbone/shared/i18n/config'
-import { isCourse } from '@abc-transitionbascarbone/shared/utils/environments'
-import { mergeObjects } from '@abc-transitionbascarbone/shared/utils/object'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { Locale, LocaleType } from '@abc-transitionbascarbone/common/i18n/config'
+import { isCourse } from '@abc-transitionbascarbone/common/utils/environments'
+import { mergeObjects } from '@abc-transitionbascarbone/common/utils/object'
 import fs from 'fs'
 import path from 'path'
 
@@ -11,10 +11,10 @@ export const getMessages = async (locale: LocaleType, environment?: Environment)
   let bcMessages = {}
 
   try {
-    commonMessages = (await import(`../../../../packages/shared/i18n/translations/${locale}/common.json`)).default
+    commonMessages = (await import(`../../../../packages/common/i18n/translations/${locale}/common.json`)).default
   } catch {
     console.log(`No common translation file for locale: ${locale}, falling back to default`)
-    commonMessages = (await import(`../../../../packages/shared/i18n/translations/${Locale.EN}/common.json`)).default
+    commonMessages = (await import(`../../../../packages/common/i18n/translations/${Locale.EN}/common.json`)).default
   }
 
   try {
@@ -45,7 +45,7 @@ export const getMessages = async (locale: LocaleType, environment?: Environment)
   let publicodesRules = {}
   try {
     publicodesRules = (
-      await import(`../../../../packages/shared/i18n/translations/${locale}/publicodes/${envLower}-rules.json`)
+      await import(`../../../../packages/common/i18n/translations/${locale}/publicodes/${envLower}-rules.json`)
     ).default
   } catch {
     console.log(`No publicodes rules translation file for locale: ${locale} and environment: ${environment}`)
@@ -54,7 +54,7 @@ export const getMessages = async (locale: LocaleType, environment?: Environment)
   let publicodesLayout = {}
   try {
     publicodesLayout = (
-      await import(`../../../../packages/shared/i18n/translations/${locale}/publicodes/${envLower}-layout.json`)
+      await import(`../../../../packages/common/i18n/translations/${locale}/publicodes/${envLower}-layout.json`)
     ).default
   } catch {
     console.log(`No publicodes layout translation file for locale: ${locale} and environment: ${environment}`)

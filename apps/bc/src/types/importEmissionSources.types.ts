@@ -1,4 +1,9 @@
-import { EmissionSourceCaracterisation, EmissionSourceType, SubPost, Unit } from '@abc-transitionbascarbone/db/enums'
+import {
+  EmissionSourceCaracterisation,
+  EmissionSourceType,
+  SubPost,
+  Unit,
+} from '@abc-transitionbascarbone/common/db/enums'
 import { AmbiguousRow, ImportError, ImportWarning } from './import.types'
 
 export type PreviewEmissionSourceRow = {

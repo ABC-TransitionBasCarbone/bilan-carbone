@@ -1,4 +1,4 @@
-import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
+import { Post } from '@abc-transitionbascarbone/common/utils/charts'
 import { styled } from '@mui/material'
 
 export const StyledPostContainer = styled('div', { shouldForwardProp: (prop) => prop !== 'post' })<{ post: Post }>(

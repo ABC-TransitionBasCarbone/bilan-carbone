@@ -1,4 +1,4 @@
-import { EmissionFactorPartType } from '@abc-transitionbascarbone/db/enums'
+import { EmissionFactorPartType } from '@abc-transitionbascarbone/common/db/enums'
 
 export const additionalParts: Record<string, EmissionFactorPartType> = {
   '26034': EmissionFactorPartType.Amont,

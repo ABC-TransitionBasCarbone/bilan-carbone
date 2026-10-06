@@ -5,7 +5,7 @@ import clicksonTheme from '@/environments/clickson/theme/theme'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import cutTheme from '@/environments/cut/theme/theme'
 import tiltTheme from '@/environments/tilt/theme/theme'
-import { Environment } from '@abc-transitionbascarbone/db/enums'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { ThemeProvider } from '@mui/material'
 import { ReactNode } from 'react'
 

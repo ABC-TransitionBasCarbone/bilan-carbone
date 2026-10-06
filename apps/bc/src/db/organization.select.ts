@@ -1,4 +1,4 @@
-import { Prisma } from '@abc-transitionbascarbone/db'
+import { Prisma } from '@abc-transitionbascarbone/common/db'
 
 export const OrganizationVersionWithOrganizationSelect = {
   id: true,

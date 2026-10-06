@@ -1,5 +1,5 @@
-import { SiteCAUnit } from '@abc-transitionbascarbone/db/enums'
-import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
+import { SiteCAUnit } from '@abc-transitionbascarbone/common/db/enums'
+import { formatNumber } from '@abc-transitionbascarbone/common/utils/number'
 import Big from 'big.js'
 
 export const parseFloatString = (value: string): number | undefined => {

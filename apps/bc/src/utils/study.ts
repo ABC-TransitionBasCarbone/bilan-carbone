@@ -20,9 +20,9 @@ import {
   StudyRole,
   SubPost,
   Unit,
-} from '@abc-transitionbascarbone/db/enums'
-import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/shared/utils/charts'
-import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
+} from '@abc-transitionbascarbone/common/db/enums'
+import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/common/utils/charts'
+import { formatNumber } from '@abc-transitionbascarbone/common/utils/number'
 import { Getter } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { unique } from './array'

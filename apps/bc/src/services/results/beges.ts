@@ -1,8 +1,8 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import { hasDeprecationPeriod } from '@/utils/study'
-import type { ExportRule } from '@abc-transitionbascarbone/db'
-import { Environment } from '@abc-transitionbascarbone/db/enums'
+import type { ExportRule } from '@abc-transitionbascarbone/common/db'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { computeResult, EmissionSource, ExportEmissionFactor, getEmissionTotal, PostInfos } from './exports'
 
 const allRules = [

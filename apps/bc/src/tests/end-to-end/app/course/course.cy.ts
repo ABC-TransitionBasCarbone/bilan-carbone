@@ -1,4 +1,4 @@
-import { courseEnvironments } from '@abc-transitionbascarbone/shared/utils/environments'
+import { courseEnvironments } from '@abc-transitionbascarbone/common/utils/environments'
 import dayjs from 'dayjs'
 
 for (let i = 0; i < courseEnvironments.length; i++) {

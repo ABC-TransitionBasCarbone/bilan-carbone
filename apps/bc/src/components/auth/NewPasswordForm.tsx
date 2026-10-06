@@ -1,10 +1,10 @@
 'use client'
 
 import { resetPassword } from '@/services/serverFunctions/user'
-import NewPasswordFormCommon from '@abc-transitionbascarbone/application/components/auth/NewPasswordFormCommon'
-import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
-import { Environment } from '@abc-transitionbascarbone/db/enums'
-import { getEnvRoute } from '@abc-transitionbascarbone/shared/utils/environments'
+import NewPasswordFormCommon from '@abc-transitionbascarbone/common/components/auth/NewPasswordFormCommon'
+import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { getEnvRoute } from '@abc-transitionbascarbone/common/utils/environments'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 

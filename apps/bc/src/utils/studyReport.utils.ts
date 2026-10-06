@@ -6,9 +6,9 @@ import { getEmissionResults } from '@/services/emissionSource'
 import { getActionReductionStats } from '@/utils/actionTrajectory.utils'
 import { getPostsFromSubPosts } from '@/utils/post'
 import { getBcTranslations } from '@/utils/translation.utils'
-import { Environment, Level, StudyRole } from '@abc-transitionbascarbone/db/enums'
-import { formatDateFr } from '@abc-transitionbascarbone/shared/utils'
-import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
+import { Environment, Level, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
+import { formatDateFr } from '@abc-transitionbascarbone/common/utils'
+import { formatNumber } from '@abc-transitionbascarbone/common/utils/number'
 import { getTranslations } from 'next-intl/server'
 
 const getActionDetails = (

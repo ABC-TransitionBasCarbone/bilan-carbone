@@ -9,8 +9,8 @@ import type {
   TrajectoryDataPoint,
   TrajectoryWithObjectives,
 } from '@/types/trajectory.types'
-import { SectenInfo } from '@abc-transitionbascarbone/db'
-import { TrajectoryType } from '@abc-transitionbascarbone/db/enums'
+import { SectenInfo } from '@abc-transitionbascarbone/common/db'
+import { TrajectoryType } from '@abc-transitionbascarbone/common/db/enums'
 import { calculateSBTiTrajectory, getDefaultSBTIReductionRate } from './sbti'
 import { calculateCustomSNBCSectoralTrajectory, calculateSNBCTrajectory } from './snbc'
 import {

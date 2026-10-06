@@ -1,4 +1,4 @@
-import { getRuleCategoryKey } from '@abc-transitionbascarbone/shared/publicodes/form/utils'
+import { getRuleCategoryKey } from '@abc-transitionbascarbone/common/publicodes/form/utils'
 import { getFormQuestions, getNextQuestion } from './mip-rules'
 import { useMipPublicodes } from './MipPublicodesProvider'
 

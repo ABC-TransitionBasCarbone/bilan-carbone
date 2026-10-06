@@ -1,7 +1,7 @@
 'use server'
 
 import { getUserSettings } from '@/services/serverFunctions/user'
-import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
+import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 import Settings from '../settings/Settings'
 
 const SettingsPage = async () => {

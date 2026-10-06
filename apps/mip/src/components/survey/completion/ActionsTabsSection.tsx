@@ -2,7 +2,7 @@
 
 import EquivalentSection from '@/components/results/EquivalentSection'
 import { CategoryWithActions } from '@/components/survey/completion/types'
-import { formatMassKilograms } from '@abc-transitionbascarbone/shared/publicodes/form'
+import { formatMassKilograms } from '@abc-transitionbascarbone/common/publicodes/form'
 import { Card, CardContent, Tab, Tabs, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'

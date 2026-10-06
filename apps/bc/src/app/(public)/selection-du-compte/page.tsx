@@ -3,7 +3,7 @@
 import SelectAccountPage from '@/components/pages/SelectAccount'
 import { getUserWithAccountsAndOrganizationsById } from '@/db/user'
 import { auth } from '@/services/auth'
-import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
+import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 
 const SelectAccount = async () => {
   const session = await auth()

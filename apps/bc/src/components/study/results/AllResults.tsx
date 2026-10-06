@@ -27,10 +27,10 @@ import { AdditionalResultTypes, ResultType } from '@/types/study.types'
 import { getPost } from '@/utils/post'
 import { calculateMonetaryRatio, convertValue } from '@/utils/study'
 import { getAllTagIds } from '@/utils/tag.utils'
-import Block from '@abc-transitionbascarbone/application/components/base/Block'
-import Box from '@abc-transitionbascarbone/application/components/base/Box'
-import { useServerFunction } from '@abc-transitionbascarbone/application/components/hooks/useServerFunction'
-import type { ExportRule } from '@abc-transitionbascarbone/db'
+import Block from '@abc-transitionbascarbone/common/components/base/Block'
+import Box from '@abc-transitionbascarbone/common/components/base/Box'
+import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
+import type { ExportRule } from '@abc-transitionbascarbone/common/db'
 import {
   ControlMode,
   DeactivatableFeature,
@@ -39,7 +39,7 @@ import {
   SiteCAUnit,
   StudyResultUnit,
   SubPost,
-} from '@abc-transitionbascarbone/db/enums'
+} from '@abc-transitionbascarbone/common/db/enums'
 import DownloadIcon from '@mui/icons-material/Download'
 import { FormControl, InputLabel, MenuItem, Select, Tab, Tabs } from '@mui/material'
 import { useTranslations } from 'next-intl'

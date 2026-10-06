@@ -1,9 +1,9 @@
 'use client'
 
-import { BarChart, PieChart } from '@abc-transitionbascarbone/application/ui'
-import { StudyResultUnit } from '@abc-transitionbascarbone/db/enums'
-import { BasicTypeCharts } from '@abc-transitionbascarbone/shared/utils/charts'
-import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
+import { StudyResultUnit } from '@abc-transitionbascarbone/common/db/enums'
+import { BarChart, PieChart } from '@abc-transitionbascarbone/common/ui'
+import { BasicTypeCharts } from '@abc-transitionbascarbone/common/utils/charts'
+import { formatNumber } from '@abc-transitionbascarbone/common/utils/number'
 import { Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

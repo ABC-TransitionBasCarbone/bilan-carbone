@@ -1,6 +1,6 @@
 'use client'
 
-import Modal from '@abc-transitionbascarbone/application/components/modals/Modal'
+import Modal from '@abc-transitionbascarbone/common/components/modals/Modal'
 import { styled } from '@mui/material/styles'
 import { useTranslations } from 'next-intl'
 

@@ -22,7 +22,7 @@ function mockNotFoundComponent() {
   return <div>not-found</div>
 }
 
-jest.mock('@abc-transitionbascarbone/application/components/pages/NotFound', () => ({
+jest.mock('@abc-transitionbascarbone/common/components/pages/NotFound', () => ({
   __esModule: true,
   default: mockNotFoundComponent,
 }))

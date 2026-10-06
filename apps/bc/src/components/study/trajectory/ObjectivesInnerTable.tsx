@@ -1,9 +1,9 @@
 'use client'
 
 import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
-import { Table as BaseTable } from '@abc-transitionbascarbone/application/components'
-import { TableActionButton } from '@abc-transitionbascarbone/application/components/base/TableActionButton'
-import { customRich } from '@abc-transitionbascarbone/shared/utils/customRich'
+import { Table as BaseTable } from '@abc-transitionbascarbone/common/components'
+import { TableActionButton } from '@abc-transitionbascarbone/common/components/base/TableActionButton'
+import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import { Link, Typography } from '@mui/material'
 import { ColumnDef, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import classNames from 'classnames'

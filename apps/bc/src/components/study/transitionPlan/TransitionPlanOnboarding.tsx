@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@abc-transitionbascarbone/application/ui'
+import { Button } from '@abc-transitionbascarbone/common/ui'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import SchoolIcon from '@mui/icons-material/School'
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material'

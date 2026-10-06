@@ -1,7 +1,7 @@
 import { begesRules } from '@/utils/beges.config'
 import { ghgpRules } from '@/utils/ghgp.config'
-import type { PrismaClient } from '@abc-transitionbascarbone/db'
-import { Export } from '@abc-transitionbascarbone/db/enums'
+import type { PrismaClient } from '@abc-transitionbascarbone/common/db'
+import { Export } from '@abc-transitionbascarbone/common/db/enums'
 
 export const reCreateBegesRules = async (prismaClient: PrismaClient) => {
   await prismaClient.exportRule.deleteMany({ where: { export: Export.Beges } })

@@ -1,4 +1,4 @@
-import type { JsonValue } from '@abc-transitionbascarbone/db/types'
+import type { JsonValue } from '@abc-transitionbascarbone/common/db/types'
 
 export const handleCopy = async (link: string): Promise<void> => {
   await navigator.clipboard.writeText(link)

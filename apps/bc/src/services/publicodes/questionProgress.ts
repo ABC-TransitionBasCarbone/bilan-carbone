@@ -1,6 +1,6 @@
 import { ListLayoutSituations } from '@/lib/publicodes/context'
 import { typedEntries } from '@/utils/object'
-import { SubPost } from '@abc-transitionbascarbone/db/enums'
+import { SubPost } from '@abc-transitionbascarbone/common/db/enums'
 import {
   hasDefaultValue,
   isGroupLayoutAnswered,
@@ -11,8 +11,8 @@ import {
   isMosaicLayoutApplicable,
   isTableLayoutAnswered,
   isTableLayoutApplicable,
-} from '@abc-transitionbascarbone/shared/publicodes/form'
-import { FormLayout, getEvaluatedFormLayout } from '@abc-transitionbascarbone/shared/publicodes/form/layouts'
+} from '@abc-transitionbascarbone/common/publicodes/form'
+import { FormLayout, getEvaluatedFormLayout } from '@abc-transitionbascarbone/common/publicodes/form/layouts'
 import Engine from 'publicodes'
 import { SimplifiedPost } from '../posts'
 

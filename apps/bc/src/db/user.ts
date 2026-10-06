@@ -3,12 +3,18 @@ import { addUserChecklistItem, sendEmailToAddedUser } from '@/services/serverFun
 import { AuthorizedInOrgaUserStatus } from '@/services/users'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { userSessionToDbUser } from '@/utils/userAccounts'
-import { Prisma } from '@abc-transitionbascarbone/db'
-import { DeactivatableFeature, Environment, Role, UserChecklist, UserStatus } from '@abc-transitionbascarbone/db/enums'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/shared/services/permissions/check'
-import { AddMemberCommand } from '@abc-transitionbascarbone/shared/services/serverFunctions/user.command'
-import { signPassword } from '@abc-transitionbascarbone/shared/utils/auth'
-import { environmentsWithChecklist } from '@abc-transitionbascarbone/shared/utils/environments'
+import { Prisma } from '@abc-transitionbascarbone/common/db'
+import {
+  DeactivatableFeature,
+  Environment,
+  Role,
+  UserChecklist,
+  UserStatus,
+} from '@abc-transitionbascarbone/common/db/enums'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
+import { AddMemberCommand } from '@abc-transitionbascarbone/common/services/serverFunctions/user.command'
+import { signPassword } from '@abc-transitionbascarbone/common/utils/auth'
+import { environmentsWithChecklist } from '@abc-transitionbascarbone/common/utils/environments'
 import { UserSession } from 'next-auth'
 import { addAccount, getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
 import { prismaClient } from './client.server'

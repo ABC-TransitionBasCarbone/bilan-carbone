@@ -3,9 +3,9 @@ import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
 import StudyPostsPageContainer from '@/components/pages/StudyPostsContainer'
 import { canReadStudyDetail } from '@/services/permissions/study'
 import { getAccountRoleOnStudy } from '@/utils/study'
-import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
-import { SubPost } from '@abc-transitionbascarbone/db/enums'
-import { Post } from '@abc-transitionbascarbone/shared/utils/charts'
+import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
+import { SubPost } from '@abc-transitionbascarbone/common/db/enums'
+import { Post } from '@abc-transitionbascarbone/common/utils/charts'
 
 interface Props {
   params: Promise<{

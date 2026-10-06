@@ -3,7 +3,7 @@
 import withAuth from '@/components/hoc/withAuth'
 import RessourcesPage from '@/components/pages/Ressources'
 import { auth } from '@/services/auth'
-import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
+import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 
 const Ressources = async () => {
   const session = await auth()

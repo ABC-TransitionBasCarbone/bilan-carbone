@@ -1,9 +1,9 @@
 'use client'
 
 import { SurveyResults } from '@/types/results.types'
-import { StudyResultUnit } from '@abc-transitionbascarbone/db/enums'
-import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/shared/utils/charts'
-import { formatNumber } from '@abc-transitionbascarbone/shared/utils/number'
+import { StudyResultUnit } from '@abc-transitionbascarbone/common/db/enums'
+import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/common/utils/charts'
+import { formatNumber } from '@abc-transitionbascarbone/common/utils/number'
 import { Card, CardContent, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'

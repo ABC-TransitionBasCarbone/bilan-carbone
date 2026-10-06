@@ -1,6 +1,6 @@
 import '@/css/index.css'
 import { MuiThemeProvider } from '@/lib/providers/MuiThemeProvider'
-import Providers from '@abc-transitionbascarbone/application/components/providers/Providers'
+import Providers from '@abc-transitionbascarbone/common/components/providers/Providers'
 import { CssBaseline } from '@mui/material'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v16-appRouter'
 import type { Metadata } from 'next'

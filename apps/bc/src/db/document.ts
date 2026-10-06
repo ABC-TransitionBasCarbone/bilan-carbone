@@ -1,5 +1,5 @@
 import { prismaClient } from '@/db/client.server'
-import type { Prisma } from '@abc-transitionbascarbone/db'
+import type { Prisma } from '@abc-transitionbascarbone/common/db'
 
 export const createDocument = (document: Prisma.DocumentCreateInput) => prismaClient.document.create({ data: document })
 

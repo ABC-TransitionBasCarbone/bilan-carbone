@@ -1,4 +1,4 @@
-import { SubPost } from '@abc-transitionbascarbone/db/enums'
+import { SubPost } from '@abc-transitionbascarbone/common/db/enums'
 import {
   FormLayout,
   groupLayout,
@@ -6,8 +6,8 @@ import {
   listLayout,
   mosaicLayout,
   tableLayout,
-} from '@abc-transitionbascarbone/shared/publicodes/form/layouts'
-import { TiltSimplifiedPost } from '@abc-transitionbascarbone/shared/services/results/posts.enums'
+} from '@abc-transitionbascarbone/common/publicodes/form/layouts'
+import { TiltSimplifiedPost } from '@abc-transitionbascarbone/common/services/results/posts.enums'
 import { TiltRuleName } from './types'
 
 export const getPostRuleNameTilt = (post: TiltSimplifiedPost): TiltRuleName | '' => {

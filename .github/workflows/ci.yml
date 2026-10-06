@@ -23,13 +23,13 @@ jobs:
         run: cp .env.dist .env
         working-directory: apps/bc
       - name: Copy .env to db
-        run: cp apps/bc/.env.dist packages/db/.env
+        run: cp apps/bc/.env.dist packages/common/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
       - name: Generate prisma files
-        run: yarn workspace @abc-transitionbascarbone/db prisma generate
+        run: yarn workspace @abc-transitionbascarbone/common prisma generate
         working-directory: .
       - name: Linter
         run: yarn lint
@@ -57,7 +57,7 @@ jobs:
         run: cp apps/bc/.env.dist apps/bc/.env
         working-directory: ${{ github.workspace }}
       - name: Copy .env to db
-        run: cp apps/bc/.env.dist packages/db/.env
+        run: cp apps/bc/.env.dist packages/common/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -87,7 +87,7 @@ jobs:
         run: cp apps/bc/.env.dist apps/bc/.env
         working-directory: ${{ github.workspace }}
       - name: Copy .env to db
-        run: cp apps/bc/.env.dist packages/db/.env
+        run: cp apps/bc/.env.dist packages/common/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -112,7 +112,7 @@ jobs:
           node-version: 24.18.0
           cache: 'yarn'
       - name: Check circular dependencies (bc)
-        run: npx madge --circular --extensions ts,tsx --exclude "packages/db/src/generated" apps/bc
+        run: npx madge --circular --extensions ts,tsx --exclude "packages/common/db/src/generated" apps/bc
       - name: Check circular dependencies (mip)
         run: npx madge --circular --extensions ts,tsx apps/mip
 
@@ -132,7 +132,7 @@ jobs:
         run: cp .env.dist .env
         working-directory: apps/bc
       - name: Copy .env to db
-        run: cp apps/bc/.env.dist packages/db/.env
+        run: cp apps/bc/.env.dist packages/common/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -140,7 +140,7 @@ jobs:
       - name: Prebuild application
         run: yarn prebuild
       - name: Generate prisma files
-        run: yarn workspace @abc-transitionbascarbone/db prisma generate
+        run: yarn workspace @abc-transitionbascarbone/common prisma generate
         working-directory: .
       - name: Launch unit tests
         run: yarn run test
@@ -162,7 +162,7 @@ jobs:
         working-directory: apps/mip
       - name: Copy .env to db
         run: |
-          cp apps/mip/.env.dist packages/db/.env
+          cp apps/mip/.env.dist packages/common/db/.env
           cp apps/mip/.env.dist apps/bc/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
@@ -187,7 +187,7 @@ jobs:
         run: cp .env.dist .env
         working-directory: apps/bc
       - name: Copy .env to db
-        run: cp apps/bc/.env.dist packages/db/.env
+        run: cp apps/bc/.env.dist packages/common/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -214,14 +214,14 @@ jobs:
       - name: Copy .env
         run: cp .env.dist .env
       - name: Copy .env to db
-        run: cp .env.dist ../../packages/db/.env
+        run: cp .env.dist ../../packages/common/db/.env
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: ${{ github.workspace }}
       - name: Prebuild application
         run: yarn prebuild
       - name: Generate prisma files
-        run: yarn workspace @abc-transitionbascarbone/db prisma generate
+        run: yarn workspace @abc-transitionbascarbone/common prisma generate
         working-directory: ${{ github.workspace }}
       - name: Build application
         run: yarn build
@@ -276,12 +276,12 @@ jobs:
       - name: Copy .env
         run: cp .env.dist .env
       - name: Copy .env to db
-        run: cp apps/bc/.env.dist packages/db/.env
+        run: cp apps/bc/.env.dist packages/common/db/.env
         working-directory: ${{ github.workspace }}
       - name: Copy .env.test
         run: cp .env.dist .env.test
       - name: Copy .env.test to db
-        run: cp apps/bc/.env.dist packages/db/.env
+        run: cp apps/bc/.env.dist packages/common/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -289,10 +289,10 @@ jobs:
       - name: Prebuild application
         run: yarn prebuild
       - name: Generate prisma files
-        run: yarn workspace @abc-transitionbascarbone/db prisma generate
+        run: yarn workspace @abc-transitionbascarbone/common prisma generate
         working-directory: .
       - name: Migrate DB
-        run: yarn workspace @abc-transitionbascarbone/db prisma migrate deploy
+        run: yarn workspace @abc-transitionbascarbone/common prisma migrate deploy
         working-directory: .
       - name: Seed DB
         run: yarn workspace bc prisma db seed
@@ -319,85 +319,84 @@ jobs:
           path: ${{ github.workspace }}/apps/bc/cypress/screenshots
 
   mip-e2e-tests:
-      timeout-minutes: 30
-      runs-on: ubuntu-latest
-      needs: [mip-lint-and-typecheck, mip-unit-tests, mip-build-app]
-      strategy:
-        fail-fast: false
-        matrix:
-          group:
-            - auth
-            - campaigns
-      defaults:
-        run:
-          working-directory: apps/mip
-      services:
-        postgres:
-          image: postgres:17
-          env:
-            POSTGRES_USER: bilancarbone
-            POSTGRES_PASSWORD: bilancarbone
-          ports:
-            - 5432:5432
-          options: >-
-            --health-cmd pg_isready
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 5
-      steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-node@v4
-          with:
-            node-version: 24.18.0
-            cache: 'yarn'
-        - name: Run maildev
-          run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
-        - name: Copy .env
-          run: cp .env.dist .env
-        - name: Copy .env to db
-          run: cp apps/mip/.env.dist packages/db/.env
-          working-directory: ${{ github.workspace }}
-        - name: Copy .env.test
-          run: cp .env.dist .env.test
-        - name: Copy .env.test to db
-          run: cp apps/mip/.env.dist packages/db/.env
-          working-directory: ${{ github.workspace }}
-        - name: Copy .env for bc (needed for postinstall)
-          run: cp apps/bc/.env.dist apps/bc/.env
-          working-directory: ${{ github.workspace }}
-        - name: Install dependencies
-          run: yarn install --immutable --immutable-cache --check-cache
-          working-directory: .
-        - name: Generate prisma files
-          run: yarn workspace @abc-transitionbascarbone/db prisma generate
-          working-directory: .
-        - name: Migrate DB
-          run: yarn workspace @abc-transitionbascarbone/db prisma migrate deploy
-          working-directory: .
-        - name: Seed DB
-          run: yarn workspace mip prisma db seed
-        - name: Download build artifact
-          uses: actions/download-artifact@v4
-          with:
-            name: mip-app-next-build
-            path: /tmp/ci-build
-        - name: Extract build artifact
-          run: tar -xzf /tmp/ci-build/mip-next-build.tgz -C .
-        - name: Start server
-          run: PORT=3002 yarn start &
-        - name: Wait for server
-          run: npx wait-on http://localhost:3002 --timeout 60000
-        - name: Launch e2e tests
-          env:
-            NODE_OPTIONS: --max-old-space-size=4096
-          run: yarn cypress run --spec "src/tests/end-to-end/app/${{ matrix.group }}/**/*.cy.ts" --headless
-        - name: Upload screenshots
-          uses: actions/upload-artifact@v4
-          if: failure()
-          with:
-            name: cypress-screenshots-${{ matrix.group }}
-            path: ${{ github.workspace }}/apps/mip/cypress/screenshots
-
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    needs: [mip-lint-and-typecheck, mip-unit-tests, mip-build-app]
+    strategy:
+      fail-fast: false
+      matrix:
+        group:
+          - auth
+          - campaigns
+    defaults:
+      run:
+        working-directory: apps/mip
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: bilancarbone
+          POSTGRES_PASSWORD: bilancarbone
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.18.0
+          cache: 'yarn'
+      - name: Run maildev
+        run: docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
+      - name: Copy .env
+        run: cp .env.dist .env
+      - name: Copy .env to db
+        run: cp apps/mip/.env.dist packages/common/db/.env
+        working-directory: ${{ github.workspace }}
+      - name: Copy .env.test
+        run: cp .env.dist .env.test
+      - name: Copy .env.test to db
+        run: cp apps/mip/.env.dist packages/common/db/.env
+        working-directory: ${{ github.workspace }}
+      - name: Copy .env for bc (needed for postinstall)
+        run: cp apps/bc/.env.dist apps/bc/.env
+        working-directory: ${{ github.workspace }}
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
+        working-directory: .
+      - name: Generate prisma files
+        run: yarn workspace @abc-transitionbascarbone/common prisma generate
+        working-directory: .
+      - name: Migrate DB
+        run: yarn workspace @abc-transitionbascarbone/common prisma migrate deploy
+        working-directory: .
+      - name: Seed DB
+        run: yarn workspace mip prisma db seed
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: mip-app-next-build
+          path: /tmp/ci-build
+      - name: Extract build artifact
+        run: tar -xzf /tmp/ci-build/mip-next-build.tgz -C .
+      - name: Start server
+        run: PORT=3002 yarn start &
+      - name: Wait for server
+        run: npx wait-on http://localhost:3002 --timeout 60000
+      - name: Launch e2e tests
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+        run: yarn cypress run --spec "src/tests/end-to-end/app/${{ matrix.group }}/**/*.cy.ts" --headless
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots-${{ matrix.group }}
+          path: ${{ github.workspace }}/apps/mip/cypress/screenshots
 
   lighthouse:
     timeout-minutes: 10
@@ -430,7 +429,7 @@ jobs:
       - name: Copy .env
         run: cp .env.dist .env
       - name: Copy .env to db
-        run: cp apps/bc/.env.dist packages/db/.env
+        run: cp apps/bc/.env.dist packages/common/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
         run: yarn install --immutable --immutable-cache --check-cache
@@ -438,10 +437,10 @@ jobs:
       - name: Prebuild application
         run: yarn prebuild
       - name: Generate prisma files
-        run: yarn workspace @abc-transitionbascarbone/db prisma generate
+        run: yarn workspace @abc-transitionbascarbone/common prisma generate
         working-directory: .
       - name: Migrate DB
-        run: yarn workspace @abc-transitionbascarbone/db prisma migrate deploy
+        run: yarn workspace @abc-transitionbascarbone/common prisma migrate deploy
         working-directory: .
       - name: Seed DB
         run: yarn workspace bc prisma db seed

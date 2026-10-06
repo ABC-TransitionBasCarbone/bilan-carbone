@@ -7,7 +7,7 @@ import {
   getModelCampaignByOrganizationVersionMipId,
 } from '@/db/campaign'
 import { isAdmin } from '@/utils/user'
-import NotFound from '@abc-transitionbascarbone/application/components/pages/NotFound'
+import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 
 const Campaigns = async ({ user }: UserSessionProps) => {
   const modelCampaign = await getModelCampaignByOrganizationVersionMipId(user.organizationVersionMipId)

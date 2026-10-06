@@ -2,8 +2,8 @@
 
 import type { FullStudy } from '@/db/study'
 import { getAccountRoleOnStudy } from '@/utils/study'
-import Block from '@abc-transitionbascarbone/application/components/base/Block'
-import { Environment } from '@abc-transitionbascarbone/db/enums'
+import Block from '@abc-transitionbascarbone/common/components/base/Block'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
 import { UserSession } from 'next-auth'

@@ -1,4 +1,4 @@
-import { User } from '@abc-transitionbascarbone/db'
+import { User } from '@abc-transitionbascarbone/common/db'
 import { UserSession } from 'next-auth'
 
 export const userSessionToDbUser = (userSession: UserSession) =>
