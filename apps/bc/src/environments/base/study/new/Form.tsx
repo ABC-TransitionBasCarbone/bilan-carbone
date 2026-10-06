@@ -43,7 +43,7 @@ const NewStudyForm = ({ user, accounts, form, duplicateStudyId, sourceStudy }: P
   const validatorAccountOptions = useMemo(
     () =>
       accounts
-        .filter((account) => hasSufficientLevel(account.user.level, level ?? Level.Advanced))
+        .filter((account) => hasSufficientLevel(account.user.level, level ?? Level.Advanced, user.environment))
         .map((account) => account.user.email),
     [accounts, level],
   )
@@ -97,7 +97,7 @@ const NewStudyForm = ({ user, accounts, form, duplicateStudyId, sourceStudy }: P
           icon={<HelpIcon onClick={() => setGlossary('type')} label={tGlossary('title')} />}
           iconPosition="after"
         >
-          {getAllowedLevels(user.level).map((key) => (
+          {getAllowedLevels(user.level, user.environment).map((key) => (
             <MenuItem key={key} value={key}>
               {tLevel(key)}
             </MenuItem>

@@ -1,6 +1,10 @@
 import { getAccountById } from '@/db/account'
 import { getDocumentById } from '@/db/document'
-import { getOrganizationVersionForRightsCheck, getOrganizationVersionsByOrganizationId } from '@/db/organization'
+import {
+  getOrganizationVersionForRightsCheck,
+  getOrganizationVersionsByOrganizationId,
+  getOrgVersionWithNameById,
+} from '@/db/organization'
 import { FullStudy, getStudyById, MinimalStudyForRights } from '@/db/study'
 import { getAccountByIdWithAllowedStudies, UserWithAllowedStudies } from '@/db/user'
 import { canEditOrganizationVersion, hasActiveLicence, isInOrgaOrParent } from '@/utils/organization'
@@ -150,7 +154,13 @@ const canCreateSpecificStudyBC = async (
     organizationVersionId,
   )
 
-  if (!commonRights || !dbAccount || !hasSufficientLevel(dbAccount.user.level, study.level)) {
+  const orgaVersion = await getOrgVersionWithNameById(organizationVersionId)
+
+  if (!orgaVersion) {
+    return false
+  }
+
+  if (!commonRights || !dbAccount || !hasSufficientLevel(dbAccount.user.level, study.level, orgaVersion.environment)) {
     return false
   }
 
@@ -233,7 +243,7 @@ export const canChangeLevel = async (user: UserSession, study: FullStudy, level:
     return false
   }
 
-  if (!hasSufficientLevel(user.level, level)) {
+  if (!hasSufficientLevel(user.level, level, study.organizationVersion.environment)) {
     return false
   }
 
@@ -258,7 +268,8 @@ const getRoleIfHasAccess = (user: UserSession, minimalStudy: MinimalStudyForRigh
     return StudyRole.Editor
   }
 
-  return hasSufficientLevel(user.level, minimalStudy.level) && hasActiveLicence(minimalStudy.organizationVersion)
+  return hasSufficientLevel(user.level, minimalStudy.level, minimalStudy.organizationVersion.environment) &&
+    hasActiveLicence(minimalStudy.organizationVersion)
     ? (overrideRole ?? StudyRole.Validator)
     : StudyRole.Reader
 }

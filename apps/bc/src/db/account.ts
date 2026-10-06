@@ -164,7 +164,7 @@ export const addAccount = async (account: Prisma.AccountCreateInput & { role: Ex
 export const getAccountsUserLevel = (ids: string[]) =>
   prismaClient.account.findMany({
     where: { id: { in: ids } },
-    select: { id: true, user: { select: { level: true } } },
+    select: { id: true, environment: true, user: { select: { level: true } } },
   })
 
 export const getAccountsFromUser = (user: UserSession) =>

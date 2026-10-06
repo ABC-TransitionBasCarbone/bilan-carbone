@@ -801,7 +801,9 @@ const users = async () => {
           startDate: new Date(),
           endDate: faker.date.future(),
           isPublic: faker.datatype.boolean(),
-          level: faker.helpers.arrayElement(getAllowedLevels(creator.user.level)),
+          level: faker.helpers.arrayElement(
+            getAllowedLevels(creator.user.level, creator.accounts[0].account.environment),
+          ),
           name: faker.lorem.words({ min: 2, max: 5 }),
           organizationVersionId: creator.accounts[0].account.organizationVersionId as string,
           sites: {

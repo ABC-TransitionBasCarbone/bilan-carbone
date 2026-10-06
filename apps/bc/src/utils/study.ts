@@ -22,6 +22,7 @@ import {
   Unit,
 } from '@abc-transitionbascarbone/common/db/enums'
 import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/common/utils/charts'
+import { courseEnvironments } from '@abc-transitionbascarbone/common/utils/environments'
 import { formatNumber } from '@abc-transitionbascarbone/common/utils/number'
 import { Getter } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
@@ -34,14 +35,14 @@ export const getUserRoleOnPublicStudy = (
   studyLevel: Level,
 ) => {
   if (isAdmin(user.role)) {
-    return hasSufficientLevel(user.level, studyLevel) ? StudyRole.Validator : StudyRole.Reader
+    return hasSufficientLevel(user.level, studyLevel, user.environment) ? StudyRole.Validator : StudyRole.Reader
   }
 
   if (user.environment === Environment.CUT) {
     return StudyRole.Editor
   }
 
-  return user.role === Role.COLLABORATOR && hasSufficientLevel(user.level, studyLevel)
+  return user.role === Role.COLLABORATOR && hasSufficientLevel(user.level, studyLevel, user.environment)
     ? StudyRole.Editor
     : StudyRole.Reader
 }
@@ -66,14 +67,14 @@ export const getAccountRoleOnStudy = (user: UserSession, study: StudyWithRoleFie
     return StudyRole.Editor
   }
   if (isAdminOnStudyOrga(user, study.organizationVersion)) {
-    return hasSufficientLevel(user.level, study.level) && hasActiveLicence(study.organizationVersion)
+    return hasSufficientLevel(user.level, study.level, user.environment) && hasActiveLicence(study.organizationVersion)
       ? StudyRole.Validator
       : StudyRole.Reader
   }
 
   const right = study.allowedUsers.find((right) => right.account.id === user.accountId)
   if (right) {
-    return hasSufficientLevel(user.level, study.level) && hasActiveLicence(study.organizationVersion)
+    return hasSufficientLevel(user.level, study.level, user.environment) && hasActiveLicence(study.organizationVersion)
       ? right.role
       : StudyRole.Reader
   }
@@ -402,21 +403,26 @@ export const getActionReductionRatio = (
   return emissionsWithActionScopeAndFilters / emissionsWithActionScope
 }
 
-export const getAllowedLevels = (level: Level | null) => {
+export const getAllowedLevels = (level: Level | null, environment: Environment) => {
+  if (courseEnvironments.includes(environment)) {
+    return Object.values(Level) as Level[]
+  }
+
   switch (level) {
     case Level.Initial:
       return [Level.Initial]
     case Level.Standard:
       return [Level.Initial, Level.Standard]
     case Level.Advanced:
-      return [Level.Initial, Level.Standard, Level.Advanced]
+      return Object.values(Level) as Level[]
     default:
       return []
   }
 }
 
-export const hasSufficientLevel = (userLevel: Level | null, targetLevel: Level) =>
-  userLevel ? getAllowedLevels(userLevel).includes(targetLevel) : false
+export const hasSufficientLevel = (userLevel: Level | null, targetLevel: Level, environment: Environment) => {
+  return userLevel ? getAllowedLevels(userLevel, environment).includes(targetLevel) : false
+}
 
 const hasCompletedTiltSimplifiedGeneralData = (situation: Record<string, unknown>) => {
   const mappedKeys = Object.keys(mappedTiltSituationToCustomDataFields)
