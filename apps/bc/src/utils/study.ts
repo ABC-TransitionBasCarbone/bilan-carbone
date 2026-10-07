@@ -405,7 +405,7 @@ export const getActionReductionRatio = (
 
 export const getAllowedLevels = (level: Level | null, environment: Environment) => {
   if (courseEnvironments.includes(environment)) {
-    return [null, ...Object.values(Level)]
+    return Object.values(Level)
   }
 
   switch (level) {
@@ -421,7 +421,8 @@ export const getAllowedLevels = (level: Level | null, environment: Environment) 
 }
 
 export const hasSufficientLevel = (userLevel: Level | null, targetLevel: Level, environment: Environment) => {
-  return getAllowedLevels(userLevel, environment).includes(targetLevel)
+  const userLevelForEnv = courseEnvironments.includes(environment) ? Level.Advanced : userLevel
+  return getAllowedLevels(userLevelForEnv, environment).includes(targetLevel)
 }
 
 const hasCompletedTiltSimplifiedGeneralData = (situation: Record<string, unknown>) => {
