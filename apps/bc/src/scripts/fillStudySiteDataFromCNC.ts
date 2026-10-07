@@ -1,5 +1,3 @@
-'use server'
-
 import { prismaClient } from '@/db/client.server'
 import { mapCncToStudySite } from '@/utils/cnc'
 

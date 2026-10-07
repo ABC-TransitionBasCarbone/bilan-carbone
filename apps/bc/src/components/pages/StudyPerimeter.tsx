@@ -1,5 +1,3 @@
-'use server'
-
 import { OrganizationWithSites } from '@/db/account'
 import { getDocumentsForStudy } from '@/db/document'
 import type { FullStudy } from '@/db/study'

@@ -1,5 +1,3 @@
-'use server'
-
 import { getOrganizationVersionForRightsCheck } from '@/db/organization'
 import { hasActiveLicenceForFormation } from '@/utils/organization'
 import { DeactivatableFeature } from '@abc-transitionbascarbone/common/db/enums'

@@ -1,4 +1,3 @@
-'use server'
 import type { DeactivatableFeature, Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment, UserSource } from '@abc-transitionbascarbone/common/db/enums'
 import { prismaClient } from './client.server'
