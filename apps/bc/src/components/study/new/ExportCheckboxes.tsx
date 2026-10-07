@@ -138,6 +138,7 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
       <div className="flex-col">
         <div className={styles.field}>
           <FormControlLabel
+            className={styles.consolidatedLabel}
             control={<Checkbox checked className={styles.checkbox} disabled />}
             label={<span className={styles.bcExport}>{t('consolidated')}</span>}
           />

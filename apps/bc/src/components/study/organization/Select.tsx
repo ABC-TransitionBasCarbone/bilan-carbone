@@ -153,6 +153,7 @@ const SelectOrganization = ({
             organizationVersionId: organizationVersionId!,
             name: organizationVersion?.organization.name || '',
             sites: currentSites,
+            siret: organizationVersion?.organization.siret || '',
           }),
         {
           onSuccess: () => {

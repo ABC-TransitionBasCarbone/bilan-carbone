@@ -1,3 +1,4 @@
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import z from 'zod'
 import { SitesCommandValidation } from './study.command'
 
@@ -19,3 +20,6 @@ export const UpdateOrganizationCommandValidation = z.intersection(
 )
 
 export type UpdateOrganizationCommand = z.infer<typeof UpdateOrganizationCommandValidation>
+
+export const canUpdateOrganizationSiret = (environment: Environment, parentId: string | null) =>
+  environment !== Environment.BC || !!parentId

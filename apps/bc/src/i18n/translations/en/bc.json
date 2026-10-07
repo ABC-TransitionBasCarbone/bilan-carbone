@@ -2269,7 +2269,11 @@
       "siret": "SIRET",
       "name": "Organisation name",
       "title": "Information about the new organisation",
-      "Unknown error": "An unknwon error happened. Please contact the support"
+      "Unknown error": "An unknwon error happened. Please contact the support",
+      "glossary": {
+        "siret": "Edit the SIRET",
+        "siretDescription": "To change the SIRET, update this information on the WordPress website. This account will be updated within one hour."
+      }
     },
     "sites": {
       "title": "Organisation's sites covered in this study",

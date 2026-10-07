@@ -49,7 +49,7 @@ const Modal = ({ className, label, open, onClose, title, children, actions, big 
         )}
 
         <IconButton color="primary" onClick={onClose}>
-          <CloseIcon />
+          <CloseIcon data-testid='close-modal-button' />
         </IconButton>
       </div>
 

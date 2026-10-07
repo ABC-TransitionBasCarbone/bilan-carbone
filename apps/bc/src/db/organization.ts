@@ -39,7 +39,12 @@ export const getOrgVersionWithNameById = async (id: string | null) => {
   }
   return prismaClient.organizationVersion.findUnique({
     where: { id },
-    select: { id: true, parentId: true, organization: { select: { id: true, name: true, siret: true } } },
+    select: {
+      id: true,
+      environment: true,
+      parentId: true,
+      organization: { select: { id: true, name: true, siret: true } },
+    },
   })
 }
 

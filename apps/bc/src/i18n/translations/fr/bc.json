@@ -2269,7 +2269,11 @@
       "edit": "Valider la modification",
       "name": "Nom de l'organisation",
       "title": "Informations sur la nouvelle organisation",
-      "Unknown error": "Une erreur inconnue s'est produite. Veuillez contacter le support"
+      "Unknown error": "Une erreur inconnue s'est produite. Veuillez contacter le support",
+      "glossary": {
+        "siret": "Modifier le SIRET",
+        "siretDescription": "Pour modifier le SIRET, modifiez cette information sur le compte ABC de l'administrateur de votre organisation. Ce compte sera mis à jour sous une heure après cette modification."
+      }
     },
     "sites": {
       "title": "Sites de l'organisation concernés par l'étude",

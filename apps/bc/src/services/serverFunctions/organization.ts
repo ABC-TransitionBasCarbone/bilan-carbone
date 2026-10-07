@@ -6,10 +6,10 @@ import { getEmissionFactorWithoutQuality } from '@/db/emissionFactors'
 import {
   createOrganizationWithVersion,
   deleteClient,
-  getOrgNameByOrgVersionId,
-  getOrgVersionWithNameById,
   getOrganizationVersionAccounts,
   getOrganizationVersionIsCR,
+  getOrgNameByOrgVersionId,
+  getOrgVersionWithNameById,
   getRawOrganizationVersionById,
   onboardOrganizationVersion,
   setOnboarded,
@@ -36,7 +36,11 @@ import {
   canDeleteOrganizationVersion,
   canUpdateOrganizationVersion,
 } from '../permissions/organization'
-import { CreateOrganizationCommand, UpdateOrganizationCommand } from './organization.command'
+import {
+  canUpdateOrganizationSiret,
+  CreateOrganizationCommand,
+  UpdateOrganizationCommand,
+} from './organization.command'
 import { getStudy } from './study'
 import { DeleteCommand, SitesCommand } from './study.command'
 import { addMember, addUserChecklistItem } from './user'
@@ -96,6 +100,21 @@ export const updateOrganizationCommand = async (command: UpdateOrganizationComma
     }
 
     if (!(await canUpdateOrganizationVersion(session.user, command.organizationVersionId))) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const organizationVersion = await getOrgVersionWithNameById(command.organizationVersionId)
+
+    if (!organizationVersion) {
+      console.error('updateOrganizationCommand: organizationversion is not found')
+      throw new Error(NOT_AUTHORIZED)
+    }
+    const updatingSiretButNoRights =
+      !canUpdateOrganizationSiret(organizationVersion.environment, organizationVersion.parentId) &&
+      command.siret !== (organizationVersion.organization.siret ?? '')
+
+    if (updatingSiretButNoRights) {
+      console.error('updateOrganizationCommand: cannot update organization SIRET')
       throw new Error(NOT_AUTHORIZED)
     }
 
