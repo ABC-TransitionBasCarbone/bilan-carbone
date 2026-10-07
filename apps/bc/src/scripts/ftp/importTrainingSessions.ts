@@ -117,7 +117,7 @@ const isTrainingSession = (session: TrainingSessionRow): session is TrainingSess
     isValidDate(session.formationStartDate) &&
     isValidDate(session.formationEndDate) &&
     typeof session.environment === 'string' &&
-    (session.userEmails === null || typeof session.userEmails === 'string')
+    (session.userEmails === undefined || session.userEmails === null || typeof session.userEmails === 'string')
   )
 }
 
@@ -177,32 +177,54 @@ const handleDataForOF = async (of: CourseOrganism, trainingSessions: TrainingSes
 
     let courseSession = existingSession
     try {
-      courseSession = await prismaClient.$transaction(async (transaction) =>
-        existingSession
-          ? transaction.courseSession.update({
-              where: { id: existingSession.id },
-              data: { startDate, endDate },
+      courseSession = await prismaClient.$transaction(async (transaction) => {
+        if (existingSession) {
+          return transaction.courseSession.update({
+            where: { id: existingSession.id },
+            data: { startDate, endDate },
+          })
+        } else {
+          let traineeCode = randomInt(99999999).toString()
+          let professorCode = randomInt(99999999).toString()
+
+          let existingCodes = [{}]
+          let count = 0
+          while (existingCodes.length > 0 && count < 10) {
+            traineeCode = randomInt(99999999).toString()
+            professorCode = randomInt(99999999).toString()
+
+            existingCodes = await transaction.sessionCode.findMany({
+              where: { OR: [{ traineeCode }, { professorCode }] },
             })
-          : transaction.courseSession.create({
-              data: {
-                startDate,
-                endDate,
-                courseOrganism: { connect: { id: of.id } },
-                organizationVersion: {
-                  create: {
-                    environment,
-                    organization: { create: { name } },
-                  },
-                },
-                sessionCode: {
-                  create: {
-                    traineeCode: randomInt(99999999).toString(),
-                    professorCode: randomInt(99999999).toString(),
-                  },
+
+            count++
+          }
+
+          if (count >= 10 && existingCodes.length > 0) {
+            throw new Error('Failed to generate unique session codes after 10 attempts')
+          }
+
+          return transaction.courseSession.create({
+            data: {
+              startDate,
+              endDate,
+              courseOrganism: { connect: { id: of.id } },
+              organizationVersion: {
+                create: {
+                  environment,
+                  organization: { create: { name } },
                 },
               },
-            }),
-      )
+              sessionCode: {
+                create: {
+                  traineeCode,
+                  professorCode,
+                },
+              },
+            },
+          })
+        }
+      })
     } catch (error) {
       console.error('Failed to save training session:', { courseOrganismId: of.id, name, environment }, error)
       if (!existingSession) {
@@ -263,10 +285,12 @@ export const getTrainingSessionsFromFTP = async () => {
       throw new Error('No course organisms found')
     }
 
+    const errors = []
     for (const of of ofList) {
       const data = await downloadFileFromFTP(client, of)
 
       if (!data) {
+        errors.push(`No data found for course organism: ${of.name}`)
         continue
       }
 
@@ -281,6 +305,10 @@ export const getTrainingSessionsFromFTP = async () => {
     }
 
     console.log('Training sessions file read successfully')
+    if (errors.length > 0) {
+      console.error('Error reading training sessions file:', errors.join(', '))
+      throw new Error('Errors occurred while reading training sessions file')
+    }
   } catch (error) {
     console.error('Error reading training sessions file:', error)
     throw error

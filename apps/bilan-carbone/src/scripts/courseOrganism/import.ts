@@ -56,7 +56,7 @@ program
   .name('add-course-organism')
   .description('Script pour ajouter des OFs')
   .version('1.0.0')
-  .requiredOption("-f, --file <value>', 'Fichier CSV avec les nouveaux OFs")
+  .requiredOption('-f, --file <value>', 'Fichier CSV avec les nouveaux OFs')
   .parse(process.argv)
 
 const params = program.opts()

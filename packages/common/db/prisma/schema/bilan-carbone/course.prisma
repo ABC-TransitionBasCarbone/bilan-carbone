@@ -8,6 +8,7 @@ model CourseOrganism {
   ftpPath        String          @map("ftp_path")
   courseSessions CourseSession[]
 
+  @@unique([name])
   @@map("course_organism")
   @@schema("bilan_carbone")
 }
@@ -21,6 +22,8 @@ model SessionCode {
   professorCode  String?         @map("professor_code")
   courseSessions CourseSession[]
 
+  @@unique([traineeCode])
+  @@unique([professorCode])
   @@map("session_code")
   @@schema("bilan_carbone")
 }
@@ -33,15 +36,17 @@ model CourseSession {
   startDate DateTime @map("start_date")
   endDate   DateTime @map("end_date")
 
-  organizationVersion   OrganizationVersion? @relation(fields: [organizationVersionId], references: [id])
-  organizationVersionId String?              @map("organization_version_id")
+  organizationVersion   OrganizationVersion @relation(fields: [organizationVersionId], references: [id], onDelete: Cascade)
+  organizationVersionId String              @map("organization_version_id")
 
-  courseOrganism   CourseOrganism? @relation(fields: [courseOrganismId], references: [id])
-  courseOrganismId String?         @map("course_organism_id")
+  courseOrganism   CourseOrganism @relation(fields: [courseOrganismId], references: [id], onDelete: Cascade)
+  courseOrganismId String         @map("course_organism_id")
 
-  sessionCode   SessionCode? @relation(fields: [sessionCodeId], references: [id])
-  sessionCodeId String?      @map("session_code_id")
+  sessionCode   SessionCode @relation(fields: [sessionCodeId], references: [id], onDelete: Cascade)
+  sessionCodeId String      @map("session_code_id")
 
+  @@unique([organizationVersionId])
+  @@unique([sessionCodeId])
   @@map("course_session")
   @@schema("bilan_carbone")
 }

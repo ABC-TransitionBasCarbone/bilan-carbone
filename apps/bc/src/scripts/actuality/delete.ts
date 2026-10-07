@@ -7,7 +7,7 @@ program
   .name('delete-actuality')
   .description('Script pour supprimer une actualité')
   .version('1.0.0')
-  .requiredOption("-a, --actuality <value>', 'Id de l'actualité à supprimer")
+  .requiredOption('-a, --actuality <value>', "Id de l'actualité à supprimer")
   .parse(process.argv)
 
 const params = program.opts()
