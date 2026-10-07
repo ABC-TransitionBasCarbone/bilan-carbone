@@ -1,4 +1,4 @@
-import { Environment } from '@abc-transitionbascarbone/db-common/enums'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import z from 'zod'
 import { SitesCommandValidation } from './study.command'
 
