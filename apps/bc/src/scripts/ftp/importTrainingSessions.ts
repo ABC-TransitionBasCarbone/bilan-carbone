@@ -1,6 +1,6 @@
 import { prismaClient } from '@/db/client.node'
-import { CourseOrganism } from '@abc-transitionbascarbone/db-common'
-import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
+import { CourseOrganism } from '@abc-transitionbascarbone/common/db'
+import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { AccessOptions, Client } from 'basic-ftp'
 import { randomInt } from 'crypto'
 import { getJsDateFromExcel } from 'excel-date-to-js'

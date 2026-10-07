@@ -1,6 +1,6 @@
 import { prismaClient } from '@/db/client.node'
-import { CourseSession, Prisma, User } from '@abc-transitionbascarbone/db-common'
-import { Environment, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
+import { CourseSession, Prisma, User } from '@abc-transitionbascarbone/common/db'
+import { Environment, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import fs from 'fs'
 import xlsx from 'node-xlsx'
 import { handleTrainingSessionsFromFTP } from './importTrainingSessions'

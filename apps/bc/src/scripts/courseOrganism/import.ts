@@ -1,6 +1,6 @@
 import { prismaClient } from '@/db/client.server'
 import { createCourseOrganismList } from '@/db/courseOrganism'
-import { CourseOrganism } from '@abc-transitionbascarbone/db-common'
+import { CourseOrganism } from '@abc-transitionbascarbone/common/db'
 import { Command } from 'commander'
 import { parse } from 'csv-parse'
 import fs from 'fs'
