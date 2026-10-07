@@ -112,6 +112,7 @@ const users = async () => {
     data: {
       name: faker.company.name(),
       wordpressId: faker.finance.accountNumber(14),
+      siret: faker.finance.accountNumber(14),
     },
   })
 
@@ -167,6 +168,7 @@ const users = async () => {
     data: {
       name: faker.company.name(),
       wordpressId: faker.finance.accountNumber(14),
+      siret: faker.finance.accountNumber(14),
     },
   })
 
@@ -236,6 +238,7 @@ const users = async () => {
     data: Array.from({ length: 10 }).map(() => ({
       name: faker.company.name(),
       wordpressId: faker.finance.accountNumber(14),
+      siret: faker.finance.accountNumber(14),
     })),
   })
 
