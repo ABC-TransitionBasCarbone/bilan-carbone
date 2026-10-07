@@ -1,4 +1,4 @@
-import { MipAccount as PrismaMipAccount, User as PrismaUser } from '@abc-transitionbascarbone/db-common'
+import { MipAccount as PrismaMipAccount, User as PrismaUser } from '@abc-transitionbascarbone/common/db'
 import 'next-auth'
 
 declare module 'next-auth' {

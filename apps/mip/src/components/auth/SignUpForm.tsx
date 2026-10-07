@@ -2,9 +2,9 @@
 
 import { signUpWithModelCampaign } from '@/services/serverFunctions/user'
 import { SignUpCommand, SignUpCommandValidation } from '@/services/serverFunctions/user.command'
-import Form from '@abc-transitionbascarbone/components/src/base/Form'
-import LoadingButton from '@abc-transitionbascarbone/components/src/base/LoadingButton'
-import { FormTextField } from '@abc-transitionbascarbone/components/src/form/TextField'
+import Form from '@abc-transitionbascarbone/common/components/base/Form'
+import LoadingButton from '@abc-transitionbascarbone/common/components/base/LoadingButton'
+import { FormTextField } from '@abc-transitionbascarbone/common/components/form/TextField'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormControl } from '@mui/material'
 import classNames from 'classnames'

@@ -1,12 +1,11 @@
 'use client'
 
-import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
-import { getSurveyCategoryKeysFromParsedRules } from '@/publicodes/mip-engine'
-import { hasRuleAnswer } from '@/publicodes/mip-rules'
-import { formatMassKilograms, getCategoryClassSuffix } from '@abc-transitionbascarbone/publicodes/form'
-import { getRuleCategoryKey } from '@abc-transitionbascarbone/publicodes/form/utils'
-import { getPositiveNodeValue } from '@abc-transitionbascarbone/utils/number'
-import { normalizeCategoryKey } from '@abc-transitionbascarbone/utils/parsing'
+import { useMipPublicodes } from '@/lib/publicodes/MipPublicodesProvider'
+import { getSurveyCategoryKeysFromParsedRules } from '@/lib/publicodes/mip-engine'
+import { hasRuleAnswer } from '@/lib/publicodes/mip-rules'
+import { formatMassKilograms, getCategoryClassSuffix } from '@abc-transitionbascarbone/common/publicodes/form'
+import { getRuleCategoryKey } from '@abc-transitionbascarbone/common/publicodes/form/utils'
+import { getPositiveNodeValue } from '@abc-transitionbascarbone/common/utils/number'
 import classNames from 'classnames'
 import { Situation } from 'publicodes'
 import { useMemo } from 'react'
@@ -70,10 +69,7 @@ const SurveyCategoriesSidebar = ({ activeCategoryKey, situation, relevantQuestio
 
   const categories: CategoryItem[] = categoryKeys.map((key) => {
     const raw = rules[key]?.rawNode as { titre?: string; icônes?: string } | undefined
-    const categoryQuestions = relevantQuestions.filter((name) => getRuleCategoryKey(name) === key)
-    const isComplete =
-      categoryQuestions.length > 0 &&
-      categoryQuestions.every((question) => hasRuleAnswer(question, situation, meta.mosaicChildrenWithParent))
+    const hasAnswers = Object.keys(situation).some((name) => name.startsWith(`${key} . `))
     const result = (() => {
       try {
         return previewEngine.evaluate(key)
@@ -81,9 +77,10 @@ const SurveyCategoriesSidebar = ({ activeCategoryKey, situation, relevantQuestio
         return { nodeValue: 0 }
       }
     })()
-    const valueKg = isComplete ? getPositiveNodeValue(result.nodeValue) : 0
+    const valueKg = hasAnswers ? getPositiveNodeValue(result.nodeValue) : 0
     const isActive = key === activeCategoryKey
-    const categoryClassSuffix = getCategoryClassSuffix(normalizeCategoryKey(key))
+    const categoryClassSuffix = getCategoryClassSuffix(key)
+    const categoryQuestions = relevantQuestions.filter((name) => getRuleCategoryKey(name) === key)
 
     return {
       key,

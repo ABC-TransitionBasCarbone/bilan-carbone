@@ -1,7 +1,7 @@
 'use client'
 
 import { CategoryResult } from '@/components/survey/completion/types'
-import { formatMassKilograms } from '@abc-transitionbascarbone/publicodes/form'
+import { formatMassKilograms } from '@abc-transitionbascarbone/common/publicodes/form'
 import { Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import styles from '../SurveyCompletion.module.css'

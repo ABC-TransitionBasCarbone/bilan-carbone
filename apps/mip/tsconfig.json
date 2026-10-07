@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "types": ["cypress", "node", "jest"],
     "plugins": [
       {
@@ -9,7 +10,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@abc-transitionbascarbone/css": ["../../packages/css/index.ts"]
+      "@abc-transitionbascarbone/css": ["../../packages/common/components/ui/css/index.ts"]
     }
   },
   "include": [
@@ -18,7 +19,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "cypress/**/*.ts",
-    "../../packages/types/mui.d.ts"
+    "../../packages/common/types/mui.d.ts"
   ],
   "exclude": ["node_modules"]
 }

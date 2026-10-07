@@ -3,6 +3,9 @@
 Ce monorepo contient les applications et packages partagés du projet Bilan Carbone.
 This monorepo contains apps and shared packages for Bilan Carbone & MEP Pro
 
+`packages/common` contains the database, components, translations and shared services in a single workspace.
+`packages/publicodes-packages` contains the Publicodes models.
+
 ## Get started
 
 ### Prerequisites
@@ -23,25 +26,25 @@ yarn install
 
 ### 2. Variables d'environnement
 
-Create a `.env` copied from `apps/bilan-carbone/.env.dist` and create a `.env.test` copied from `apps/bilan-carbone/.env.test.dist`.
-Do the same in db-common folder.
+Create a `.env` copied from `apps/bc/.env.dist` and create a `.env.test` copied from `apps/bc/.env.test.dist`.
+Do the same in db folder.
 
 ```bash
-cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
-cp apps/bilan-carbone/.env.dist.test apps/bilan-carbone/.env.test
-cp packages/db-common/.env.dist packages/db-common/.env
+cp apps/bc/.env.dist apps/bc/.env
+cp apps/bc/.env.test.dist apps/bc/.env.test
+cp packages/common/db/.env.dist packages/common/db/.env
 ```
 
 ### 3. Start the database
 
 ```bash
-cd apps/bilan-carbone && docker-compose up -d && cd ../..
+cd apps/bc && docker-compose up -d && cd ../..
 ```
 
 ### 4. Set up the database with Prisma
 
 ```bash
-yarn prisma migrate dev
+yarn db:migrate
 ```
 
 Or in production :
@@ -53,7 +56,7 @@ yarn prisma migrate deploy
 ### 5. Seed the database (cannot use the yarn prisma shortcut)
 
 ```bash
-yarn workspace bilan-carbone prisma db seed
+yarn workspace bc prisma db seed
 ```
 
 OR use the shortcut:
@@ -78,30 +81,30 @@ The application will be available at [http://localhost:3000](http://localhost:30
 
 ## Commands by workspace
 
-### bilan-carbone application
+### bc application
 
 ```bash
 # Development
-yarn workspace bilan-carbone dev
+yarn workspace bc dev
 
 # Build
-yarn workspace bilan-carbone build
+yarn workspace bc build
 
 # Unit tests
-yarn workspace bilan-carbone test
+yarn workspace bc test
 
 # Cypress e2e tests
-yarn workspace bilan-carbone cypress
+yarn workspace bc cypress
 
 # Reset test database
-yarn workspace bilan-carbone db:test:reset
+yarn workspace bc db:test:reset
 ```
 
-### Database (db-common)
+### Database (db)
 
 ````bash
 # Create a new migration
-yarn prisma migrate dev
+yarn db:migrate
 
 # Reset the database
 yarn prisma migrate reset
@@ -122,10 +125,10 @@ yarn prisma studio
 
 ## Import scripts
 
-These scripts must be run from apps/bilan-carbone:
+These scripts must be run from apps/bc:
 
 ```bash
-cd apps/bilan-carbone
+cd apps/bc
 
 # Importer les facteurs d'émissions NegaOctet
 npx tsx src/scripts/negaOctet/getEmissionFactors.ts -n ${versionNumber} -f ${pathToCSVFile}
@@ -159,10 +162,10 @@ npx tsx src/scripts/secten/importSectenData.ts -y ${versionYear} -f ${pathToCSVF
 ### Run Unit tests
 
 ```bash
-yarn workspace bilan-carbone test
+yarn workspace bc test
 
 # Watch mode
-yarn workspace bilan-carbone test:watch
+yarn workspace bc test:watch
 ```
 
 ## Deploy on Scalingo
@@ -210,3 +213,13 @@ Then, run the following command to check if the vulnerabilities are fixed:
 ```bash
 yarn audit
 ```
+
+## Architecture
+
+| Package                        | Rôle actuel                                                                                                                                                                    |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `packages/common`                | Composants réutilisés par les applications, dont l’interface et les styles dans `components/ui`.                                                                               |
+| `packages/common/db`             | Schéma Prisma et accès à la base de données.                                                                                                                                   |
+| `packages/publicodes-packages` | Modèles Publicodes `count`, `clickson` et `tilt`, consommés par BC. MIP n’a pas de dépendance directe à ce package.                                                            |
+| `packages/common`                | Code transverse consommé par BC et MIP : i18n, types, gardes de type, utilitaires et services. Tous ses modules ne sont pas nécessairement utilisés par les deux applications. |
+| `packages/common/tooling`        | Scripts de build, configuration Jest et utilitaires de test communs.                                                                                                           |

@@ -1,0 +1,66 @@
+{
+  "name": "@abc-transitionbascarbone/common",
+  "version": "0.0.1",
+  "private": true,
+  "exports": {
+    ".": "./index.ts",
+    "./db": "./db/src/index.ts",
+    "./db/enums": "./db/src/enums.ts",
+    "./db/types": "./db/src/types.ts",
+    "./db/db": "./db/src/db/index.ts",
+    "./db/db/common.select": "./db/src/db/common.select.ts",
+    "./components": "./components/index.ts",
+    "./components/auth/user.command": "./components/auth/user.command.ts",
+    "./components/hooks/useServerFunction": "./components/hooks/useServerFunction.ts",
+    "./components/providers/Providers": "./components/providers/Providers.tsx",
+    "./components/publicodes/form": "./components/publicodes/form/index.ts",
+    "./components/publicodes/form/inputFields": "./components/publicodes/form/inputFields/index.ts",
+    "./components/*.module.css": "./components/*.module.css",
+    "./components/*": "./components/*.tsx",
+    "./ui": "./components/ui/index.ts",
+    "./ui/*": "./components/ui/*.tsx",
+    "./components/base/*.module.css": "./components/ui/base/*.module.css",
+    "./components/base/*": "./components/ui/base/*.tsx",
+    "./services/*": "./services/*.ts",
+    "./publicodes/*": "./publicodes/*.ts",
+    "./publicodes/hooks": "./publicodes/hooks/index.ts",
+    "./publicodes/state": "./publicodes/state/index.ts",
+    "./publicodes/form": "./publicodes/form/index.ts",
+    "./publicodes/form/layouts": "./publicodes/form/layouts/index.ts",
+    "./i18n/config": "./i18n/config.ts",
+    "./i18n/translation": "./i18n/translation.ts",
+    "./i18n/translations/*": "./i18n/translations/*",
+    "./typeguards": "./typeguards/question.ts",
+    "./utils": "./utils/time.ts",
+    "./utils/customRich": "./utils/customRich.tsx",
+    "./utils/*": "./utils/*.ts"
+  },
+  "scripts": {
+    "db:migrate": "prisma migrate dev --config db/prisma.config.ts",
+    "db:generate": "prisma generate --config db/prisma.config.ts",
+    "db:status": "prisma migrate status --config db/prisma.config.ts",
+    "prisma": "prisma --config db/prisma.config.ts"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "@mui/material": "*",
+    "@mui/x-date-pickers": "*",
+    "@mui/x-charts": "*",
+    "next-intl": "*"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.36.0",
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "7.10.0",
+    "pg": "^8.23.1",
+    "prettier": "^3.8.4",
+    "publicodes": "^1.10.1",
+    "yargs": "^17.7.2",
+    "zod": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.2"
+  }
+}

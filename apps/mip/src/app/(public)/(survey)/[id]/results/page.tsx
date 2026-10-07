@@ -1,9 +1,9 @@
 import SurveyCompletion from '@/components/survey/SurveyCompletion'
 import { getCampaignById } from '@/db/campaign'
-import { RawRules } from '@/publicodes/mip-engine'
-import { MipPublicodesProvider } from '@/publicodes/MipPublicodesProvider'
-import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
-import { CampaignStatus } from '@abc-transitionbascarbone/db-common/enums'
+import { RawRules } from '@/lib/publicodes/mip-engine'
+import { MipPublicodesProvider } from '@/lib/publicodes/MipPublicodesProvider'
+import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
+import { CampaignStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 

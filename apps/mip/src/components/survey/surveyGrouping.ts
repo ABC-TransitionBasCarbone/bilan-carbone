@@ -1,6 +1,6 @@
-import { createMipEngine } from '@/publicodes/mip-engine'
-import { getPlancherWarning, getQuestionType, MipQuestionType } from '@/publicodes/mip-rules'
-import { getRuleCategoryKey } from '@abc-transitionbascarbone/publicodes/form/utils'
+import { createMipEngine } from '@/lib/publicodes/mip-engine'
+import { getPlancherWarning, getQuestionType, MipQuestionType } from '@/lib/publicodes/mip-rules'
+import { getRuleCategoryKey } from '@abc-transitionbascarbone/common/publicodes/form/utils'
 import { EvaluatedFormElement, FormPageElementProp, getEvaluatedFormElement } from '@publicodes/forms'
 
 type SurveyFormElement = EvaluatedFormElement<string> & FormPageElementProp

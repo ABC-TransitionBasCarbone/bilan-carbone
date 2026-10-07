@@ -4,7 +4,7 @@ import {
   calculateSimpleLinearTrajectory,
   getSnbcDefaultReductionRates,
   ReductionRates,
-} from '@abc-transitionbascarbone/utils/trajectory'
+} from '@abc-transitionbascarbone/common/utils/trajectory'
 import { LineChart } from '@mui/x-charts/LineChart'
 import { useMemo } from 'react'
 import styles from './TrajectoryChart.module.css'

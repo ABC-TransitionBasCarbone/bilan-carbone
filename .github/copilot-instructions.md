@@ -1,30 +1,33 @@
-# Copilot Instructions for bilan-carbone and mip
+# Copilot Instructions for bc and mip
 
 ## Scope
 
 Monorepo Next.js (Yarn workspaces + Turbo) for carbon accounting products:
-- apps/bilan-carbone
+
+- apps/bc
 - apps/mip
-- packages/* shared libs (db-common, i18n, components, services, typeguards, publicodes, ui, utils)
+- packages/common (components, db, i18n, services, tooling, types, utils)
+- packages/publicodes-packages
 
 ## Architecture Essentials
 
-- UI routes/components: apps/*/src/app and apps/*/src/components
+- UI routes/components: apps/_/src/app and apps/_/src/components
 - APIs: apps/*/src/app/api
-- DB schema: packages/db-common/prisma/schema
-- DB access and business logic: apps/*/src/db and apps/*/src/services
+- DB schema: packages/common/db/prisma/schema
+- DB access and business logic: apps/_/src/db and apps/_/src/services
 - Shared types/constants: src/types and src/constants (or shared packages when reusable)
 
 ## Preferred Commands
 
 Run from repo root unless specified:
+
 - Dev all: yarn dev
-- Dev BC only: yarn dev:bc
-- Dev MIP only: yarn dev:mip
+- Dev BC only: yarn bc:dev
+- Dev MIP only: yarn mip:dev
 - Lint: yarn lint
 - Typecheck: yarn ts
 - Tests: yarn test
-- App-local tests: (cd apps/bilan-carbone && yarn test) or (cd apps/mip && yarn test)
+- App-local tests: (cd apps/bc && yarn test) or (cd apps/mip && yarn test)
 
 ## Core Conventions
 
@@ -51,7 +54,7 @@ Run from repo root unless specified:
 
 - No inline style and no MUI sx prop in app code.
 - Use CSS modules for local styles.
-- Prefer shared utility classes from packages/css/style first.
+- Prefer shared utility classes from packages/common/components/ui/css/style first.
 - Use classNames when composing global utilities with module classes.
 - Use shared color CSS variables (no hardcoded hex, no white/#fff literals).
 - Keep typography consistent with project theme conventions.
@@ -64,8 +67,8 @@ Run from repo root unless specified:
 - Do not declare functions inside other functions; move shared helpers to module scope.
 - follow eslint.config.base.mjs conventions for import order and grouping.
 - follow .prettierrc.json conventions for formatting.
-- Before creating app-local types/components, check if it belongs in shared packages.
-- Survey reusable UI/types should live in shared packages and be imported from there.
+- Before creating app-local types/components, check if it belongs in packages/common.
+- Survey reusable UI/types should live in packages/common and be imported from there.
 
 ## Tooling Rules
 
@@ -74,7 +77,7 @@ Run from repo root unless specified:
 - Keep app tsconfig focused on app-specific overrides only.
 - Keep README footprint minimal:
   - root README.md
-  - apps/bilan-carbone/README.md
+  - apps/bc/README.md
   - apps/mip/README.md
 
 ## Authorization Logging Requirement
@@ -96,11 +99,12 @@ Never validate my claims without checking them. Prefer evidence over my approval
 
 ## Important Locations
 
-- apps/bilan-carbone/src/db/emissionFactors.ts
-- packages/db-common/prisma/schema
+- apps/bc/src/db/emissionFactors.ts
+- packages/common/db/prisma/schema
 - apps/*/src/components
 - apps/*/src/app/api
 - .env
 
 ## PR
+
 - Do not comment on french text that are not translated. We have a script that translate it automatically after the PR is merged.

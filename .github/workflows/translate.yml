@@ -5,8 +5,8 @@ on:
   push:
     branches: [develop]
     paths:
-      - 'packages/i18n/translations/fr/**'
-      - 'apps/bilan-carbone/src/i18n/translations/fr/**'
+      - 'packages/common/i18n/translations/fr/**'
+      - 'apps/bc/src/i18n/translations/fr/**'
       - 'apps/mip/src/i18n/translations/fr/**'
 
   # Manual: allows choosing a specific locale and file
@@ -43,16 +43,16 @@ jobs:
           cache: yarn
 
       - name: Copy .env (needed for postinstall scripts)
-        run: cp apps/bilan-carbone/.env.dist apps/bilan-carbone/.env
+        run: cp apps/bc/.env.dist apps/bc/.env
 
-      - name: Copy .env to db-common
-        run: cp apps/bilan-carbone/.env.dist packages/db-common/.env
+      - name: Copy .env to db
+        run: cp apps/bc/.env.dist packages/common/db/.env
 
       - name: Install dependencies
         run: yarn install --immutable
 
       - name: Run translation script
-        working-directory: packages/i18n
+        working-directory: packages/common/i18n
         run: |
           if [ "${{ github.event_name }}" = "push" ]; then
             # Incremental: only keys changed in this push → keeps API usage minimal.
