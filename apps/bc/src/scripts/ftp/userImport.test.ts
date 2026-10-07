@@ -1,6 +1,6 @@
 import { getAccountByEmailAndEnvironment } from '@/db/account'
 import { createUsersWithAccount, updateAccount } from '@/db/user'
-import { Environment, Level, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { Environment, Level, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { processUsers } from './userImport'
 
 jest.mock('@/db/account', () => ({
@@ -82,6 +82,100 @@ describe('processUsers', () => {
     expect(consoleLogSpy).toHaveBeenCalledWith('No new users to create')
     expect(consoleLogSpy).toHaveBeenCalledWith('1 accounts updated')
     expect(consoleLogSpy).not.toHaveBeenCalledWith(expect.stringContaining('Progress:'))
+  })
+
+  it.each([Environment.BC, Environment.TILT])(
+    'updates imported data for invited %s accounts without changing their access',
+    async (environment) => {
+      jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue({
+        id: 'account-id',
+        status: UserStatus.VALIDATED,
+        role: Role.DEFAULT,
+        organizationVersionId: 'organization-version-id',
+        user: {
+          id: 'user-id',
+          email: 'invited@example.com',
+          firstName: 'Old',
+          lastName: 'Name',
+          source: UserSource.CRON,
+        },
+      } as Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>)
+
+      await processUsers(
+        [
+          {
+            userEmail: 'invited@example.com',
+            firstName: 'Updated',
+            lastName: 'User',
+            environment,
+            source: UserSource.TUNISIE,
+            formationName: 'Bilan Carbone® Maitrise',
+            formationStartDate: '2026-01-15',
+            formationEndDate: '2026-01-16',
+          },
+        ],
+        new Date('2026-01-15T12:00:00.000Z'),
+      )
+
+      const [, accountData, userData] = jest.mocked(updateAccount).mock.calls[0]
+      expect(accountData).toEqual(
+        expect.objectContaining({
+          environment,
+          formationName: 'Bilan Carbone® Maitrise',
+          formationStartDate: '2026-01-15',
+          formationEndDate: '2026-01-16',
+        }),
+      )
+      expect(accountData).not.toHaveProperty('role')
+      expect(accountData).not.toHaveProperty('status')
+      expect(accountData).not.toHaveProperty('organizationVersion')
+      expect(userData).toEqual(
+        expect.objectContaining({
+          firstName: 'Updated',
+          lastName: 'User',
+          source: UserSource.TUNISIE,
+        }),
+      )
+      expect(createUsersWithAccount).not.toHaveBeenCalled()
+    },
+  )
+
+  it('keeps the existing import behavior for invited CUT accounts', async () => {
+    jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue({
+      id: 'account-id',
+      status: UserStatus.VALIDATED,
+      role: Role.DEFAULT,
+      user: {
+        id: 'user-id',
+        email: 'invited@example.com',
+        firstName: 'Existing',
+        lastName: 'User',
+        source: UserSource.CRON,
+      },
+    } as Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>)
+
+    await processUsers(
+      [
+        {
+          userEmail: 'invited@example.com',
+          firstName: 'Updated',
+          lastName: 'Name',
+          environment: Environment.CUT,
+          formationName: 'Bilan Carbone® Maitrise',
+        },
+      ],
+      new Date('2026-01-15T12:00:00.000Z'),
+    )
+
+    const [, accountData, userData] = jest.mocked(updateAccount).mock.calls[0]
+    expect(accountData).toEqual({ environment: Environment.CUT })
+    expect(userData).toEqual(
+      expect.objectContaining({
+        firstName: 'Existing',
+        lastName: 'User',
+        source: UserSource.CRON,
+      }),
+    )
   })
 
   it('processes multiple new users with trainings and computes the correct level for each', async () => {
