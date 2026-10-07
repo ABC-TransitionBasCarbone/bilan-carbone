@@ -142,8 +142,6 @@ describe('handleTrainingSessionsFromFTP', () => {
           create: { environment: Environment.COURSE_BC, organization: { create: { name: 'BC session' } } },
         },
         sessionCode: {
-          startDate: new Date('2026-01-15T00:00:00.000Z'),
-          endDate: new Date('2026-01-16T00:00:00.000Z'),
           create: {
             traineeCode: expect.stringMatching(/^\d{1,8}$/),
             professorCode: expect.stringMatching(/^\d{1,8}$/),
@@ -153,6 +151,8 @@ describe('handleTrainingSessionsFromFTP', () => {
     })
     expect(prismaClient.courseSession.create).toHaveBeenNthCalledWith(2, {
       data: expect.objectContaining({
+        startDate: new Date('2026-01-15T00:00:00.000Z'),
+        endDate: new Date('2026-01-16T00:00:00.000Z'),
         organizationVersion: {
           create: { environment: Environment.COURSE_TILT, organization: { create: { name: 'TILT session' } } },
         },
