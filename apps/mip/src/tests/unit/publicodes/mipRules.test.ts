@@ -15,6 +15,7 @@ import {
 } from '@/lib/publicodes/mip-rules'
 import { describe, expect, it } from '@jest/globals'
 import { getEvaluatedFormElement } from '@publicodes/forms'
+import seedModel from '../../../../prisma/seed/co2-model.FR-lang.fr-opti.json'
 
 const model = {
   bilan: { somme: ['transport', 'alimentation'] },
@@ -52,8 +53,40 @@ describe('mip-rules', () => {
     engine.setSituation({})
     expect(engine.evaluate('transport . voiture . km').nodeValue).not.toBe(1000)
 
-    engine.setSituation({ 'transport . voiture . km': 250 })
+    engine.setSituation({ 'transport . voiture . présent': 'oui', 'transport . voiture . km': 250 })
     expect(engine.evaluate('transport . voiture . km').nodeValue).toBe(250)
+  })
+
+  it('evaluates presence questions used by their parent applicability without defaults', () => {
+    const engine = createMipEngineWithoutDefaults({
+      bilan: { somme: ['DT'] },
+      DT: { somme: ['train'] },
+      'DT . train': { 'applicable si': 'DT . train . présent', valeur: 'km * 0.1' },
+      'DT . train . présent': { question: 'Train ?', 'par défaut': 'non' },
+      'DT . train . km': { question: 'Distance ?', 'par défaut': 100 },
+    })
+
+    engine.setSituation({ 'DT . train . présent': 'oui', 'DT . train . km': 50 })
+    expect(engine.evaluate('bilan').nodeValue).toBe(5)
+  })
+
+  it('evaluates seed model totals and submitted food and digital answers without recursion', () => {
+    const engine = createMipEngineWithoutDefaults(seedModel)
+    const emptyFood = engine.evaluate('alimentation').nodeValue
+    const emptyDigital = engine.evaluate('numérique').nodeValue
+
+    expect(typeof engine.evaluate('bilan').nodeValue).toBe('number')
+    expect(typeof emptyFood).toBe('number')
+    expect(emptyDigital).toBe(0)
+
+    engine.setSituation({
+      'alimentation . plats . végétarien . nombre': 5,
+      'numérique . internet . durée journalière': 2,
+    })
+
+    expect(engine.evaluate('alimentation').nodeValue).toBeGreaterThan(emptyFood as number)
+    expect(engine.evaluate('numérique').nodeValue).toBeGreaterThan(0)
+    expect(typeof engine.evaluate('bilan').nodeValue).toBe('number')
   })
 
   it('extracts rules metadata', () => {
@@ -92,6 +125,22 @@ describe('mip-rules', () => {
   it('resets unanswered mosaic siblings', () => {
     const engine = createMipEngine(model)
     expect(getMosaicResetSituation(engine, [viande, legumes], { [viande]: 2 })).toEqual({ [legumes]: 0 })
+  })
+
+  it('keeps an answered question in navigation order until navigating away', () => {
+    const engine = createMipEngine(model)
+    const meta = getRulesMeta(engine)
+    engine.setSituation({ 'transport . voiture . présent': 'non', [viande]: 2, [legumes]: 0 })
+
+    const questions = getFormQuestions(engine, meta, [])
+
+    expect(questions.remainingQuestions).toEqual(['transport . train'])
+    expect(questions.relevantQuestions).toEqual([
+      'transport . voiture . présent',
+      'transport . train',
+      'alimentation . repas',
+    ])
+    expect(questions.relevantAnsweredQuestions).toEqual(['transport . voiture . présent', 'alimentation . repas'])
   })
 
   it('tracks a completed mosaic by its parent rule', () => {

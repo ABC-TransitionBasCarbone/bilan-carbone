@@ -3,8 +3,11 @@
 import { useMipPublicodes } from '@/lib/publicodes/MipPublicodesProvider'
 import { getSurveyCategoryKeysFromParsedRules } from '@/lib/publicodes/mip-engine'
 import { hasRuleAnswer } from '@/lib/publicodes/mip-rules'
-import { formatMassKilograms, getCategoryClassSuffix } from '@abc-transitionbascarbone/common/publicodes/form'
-import { getRuleCategoryKey } from '@abc-transitionbascarbone/common/publicodes/form/utils'
+import {
+  formatMassKilograms,
+  getCategoryClassSuffix,
+  getRuleCategoryKey,
+} from '@abc-transitionbascarbone/common/publicodes/form/utils'
 import { getPositiveNodeValue } from '@abc-transitionbascarbone/common/utils/number'
 import classNames from 'classnames'
 import { Situation } from 'publicodes'
@@ -33,6 +36,8 @@ interface SidebarItemProps {
 }
 
 const SidebarItem = ({ item }: SidebarItemProps) => {
+  const valueLabel = item.completedQuestions > 0 ? formatMassKilograms(item.valueKg) : ''
+
   return (
     <div
       className={classNames(styles.categoryItem, item.toneClassName, 'justify-between', 'align-center', 'gapped-2', {
@@ -49,9 +54,7 @@ const SidebarItem = ({ item }: SidebarItemProps) => {
         <span>{item.icones}</span>
         <span className={styles.title}>{item.titre}</span>
       </div>
-      <span className={classNames(styles.value, { [styles.activeValue]: item.isActive })}>
-        {formatMassKilograms(item.valueKg)}
-      </span>
+      <span className={classNames(styles.value, { [styles.activeValue]: item.isActive })}>{valueLabel}</span>
     </div>
   )
 }
@@ -69,7 +72,10 @@ const SurveyCategoriesSidebar = ({ activeCategoryKey, situation, relevantQuestio
 
   const categories: CategoryItem[] = categoryKeys.map((key) => {
     const raw = rules[key]?.rawNode as { titre?: string; icônes?: string } | undefined
-    const hasAnswers = Object.keys(situation).some((name) => name.startsWith(`${key} . `))
+    const categoryQuestions = relevantQuestions.filter((name) => getRuleCategoryKey(name) === key)
+    const completedQuestions = categoryQuestions.filter((question) =>
+      hasRuleAnswer(question, situation, meta.mosaicChildrenWithParent),
+    ).length
     const result = (() => {
       try {
         return previewEngine.evaluate(key)
@@ -77,10 +83,9 @@ const SurveyCategoriesSidebar = ({ activeCategoryKey, situation, relevantQuestio
         return { nodeValue: 0 }
       }
     })()
-    const valueKg = hasAnswers ? getPositiveNodeValue(result.nodeValue) : 0
+    const valueKg = getPositiveNodeValue(result.nodeValue)
     const isActive = key === activeCategoryKey
     const categoryClassSuffix = getCategoryClassSuffix(key)
-    const categoryQuestions = relevantQuestions.filter((name) => getRuleCategoryKey(name) === key)
 
     return {
       key,
@@ -89,9 +94,7 @@ const SurveyCategoriesSidebar = ({ activeCategoryKey, situation, relevantQuestio
       valueKg,
       isActive,
       toneClassName: styles[`category${categoryClassSuffix}`] ?? styles.categoryDt,
-      completedQuestions: categoryQuestions.filter((question) =>
-        hasRuleAnswer(question, situation, meta.mosaicChildrenWithParent),
-      ).length,
+      completedQuestions,
       totalQuestions: categoryQuestions.length,
     }
   })

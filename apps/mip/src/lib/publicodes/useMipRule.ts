@@ -9,7 +9,7 @@ export const useMipRule = (ruleName: string) => {
   const value = safeEvaluate(ruleName)?.nodeValue
 
   const setValue = (inputValue: string | number | boolean | undefined, targetRuleName = ruleName) => {
-    const situation = getUpdatedSituationWithInputValue(engine, simulation.situation, targetRuleName, inputValue)
+    const situation = getUpdatedSituationWithInputValue(engine, engine.getSituation(), targetRuleName, inputValue)
     const mosaicParent = Object.entries(meta.mosaicChildrenWithParent).find(([, children]) =>
       children.includes(targetRuleName),
     )

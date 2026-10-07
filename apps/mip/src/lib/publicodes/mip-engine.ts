@@ -43,20 +43,6 @@ const normalizeRulesWithMissingParents = (rules: RawRules): RawRules => {
   return normalizedRules as RawRules
 }
 
-const stripDefaultValues = (value: unknown): unknown => {
-  if (Array.isArray(value)) {
-    return value.map(stripDefaultValues)
-  }
-  if (!isObject(value)) {
-    return value
-  }
-  return Object.fromEntries(
-    Object.entries(value)
-      .filter(([key]) => key !== 'par défaut')
-      .map(([key, nestedValue]) => [key, stripDefaultValues(nestedValue)]),
-  )
-}
-
 export function createMipEngine(rules: RawRules): Engine {
   return new Engine(normalizeRulesWithMissingParents(rules), {
     flag: { filterNotApplicablePossibilities: true },
@@ -64,8 +50,23 @@ export function createMipEngine(rules: RawRules): Engine {
   })
 }
 
-export const createMipEngineWithoutDefaults = (rules: RawRules): Engine =>
-  createMipEngine(stripDefaultValues(rules) as RawRules)
+export const createMipEngineWithoutDefaults = (rules: RawRules): Engine => {
+  const engine = createMipEngine(rules)
+  const resultRules = { ...rules }
+
+  for (const [ruleName, rule] of Object.entries(rules)) {
+    if (!isObject(rule) || !rule.question || !('par défaut' in rule)) {
+      continue
+    }
+
+    const type = engine.context.nodesTypes.get(engine.getRule(ruleName))?.type
+    if (type === 'number' || type === 'boolean') {
+      resultRules[ruleName] = { ...rule, 'par défaut': type === 'boolean' ? 'non' : 0 }
+    }
+  }
+
+  return createMipEngine(resultRules)
+}
 
 const getSurveyCategoryKeysFromRules = (rules: Record<string, unknown>): string[] => {
   const bilanRule = rules.bilan
