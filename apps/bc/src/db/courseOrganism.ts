@@ -1,4 +1,4 @@
-import { CourseOrganism } from '@abc-transitionbascarbone/common/db/enums'
+import { CourseOrganism } from '@abc-transitionbascarbone/common/db'
 import { prismaClient } from './client.server'
 
 export const createCourseOrganismList = (

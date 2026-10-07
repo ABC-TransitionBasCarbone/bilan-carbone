@@ -1,5 +1,5 @@
 import { checkCronRequest } from '@/app/api/cron/utils'
-import { getTrainingSessionsFromFTP } from '@/scripts/ftp/importTrainingSessions'
+import { handleTrainingSessionsFromFTP } from '@/scripts/ftp/importTrainingSessions'
 import { NextResponse, type NextRequest } from 'next/server'
 import { POST } from './route'
 
@@ -25,7 +25,7 @@ jest.mock('@/app/api/cron/utils', () => ({
 }))
 
 jest.mock('@/scripts/ftp/importTrainingSessions', () => ({
-  getTrainingSessionsFromFTP: jest.fn(),
+  handleTrainingSessionsFromFTP: jest.fn(),
 }))
 
 describe('POST /api/cron/import-training-sessions', () => {
@@ -47,24 +47,24 @@ describe('POST /api/cron/import-training-sessions', () => {
     const response = await POST(req)
 
     expect(response).toBe(errorResponse)
-    expect(getTrainingSessionsFromFTP).not.toHaveBeenCalled()
+    expect(handleTrainingSessionsFromFTP).not.toHaveBeenCalled()
   })
 
   it('returns 200 when import succeeds', async () => {
     jest.mocked(checkCronRequest).mockReturnValue(null)
 
-    jest.mocked(getTrainingSessionsFromFTP).mockResolvedValue()
+    jest.mocked(handleTrainingSessionsFromFTP).mockResolvedValue([])
 
     const response = await POST(req)
 
-    expect(getTrainingSessionsFromFTP).toHaveBeenCalledTimes(1)
+    expect(handleTrainingSessionsFromFTP).toHaveBeenCalledTimes(1)
     expect(response.status).toBe(200)
   })
 
   it('returns 500 when import fails', async () => {
     const error = new Error('FTP down')
     jest.mocked(checkCronRequest).mockReturnValue(null)
-    jest.mocked(getTrainingSessionsFromFTP).mockRejectedValue(error)
+    jest.mocked(handleTrainingSessionsFromFTP).mockRejectedValue(error)
 
     const response = await POST(req)
 

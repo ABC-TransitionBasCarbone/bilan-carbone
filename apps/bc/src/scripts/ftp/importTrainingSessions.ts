@@ -161,7 +161,10 @@ const parseTrainingSession = (session: TrainingSessionRow) => {
   return { name, startDate, endDate, environment, userEmails }
 }
 
+const getErrorMessage = (error: unknown) => (error instanceof Error ? error.message : String(error))
+
 const handleDataForOF = async (of: CourseOrganism, trainingSessions: TrainingSessionWorksheet['data']) => {
+  const errors: string[] = []
   const sessions = trainingSessions
     .filter((session) => Object.values(session).some((value) => value != null && String(value).trim() !== ''))
     .map(parseTrainingSession)
@@ -225,56 +228,62 @@ const handleDataForOF = async (of: CourseOrganism, trainingSessions: TrainingSes
           })
         }
       })
-    } catch (error) {
-      console.error('Failed to save training session:', { courseOrganismId: of.id, name, environment }, error)
-      if (!existingSession) {
-        throw error
+
+      if (userEmails.length === 0) {
+        continue
       }
-    }
 
-    if (userEmails.length === 0) {
-      continue
-    }
+      const organizationVersionId = courseSession?.organizationVersionId
+      if (!organizationVersionId) {
+        throw new Error(`Missing organization version for training session: ${name}`)
+      }
 
-    const organizationVersionId = courseSession?.organizationVersionId
-    if (!organizationVersionId) {
-      throw new Error(`Missing organization version for training session: ${name}`)
-    }
-
-    const promises = []
-    for (const email of userEmails) {
-      promises.push(
-        prismaClient.$transaction(async (transaction) => {
-          try {
-            const user = await transaction.user.upsert({
-              where: { email },
-              create: { email, firstName: '', lastName: '' },
-              update: {},
-              select: { id: true },
+      const promises = []
+      for (const email of userEmails) {
+        promises.push(
+          prismaClient
+            .$transaction(async (transaction) => {
+              const user = await transaction.user.upsert({
+                where: { email },
+                create: { email, firstName: '', lastName: '' },
+                update: {},
+                select: { id: true },
+              })
+              await transaction.account.upsert({
+                where: { userId_environment: { userId: user.id, environment } },
+                create: {
+                  organizationVersionId,
+                  userId: user.id,
+                  environment,
+                  role: Role.COLLABORATOR,
+                  status: UserStatus.IMPORTED,
+                },
+                update: {},
+              })
             })
-            await transaction.account.upsert({
-              where: { userId_environment: { userId: user.id, environment } },
-              create: {
-                organizationVersionId,
-                userId: user.id,
-                environment,
-                role: Role.COLLABORATOR,
-                status: UserStatus.IMPORTED,
-              },
-              update: {},
-            })
-          } catch (error) {
-            console.error('Failed to import training session trainee:', { courseOrganismId: of.id, name, email }, error)
-          }
-        }),
-      )
-    }
+            .catch((error: unknown) => {
+              console.error(
+                'Failed to import training session trainee:',
+                { courseOrganismId: of.id, name, email },
+                error,
+              )
+              errors.push(
+                `Course organism ${of.name} (${of.id}), session ${name}, trainee ${email}: ${getErrorMessage(error)}`,
+              )
+            }),
+        )
+      }
 
-    await Promise.all(promises)
+      await Promise.all(promises)
+    } catch (error) {
+      console.error('Failed to import training session:', { courseOrganismId: of.id }, error)
+      errors.push(`Course organism ${of.name} (${of.id})}: ${getErrorMessage(error)}`)
+    }
   }
+  return errors
 }
 
-export const getTrainingSessionsFromFTP = async () => {
+export const handleTrainingSessionsFromFTP = async () => {
   let client: Client | undefined
   try {
     client = await getFTPClient()
@@ -285,30 +294,36 @@ export const getTrainingSessionsFromFTP = async () => {
       throw new Error('No course organisms found')
     }
 
-    const errors = []
+    const errors: string[] = []
     for (const of of ofList) {
-      const data = await downloadFileFromFTP(client, of)
+      try {
+        const data = await downloadFileFromFTP(client, of)
 
-      if (!data) {
-        errors.push(`No data found for course organism: ${of.name}`)
-        continue
+        if (!data) {
+          errors.push(`No data found for course organism: ${of.name}`)
+          continue
+        }
+
+        const trainingSessions = xlsx
+          .parse(data)
+          .filter((worksheet) => worksheet.name !== 'Liste')
+          .map(convertWorksheetRowsToObjects)
+          .flatMap((worksheet) => worksheet.data)
+
+        console.log(trainingSessions.length, 'training sessions found for', of.name)
+        errors.push(...(await handleDataForOF(of, trainingSessions)))
+      } catch (error) {
+        console.error('Failed to import training sessions for course organism:', { courseOrganismId: of.id }, error)
+        errors.push(`Course organism ${of.name} (${of.id}): ${getErrorMessage(error)}`)
       }
-
-      const trainingSessions = xlsx
-        .parse(data)
-        .filter((worksheet) => worksheet.name !== 'Liste')
-        .map(convertWorksheetRowsToObjects)
-        .flatMap((worksheet) => worksheet.data)
-
-      console.log(trainingSessions.length, 'training sessions found for', of.name)
-      await handleDataForOF(of, trainingSessions)
     }
 
-    console.log('Training sessions file read successfully')
     if (errors.length > 0) {
       console.error('Error reading training sessions file:', errors.join(', '))
-      throw new Error('Errors occurred while reading training sessions file')
+    } else {
+      console.log('Training sessions file read successfully')
     }
+    return errors
   } catch (error) {
     console.error('Error reading training sessions file:', error)
     throw error

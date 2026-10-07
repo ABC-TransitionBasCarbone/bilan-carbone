@@ -45,7 +45,7 @@ const NewStudyForm = ({ user, accounts, form, duplicateStudyId, sourceStudy }: P
       accounts
         .filter((account) => hasSufficientLevel(account.user.level, level ?? Level.Advanced, user.environment))
         .map((account) => account.user.email),
-    [accounts, level],
+    [accounts, level, user.environment],
   )
 
   const Help = (name: string) => (
