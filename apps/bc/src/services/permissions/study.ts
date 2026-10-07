@@ -18,12 +18,8 @@ import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
 import { getUserActiveAccounts } from '../serverFunctions/user'
-import {
-  canCreateStudyOnlyAsAdministrator,
-  canCreateStudyWithoutSpecificRights,
-  isTilt,
-  isTiltSimplifiedFeatureActive,
-} from './environment'
+import { canCreateStudyOnlyAsAdministrator, canCreateStudyWithoutSpecificRights, isTilt } from './environment'
+import { isTiltSimplifiedFeatureActive } from './environment.server'
 import { hasAccessToDuplicateStudy, isTiltSimplified } from './environmentAdvanced'
 import { isInOrgaOrParentFromId } from './organization'
 import { isAdminOnStudyOrga } from './study.utils'

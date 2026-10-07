@@ -1,5 +1,4 @@
-import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
-import { DeactivatableFeature, Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { Locale } from '@abc-transitionbascarbone/common/i18n/config'
 import { advancedEnvironments, isAdvanced, isSimplified } from '@abc-transitionbascarbone/common/utils/environments'
 const { BC, CUT, TILT, CLICKSON } = Environment
@@ -103,14 +102,6 @@ export const hasStartLinkOnFootprints = isTilt
 export const hasAccessToPostTypeform = isTilt
 
 export const hasAccessToReductionObjectivesGlossary = isTilt
-
-export const isTiltSimplifiedFeatureActive = async (environment: Environment) => {
-  if (!isTilt(environment)) {
-    return true
-  }
-
-  return isFeatureActiveForEnvironment(DeactivatableFeature.TiltSimplified, environment)
-}
 
 export const hasAccessToHomeSubtitle = isClickson
 

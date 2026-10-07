@@ -1,5 +1,3 @@
-'use server'
-
 import ForbiddenAccess from '@/components/formation/Forbidden'
 import FormationPage from '@/components/pages/Formation'
 import { getFormationVideos } from '@/db/formation'
@@ -10,7 +8,7 @@ import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound
 
 const Formation = async () => {
   const session = await auth()
-  if (!session?.user || !(await hasAccessToFormation(session?.user?.environment))) {
+  if (!session?.user || !(await hasAccessToFormation(session.user))) {
     return <NotFound />
   }
 

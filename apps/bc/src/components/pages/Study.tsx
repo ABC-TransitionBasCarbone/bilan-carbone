@@ -1,5 +1,3 @@
-'use server'
-
 import { isOrganizationVersionCR } from '@/db/organization'
 import type { FullStudy } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
