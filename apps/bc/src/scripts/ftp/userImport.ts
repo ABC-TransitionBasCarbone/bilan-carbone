@@ -91,13 +91,11 @@ const parseTrainings = (rawTrainings: UserImportRecord['trainings']): Training[]
 const getRoleForImport = async (environment: Environment, dbAccount: ExistingAccount | null) => {
   let role = environment === Environment.CUT ? getEnvRoleFromBase(Role.COLLABORATOR) : Role.COLLABORATOR
 
-  // Keep at least one admin on an organization, or grant admin access to an unlinked existing account.
+  // Keep at least one admin on an organization.
   if (
-    dbAccount &&
+    dbAccount?.organizationVersion &&
     dbAccount.user.level !== undefined &&
-    ((dbAccount.organizationVersion &&
-      ((await organizationVersionActiveAccountsCount(dbAccount.organizationVersion.id)) ?? 0) <= 1) ||
-      !dbAccount.organizationVersion)
+    ((await organizationVersionActiveAccountsCount(dbAccount.organizationVersion.id)) ?? 0) <= 1
   ) {
     role = Role.ADMIN
   }
