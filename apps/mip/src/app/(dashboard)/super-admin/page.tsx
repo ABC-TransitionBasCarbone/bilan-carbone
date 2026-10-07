@@ -1,4 +1,3 @@
-'use server'
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import SuperAdminPage from '@/components/pages/SuperAdmin'
 import { getAllModelCampaigns } from '@/db/campaign'

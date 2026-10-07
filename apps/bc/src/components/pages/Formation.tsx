@@ -1,5 +1,3 @@
-'use server'
-
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import { Formation } from '@abc-transitionbascarbone/common/db'
 import { UserSession } from 'next-auth'

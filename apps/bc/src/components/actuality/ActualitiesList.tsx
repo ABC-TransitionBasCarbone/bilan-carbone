@@ -1,5 +1,3 @@
-'use server'
-
 import { getAllActualitiesLocale } from '@/db/actuality.server'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import classNames from 'classnames'

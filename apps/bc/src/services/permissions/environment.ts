@@ -1,5 +1,5 @@
 import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
-import { DeactivatableFeature, Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { Locale } from '@abc-transitionbascarbone/common/i18n/config'
 import {
   advancedEnvironments,

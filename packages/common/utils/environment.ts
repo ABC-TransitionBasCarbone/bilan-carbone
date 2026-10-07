@@ -1,5 +1,3 @@
-'use server'
-
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 
 export const getEnvVar = async (key: string, environment: Environment = Environment.BC) => {
