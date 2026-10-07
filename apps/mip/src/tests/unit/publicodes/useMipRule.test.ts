@@ -1,11 +1,11 @@
-import { createMipEngine } from '@/publicodes/mip-engine'
-import { getFormQuestions, getRulesMeta, getStableQuestionOrder } from '@/publicodes/mip-rules'
-import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
-import { useMipRule } from '@/publicodes/useMipRule'
+import { createMipEngine } from '@/lib/publicodes/mip-engine'
+import { getFormQuestions, getRulesMeta, getStableQuestionOrder } from '@/lib/publicodes/mip-rules'
+import { useMipPublicodes } from '@/lib/publicodes/MipPublicodesProvider'
+import { useMipRule } from '@/lib/publicodes/useMipRule'
 import { MipSimulationState } from '@/utils/survey'
 import { beforeEach, describe, expect, it } from '@jest/globals'
 
-jest.mock('@/publicodes/MipPublicodesProvider', () => ({
+jest.mock('@/lib/publicodes/MipPublicodesProvider', () => ({
   useMipPublicodes: () => mockPublicodes,
 }))
 
