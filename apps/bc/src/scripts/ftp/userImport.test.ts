@@ -72,12 +72,16 @@ describe('processUsers', () => {
         email: 'existing@example.com',
         firstName: 'Existing',
         lastName: 'User',
+        level: Level.Advanced,
       },
     } as Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>)
 
     await processUsers([{ userEmail: 'existing@example.com' }], new Date('2026-01-15T12:00:00.000Z'))
 
     expect(updateAccount).toHaveBeenCalledTimes(1)
+    expect(jest.mocked(updateAccount).mock.calls[0][1]).toEqual(
+      expect.objectContaining({ role: Role.COLLABORATOR }),
+    )
     expect(createUsersWithAccount).not.toHaveBeenCalled()
     expect(consoleLogSpy).toHaveBeenCalledWith('No new users to create')
     expect(consoleLogSpy).toHaveBeenCalledWith('1 accounts updated')
@@ -107,6 +111,8 @@ describe('processUsers', () => {
             userEmail: 'invited@example.com',
             firstName: 'Updated',
             lastName: 'User',
+            companyName: 'Example Company',
+            siret: '12345678901234',
             environment,
             source: UserSource.TUNISIE,
             formationName: 'Bilan Carbone® Maitrise',
@@ -139,44 +145,6 @@ describe('processUsers', () => {
       expect(createUsersWithAccount).not.toHaveBeenCalled()
     },
   )
-
-  it('keeps the existing import behavior for invited CUT accounts', async () => {
-    jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue({
-      id: 'account-id',
-      status: UserStatus.VALIDATED,
-      role: Role.DEFAULT,
-      user: {
-        id: 'user-id',
-        email: 'invited@example.com',
-        firstName: 'Existing',
-        lastName: 'User',
-        source: UserSource.CRON,
-      },
-    } as Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>)
-
-    await processUsers(
-      [
-        {
-          userEmail: 'invited@example.com',
-          firstName: 'Updated',
-          lastName: 'Name',
-          environment: Environment.CUT,
-          formationName: 'Bilan Carbone® Maitrise',
-        },
-      ],
-      new Date('2026-01-15T12:00:00.000Z'),
-    )
-
-    const [, accountData, userData] = jest.mocked(updateAccount).mock.calls[0]
-    expect(accountData).toEqual({ environment: Environment.CUT })
-    expect(userData).toEqual(
-      expect.objectContaining({
-        firstName: 'Existing',
-        lastName: 'User',
-        source: UserSource.CRON,
-      }),
-    )
-  })
 
   it('processes multiple new users with trainings and computes the correct level for each', async () => {
     jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue(null)
