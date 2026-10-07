@@ -42,8 +42,8 @@ model CourseSession {
   courseOrganism   CourseOrganism @relation(fields: [courseOrganismId], references: [id], onDelete: Cascade)
   courseOrganismId String         @map("course_organism_id")
 
-  sessionCode   SessionCode @relation(fields: [sessionCodeId], references: [id], onDelete: Cascade)
-  sessionCodeId String      @map("session_code_id")
+  sessionCode   SessionCode? @relation(fields: [sessionCodeId], references: [id], onDelete: Cascade)
+  sessionCodeId String?      @map("session_code_id")
 
   @@unique([organizationVersionId])
   @@unique([sessionCodeId])

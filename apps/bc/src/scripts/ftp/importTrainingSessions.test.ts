@@ -16,6 +16,7 @@ jest.mock('@/db/client.node', () => ({
     ),
     courseOrganism: { findMany: jest.fn() },
     courseSession: { findFirst: jest.fn(), create: jest.fn(), update: jest.fn() },
+    sessionCode: { findMany: jest.fn() },
     user: { upsert: jest.fn() },
     account: { upsert: jest.fn() },
   },
@@ -98,6 +99,7 @@ describe('getTrainingSessionsFromFTP', () => {
     jest.mocked(prismaClient.courseSession.findFirst).mockResolvedValue(null)
     jest.mocked(prismaClient.courseSession.create).mockResolvedValue(courseSession)
     jest.mocked(prismaClient.courseSession.update).mockResolvedValue(courseSession)
+    jest.mocked(prismaClient.sessionCode.findMany).mockResolvedValue([])
     jest.mocked(prismaClient.user.upsert).mockResolvedValue(user)
     jest.mocked(fs.promises.readFile).mockResolvedValue(Buffer.from('xlsx content'))
     jest.mocked(xlsx.parse).mockReturnValue([
@@ -232,6 +234,26 @@ describe('getTrainingSessionsFromFTP', () => {
     await expect(getTrainingSessionsFromFTP()).rejects.toThrow('Database failure')
 
     expect(consoleLogSpy).not.toHaveBeenCalledWith('Training sessions file read successfully')
+    expect(closeMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('stops generating session codes after 10 collisions', async () => {
+    jest.mocked(prismaClient.sessionCode.findMany).mockResolvedValue([
+      {
+        id: 'existing-code-id',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        traineeCode: 'existing-trainee-code',
+        professorCode: 'existing-professor-code',
+      },
+    ])
+
+    await expect(getTrainingSessionsFromFTP()).rejects.toThrow(
+      'Failed to generate unique session codes after 10 attempts',
+    )
+
+    expect(prismaClient.sessionCode.findMany).toHaveBeenCalledTimes(10)
+    expect(prismaClient.courseSession.create).not.toHaveBeenCalled()
     expect(closeMock).toHaveBeenCalledTimes(1)
   })
 
