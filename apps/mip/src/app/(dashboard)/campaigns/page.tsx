@@ -1,4 +1,3 @@
-'use server'
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import CampaignsPage from '@/components/pages/Campaigns'
 import {
