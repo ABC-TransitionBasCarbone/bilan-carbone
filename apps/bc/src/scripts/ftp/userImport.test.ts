@@ -79,9 +79,7 @@ describe('processUsers', () => {
     await processUsers([{ userEmail: 'existing@example.com' }], new Date('2026-01-15T12:00:00.000Z'))
 
     expect(updateAccount).toHaveBeenCalledTimes(1)
-    expect(jest.mocked(updateAccount).mock.calls[0][1]).toEqual(
-      expect.objectContaining({ role: Role.COLLABORATOR }),
-    )
+    expect(jest.mocked(updateAccount).mock.calls[0][1]).toEqual(expect.objectContaining({ role: Role.COLLABORATOR }))
     expect(createUsersWithAccount).not.toHaveBeenCalled()
     expect(consoleLogSpy).toHaveBeenCalledWith('No new users to create')
     expect(consoleLogSpy).toHaveBeenCalledWith('1 accounts updated')
