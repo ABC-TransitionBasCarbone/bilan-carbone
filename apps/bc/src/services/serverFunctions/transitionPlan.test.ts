@@ -1,12 +1,12 @@
 import * as studyDbModule from '@/db/study'
 import * as transitionPlanDbModule from '@/db/transitionPlan'
 import { expect } from '@jest/globals'
-import * as authModule from '../auth'
+import * as authModule from '../auth.server'
 import * as transitionPlanModule from './transitionPlan'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('uuid', () => ({ v4: jest.fn() }))
-jest.mock('../auth', () => ({ auth: jest.fn(), dbActualizedAuth: jest.fn() }))
+jest.mock('../auth.server', () => ({ auth: jest.fn(), dbActualizedAuth: jest.fn() }))
 jest.mock('../file', () => ({ download: jest.fn() }))
 jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),

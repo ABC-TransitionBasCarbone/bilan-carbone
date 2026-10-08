@@ -1,6 +1,6 @@
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import type { UserSession } from 'next-auth'
-import { hasEditAccessOnStudy } from './study'
+import { hasEditAccessOnStudy } from './study.server'
 export const isSimplifiedContributor = (
   study: { contributors: Array<{ accountId: string }> },
   session: { user: UserSession },

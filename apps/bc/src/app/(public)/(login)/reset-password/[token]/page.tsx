@@ -1,5 +1,5 @@
 import ResetForm from '@/components/auth/ResetForm'
-import { auth } from '@/services/auth'
+import { auth } from '@/services/auth.server'
 
 interface Props {
   params: Promise<{ token: string }>

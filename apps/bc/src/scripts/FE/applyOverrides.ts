@@ -1,7 +1,7 @@
 import { Import } from '@abc-transitionbascarbone/common/db/enums'
 import { Command } from 'commander'
 import * as XLSX from 'xlsx'
-import { applyOverridesFromRows } from '../../services/importEmissionFactor/applyOverrides'
+import { applyOverridesFromRows } from '../../services/importEmissionFactor/applyOverrides.server'
 import { parseSheetRows } from '../../services/importEmissionFactor/parseXlsx'
 
 const program = new Command()

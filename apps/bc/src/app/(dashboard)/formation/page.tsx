@@ -2,8 +2,8 @@ import ForbiddenAccess from '@/components/formation/Forbidden'
 import FormationPage from '@/components/pages/Formation'
 import { getFormationVideos } from '@/db/formation'
 import { getOrgNameByOrgVersionId } from '@/db/organization'
-import { auth } from '@/services/auth'
-import { hasAccessToFormation, hasLevelForFormation } from '@/services/permissions/formations'
+import { auth } from '@/services/auth.server'
+import { hasAccessToFormation, hasLevelForFormation } from '@/services/permissions/formations.server'
 import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 
 const Formation = async () => {
