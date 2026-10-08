@@ -43,7 +43,7 @@ jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),
 }))
 
-jest.mock('@/services/auth', () => ({
+jest.mock('@/services/auth.server', () => ({
   auth: jest.fn(),
   dbActualizedAuth: jest.fn(),
 }))

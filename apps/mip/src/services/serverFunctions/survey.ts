@@ -7,7 +7,7 @@ import {
   getSurveyCategoryKeysFromRawRules,
   RawRules,
 } from '@/lib/publicodes/mip-engine'
-import { dbActualizedAuth } from '@/services/auth'
+import { dbActualizedAuth } from '@/services/auth.server'
 import { EmissionCategory, EntityFilterResult, SurveyResults } from '@/types/results.types'
 import { getEntityFilterDefsFromModel as getEntityFilterDefsFromModelFromUtil } from '@/utils/entityFilter'
 import { withServerResponse } from '@/utils/serverResponse'

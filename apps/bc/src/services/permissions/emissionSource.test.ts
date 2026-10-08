@@ -5,15 +5,15 @@ import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import { StudyRole } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import * as studyUtilsModule from '../../utils/study'
-import { hasStudyBasicRights } from './emissionSource'
-import * as studyModule from './study'
+import { hasStudyBasicRights } from './emissionSource.server'
+import * as studyModule from './study.server'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../file', () => ({ download: jest.fn() }))
-jest.mock('../auth', () => ({ auth: jest.fn() }))
+jest.mock('../auth.server', () => ({ auth: jest.fn() }))
 jest.mock('uuid', () => ({ v4: jest.fn() }))
 
-jest.mock('./study', () => ({ canReadStudy: jest.fn() }))
+jest.mock('./study.server', () => ({ canReadStudy: jest.fn() }))
 jest.mock('../../utils/study', () => ({ getAccountRoleOnStudy: jest.fn() }))
 jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),

@@ -2,11 +2,11 @@ import { expect } from '@jest/globals'
 import * as accountModule from '../../db/account'
 import * as emissionSourceModule from '../../db/emissionSource'
 import * as studySourceModule from '../../db/study'
-import * as authModule from '../auth'
+import * as authModule from '../auth.server'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../file', () => ({ download: jest.fn() }))
-jest.mock('../auth', () => ({ auth: jest.fn() }))
+jest.mock('../auth.server', () => ({ auth: jest.fn() }))
 jest.mock('uuid', () => ({ v4: jest.fn() }))
 jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),

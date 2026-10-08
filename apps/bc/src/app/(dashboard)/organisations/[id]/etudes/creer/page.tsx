@@ -3,7 +3,7 @@ import withStudyCreation, { StudyCreationProps } from '@/components/hoc/withStud
 import NewStudyPage from '@/components/pages/NewStudy'
 import { getAccountOrganizationVersions } from '@/db/account'
 import { getOrganizationVersionAccounts, getOrganizationVersionForRightsCheck } from '@/db/organization'
-import { canCreateAStudy } from '@/services/permissions/study'
+import { canCreateAStudy } from '@/services/permissions/study.server'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { defaultCAUnit } from '@/utils/number'
 import { hasActiveLicence } from '@/utils/organization'

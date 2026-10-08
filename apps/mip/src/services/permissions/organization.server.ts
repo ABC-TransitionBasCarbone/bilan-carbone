@@ -1,6 +1,6 @@
 import { getUserByEmail } from '@/db/user'
 import { canEditMemberRole } from '@/utils/user'
-import { dbActualizedAuth } from '../auth'
+import { dbActualizedAuth } from '../auth.server'
 
 export const canDeleteMember = async (email: string) => {
   const session = await dbActualizedAuth()

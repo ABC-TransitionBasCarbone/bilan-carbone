@@ -3,15 +3,15 @@ import { mockedOrganizationVersionMipId } from '@/tests/utils/models/organizatio
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import * as userUtils from '@/utils/user'
 import { expect } from '@jest/globals'
-import * as authModule from '../auth'
-import { canDeleteMember } from './organization'
+import * as authModule from '../auth.server'
+import { canDeleteMember } from './organization.server'
 
 jest.mock('@/db/accountMip', () => ({ getAccountMipById: jest.fn() }))
 jest.mock('@/db/user', () => ({ getUserByEmail: jest.fn() }))
 jest.mock('@/utils/user', () => ({
   canEditMemberRole: jest.fn(),
 }))
-jest.mock('../auth', () => ({ dbActualizedAuth: jest.fn() }))
+jest.mock('../auth.server', () => ({ dbActualizedAuth: jest.fn() }))
 
 const mockGetUserByEmail = dbUser.getUserByEmail as jest.Mock
 const mockCanEditMemberRole = userUtils.canEditMemberRole as jest.Mock

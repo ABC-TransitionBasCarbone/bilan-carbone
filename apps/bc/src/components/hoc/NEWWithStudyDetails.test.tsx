@@ -1,5 +1,5 @@
 import { getMinimalStudyForRights } from '@/db/study'
-import { canReadStudy, canReadStudyDetail } from '@/services/permissions/study'
+import { canReadStudy, canReadStudyDetail } from '@/services/permissions/study.server'
 import { getMockedMinimalStudy } from '@/tests/utils/models/study'
 import NEWWithStudyDetails from './NEWWithStudyDetails'
 
@@ -13,7 +13,7 @@ jest.mock('@/db/study', () => ({
   getMinimalStudyForRights: jest.fn(),
 }))
 
-jest.mock('@/services/permissions/study', () => ({
+jest.mock('@/services/permissions/study.server', () => ({
   canReadStudy: jest.fn(),
   canReadStudyDetail: jest.fn(),
 }))

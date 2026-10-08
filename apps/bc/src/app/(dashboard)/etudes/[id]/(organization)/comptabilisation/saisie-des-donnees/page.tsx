@@ -2,7 +2,7 @@ import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
 import StudyDataEntryInfographyPage from '@/components/pages/StudyDataEntryInfographyPage'
 import { isOrganizationVersionCR } from '@/db/organization'
-import { canDeleteStudy, canDuplicateStudy, getEnvironmentsForDuplication } from '@/services/permissions/study'
+import { canDeleteStudy, canDuplicateStudy, getEnvironmentsForDuplication } from '@/services/permissions/study.server'
 import { NEWGetAccountRoleOnStudyWithId } from '@/services/serverFunctions/study'
 import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 

@@ -6,7 +6,7 @@ import {
   getEmissionFactorPartOverrideData,
   getType,
   ImportEmissionFactor,
-} from './import'
+} from './import.server'
 
 export const applyOverridesFromRows = async (source: Import, rows: ImportEmissionFactor[], dryRun = false) => {
   const efRows = rows.filter((r) => r.Type_Ligne !== 'Poste')

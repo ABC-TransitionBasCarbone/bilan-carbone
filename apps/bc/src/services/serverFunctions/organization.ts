@@ -27,7 +27,7 @@ import type { Account, Prisma, User } from '@abc-transitionbascarbone/common/db'
 import { StudyRole, UserChecklist } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { AddMemberCommand } from '@abc-transitionbascarbone/common/services/serverFunctions/user.command'
-import { auth, dbActualizedAuth } from '../auth'
+import { auth, dbActualizedAuth } from '../auth.server'
 import { UNKNOWN_ERROR } from '../permissions/check'
 import { hasAccessToCreateOrganization } from '../permissions/environment'
 import {
@@ -35,7 +35,7 @@ import {
   canDeleteMember,
   canDeleteOrganizationVersion,
   canUpdateOrganizationVersion,
-} from '../permissions/organization'
+} from '../permissions/organization.server'
 import {
   canUpdateOrganizationSiret,
   CreateOrganizationCommand,

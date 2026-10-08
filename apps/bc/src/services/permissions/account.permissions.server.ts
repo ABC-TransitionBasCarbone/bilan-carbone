@@ -1,6 +1,6 @@
 import { getAccountById } from '@/db/account'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
-import { auth } from '../auth'
+import { auth } from '../auth.server'
 
 export const getAuthenticatedAccount = async () => {
   const session = await auth()

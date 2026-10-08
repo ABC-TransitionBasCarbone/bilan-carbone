@@ -1,6 +1,6 @@
 import { Import } from '@abc-transitionbascarbone/common/db/enums'
 import { Command } from 'commander'
-import { getEmissionFactorsFromCSV, OverrideMode } from '../../services/importEmissionFactor/getEmissionFactorsFromCSV'
+import { getEmissionFactorsFromCSV, OverrideMode } from '../../services/importEmissionFactor/getEmissionFactorsFromCSV.server'
 
 const program = new Command()
 
