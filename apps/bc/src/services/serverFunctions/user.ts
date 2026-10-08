@@ -413,13 +413,15 @@ export const activateEmail = async (email: string, userEnv: Environment, fromRes
         throw new Error(NOT_AUTHORIZED)
       }
       const accounts = await getAccountFromUserOrganization(accountWithUserToUserSession(account))
-      await sendActivationRequest(
-        accounts
-          .filter((a) => (a.role === Role.GESTIONNAIRE || a.role === Role.ADMIN) && a.status == UserStatus.ACTIVE)
-          .map((a) => a.user.email),
-        email.toLowerCase(),
-        `${user.firstName} ${user.lastName}`,
-      )
+      const approverEmails = accounts
+        .filter((a) => (a.role === Role.GESTIONNAIRE || a.role === Role.ADMIN) && a.status === UserStatus.ACTIVE)
+        .map((a) => a.user.email)
+
+      if (approverEmails.length === 0) {
+        throw new Error(NOT_AUTHORIZED)
+      }
+
+      await sendActivationRequest(approverEmails, email.toLowerCase(), `${user.firstName} ${user.lastName}`)
 
       await updateAccount(account.id, {
         status: UserStatus.PENDING_REQUEST,
@@ -434,7 +436,18 @@ export const activateEmail = async (email: string, userEnv: Environment, fromRes
         }
         await checkIfOtherAccountHasReservationActivation(account.id, account.organizationVersionId, transaction)
         await validateUser(account.id, transaction)
-        await updateAccount(account.id, { activationRequestedAt: new Date() }, undefined, transaction)
+        await updateAccount(
+          account.id,
+          {
+            ...(env === Environment.BC &&
+              account.status === UserStatus.IMPORTED && {
+                role: account.user.level === undefined ? Role.GESTIONNAIRE : Role.ADMIN,
+              }),
+            activationRequestedAt: new Date(),
+          },
+          undefined,
+          transaction,
+        )
       })
       await sendActivation(email, fromReset, env)
 
