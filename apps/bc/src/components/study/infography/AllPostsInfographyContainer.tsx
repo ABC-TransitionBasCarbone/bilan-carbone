@@ -47,7 +47,11 @@ const AllPostsInfographyContainer = ({ study, studySiteId, siteId }: Props) => {
         siteId,
         true,
         validatedOnly,
-        environment === Environment.TILT ? TiltAdvancedPost : environment === Environment.CUT ? CutPost : undefined,
+        environment === Environment.TILT || environment === Environment.COURSE_TILT
+          ? TiltAdvancedPost
+          : environment === Environment.CUT
+            ? CutPost
+            : undefined,
         environment,
       ),
     [study, tPost, siteId, validatedOnly, environment],

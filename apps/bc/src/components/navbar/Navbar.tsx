@@ -42,6 +42,7 @@ const Navbar = ({ user, environment, isFootprintsEnabled, hasTrainedUsers }: Pro
   const [hasFormation, setHasFormation] = useState(false)
   const [hasMultipleAccounts, setHasMultipleAccounts] = useState(false)
   const locale = useLocale()
+  const isTiltEnvironment = user.environment === Environment.TILT || user.environment === Environment.COURSE_TILT
 
   useEffect(() => {
     const getFormationAccess = async () => {
@@ -63,6 +64,7 @@ const Navbar = ({ user, environment, isFootprintsEnabled, hasTrainedUsers }: Pro
   const methodologyLink = useMemo(() => {
     switch (user.environment) {
       case Environment.TILT:
+      case Environment.COURSE_TILT:
         return 'https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative'
       default:
         return locale === Locale.FR
@@ -134,7 +136,7 @@ const Navbar = ({ user, environment, isFootprintsEnabled, hasTrainedUsers }: Pro
                 </NavbarButton>
               </div>
             </Box>
-            {isTilt(user.environment) && (
+            {isTiltEnvironment && (
               <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
                 <Logo />
               </NavbarLink>

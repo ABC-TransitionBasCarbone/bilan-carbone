@@ -9,6 +9,11 @@ export const isAdvanced = (environment: Environment) => advancedEnvironments.inc
 export const isSimplified = (environment: Environment) => simplifiedEnvironments.includes(environment)
 export const isCourse = (environment: Environment) => courseEnvironments.includes(environment)
 
+export const fallBackEnvironment = {
+  [COURSE_BC]: BC,
+  [COURSE_TILT]: TILT,
+}
+
 export const environmentWithOnboarding: Environment[] = [BC, CLICKSON]
 export const environmentsWithChecklist: Environment[] = [BC]
 export const EnvironmentNames = {

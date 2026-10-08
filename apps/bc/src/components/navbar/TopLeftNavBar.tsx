@@ -1,8 +1,8 @@
 import NavbarOrganizationMenu from '@/components/navbar/NavbarOrganizationMenu'
-import { hasAlwaysAccessToOrganizationVersion, hasHomeButtonHeader, isTilt } from '@/services/permissions/environment'
+import { hasAlwaysAccessToOrganizationVersion, hasHomeButtonHeader } from '@/services/permissions/environment'
 import { hasAccessToEmissionFactors } from '@/services/permissions/environmentAdvanced'
 import { isAdmin } from '@/utils/user'
-import { Role } from '@abc-transitionbascarbone/common/db/enums'
+import { Environment, Role } from '@abc-transitionbascarbone/common/db/enums'
 import NavbarButton from '@abc-transitionbascarbone/common/ui/navbar/NavbarButton'
 import NavbarLink from '@abc-transitionbascarbone/common/ui/navbar/NavbarLink'
 import { Box, MenuItem } from '@mui/material'
@@ -22,6 +22,7 @@ const TopLeftNavBar = ({ user, hasFormation, isFootprintsEnabled, hasTrainedUser
   const t = useTranslations('navigation')
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
+  const isTiltEnvironment = user.environment === Environment.TILT || user.environment === Environment.COURSE_TILT
   const handleClickMenu = (event: MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget)
   const handleClose = () => setAnchorEl(null)
 
@@ -62,14 +63,14 @@ const TopLeftNavBar = ({ user, hasFormation, isFootprintsEnabled, hasTrainedUser
                 {t('team')}
               </NavbarLink>
             </MenuItem>
-            {(!isTilt(user.environment) || hasTrainedUsers) && (
+            {(!isTiltEnvironment || hasTrainedUsers) && (
               <MenuItem onClick={handleClose}>
                 <NavbarLink data-testid="link-organization" href="/organisations" onClick={handleClose}>
                   {t('organizations')}
                 </NavbarLink>
               </MenuItem>
             )}
-            {isTilt(user.environment) && isFootprintsEnabled && (
+            {isTiltEnvironment && isFootprintsEnabled && (
               <MenuItem onClick={handleClose}>
                 <NavbarLink data-testid="link-organization" href="/mes-empreintes" onClick={handleClose}>
                   {t('footprints')}
