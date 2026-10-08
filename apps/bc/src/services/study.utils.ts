@@ -5,7 +5,7 @@ import { getEmissionSourcesTotalCo2 } from '@/utils/emissionSources'
 import { getPost } from '@/utils/post'
 import { formatEmissionValueForExport, hasDeprecationPeriod, isCAS } from '@/utils/study'
 import { Translations } from '@abc-transitionbascarbone/common'
-import { Environment, Level, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/common/db/enums'
+import { Environment, StudyResultUnit, SubPost } from '@abc-transitionbascarbone/common/db/enums'
 import { Post } from '@abc-transitionbascarbone/common/utils/charts'
 import { formatDateFr } from '@abc-transitionbascarbone/common/utils/time'
 import dayjs from 'dayjs'
@@ -352,19 +352,3 @@ export const sanitizeStudyName = (name: string) => {
     .replace(/\s+/g, '_')
     .trim()
 }
-
-export const getAllowedLevels = (level: Level | null) => {
-  switch (level) {
-    case Level.Initial:
-      return [Level.Initial]
-    case Level.Standard:
-      return [Level.Initial, Level.Standard]
-    case Level.Advanced:
-      return [Level.Initial, Level.Standard, Level.Advanced]
-    default:
-      return []
-  }
-}
-
-export const hasSufficientLevel = (userLevel: Level | null, targetLevel: Level) =>
-  userLevel ? getAllowedLevels(userLevel).includes(targetLevel) : false

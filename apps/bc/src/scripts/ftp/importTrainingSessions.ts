@@ -1,32 +1,40 @@
+import { prismaClient } from '@/db/client.node'
+import { CourseOrganism } from '@abc-transitionbascarbone/common/db'
+import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { AccessOptions, Client } from 'basic-ftp'
+import { randomInt } from 'crypto'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import fs from 'fs'
 import xlsx from 'node-xlsx'
+import { z } from 'zod'
 
 type Worksheet = {
   name: string
   data: unknown[][]
 }
 
-type TrainingSession = Record<string, unknown>
-
-type TrainingSessionWorksheet = Omit<Worksheet, 'data'> & {
-  data: TrainingSession[]
+type TrainingSession = {
+  sessionId: string
+  formationStartDate: Date
+  formationEndDate: Date
+  environment: string
+  userEmails?: string | null
 }
 
-const IMPORT_FIELD_BY_HEADER: Record<string, string> = {
-  'Date début session': 'formationStartDate',
-  'Date fin session': 'formationEndDate',
-  Organisation: 'companyName',
-  'Nom de Formation': 'formationName',
-  Nom: 'lastName',
-  Prenom: 'firstName',
-  'E-mail': 'userEmail',
-  'Produits achetés': 'purchasedProducts',
-  'Code session': 'sessionCode',
-  SIRET: 'siret',
-  'Numero Fiscal': 'taxNumber',
-  TVA: 'vat',
+type CellValue = undefined | null | Date | string
+
+type TrainingSessionRow = Partial<Record<keyof TrainingSession, CellValue>>
+
+type TrainingSessionWorksheet = Omit<Worksheet, 'data'> & {
+  data: TrainingSessionRow[]
+}
+
+const IMPORT_FIELD_BY_HEADER: Partial<Record<string, keyof TrainingSessionRow>> = {
+  'Nom de la session': 'sessionId',
+  'Date de début': 'formationStartDate',
+  'Date de fin': 'formationEndDate',
+  Stagiaires: 'userEmails',
+  Environment: 'environment',
 }
 
 const getFTPClient = async () => {
@@ -41,21 +49,37 @@ const getFTPClient = async () => {
   return client
 }
 
-const downloadFileFromFTP = async (client: Client, folderPath: string, fileName: string) => {
-  const fullPath = `${folderPath}${fileName}`
-  const writableStream = fs.createWriteStream(fileName)
-  await client.downloadTo(writableStream, fullPath)
-  return fs.promises.readFile(fileName)
+const downloadFileFromFTP = async (client: Client, of: CourseOrganism) => {
+  try {
+    const folderPath = process.env.FTP_TRAINING_SESSIONS_FILE_PATH || '/'
+    const fileName = process.env.FTP_TRAINING_SESSIONS_FILE_NAME || '/'
+
+    const { ftpPath } = of
+
+    const fullPath = `${folderPath}/${ftpPath}/${fileName}`
+    const writableStream = fs.createWriteStream(fileName)
+    await client.downloadTo(writableStream, fullPath)
+    return fs.promises.readFile(fileName)
+  } catch (e) {
+    console.error('Failed to download file from FTP for an orga:', of.name, e)
+    return null
+  }
 }
 
-const formatCellValue = (header: string, value: unknown) => {
+const formatCellValue = (header: string, value: unknown): CellValue => {
   if (value === undefined || value === null) {
     return value
   }
 
-  if (header === 'Date début session' || header === 'Date fin session') {
+  if (header === 'Date de début' || header === 'Date de fin') {
     if (typeof value === 'number') {
-      return getJsDateFromExcel(value).toISOString()
+      return getJsDateFromExcel(value)
+    }
+    if (value instanceof Date) {
+      return value
+    }
+    if (typeof value === 'string') {
+      return value.trim() ? new Date(value) : value
     }
   }
 
@@ -71,37 +95,235 @@ const convertWorksheetRowsToObjects = (worksheet: Worksheet): TrainingSessionWor
 
   return {
     ...worksheet,
-    data: rows.map((row) =>
-      Object.fromEntries(
-        headers
-          .map((header, index) => {
-            const headerName = String(header)
-            const fieldName = IMPORT_FIELD_BY_HEADER[headerName]
-            return fieldName ? ([fieldName, formatCellValue(headerName, row[index])] as [string, unknown]) : undefined
-          })
-          .filter((entry): entry is [string, unknown] => entry !== undefined)
-          .filter(([, value]) => value !== undefined),
-      ),
-    ),
+    data: rows.map((row) => {
+      const session: TrainingSessionRow = {}
+      for (const [index, header] of headers.entries()) {
+        const headerName = String(header).trim()
+        const fieldName = IMPORT_FIELD_BY_HEADER[headerName]
+        if (fieldName) {
+          session[fieldName] = formatCellValue(headerName, row[index])
+        }
+      }
+      return session
+    }),
   }
 }
 
-export const getTrainingSessionsFromFTP = async (): Promise<TrainingSession[]> => {
+const isValidDate = (value: CellValue): value is Date => value instanceof Date && !Number.isNaN(value.getTime())
+
+const isTrainingSession = (session: TrainingSessionRow): session is TrainingSession => {
+  return (
+    typeof session.sessionId === 'string' &&
+    isValidDate(session.formationStartDate) &&
+    isValidDate(session.formationEndDate) &&
+    typeof session.environment === 'string' &&
+    (session.userEmails === undefined || session.userEmails === null || typeof session.userEmails === 'string')
+  )
+}
+
+const parseTrainingSession = (session: TrainingSessionRow) => {
+  const name = typeof session.sessionId === 'string' ? session.sessionId.trim() : ''
+  if (!isTrainingSession(session)) {
+    throw new Error(`Invalid training session: ${name || '(missing name)'}`)
+  }
+
+  const startDate = session.formationStartDate
+  const endDate = session.formationEndDate
+  const importedEnvironment = session.environment.trim().toUpperCase()
+  const environment =
+    importedEnvironment === Environment.BC || importedEnvironment === Environment.COURSE_BC
+      ? Environment.COURSE_BC
+      : importedEnvironment === Environment.TILT || importedEnvironment === Environment.COURSE_TILT
+        ? Environment.COURSE_TILT
+        : undefined
+
+  if (!name || !environment || endDate < startDate) {
+    throw new Error(`Invalid training session: ${name || '(missing name)'}`)
+  }
+
+  const userEmails = [
+    ...new Set(
+      (session.userEmails ?? '')
+        .split(/[;,\s]+/)
+        .filter(Boolean)
+        .filter((email) => {
+          if (!z.email().safeParse(email).success) {
+            console.error('incorrect email for of training session:', name)
+            return false
+          }
+
+          return true
+        })
+        .map((email) => email.toLowerCase()),
+    ),
+  ]
+
+  return { name, startDate, endDate, environment, userEmails }
+}
+
+const getErrorMessage = (error: unknown) => (error instanceof Error ? error.message : String(error))
+
+const handleDataForOF = async (of: CourseOrganism, trainingSessions: TrainingSessionWorksheet['data']) => {
+  const errors: string[] = []
+  const sessions = trainingSessions
+    .filter((session) => Object.values(session).some((value) => value != null && String(value).trim() !== ''))
+    .map(parseTrainingSession)
+
+  for (const { name, startDate, endDate, environment, userEmails } of sessions) {
+    const existingSession = await prismaClient.courseSession.findFirst({
+      where: {
+        courseOrganismId: of.id,
+        organizationVersion: { environment, organization: { name } },
+      },
+      select: { id: true, organizationVersionId: true },
+    })
+
+    let courseSession = existingSession
+    try {
+      courseSession = await prismaClient.$transaction(async (transaction) => {
+        if (existingSession) {
+          return transaction.courseSession.update({
+            where: { id: existingSession.id },
+            data: { startDate, endDate },
+          })
+        } else {
+          let traineeCode = randomInt(99999999).toString()
+          let professorCode = randomInt(99999999).toString()
+
+          let existingCodes = [{}]
+          let count = 0
+          while (existingCodes.length > 0 && count < 10) {
+            traineeCode = randomInt(99999999).toString()
+            professorCode = randomInt(99999999).toString()
+
+            existingCodes = await transaction.sessionCode.findMany({
+              where: { OR: [{ traineeCode }, { professorCode }] },
+            })
+
+            count++
+          }
+
+          if (count >= 10 && existingCodes.length > 0) {
+            throw new Error('Failed to generate unique session codes after 10 attempts')
+          }
+
+          return transaction.courseSession.create({
+            data: {
+              startDate,
+              endDate,
+              courseOrganism: { connect: { id: of.id } },
+              organizationVersion: {
+                create: {
+                  environment,
+                  organization: { create: { name } },
+                },
+              },
+              sessionCode: {
+                create: {
+                  traineeCode,
+                  professorCode,
+                },
+              },
+            },
+          })
+        }
+      })
+
+      if (userEmails.length === 0) {
+        continue
+      }
+
+      const organizationVersionId = courseSession?.organizationVersionId
+      if (!organizationVersionId) {
+        throw new Error(`Missing organization version for training session: ${name}`)
+      }
+
+      const promises = []
+      for (const email of userEmails) {
+        promises.push(
+          prismaClient
+            .$transaction(async (transaction) => {
+              const user = await transaction.user.upsert({
+                where: { email },
+                create: { email, firstName: '', lastName: '' },
+                update: {},
+                select: { id: true },
+              })
+              await transaction.account.upsert({
+                where: { userId_environment: { userId: user.id, environment } },
+                create: {
+                  organizationVersionId,
+                  userId: user.id,
+                  environment,
+                  role: Role.COLLABORATOR,
+                  status: UserStatus.IMPORTED,
+                },
+                update: {},
+              })
+            })
+            .catch((error: unknown) => {
+              console.error(
+                'Failed to import training session trainee:',
+                { courseOrganismId: of.id, name, email },
+                error,
+              )
+              errors.push(
+                `Course organism ${of.name} (${of.id}), session ${name}, trainee ${email}: ${getErrorMessage(error)}`,
+              )
+            }),
+        )
+      }
+
+      await Promise.all(promises)
+    } catch (error) {
+      console.error('Failed to import training session:', { courseOrganismId: of.id }, error)
+      errors.push(`Course organism ${of.name} (${of.id})}: ${getErrorMessage(error)}`)
+    }
+  }
+  return errors
+}
+
+export const handleTrainingSessionsFromFTP = async () => {
   let client: Client | undefined
   try {
     client = await getFTPClient()
-    const folderPath = process.env.FTP_TRAINING_SESSIONS_FILE_PATH || '/'
-    const fileName = process.env.FTP_TRAINING_SESSIONS_FILE_NAME || '/'
-    const data = await downloadFileFromFTP(client, folderPath, fileName)
 
-    const trainingSessions = xlsx
-      .parse(data)
-      .filter((worksheet) => worksheet.name !== 'Liste')
-      .map(convertWorksheetRowsToObjects)
-      .flatMap((worksheet) => worksheet.data)
-    console.log(trainingSessions)
-    console.log('Training sessions file read successfully')
-    return trainingSessions
+    const ofList = await prismaClient.courseOrganism.findMany({})
+
+    if (!ofList || !ofList.length) {
+      throw new Error('No course organisms found')
+    }
+
+    const errors: string[] = []
+    for (const of of ofList) {
+      try {
+        const data = await downloadFileFromFTP(client, of)
+
+        if (!data) {
+          errors.push(`No data found for course organism: ${of.name}`)
+          continue
+        }
+
+        const trainingSessions = xlsx
+          .parse(data)
+          .filter((worksheet) => worksheet.name !== 'Liste')
+          .map(convertWorksheetRowsToObjects)
+          .flatMap((worksheet) => worksheet.data)
+
+        console.log(trainingSessions.length, 'training sessions found for', of.name)
+        errors.push(...(await handleDataForOF(of, trainingSessions)))
+      } catch (error) {
+        console.error('Failed to import training sessions for course organism:', { courseOrganismId: of.id }, error)
+        errors.push(`Course organism ${of.name} (${of.id}): ${getErrorMessage(error)}`)
+      }
+    }
+
+    if (errors.length > 0) {
+      console.error('Error reading training sessions file:', errors.join(', '))
+    } else {
+      console.log('Training sessions file read successfully')
+    }
+    return errors
   } catch (error) {
     console.error('Error reading training sessions file:', error)
     throw error

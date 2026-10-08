@@ -10,6 +10,7 @@ import { useServerFunction } from '@abc-transitionbascarbone/common/components/h
 import GlossaryModal from '@abc-transitionbascarbone/common/components/modals/GlossaryModal'
 import { Level } from '@abc-transitionbascarbone/common/db/enums'
 import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
+import { courseEnvironments } from '@abc-transitionbascarbone/common/utils/environments'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MenuItem } from '@mui/material'
 import { UserSession } from 'next-auth'
@@ -61,7 +62,7 @@ const StudyLevel = ({ user, study, disabled }: Props) => {
     }
   }, [level, form, study, callServerFunction, router])
 
-  const allowedLevels = useMemo(() => getAllowedLevels(user.level), [user])
+  const allowedLevels = useMemo(() => getAllowedLevels(user.level, user.environment), [user])
   return (
     <div className="grow">
       <FormSelect
@@ -76,7 +77,13 @@ const StudyLevel = ({ user, study, disabled }: Props) => {
         disabled={disabled}
       >
         {Object.values(Level).map((level) => (
-          <MenuItem key={level} value={level} disabled={!allowedLevels.includes(level)}>
+          <MenuItem
+            key={level}
+            value={level}
+            disabled={
+              !allowedLevels.includes(level) && !courseEnvironments.includes(study.organizationVersion.environment)
+            }
+          >
             {tLevel(level)}
           </MenuItem>
         ))}

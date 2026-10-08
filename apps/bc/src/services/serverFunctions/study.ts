@@ -261,7 +261,7 @@ export const createStudyCommand = async (
         throw new Error(NOT_AUTHORIZED)
       }
 
-      if (!hasSufficientLevel(accountValidator.user.level, command.level)) {
+      if (!hasSufficientLevel(accountValidator.user.level, command.level, accountValidator.environment)) {
         throw new Error(NOT_AUTHORIZED)
       }
 
@@ -422,7 +422,7 @@ export const changeStudyLevel = async ({ studyId, ...command }: ChangeStudyLevel
     const usersOnStudy = await getUsersOnStudy(studyId)
     const accountsLevel = await getAccountsUserLevel(usersOnStudy.map((account) => account.accountId))
     const accountsRoleToDowngrade = accountsLevel
-      .filter((accountLevel) => !hasSufficientLevel(accountLevel.user.level, command.level))
+      .filter((accountLevel) => !hasSufficientLevel(accountLevel.user.level, command.level, accountLevel.environment))
       .map((accountLevel) => accountLevel.id)
     if (accountsRoleToDowngrade.length) {
       await downgradeStudyUserRoles(studyId, accountsRoleToDowngrade)
@@ -915,7 +915,11 @@ export const newStudyRight = async (right: NewStudyRightCommand) =>
 
     if (
       !existingUserToChange ||
-      !hasSufficientLevel(existingUserToChange.level, studyWithRights.level) ||
+      !hasSufficientLevel(
+        existingUserToChange.level,
+        studyWithRights.level,
+        studyWithRights.organizationVersion.environment,
+      ) ||
       !userToChangeOrganizationVersion ||
       !hasActiveLicence(userToChangeOrganizationVersion)
     ) {
@@ -945,7 +949,11 @@ export const newStudyRight = async (right: NewStudyRightCommand) =>
         accountWithUserToUserSession({ ...existingAccountToChange, user: existingUserToChange }),
         studyWithRights.organizationVersion,
       ) &&
-      hasSufficientLevel(existingUserToChange.level, studyWithRights.level)
+      hasSufficientLevel(
+        existingUserToChange.level,
+        studyWithRights.level,
+        studyWithRights.organizationVersion.environment,
+      )
     ) {
       right.role = StudyRole.Validator
     }
@@ -1033,7 +1041,12 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
     if (
       !userToChangeOrganizationVersion ||
       !hasActiveLicence(userToChangeOrganizationVersion) ||
-      (!hasSufficientLevel(existingUserToChange.level, studyWithRights.level) && studyRole !== StudyRole.Reader)
+      (!hasSufficientLevel(
+        existingUserToChange.level,
+        studyWithRights.level,
+        studyWithRights.organizationVersion.environment,
+      ) &&
+        studyRole !== StudyRole.Reader)
     ) {
       throw new Error(NOT_AUTHORIZED)
     }

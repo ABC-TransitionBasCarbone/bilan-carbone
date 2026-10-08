@@ -174,27 +174,45 @@ describe('Study Service', () => {
 
   describe('hasSufficientLevel', () => {
     it('Should return true if userLevel is sufficient', () => {
-      expect(hasSufficientLevel(Level.Advanced, Level.Initial)).toBe(true)
-      expect(hasSufficientLevel(Level.Advanced, Level.Standard)).toBe(true)
-      expect(hasSufficientLevel(Level.Advanced, Level.Advanced)).toBe(true)
+      expect(hasSufficientLevel(Level.Advanced, Level.Initial, Environment.BC)).toBe(true)
+      expect(hasSufficientLevel(Level.Advanced, Level.Standard, Environment.BC)).toBe(true)
+      expect(hasSufficientLevel(Level.Advanced, Level.Advanced, Environment.BC)).toBe(true)
 
-      expect(hasSufficientLevel(Level.Standard, Level.Standard)).toBe(true)
-      expect(hasSufficientLevel(Level.Standard, Level.Initial)).toBe(true)
+      expect(hasSufficientLevel(Level.Standard, Level.Standard, Environment.BC)).toBe(true)
+      expect(hasSufficientLevel(Level.Standard, Level.Initial, Environment.BC)).toBe(true)
 
-      expect(hasSufficientLevel(Level.Initial, Level.Initial)).toBe(true)
+      expect(hasSufficientLevel(Level.Initial, Level.Initial, Environment.BC)).toBe(true)
     })
 
     it('Should return false if userLevel is not sufficient', () => {
-      expect(hasSufficientLevel(Level.Initial, Level.Standard)).toBe(false)
-      expect(hasSufficientLevel(Level.Initial, Level.Advanced)).toBe(false)
+      expect(hasSufficientLevel(Level.Initial, Level.Standard, Environment.BC)).toBe(false)
+      expect(hasSufficientLevel(Level.Initial, Level.Advanced, Environment.BC)).toBe(false)
 
-      expect(hasSufficientLevel(Level.Standard, Level.Advanced)).toBe(false)
+      expect(hasSufficientLevel(Level.Standard, Level.Advanced, Environment.BC)).toBe(false)
     })
 
     it('Should return false if userLevel is null', () => {
-      expect(hasSufficientLevel(null, Level.Initial)).toBe(false)
-      expect(hasSufficientLevel(null, Level.Standard)).toBe(false)
-      expect(hasSufficientLevel(null, Level.Advanced)).toBe(false)
+      expect(hasSufficientLevel(null, Level.Initial, Environment.BC)).toBe(false)
+      expect(hasSufficientLevel(null, Level.Standard, Environment.BC)).toBe(false)
+      expect(hasSufficientLevel(null, Level.Advanced, Environment.BC)).toBe(false)
+    })
+
+    it('should return true for course environment', () => {
+      expect(hasSufficientLevel(Level.Advanced, Level.Initial, Environment.COURSE_BC)).toBe(true)
+      expect(hasSufficientLevel(Level.Advanced, Level.Standard, Environment.COURSE_BC)).toBe(true)
+      expect(hasSufficientLevel(Level.Advanced, Level.Advanced, Environment.COURSE_BC)).toBe(true)
+
+      expect(hasSufficientLevel(Level.Standard, Level.Standard, Environment.COURSE_BC)).toBe(true)
+      expect(hasSufficientLevel(Level.Standard, Level.Initial, Environment.COURSE_BC)).toBe(true)
+
+      expect(hasSufficientLevel(Level.Initial, Level.Initial, Environment.COURSE_BC)).toBe(true)
+      expect(hasSufficientLevel(Level.Initial, Level.Standard, Environment.COURSE_BC)).toBe(true)
+      expect(hasSufficientLevel(Level.Initial, Level.Advanced, Environment.COURSE_BC)).toBe(true)
+
+      expect(hasSufficientLevel(Level.Standard, Level.Advanced, Environment.COURSE_BC)).toBe(true)
+      expect(hasSufficientLevel(null, Level.Initial, Environment.COURSE_BC)).toBe(true)
+      expect(hasSufficientLevel(null, Level.Standard, Environment.COURSE_BC)).toBe(true)
+      expect(hasSufficientLevel(null, Level.Advanced, Environment.COURSE_BC)).toBe(true)
     })
   })
 

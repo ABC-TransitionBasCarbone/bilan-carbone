@@ -141,16 +141,16 @@ const canCreateSpecificStudySimplified = async (accountId: string, organizationV
 }
 
 const canCreateSpecificStudyBC = async (
-  accountId: string,
+  user: UserSession,
   study: Prisma.StudyCreateInput,
   organizationVersionId: string,
 ) => {
   const { allowed: commonRights, account: dbAccount } = await canCreateSpecificStudyCommon(
-    accountId,
+    user.accountId,
     organizationVersionId,
   )
 
-  if (!commonRights || !dbAccount || !hasSufficientLevel(dbAccount.user.level, study.level)) {
+  if (!commonRights || !dbAccount || !hasSufficientLevel(dbAccount.user.level, study.level, user.environment)) {
     return false
   }
 
@@ -158,14 +158,14 @@ const canCreateSpecificStudyBC = async (
 }
 
 const canCreateSpecificStudyTilt = async (
-  accountId: string,
+  user: UserSession,
   study: Prisma.StudyCreateInput,
   organizationVersionId: string,
 ) => {
   if (study.simplified) {
-    return canCreateSpecificStudySimplified(accountId, organizationVersionId)
+    return canCreateSpecificStudySimplified(user.accountId, organizationVersionId)
   }
-  return canCreateSpecificStudyBC(accountId, study, organizationVersionId)
+  return canCreateSpecificStudyBC(user, study, organizationVersionId)
 }
 
 export const canCreateSpecificStudy = async (
@@ -179,10 +179,10 @@ export const canCreateSpecificStudy = async (
       return canCreateSpecificStudySimplified(user.accountId, organizationVersionId)
     case Environment.TILT:
     case Environment.COURSE_TILT:
-      return canCreateSpecificStudyTilt(user.accountId, study, organizationVersionId)
+      return canCreateSpecificStudyTilt(user, study, organizationVersionId)
     case Environment.BC:
     case Environment.COURSE_BC:
-      return canCreateSpecificStudyBC(user.accountId, study, organizationVersionId)
+      return canCreateSpecificStudyBC(user, study, organizationVersionId)
     default:
       return false
   }
@@ -233,7 +233,7 @@ export const canChangeLevel = async (user: UserSession, study: FullStudy, level:
     return false
   }
 
-  if (!hasSufficientLevel(user.level, level)) {
+  if (!hasSufficientLevel(user.level, level, study.organizationVersion.environment)) {
     return false
   }
 
@@ -258,7 +258,8 @@ const getRoleIfHasAccess = (user: UserSession, minimalStudy: MinimalStudyForRigh
     return StudyRole.Editor
   }
 
-  return hasSufficientLevel(user.level, minimalStudy.level) && hasActiveLicence(minimalStudy.organizationVersion)
+  return hasSufficientLevel(user.level, minimalStudy.level, minimalStudy.organizationVersion.environment) &&
+    hasActiveLicence(minimalStudy.organizationVersion)
     ? (overrideRole ?? StudyRole.Validator)
     : StudyRole.Reader
 }

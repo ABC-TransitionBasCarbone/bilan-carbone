@@ -69,6 +69,10 @@ const users = async () => {
   await prisma.studyEmissionFactorVersion.deleteMany()
   await prisma.contributors.deleteMany()
 
+  await prisma.sessionCode.deleteMany()
+  await prisma.courseSession.deleteMany()
+  await prisma.courseOrganism.deleteMany()
+
   await prisma.openingHours.deleteMany()
   await prisma.studySite.deleteMany()
   await prisma.document.deleteMany()
@@ -801,7 +805,11 @@ const users = async () => {
           startDate: new Date(),
           endDate: faker.date.future(),
           isPublic: faker.datatype.boolean(),
-          level: faker.helpers.arrayElement(getAllowedLevels(creator.user.level)),
+          level: faker.helpers.arrayElement(
+            getAllowedLevels(creator.user.level, creator.accounts[0].account.environment).filter(
+              (level) => !!level,
+            ) as Level[],
+          ),
           name: faker.lorem.words({ min: 2, max: 5 }),
           organizationVersionId: creator.accounts[0].account.organizationVersionId as string,
           sites: {

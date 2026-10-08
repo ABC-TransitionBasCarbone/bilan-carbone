@@ -19,7 +19,7 @@ model Organization {
 
   name        String
   wordpressId String? @map("wordpress_id")
-  siret String?
+  siret       String?
 
   sites     Site[]
   emissions EmissionFactor[]

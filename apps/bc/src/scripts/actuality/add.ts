@@ -63,7 +63,7 @@ program
   .name('add-actualities')
   .description('Script pour ajouter des actualités')
   .version('1.0.0')
-  .requiredOption("-f, --file <value>', 'Fichier CSV avec les actualités")
+  .requiredOption('-f, --file <value>', 'Fichier CSV avec les actualités')
   .parse(process.argv)
 
 const params = program.opts()
