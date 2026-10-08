@@ -882,7 +882,7 @@ const users = async () => {
     }),
   )
 
-  const defaultUserWithAccount = usersWithAccounts.find(
+  const validatorWithAccount = usersWithAccounts.find(
     (userWithAccount) => userWithAccount.user.email === 'bc-collaborator-0@yopmail.com',
   ) as userAndAccountsAndOrganizationVersion
   const readerWithAccount = usersWithAccounts.find(
@@ -892,17 +892,17 @@ const users = async () => {
     (userWithAccount) => userWithAccount.user.email === 'bc-gestionnaire-0@yopmail.com',
   ) as userAndAccountsAndOrganizationVersion
 
-  if (!defaultUserWithAccount.accounts[0].account.organizationVersionId) {
+  if (!validatorWithAccount.accounts[0].account.organizationVersionId) {
     return null
   }
-  const defaultUserWithAccountOrganizationVersion = await prisma.organizationVersion.findFirst({
-    where: { id: defaultUserWithAccount.accounts[0].account.organizationVersionId },
+  const validatorOrganizationVersion = await prisma.organizationVersion.findFirst({
+    where: { id: validatorWithAccount.accounts[0].account.organizationVersionId },
   })
-  if (!defaultUserWithAccountOrganizationVersion) {
+  if (!validatorOrganizationVersion) {
     return null
   }
   const organizationVersionSites = sites.filter(
-    (site) => site.organizationId === defaultUserWithAccountOrganizationVersion.organizationId,
+    (site) => site.organizationId === validatorOrganizationVersion.organizationId,
   )
 
   // e2e emission factor
@@ -922,7 +922,7 @@ const users = async () => {
       source: 'Magic',
       base: EmissionFactorBase.LocationBased,
       subPosts: [SubPost.Electricite],
-      organizationId: defaultUserWithAccount.accounts[0].organizationVersion.organizationId,
+      organizationId: validatorWithAccount.accounts[0].organizationVersion.organizationId,
       emissionFactorParts: {
         create: [
           {
@@ -981,13 +981,13 @@ const users = async () => {
       include: { sites: true },
       data: {
         id: '88c93e88-7c80-4be4-905b-f0bbd2ccc779',
-        createdById: defaultUserWithAccount.accounts[0].account.id,
+        createdById: validatorWithAccount.accounts[0].account.id,
         startDate: new Date(),
         endDate: faker.date.future(),
         isPublic: false,
         level: faker.helpers.enumValue(Level),
         name: faker.lorem.words({ min: 2, max: 5 }),
-        organizationVersionId: defaultUserWithAccount.accounts[0].account.organizationVersionId as string,
+        organizationVersionId: validatorWithAccount.accounts[0].account.organizationVersionId as string,
         sites: {
           createMany: {
             data: faker.helpers
@@ -1005,7 +1005,7 @@ const users = async () => {
         allowedUsers: {
           createMany: {
             data: [
-              { role: StudyRole.Validator, accountId: defaultUserWithAccount.accounts[0].account.id },
+              { role: StudyRole.Validator, accountId: validatorWithAccount.accounts[0].account.id },
               { role: StudyRole.Reader, accountId: readerWithAccount.accounts[0].account.id },
               { role: StudyRole.Editor, accountId: editorWithAccount.accounts[0].account.id },
             ],
@@ -1023,13 +1023,13 @@ const users = async () => {
       include: { sites: true },
       data: {
         id: '88c93e88-7c80-4be4-905b-f0bbd2ccc840',
-        createdById: defaultUserWithAccount.accounts[0].account.id,
+        createdById: validatorWithAccount.accounts[0].account.id,
         startDate: new Date(),
         endDate: faker.date.future(),
         isPublic: false,
         level: Level.Initial,
         name: 'Study to delete',
-        organizationVersionId: defaultUserWithAccount.accounts[0].account.organizationVersionId as string,
+        organizationVersionId: validatorWithAccount.accounts[0].account.organizationVersionId as string,
         sites: {
           createMany: {
             data: faker.helpers
@@ -1046,7 +1046,7 @@ const users = async () => {
         },
         allowedUsers: {
           createMany: {
-            data: [{ role: StudyRole.Validator, accountId: defaultUserWithAccount.accounts[0].account.id }],
+            data: [{ role: StudyRole.Validator, accountId: validatorWithAccount.accounts[0].account.id }],
           },
         },
       },
@@ -1175,7 +1175,7 @@ const users = async () => {
     }),
   )
 
-  await createRealStudy(prisma, defaultUserWithAccount.accounts[0].account)
+  await createRealStudy(prisma, validatorWithAccount.accounts[0].account)
 }
 
 const actualities = async () => {
