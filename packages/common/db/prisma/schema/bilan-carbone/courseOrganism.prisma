@@ -1,0 +1,13 @@
+model CourseOrganism {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  name           String
+  contactEmail   String          @map("contact_email")
+  ftpPath        String          @map("ftp_path")
+
+  @@unique([name])
+  @@map("course_organism")
+  @@schema("bilan_carbone")
+}
