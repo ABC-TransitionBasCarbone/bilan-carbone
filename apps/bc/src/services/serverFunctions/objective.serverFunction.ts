@@ -19,7 +19,7 @@ import { getTrajectoryWithTransitionPlan, getTransitionPlanById } from '@/db/tra
 import { withServerResponse } from '@/utils/serverResponse'
 import { SubPost, TrajectoryType } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
-import { hasEditAccessOnStudy } from '../permissions/study'
+import { hasEditAccessOnStudy } from '../permissions/study.server'
 
 export interface CreateObjectiveInput {
   name?: string

@@ -13,7 +13,7 @@ import {
 import { withServerResponse } from '@/utils/serverResponse'
 import { DeactivatableFeature, Environment, Role, UserSource } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
-import { dbActualizedAuth } from '../auth'
+import { dbActualizedAuth } from '../auth.server'
 
 export const getDeactivableFeaturesRestrictionValues = async () =>
   withServerResponse('getDeactivableFeaturesRestrictionValues', async () => {

@@ -1,6 +1,6 @@
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { unitsMatrix } from '@/services/importEmissionFactor/historyUnits'
-import { getEmissionQuality } from '@/services/importEmissionFactor/import'
+import { getEmissionQuality } from '@/services/importEmissionFactor/import.server'
 import { isMonetaryEmissionFactor } from '@/utils/emissionFactors'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import {

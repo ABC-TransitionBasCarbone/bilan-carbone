@@ -16,7 +16,7 @@ import { getDefaultObjectivesForTrajectoryType } from '@/utils/trajectory'
 import { TrajectoryType } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import type { ApiResponse } from '@abc-transitionbascarbone/common/utils/serverResponse'
-import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
+import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study.server'
 import { SectorPercentages } from './trajectory.command'
 
 type TrajectoryValidationInput = {

@@ -1,5 +1,5 @@
 import SignUpFormCut from '@/components/auth/SignUpFormCut'
-import { auth } from '@/services/auth'
+import { auth } from '@/services/auth.server'
 import { redirect } from 'next/navigation'
 
 const CountSignUpPage = async () => {

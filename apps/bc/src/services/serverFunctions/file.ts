@@ -3,7 +3,7 @@
 import { withServerResponse } from '@/utils/serverResponse'
 import { Document } from '@abc-transitionbascarbone/common/db'
 import xlsx from 'node-xlsx'
-import { canAccessFlowFromStudy } from '../permissions/study'
+import { canAccessFlowFromStudy } from '../permissions/study.server'
 import { getFileUrlFromBucket } from '../serverFunctions/scaleway'
 
 export const getDocumentUrl = async (document: Document, studyId: string) =>

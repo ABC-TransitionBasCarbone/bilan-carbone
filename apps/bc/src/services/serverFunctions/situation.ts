@@ -7,9 +7,9 @@ import { withServerResponse } from '@/utils/serverResponse'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import type { InputJsonValue } from '@prisma/client/runtime/client'
 import { Situation } from 'publicodes'
-import { dbActualizedAuth } from '../auth'
-import { canSaveSituationOnStudy } from '../permissions/situation'
-import { hasReadAccessOnStudy } from '../permissions/study'
+import { dbActualizedAuth } from '../auth.server'
+import { canSaveSituationOnStudy } from '../permissions/situation.server'
+import { hasReadAccessOnStudy } from '../permissions/study.server'
 
 export const loadMappedSituation = async (studyId: string, studySiteId: string, mapping: Record<string, string>) =>
   withServerResponse('loadMappedSituation', async () => {

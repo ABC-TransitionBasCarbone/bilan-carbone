@@ -10,8 +10,8 @@ import * as studyDbModule from '../../db/study'
 import { FullStudy } from '../../db/study'
 import * as transitionPlanDbModule from '../../db/transitionPlan'
 import * as userDbModule from '../../db/user'
-import * as authModule from '../../services/auth'
-import * as studyPermissionsModule from '../../services/permissions/study'
+import * as authModule from '../../services/auth.server'
+import * as studyPermissionsModule from '../../services/permissions/study.server'
 import * as userModule from '../../services/serverFunctions/user'
 import {
   getMockedDuplicateStudyCommand,
@@ -27,7 +27,7 @@ import type { CreateStudyCommand, DuplicateSiteCommand } from './study.command'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../file', () => ({ download: jest.fn() }))
-jest.mock('../auth', () => ({ auth: jest.fn() }))
+jest.mock('../auth.server', () => ({ auth: jest.fn() }))
 jest.mock('./scaleway', () => ({
   uploadFileToBucket: jest.fn(),
   deleteFileFromBucket: jest.fn(),
@@ -42,7 +42,7 @@ jest.mock('uuid', () => ({
   v4: jest.fn(),
 }))
 
-jest.mock('../../services/auth', () => ({
+jest.mock('../../services/auth.server', () => ({
   dbActualizedAuth: jest.fn(),
 }))
 jest.mock('../../db/study', () => ({
@@ -72,7 +72,7 @@ jest.mock('../../db/client.server', () => ({
     $transaction: jest.fn((callback) => callback(mockTransaction)),
   },
 }))
-jest.mock('../../services/permissions/study', () => ({
+jest.mock('../../services/permissions/study.server', () => ({
   hasEditionRights: jest.fn(),
   canCreateSpecificStudy: jest.fn(),
   canDuplicateStudy: jest.fn(),

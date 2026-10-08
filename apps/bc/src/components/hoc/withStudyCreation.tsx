@@ -1,4 +1,4 @@
-import { canDuplicateStudy } from '@/services/permissions/study'
+import { canDuplicateStudy } from '@/services/permissions/study.server'
 import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 import React from 'react'
 import { UserSessionProps } from './withAuth'

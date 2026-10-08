@@ -1,4 +1,4 @@
-import { auth } from '@/services/auth'
+import { auth } from '@/services/auth.server'
 import { UserSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import React from 'react'

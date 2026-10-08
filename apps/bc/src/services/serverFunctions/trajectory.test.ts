@@ -1,7 +1,7 @@
 import * as studyDbModule from '@/db/study'
 import * as transitionPlanDbModule from '@/db/transitionPlan'
-import * as authModule from '@/services/auth'
-import * as studyPermissionsModule from '@/services/permissions/study'
+import * as authModule from '@/services/auth.server'
+import * as studyPermissionsModule from '@/services/permissions/study.server'
 import { TrajectoryType } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import { CreateTrajectoryInput, createTrajectoryWithObjectives } from './trajectory.serverFunction'
@@ -16,7 +16,7 @@ jest.mock('@/components/pages/TrajectoryPage', () => ({
   TRAJECTORY_SNBC_GENERAL_ID: 'snbc-general',
 }))
 
-jest.mock('../auth', () => ({
+jest.mock('../auth.server', () => ({
   auth: jest.fn(),
 }))
 
@@ -34,7 +34,7 @@ jest.mock('@abc-transitionbascarbone/common/services/permissions/check', () => (
   NOT_AUTHORIZED: 'NOT_AUTHORIZED',
 }))
 
-jest.mock('../permissions/study', () => ({
+jest.mock('../permissions/study.server', () => ({
   hasEditAccessOnStudy: jest.fn(),
 }))
 

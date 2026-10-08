@@ -35,10 +35,10 @@ import { TransitionPlan } from '@abc-transitionbascarbone/common/db'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import type { ApiResponse } from '@abc-transitionbascarbone/common/utils/serverResponse'
 import { getYearFromDateStr } from '@abc-transitionbascarbone/common/utils/time'
-import { dbActualizedAuth } from '../auth'
+import { dbActualizedAuth } from '../auth.server'
 import { NOT_FOUND } from '../permissions/check'
-import { canReadStudy, hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
-import { canEditTransitionPlan, canReadTransitionPlan } from '../permissions/transitionPlan'
+import { canReadStudy, hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study.server'
+import { canEditTransitionPlan, canReadTransitionPlan } from '../permissions/transitionPlan.server'
 import { AddActionInputCommand } from './action.command'
 
 export const getStudyTransitionPlan = async (studyId: string): Promise<ApiResponse<TransitionPlan | null>> =>

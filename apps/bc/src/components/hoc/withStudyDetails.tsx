@@ -1,5 +1,5 @@
 import { FullStudy, getStudyById } from '@/db/study'
-import { canReadStudy, canReadStudyDetail } from '@/services/permissions/study'
+import { canReadStudy, canReadStudyDetail } from '@/services/permissions/study.server'
 import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 import { redirect } from 'next/navigation'
 import React from 'react'
