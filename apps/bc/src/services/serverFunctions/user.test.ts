@@ -1,4 +1,4 @@
-import { DeactivatableFeature, Environment, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { DeactivatableFeature, Environment, Level, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 
 import {
@@ -160,6 +160,122 @@ describe('signUpWithSiretOrCNC', () => {
   describe('activateEmail', () => {
     beforeEach(() => {
       jest.clearAllMocks()
+    })
+
+    it.each([
+      [undefined, Role.GESTIONNAIRE],
+      [Level.Advanced, Role.ADMIN],
+    ])('assigns the first BC account role based on training level', async (level, role) => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId, environment: Environment.BC, status: UserStatus.IMPORTED }],
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        status: UserStatus.IMPORTED,
+        role: Role.COLLABORATOR,
+        user: {
+          id: mockedUserId,
+          email: testEmail,
+          firstName: 'Test',
+          lastName: 'User',
+          level,
+        },
+      })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+        activatedLicence: [1],
+      })
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(0)
+      mockGetAccountsFromOrganizationForActivation.mockResolvedValue([])
+      mockValidateUser.mockResolvedValue(undefined)
+
+      const result = await actualActivateEmail(testEmail, Environment.BC)
+
+      expect(result.success).toBe(true)
+      expect(mockUpdateAccount).toHaveBeenCalledWith(
+        mockedAccountId,
+        expect.objectContaining({ role, activationRequestedAt: expect.any(Date) }),
+        undefined,
+        expect.anything(),
+      )
+    })
+
+    it('rejects activation when active organization members have no active approver', async () => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId, environment: Environment.BC, status: UserStatus.IMPORTED }],
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        organizationVersion: { environment: Environment.BC, organizationId: mockedOrganizationId },
+        status: UserStatus.IMPORTED,
+        role: Role.DEFAULT,
+        user: { id: mockedUserId, email: testEmail, firstName: 'Test', lastName: 'User' },
+      })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+        activatedLicence: [1],
+      })
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(1)
+      mockGetAccountFromUserOrganization.mockResolvedValue([
+        { role: Role.COLLABORATOR, status: UserStatus.ACTIVE, user: { email: 'member@example.com' } },
+      ])
+
+      const result = await actualActivateEmail(testEmail, Environment.BC)
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.errorMessage).toBe(NOT_AUTHORIZED)
+      }
+      expect(mockSendActivationRequest).not.toHaveBeenCalled()
+      expect(mockUpdateAccount).not.toHaveBeenCalled()
+    })
+
+    it('sends activation requests to active managers when the organization has active accounts', async () => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId, environment: Environment.BC, status: UserStatus.IMPORTED }],
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        organizationVersion: { environment: Environment.BC, organizationId: mockedOrganizationId },
+        status: UserStatus.IMPORTED,
+        role: Role.DEFAULT,
+        user: { id: mockedUserId, email: testEmail, firstName: 'Test', lastName: 'User' },
+      })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+        activatedLicence: [1],
+      })
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(1)
+      mockGetAccountFromUserOrganization.mockResolvedValue([
+        { role: Role.GESTIONNAIRE, status: UserStatus.ACTIVE, user: { email: 'manager@example.com' } },
+      ])
+
+      const result = await actualActivateEmail(testEmail, Environment.BC)
+
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data).toBe(REQUEST_SENT)
+      }
+      expect(mockSendActivationRequest).toHaveBeenCalledWith(['manager@example.com'], testEmail, 'Test User')
+      expect(mockUpdateAccount).toHaveBeenCalledWith(mockedAccountId, {
+        status: UserStatus.PENDING_REQUEST,
+        activationRequestedAt: null,
+      })
     })
 
     it('blocks self activation while another manager activation is still reserved', async () => {
