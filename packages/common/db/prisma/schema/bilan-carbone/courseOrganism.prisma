@@ -10,4 +10,27 @@ model CourseOrganism {
   @@unique([name])
   @@map("course_organism")
   @@schema("bilan_carbone")
+  courseSessions CourseSession[]
+}
+
+model CourseSession {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  startDate DateTime @map("start_date")
+  endDate   DateTime @map("end_date")
+  traineeCode    String          @map("trainee_code")
+  professorCode  String?         @map("professor_code")
+
+  courseOrganism   CourseOrganism @relation(fields: [courseOrganismId], references: [id], onDelete: Cascade)
+  courseOrganismId String         @map("course_organism_id")
+
+  professor   Account @relation("CourseSessionProfessor", fields: [professorId], references: [id], onDelete: Cascade)
+  professorId String         @map("professor_id")
+
+  traineeList Account[] @relation("CourseSessionTraineeList")
+
+  @@map("course_session")
+  @@schema("bilan_carbone")
 }
