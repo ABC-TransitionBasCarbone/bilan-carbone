@@ -6,7 +6,6 @@ import {
 } from '@/db/organization'
 import { createUsersWithAccount, organizationVersionActiveAccountsCount, updateAccount } from '@/db/user'
 import { Environment, Level, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
-import { getEnvRoleFromBase } from '../../../prisma/seed/utils'
 import { processUsers } from './userImport'
 
 jest.mock('@/db/account', () => ({
@@ -24,10 +23,6 @@ jest.mock('@/db/user', () => ({
   createUsersWithAccount: jest.fn(),
   organizationVersionActiveAccountsCount: jest.fn(),
   updateAccount: jest.fn(),
-}))
-
-jest.mock('../../../prisma/seed/utils', () => ({
-  getEnvRoleFromBase: jest.fn((role: Role) => role),
 }))
 
 describe('processUsers', () => {
@@ -177,44 +172,16 @@ describe('processUsers', () => {
     expect(createOrUpdateOrganization).not.toHaveBeenCalled()
   })
 
-  it('imports CUT users through the generic import path', async () => {
-    jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue(null)
-    jest.mocked(getRawOrganizationBySiret).mockResolvedValue({ id: 'organization-id' } as never)
-    jest
-      .mocked(getOrganizationVersionByOrganizationIdAndEnvironment)
-      .mockResolvedValue({ id: 'organization-version-id' } as never)
-    jest.mocked(createOrUpdateOrganization).mockResolvedValue({ id: 'organization-id' } as never)
-    jest.mocked(createUsersWithAccount).mockResolvedValue({
-      newUsers: { count: 1 },
-      newAccounts: { count: 1 },
-    })
-    jest.mocked(getEnvRoleFromBase).mockReturnValue(Role.DEFAULT)
+  it.each([Environment.CUT, Environment.CLICKSON, 'UNKNOWN'])(
+    'rejects FTP records for unsupported environment %s',
+    async (environment) => {
+      await expect(processUsers([{ userEmail: 'unsupported@example.com', environment }], new Date())).rejects.toThrow(
+        `Unsupported FTP environment: ${environment}`,
+      )
 
-    await processUsers(
-      [{ userEmail: 'cut@example.com', environment: Environment.CUT, siret: '12345678901234' }],
-      new Date(),
-    )
-
-    expect(getEnvRoleFromBase).toHaveBeenCalledWith(Role.COLLABORATOR)
-    expect(createUsersWithAccount).toHaveBeenCalledWith([
-      expect.objectContaining({
-        email: 'cut@example.com',
-        account: expect.objectContaining({
-          environment: Environment.CUT,
-          role: Role.DEFAULT,
-          organizationVersion: { connect: { id: 'organization-version-id' } },
-        }),
-      }),
-    ])
-  })
-
-  it('rejects FTP records from undeclared environments', async () => {
-    await expect(
-      processUsers([{ userEmail: 'unsupported@example.com', environment: 'UNKNOWN' }], new Date()),
-    ).rejects.toThrow('Unsupported FTP environment: UNKNOWN')
-
-    expect(getAccountByEmailAndEnvironment).not.toHaveBeenCalled()
-  })
+      expect(getAccountByEmailAndEnvironment).not.toHaveBeenCalled()
+    },
+  )
 
   it.each([
     [Environment.BC, undefined],
