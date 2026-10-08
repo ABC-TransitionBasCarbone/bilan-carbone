@@ -1,5 +1,6 @@
 import { getAccountByEmailAndEnvironment } from '@/db/account'
-import { createUsersWithAccount, updateAccount } from '@/db/user'
+import { createOrUpdateOrganization } from '@/db/organization'
+import { createUsersWithAccount, organizationVersionActiveAccountsCount, updateAccount } from '@/db/user'
 import { Environment, Level, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { processUsers } from './userImport'
 
@@ -86,7 +87,7 @@ describe('processUsers', () => {
     expect(consoleLogSpy).not.toHaveBeenCalledWith(expect.stringContaining('Progress:'))
   })
 
-  it.each([Environment.BC, Environment.TILT])(
+  it.each([Environment.BC, Environment.TILT, Environment.CUT])(
     'updates imported data for invited %s accounts without changing their access',
     async (environment) => {
       jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue({
@@ -140,7 +141,36 @@ describe('processUsers', () => {
           source: UserSource.TUNISIE,
         }),
       )
+      expect(createOrUpdateOrganization).not.toHaveBeenCalled()
       expect(createUsersWithAccount).not.toHaveBeenCalled()
+    },
+  )
+
+  it.each([
+    [undefined, 0, Role.GESTIONNAIRE],
+    [Level.Advanced, 0, Role.ADMIN],
+    [undefined, 1, Role.COLLABORATOR],
+  ])(
+    'sets the role for an imported account based on training and active members',
+    async (level, activeAccounts, role) => {
+      jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue({
+        id: 'account-id',
+        status: UserStatus.IMPORTED,
+        role: Role.COLLABORATOR,
+        organizationVersion: { id: 'organization-version-id' },
+        user: {
+          id: 'user-id',
+          email: 'imported@example.com',
+          firstName: 'Imported',
+          lastName: 'User',
+          ...(level !== undefined && { level }),
+        },
+      } as Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>)
+      jest.mocked(organizationVersionActiveAccountsCount).mockResolvedValue(activeAccounts)
+
+      await processUsers([{ userEmail: 'imported@example.com', sessionCode: level ? 'BCM2' : undefined }], new Date())
+
+      expect(jest.mocked(updateAccount).mock.calls[0][1]).toEqual(expect.objectContaining({ role }))
     },
   )
 

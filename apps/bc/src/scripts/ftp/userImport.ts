@@ -88,19 +88,27 @@ const parseTrainings = (rawTrainings: UserImportRecord['trainings']): Training[]
   }
 }
 
-const getRoleForImport = async (environment: Environment, dbAccount: ExistingAccount | null) => {
-  let role = environment === Environment.CUT ? getEnvRoleFromBase(Role.COLLABORATOR) : Role.COLLABORATOR
+const getRoleForImportedAccount = async (
+  environment: Environment,
+  dbAccount: ExistingAccount | null,
+  importedLevel: Level | undefined,
+) => {
+  const defaultRole = environment === Environment.CUT ? getEnvRoleFromBase(Role.COLLABORATOR) : Role.COLLABORATOR
 
-  // Keep at least one admin on an organization.
-  if (
-    dbAccount?.organizationVersion &&
-    dbAccount.user.level !== undefined &&
-    ((await organizationVersionActiveAccountsCount(dbAccount.organizationVersion.id)) ?? 0) <= 1
-  ) {
-    role = Role.ADMIN
+  if (dbAccount?.status !== UserStatus.IMPORTED) {
+    return defaultRole
+  }
+  if (!dbAccount.organizationVersion) {
+    return dbAccount.role ?? defaultRole
   }
 
-  return role
+  const activeAccountsCount = (await organizationVersionActiveAccountsCount(dbAccount.organizationVersion.id)) ?? 0
+  if (activeAccountsCount > 0) {
+    return dbAccount.role
+  }
+
+  const role = importedLevel !== undefined || dbAccount.user.level !== undefined ? Role.ADMIN : Role.GESTIONNAIRE
+  return environment === Environment.CUT ? getEnvRoleFromBase(role) : role
 }
 
 const getTrainingData = (trainings: Training[]) => {
@@ -160,11 +168,7 @@ const syncUserOrganization = async (
   user.account.organizationVersion = organizationVersion ? { connect: { id: organizationVersion.id } } : undefined
 }
 
-const getImportedAccountUpdates = (user: ImportedUser, environment: Environment) => {
-  if (environment !== Environment.BC && environment !== Environment.TILT) {
-    return {}
-  }
-
+const getImportedAccountUpdates = (user: ImportedUser) => {
   return {
     ...(user.account.formationName !== undefined && { formationName: user.account.formationName }),
     ...(user.account.formationStartDate !== undefined && { formationStartDate: user.account.formationStartDate }),
@@ -172,11 +176,7 @@ const getImportedAccountUpdates = (user: ImportedUser, environment: Environment)
   }
 }
 
-const getImportedUserUpdates = (value: UserImportRecord, environment: Environment) => {
-  if (environment !== Environment.BC && environment !== Environment.TILT) {
-    return {}
-  }
-
+const getImportedUserUpdates = (value: UserImportRecord) => {
   return {
     ...(value.firstName && { firstName: value.firstName }),
     ...(value.lastName && { lastName: value.lastName }),
@@ -198,11 +198,11 @@ const updateExistingAccount = async (
         organizationVersion: user.account.organizationVersion,
       }),
       environment,
-      ...getImportedAccountUpdates(user, environment),
+      ...getImportedAccountUpdates(user),
     },
     {
       ...dbAccount.user,
-      ...getImportedUserUpdates(value, environment),
+      ...getImportedUserUpdates(value),
       level: user.level,
     },
   )
@@ -217,7 +217,6 @@ const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
   const activatedLicence = (value.membershipYear || '').match(/\d{4}/g)?.map(Number)
 
   const dbAccount = await getAccountByEmailAndEnvironment(email, environment)
-  const role = await getRoleForImport(environment, dbAccount)
 
   const trainingData = getTrainingData(trainings)
   const sessionLevel = value.sessionCode
@@ -226,6 +225,7 @@ const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
       : Level.Initial
     : undefined
   const level = trainingData?.level ?? sessionLevel
+  const role = await getRoleForImportedAccount(environment, dbAccount, level)
 
   const user: ImportedUser = {
     id: dbAccount?.user.id,
@@ -250,17 +250,19 @@ const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
     },
   }
 
-  await syncUserOrganization(
-    user,
-    dbAccount,
-    companyNumber,
-    value.companyName,
-    value.siret,
-    isCR,
-    activatedLicence,
-    importedFileDate,
-    environment,
-  )
+  if (!dbAccount || dbAccount.status === UserStatus.IMPORTED) {
+    await syncUserOrganization(
+      user,
+      dbAccount,
+      companyNumber,
+      value.companyName,
+      value.siret,
+      isCR,
+      activatedLicence,
+      importedFileDate,
+      environment,
+    )
+  }
 
   if (dbAccount) {
     await updateExistingAccount(dbAccount, user, value, environment)
