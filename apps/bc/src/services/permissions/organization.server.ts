@@ -10,7 +10,7 @@ import { getUserByEmail } from '@/db/user'
 import { canEditOrganizationVersion, hasEditionRole, isInOrgaOrParent } from '@/utils/organization'
 import { canEditMemberRole } from '@/utils/user'
 import { UserSession } from 'next-auth'
-import { dbActualizedAuth } from '../auth'
+import { dbActualizedAuth } from '../auth.server'
 
 export const isInOrgaOrParentFromId = async (
   userOrganizationVersionId: string | null,

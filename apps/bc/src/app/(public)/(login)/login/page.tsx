@@ -1,5 +1,5 @@
 import LoginForm from '@/components/auth/LoginForm'
-import { auth } from '@/services/auth'
+import { auth } from '@/services/auth.server'
 import { redirect } from 'next/navigation'
 
 const LoginPage = async () => {

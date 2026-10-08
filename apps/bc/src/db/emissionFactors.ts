@@ -1,4 +1,4 @@
-import { isSourceForEnv } from '@/services/importEmissionFactor/import'
+import { isSourceForEnv } from '@/services/importEmissionFactor/import.server'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { FeFilters } from '@/types/filters'
 import { unique } from '@/utils/array'

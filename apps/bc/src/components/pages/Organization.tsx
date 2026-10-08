@@ -1,5 +1,5 @@
 import { OrganizationWithSites } from '@/db/account'
-import { canDeleteOrganizationVersion, canUpdateOrganizationVersion } from '@/services/permissions/organization'
+import { canDeleteOrganizationVersion, canUpdateOrganizationVersion } from '@/services/permissions/organization.server'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'

@@ -1,5 +1,5 @@
 import NewPasswordForm from '@/components/auth/NewPasswordForm'
-import { auth } from '@/services/auth'
+import { auth } from '@/services/auth.server'
 import { redirect } from 'next/navigation'
 
 const NewPasswordPage = async () => {

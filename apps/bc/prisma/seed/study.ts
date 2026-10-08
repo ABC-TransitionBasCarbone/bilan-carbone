@@ -1,5 +1,5 @@
-import { getEmissionFactorsFromCSV } from '@/services/importEmissionFactor/getEmissionFactorsFromCSV'
-import { addSourceToStudies } from '@/services/importEmissionFactor/import'
+import { getEmissionFactorsFromCSV } from '@/services/importEmissionFactor/getEmissionFactorsFromCSV.server'
+import { addSourceToStudies } from '@/services/importEmissionFactor/import.server'
 import {
   ControlMode,
   DeactivatableFeature,

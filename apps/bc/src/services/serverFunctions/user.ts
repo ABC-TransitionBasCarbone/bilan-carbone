@@ -87,7 +87,7 @@ import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/co
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
-import { auth, dbActualizedAuth } from '../auth'
+import { auth, dbActualizedAuth } from '../auth.server'
 import { getUserCheckList } from '../checklist'
 import {
   NOT_ASSOCIATION_SIRET,

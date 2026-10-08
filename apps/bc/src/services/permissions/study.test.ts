@@ -19,17 +19,17 @@ import * as studyUtils from '@/utils/study'
 import { Environment, Level, Role, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
 import { mockedUserId } from '@abc-transitionbascarbone/common/services/tests/models/user'
 import { expect } from '@jest/globals'
-import * as authModule from '../auth'
+import * as authModule from '../auth.server'
 import * as userModule from '../serverFunctions/user'
 import * as environmentAdvancedModule from './environmentAdvanced'
-import * as organizationModule from './organization'
+import * as organizationModule from './organization.server'
 import {
   canCreateSpecificStudy,
   canDeleteStudy,
   canDuplicateStudy,
   getEnvironmentsForDuplication,
   NEWGetAccountRoleOnStudy,
-} from './study'
+} from './study.server'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('uuid', () => ({ v4: jest.fn() }))
@@ -55,9 +55,9 @@ jest.mock('@/utils/organization', () => ({
   isAdminOnOrga: jest.fn(),
   isInOrgaOrParent: jest.fn(),
 }))
-jest.mock('./organization', () => ({ isInOrgaOrParentFromId: jest.fn() }))
+jest.mock('./organization.server', () => ({ isInOrgaOrParentFromId: jest.fn() }))
 jest.mock('./environmentAdvanced', () => ({ hasAccessToDuplicateStudy: jest.fn(), isTiltSimplified: jest.fn() }))
-jest.mock('../auth', () => ({ dbActualizedAuth: jest.fn() }))
+jest.mock('../auth.server', () => ({ dbActualizedAuth: jest.fn() }))
 jest.mock('../serverFunctions/user', () => ({ getUserActiveAccounts: jest.fn() }))
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
