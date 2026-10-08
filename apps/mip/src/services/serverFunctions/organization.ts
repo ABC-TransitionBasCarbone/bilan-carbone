@@ -4,8 +4,8 @@ import { updateAccountMip } from '@/db/accountMip'
 import { getUserByEmail } from '@/db/user'
 import { withServerResponse } from '@/utils/serverResponse'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
-import { dbActualizedAuth } from '../auth'
-import { canDeleteMember } from '../permissions/organization'
+import { dbActualizedAuth } from '../auth.server'
+import { canDeleteMember } from '../permissions/organization.server'
 
 export const deleteOrganizationMember = async (email: string) =>
   withServerResponse('deleteOrganizationMember', async () => {

@@ -1,7 +1,7 @@
 import { getExportRules } from '@/db/exportRule'
 import { getSourceLatestImportVersionId } from '@/db/study'
 import { getCaracterisationsBySubPost } from '@/services/emissionSource'
-import { getEmissionQuality } from '@/services/importEmissionFactor/import'
+import { getEmissionQuality } from '@/services/importEmissionFactor/import.server'
 import { hasDeprecationPeriod } from '@/utils/study'
 import type {
   EmissionFactorImportVersion,

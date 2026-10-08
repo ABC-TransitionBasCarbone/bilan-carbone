@@ -1,5 +1,5 @@
 import LoginForm from '@/components/auth/LoginForm'
-// import { auth } from '@/services/auth'
+// import { auth } from '@/services/auth.server'
 
 const LoginPage = async () => {
   // const session = await auth()
