@@ -1,6 +1,6 @@
 import { ProfessorCourseSession } from '@/db/courseSession'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
-import { canCreateOrganization } from '@/services/permissions/organization'
+import { canCreateOrganization } from '@/services/permissions/organization.server'
 import Box from '@abc-transitionbascarbone/common/components/base/Box'
 import LinkButton from '@abc-transitionbascarbone/common/components/base/LinkButton'
 import Image from '@abc-transitionbascarbone/common/components/document/Image'

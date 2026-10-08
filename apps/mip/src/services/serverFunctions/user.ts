@@ -37,7 +37,7 @@ import { AddMemberCommand } from '@abc-transitionbascarbone/common/services/serv
 import { DAY, HOUR, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils'
 import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/common/utils/user.server'
 import jwt from 'jsonwebtoken'
-import { dbActualizedAuth } from '../auth'
+import { dbActualizedAuth } from '../auth.server'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
 
 export const resetPassword = async (email: string) =>

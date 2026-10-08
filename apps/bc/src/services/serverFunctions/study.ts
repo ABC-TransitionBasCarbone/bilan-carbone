@@ -144,7 +144,7 @@ import fs from 'fs/promises'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import { v4 as uuidv4 } from 'uuid'
-import { auth, dbActualizedAuth } from '../auth'
+import { auth, dbActualizedAuth } from '../auth.server'
 import { customDataToSituationByEnvironment, TiltCustomDataFields } from '../customDataToSituation'
 import { getCaracterisationsBySubPost } from '../emissionSource'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
@@ -155,7 +155,7 @@ import {
   hasSimplifiedStudies,
 } from '../permissions/environment'
 import { hasAccessToEngagementActions, isTiltSimplified } from '../permissions/environmentAdvanced'
-import { isInOrgaOrParentFromId } from '../permissions/organization'
+import { isInOrgaOrParentFromId } from '../permissions/organization.server'
 import {
   canAccessFlowFromStudy,
   canAddContributorOnStudy,
@@ -175,7 +175,7 @@ import {
   canUpgradeSourceVersion,
   getEnvironmentsForDuplication,
   NEWGetAccountRoleOnStudy,
-} from '../permissions/study'
+} from '../permissions/study.server'
 import { isAdminOnStudyOrga } from '../permissions/study.utils'
 import { TILT_SIMPLIFIED_POSTS_CONFIG_VERSION } from '../publicodes/simplifiedPublicodesConfig'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'

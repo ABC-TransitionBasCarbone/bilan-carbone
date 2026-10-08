@@ -12,7 +12,7 @@ import {
 } from './importEmissionFactors.utils'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
-jest.mock('../services/auth', () => ({ auth: jest.fn() }))
+jest.mock('../services/auth.server', () => ({ auth: jest.fn() }))
 jest.mock('next-intl', () => ({ useTranslations: jest.fn(() => (key: string) => key), useFormatter: jest.fn() }))
 jest.mock('next-intl/server', () => ({ getTranslations: jest.fn(() => (key: string) => key) }))
 

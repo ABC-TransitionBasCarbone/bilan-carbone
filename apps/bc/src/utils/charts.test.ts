@@ -17,10 +17,10 @@ import { translationMock } from '../../../../packages/common/tooling/tests/utils
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../services/file', () => ({ download: jest.fn() }))
-jest.mock('../services/auth', () => ({ auth: jest.fn() }))
+jest.mock('../services/auth.server', () => ({ auth: jest.fn() }))
 jest.mock('uuid', () => ({ v4: jest.fn() }))
 
-jest.mock('../services/permissions/study', () => ({ canReadStudy: jest.fn() }))
+jest.mock('../services/permissions/study.server', () => ({ canReadStudy: jest.fn() }))
 jest.mock('./study', () => ({
   getAccountRoleOnStudy: jest.fn(),
   STUDY_UNIT_VALUES: { K: 1, T: 1000 },

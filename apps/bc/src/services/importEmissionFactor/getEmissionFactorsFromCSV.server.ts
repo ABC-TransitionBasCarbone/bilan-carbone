@@ -20,7 +20,7 @@ import {
   saveEmissionFactorsParts,
   serializeRowAsCsv,
   validStatuses,
-} from './import'
+} from './import.server'
 
 export type DryRunReport = {
   newCount: number

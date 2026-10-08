@@ -8,7 +8,7 @@ import {
 } from '@/db/study'
 import { canCreateStudyOnlyAsAdministrator, isTilt } from '@/services/permissions/environment'
 import { isTiltSimplifiedFeatureActive } from '@/services/permissions/environment.server'
-import { canCreateAStudy } from '@/services/permissions/study'
+import { canCreateAStudy } from '@/services/permissions/study.server'
 import { hasActiveLicence } from '@/utils/organization'
 import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import { UserSession } from 'next-auth'

@@ -5,7 +5,7 @@ import { Environment, Level, UserSource } from '@abc-transitionbascarbone/common
 import { expect } from '@jest/globals'
 import * as featuresModule from '../serverFunctions/deactivableFeatures'
 import * as userModule from '../serverFunctions/user'
-import { hasAccessToFormation, hasLevelForFormation } from './formations'
+import { hasAccessToFormation, hasLevelForFormation } from './formations.server'
 
 jest.mock('../serverFunctions/deactivableFeatures', () => ({
   isDeactivableFeatureActive: jest.fn(),

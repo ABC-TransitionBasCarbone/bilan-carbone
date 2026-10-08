@@ -6,7 +6,7 @@ import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import type { StudyEmissionSource } from '@abc-transitionbascarbone/common/db'
 import { Environment, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
 import { canBeValidated } from '../emissionSource'
-import { canReadStudy } from './study'
+import { canReadStudy } from './study.server'
 import { isAdminOnStudyOrga } from './study.utils'
 
 export const hasStudyBasicRights = async (account: AccountWithUser, study: FullStudy) => {

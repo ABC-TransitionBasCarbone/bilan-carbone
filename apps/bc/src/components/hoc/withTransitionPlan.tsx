@@ -1,5 +1,5 @@
-import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '@/services/permissions/study'
-import { isFeatureTransitionPlanActive } from '@/services/permissions/transitionPlan'
+import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '@/services/permissions/study.server'
+import { isFeatureTransitionPlanActive } from '@/services/permissions/transitionPlan.server'
 import { redirect } from 'next/navigation'
 import React from 'react'
 import { UserSessionProps } from './withAuth'
