@@ -163,15 +163,22 @@ describe('signUpWithSiretOrCNC', () => {
     })
 
     it.each([
-      [undefined, Role.GESTIONNAIRE],
-      [Level.Advanced, Role.ADMIN],
-    ])('assigns the first BC account role based on training level', async (level, role) => {
+      [Environment.BC, undefined, Role.GESTIONNAIRE],
+      [Environment.BC, Level.Advanced, Role.ADMIN],
+      [Environment.TILT, undefined, Role.GESTIONNAIRE],
+      [Environment.TILT, Level.Advanced, Role.GESTIONNAIRE],
+      [Environment.CUT, undefined, Role.ADMIN],
+      [Environment.CLICKSON, undefined, Role.ADMIN],
+      [Environment.MIP, undefined, Role.ADMIN],
+      [Environment.COURSE_BC, undefined, Role.ADMIN],
+      [Environment.COURSE_TILT, undefined, Role.ADMIN],
+    ])('assigns the first %s account role from its environment and training', async (environment, level, role) => {
       mockGetUserByEmail.mockResolvedValue({
         id: mockedUserId,
         email: testEmail,
         firstName: 'Test',
         lastName: 'User',
-        accounts: [{ id: mockedAccountId, environment: Environment.BC, status: UserStatus.IMPORTED }],
+        accounts: [{ id: mockedAccountId, environment, status: UserStatus.IMPORTED }],
       })
       mockGetAccountById.mockResolvedValue({
         id: mockedAccountId,
@@ -194,7 +201,7 @@ describe('signUpWithSiretOrCNC', () => {
       mockGetAccountsFromOrganizationForActivation.mockResolvedValue([])
       mockValidateUser.mockResolvedValue(undefined)
 
-      const result = await actualActivateEmail(testEmail, Environment.BC)
+      const result = await actualActivateEmail(testEmail, environment)
 
       expect(result.success).toBe(true)
       expect(mockUpdateAccount).toHaveBeenCalledWith(
