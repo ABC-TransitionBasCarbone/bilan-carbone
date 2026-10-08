@@ -1,5 +1,5 @@
 import SignUpFormTilt from '@/components/auth/SignUpFormTilt'
-import { auth } from '@/services/auth'
+import { auth } from '@/services/auth.server'
 import { redirect } from 'next/navigation'
 
 const TiltSignUpPage = async () => {

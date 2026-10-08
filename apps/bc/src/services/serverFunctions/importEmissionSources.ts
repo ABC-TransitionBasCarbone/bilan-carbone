@@ -41,9 +41,9 @@ import { Post } from '@abc-transitionbascarbone/common/utils/charts'
 import { buildCsv } from '@abc-transitionbascarbone/common/utils/csv'
 import xlsx from 'node-xlsx'
 import { canBeValidated, getCaracterisationsBySubPost, getEmissionSourceEmission } from '../emissionSource'
-import { getAuthenticatedAccount } from '../permissions/account.permissions'
-import { hasStudyBasicRights } from '../permissions/emissionSource'
-import { canReadStudy } from '../permissions/study'
+import { getAuthenticatedAccount } from '../permissions/account.permissions.server'
+import { hasStudyBasicRights } from '../permissions/emissionSource.server'
+import { canReadStudy } from '../permissions/study.server'
 import { getStudyParentOrganizationId } from '../study.server'
 import {
   getQualitativeUncertaintyFromQuality,

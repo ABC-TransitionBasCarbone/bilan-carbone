@@ -1,8 +1,8 @@
 import { Import } from '@abc-transitionbascarbone/common/db/enums'
 import { Command } from 'commander'
 import { prismaClient } from '../../db/client.server'
-import { parseCSVRows } from '../../services/importEmissionFactor/getEmissionFactorsFromCSV'
-import { getType, serializeRowAsCsv } from '../../services/importEmissionFactor/import'
+import { parseCSVRows } from '../../services/importEmissionFactor/getEmissionFactorsFromCSV.server'
+import { getType, serializeRowAsCsv } from '../../services/importEmissionFactor/import.server'
 
 const program = new Command()
 

@@ -10,14 +10,14 @@ import { Role } from '@abc-transitionbascarbone/common/db/enums'
 import { mockedOrganizationId } from '@abc-transitionbascarbone/common/services/tests/models/organization'
 import { expect } from '@jest/globals'
 import { UserSession } from 'next-auth'
-import * as authModule from '../auth'
+import * as authModule from '../auth.server'
 import {
   canCreateOrganization,
   canDeleteMember,
   canDeleteOrganizationVersion,
   canUpdateOrganizationVersion,
   isInOrgaOrParentFromId,
-} from './organization'
+} from './organization.server'
 
 jest.mock('@/db/account', () => ({ getAccountById: jest.fn() }))
 jest.mock('@/db/organization', () => ({
@@ -36,7 +36,7 @@ jest.mock('@/utils/organization', () => ({
   isInOrgaOrParent: jest.fn(),
 }))
 jest.mock('@/db/study', () => ({ countOrganizationStudiesFromOtherUsers: jest.fn() }))
-jest.mock('../auth', () => ({ dbActualizedAuth: jest.fn() }))
+jest.mock('../auth.server', () => ({ dbActualizedAuth: jest.fn() }))
 
 const mockGetAccountById = dbAccount.getAccountById as jest.Mock
 const mockGetOrganizationVersionForRightsCheck = dbOrganization.getOrganizationVersionForRightsCheck as jest.Mock

@@ -1,8 +1,8 @@
 import * as objectiveDbModule from '@/db/objective.db'
 import * as trajectoryDbModule from '@/db/trajectory'
 import * as transitionPlanDbModule from '@/db/transitionPlan'
-import * as authModule from '@/services/auth'
-import * as studyPermissionsModule from '@/services/permissions/study'
+import * as authModule from '@/services/auth.server'
+import * as studyPermissionsModule from '@/services/permissions/study.server'
 import { SubPost, TrajectoryType } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import {
@@ -53,11 +53,11 @@ jest.mock('@abc-transitionbascarbone/common/services/permissions/check', () => (
   NOT_AUTHORIZED: 'NOT_AUTHORIZED',
 }))
 
-jest.mock('../permissions/study', () => ({
+jest.mock('../permissions/study.server', () => ({
   hasEditAccessOnStudy: jest.fn(),
 }))
 
-jest.mock('../auth', () => ({
+jest.mock('../auth.server', () => ({
   auth: jest.fn(),
 }))
 

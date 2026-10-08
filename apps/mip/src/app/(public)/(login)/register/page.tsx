@@ -1,6 +1,6 @@
 import SignUpForm from '@/components/auth/SignUpForm'
 import { getModelCampaignById } from '@/db/campaign'
-import { auth } from '@/services/auth'
+import { auth } from '@/services/auth.server'
 import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 import { redirect } from 'next/navigation'
 

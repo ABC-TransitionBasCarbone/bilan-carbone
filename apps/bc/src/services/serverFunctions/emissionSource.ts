@@ -25,14 +25,14 @@ import { Import, SubPost, UserChecklist } from '@abc-transitionbascarbone/common
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { UserSession } from 'next-auth'
 import { revalidatePath } from 'next/cache'
-import { auth } from '../auth'
+import { auth } from '../auth.server'
 import {
   canCreateEmissionSource,
   canDeleteEmissionSource,
   canUpdateEmissionSource,
-} from '../permissions/emissionSource'
+} from '../permissions/emissionSource.server'
 import { hasAccessToCreateStudyTag } from '../permissions/environment'
-import { isVersionInOrgaOrParent } from '../permissions/organization'
+import { isVersionInOrgaOrParent } from '../permissions/organization.server'
 import { CreateEmissionSourceCommand, NewStudyTagCommand, UpdateEmissionSourceCommand } from './emissionSource.command'
 import { addUserChecklistItem } from './user'
 

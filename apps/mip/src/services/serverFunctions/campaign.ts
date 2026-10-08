@@ -9,7 +9,7 @@ import { isAdmin } from '@/utils/user'
 import { Role } from '@abc-transitionbascarbone/common/db/enums'
 import { sendCampaignCreatedByCollaboratorEmail } from '@abc-transitionbascarbone/common/services/email/email'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
-import { auth } from '../auth'
+import { auth } from '../auth.server'
 import { UpdateCampaignCommand } from './campaign.command'
 
 export const updateModelCampaignCommand = async (command: UpdateModelCampaignCommand) =>

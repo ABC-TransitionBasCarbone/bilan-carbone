@@ -1,12 +1,10 @@
-'use server'
-
 import { OrganizationWithSites } from '@/db/account'
 import { getDocumentsForStudy } from '@/db/document'
 import type { FullStudy } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
 import { hasAccessToDependencyMatrix } from '@/services/permissions/environment'
 import { hasAccessToPerimeterPage } from '@/services/permissions/environmentAdvanced'
-import { canEditStudyFlows } from '@/services/permissions/study'
+import { canEditStudyFlows } from '@/services/permissions/study.server'
 import { defaultCAUnit } from '@/utils/number'
 import { getAccountRoleOnStudy } from '@/utils/study'
 import { DocumentCategory } from '@abc-transitionbascarbone/common/db/enums'

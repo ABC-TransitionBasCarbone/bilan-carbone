@@ -7,12 +7,9 @@ import {
   getStudiesForCards,
   getStudiesValidatedEmissionsSources,
 } from '@/db/study'
-import {
-  canCreateStudyOnlyAsAdministrator,
-  isTilt,
-  isTiltSimplifiedFeatureActive,
-} from '@/services/permissions/environment'
-import { canCreateAStudy } from '@/services/permissions/study'
+import { canCreateStudyOnlyAsAdministrator, isTilt } from '@/services/permissions/environment'
+import { isTiltSimplifiedFeatureActive } from '@/services/permissions/environment.server'
+import { canCreateAStudy } from '@/services/permissions/study.server'
 import { hasActiveLicence } from '@/utils/organization'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import Box from '@abc-transitionbascarbone/common/components/base/Box'

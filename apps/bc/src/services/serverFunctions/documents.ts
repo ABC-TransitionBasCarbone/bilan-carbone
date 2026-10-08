@@ -2,7 +2,7 @@
 
 import { withServerResponse } from '@/utils/serverResponse'
 import { DocumentCategory } from '@abc-transitionbascarbone/common/db/enums'
-import { canAccessStudyFlows } from '../permissions/study'
+import { canAccessStudyFlows } from '../permissions/study.server'
 import { getFileUrlFromBucket } from './scaleway'
 
 const getStudyFlowSampleDocumentUrl = async (studyId: string) =>

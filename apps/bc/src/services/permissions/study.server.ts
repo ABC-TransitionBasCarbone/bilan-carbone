@@ -15,17 +15,13 @@ import {
 import type { Prisma, Study, User } from '@abc-transitionbascarbone/common/db'
 import { DeactivatableFeature, Environment, Level, Role, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
 import { UserSession } from 'next-auth'
-import { dbActualizedAuth } from '../auth'
+import { dbActualizedAuth } from '../auth.server'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
 import { getUserActiveAccounts } from '../serverFunctions/user'
-import {
-  canCreateStudyOnlyAsAdministrator,
-  canCreateStudyWithoutSpecificRights,
-  isTilt,
-  isTiltSimplifiedFeatureActive,
-} from './environment'
+import { canCreateStudyOnlyAsAdministrator, canCreateStudyWithoutSpecificRights, isTilt } from './environment'
+import { isTiltSimplifiedFeatureActive } from './environment.server'
 import { hasAccessToDuplicateStudy, isTiltSimplified } from './environmentAdvanced'
-import { isInOrgaOrParentFromId } from './organization'
+import { isInOrgaOrParentFromId } from './organization.server'
 import { isAdminOnStudyOrga } from './study.utils'
 
 export const canReadStudy = async (user: UserSession | UserWithAllowedStudies, studyId: string) => {

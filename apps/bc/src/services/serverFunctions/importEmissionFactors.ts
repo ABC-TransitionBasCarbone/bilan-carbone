@@ -20,7 +20,7 @@ import { getBcTranslations, getCommonTranslations } from '@/utils/translation.ut
 import { EmissionFactorBase, EmissionFactorStatus, Import, Unit } from '@abc-transitionbascarbone/common/db/enums'
 import { LocaleType } from '@abc-transitionbascarbone/common/i18n/config'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
-import { getAuthenticatedAccount } from '../permissions/account.permissions'
+import { getAuthenticatedAccount } from '../permissions/account.permissions.server'
 import { canReadEmissionFactor } from '../permissions/emissionFactor'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor.server'
 import { prepareExcel } from './file'

@@ -1,9 +1,7 @@
-'use server'
-
 import { isOrganizationVersionCR } from '@/db/organization'
 import type { FullStudy } from '@/db/study'
 import { getUserApplicationSettings } from '@/db/user'
-import { canDeleteStudy, canDuplicateStudy, getEnvironmentsForDuplication } from '@/services/permissions/study'
+import { canDeleteStudy, canDuplicateStudy, getEnvironmentsForDuplication } from '@/services/permissions/study.server'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import Breadcrumbs from '../breadcrumbs/Breadcrumbs'

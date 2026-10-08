@@ -5,7 +5,7 @@ import { StudyResultUnit, SubPost } from '@abc-transitionbascarbone/common/db/en
 import { expect } from '@jest/globals'
 
 jest.mock('../file', () => ({ download: jest.fn() }))
-jest.mock('../auth', () => ({ auth: jest.fn() }))
+jest.mock('../auth.server', () => ({ auth: jest.fn() }))
 jest.mock('uuid', () => ({ v4: jest.fn() }))
 jest.mock('next-intl/server', () => ({ getTranslations: jest.fn(() => (key: string) => key) }))
 

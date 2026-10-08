@@ -1,8 +1,6 @@
-'use server'
-
 import withAuth from '@/components/hoc/withAuth'
 import SuperAdminPage from '@/components/pages/SuperAdmin'
-import { auth } from '@/services/auth'
+import { auth } from '@/services/auth.server'
 import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 import { Role } from '@abc-transitionbascarbone/common/db/enums'
 
