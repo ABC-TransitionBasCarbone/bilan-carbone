@@ -5,7 +5,7 @@ import { unique } from '@/utils/array'
 import type { Organization, OrganizationVersion, Site } from '@abc-transitionbascarbone/common/db'
 import { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment, EstablishmentType, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 import { OrganizationVersionCourseAccessSelect, OrganizationVersionWithOrganizationSelect } from './organization.select'
 import { deleteStudy } from './study'
 
@@ -61,16 +61,16 @@ export const getOrgVersionWithOrgId = async (id: string | null) => {
 export const getOrganizationVersionForRightsCheck = (id: string | null) =>
   id
     ? prismaClient.organizationVersion.findUnique({
-        where: { id },
-        select: {
-          ...OrganizationVersionCourseAccessSelect,
-          id: true,
-          environment: true,
-          activatedLicence: true,
-          parentId: true,
-          parent: { select: { activatedLicence: true } },
-        },
-      })
+      where: { id },
+      select: {
+        ...OrganizationVersionCourseAccessSelect,
+        id: true,
+        environment: true,
+        activatedLicence: true,
+        parentId: true,
+        parent: { select: { activatedLicence: true } },
+      },
+    })
     : null
 
 export const getOrganizationVersionIsCR = async (id: string | null) => {
@@ -123,10 +123,10 @@ export const isOrganizationVersionCR = async (id: string | null) =>
 export const getOrganizationVersionAccounts = (id: string | null) =>
   id
     ? prismaClient.account.findMany({
-        select: { user: { select: { email: true, firstName: true, lastName: true, level: true } }, role: true },
-        where: { organizationVersionId: id, status: UserStatus.ACTIVE },
-        orderBy: { user: { email: 'asc' } },
-      })
+      select: { user: { select: { email: true, firstName: true, lastName: true, level: true } }, role: true },
+      where: { organizationVersionId: id, status: UserStatus.ACTIVE },
+      orderBy: { user: { email: 'asc' } },
+    })
     : []
 
 export const getOrganizationVersionWithSitesById = (id: string) =>

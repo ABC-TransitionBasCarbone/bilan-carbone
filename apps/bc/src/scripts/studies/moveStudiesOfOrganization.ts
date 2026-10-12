@@ -1,4 +1,4 @@
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { getOrganizationVersionById } from '@/db/organization'
 import { getStudyById } from '@/db/study'
 import { Command } from 'commander'

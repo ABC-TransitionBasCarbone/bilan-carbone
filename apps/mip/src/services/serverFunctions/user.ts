@@ -35,9 +35,9 @@ import { EMAIL_SENT, MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascar
 import { updateUserResetToken } from '@abc-transitionbascarbone/common/services/serverFunctions/user'
 import { AddMemberCommand } from '@abc-transitionbascarbone/common/services/serverFunctions/user.command'
 import { DAY, HOUR, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils'
-import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/common/utils/user.server'
+import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/common/utils/userTokens'
 import jwt from 'jsonwebtoken'
-import { dbActualizedAuth } from '../auth.server'
+import { dbActualizedAuth } from '../auth'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
 
 export const resetPassword = async (email: string) =>

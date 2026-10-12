@@ -1,8 +1,8 @@
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
-import { canSaveSituationOnStudy, isSimplifiedContributor } from './situation.server'
-import * as studyPermissionsModule from './study.server'
+import { canSaveSituationOnStudy, isSimplifiedContributor } from './situation'
+import * as studyPermissionsModule from './study'
 
-jest.mock('./study.server', () => ({
+jest.mock('./study', () => ({
   hasEditAccessOnStudy: jest.fn(),
 }))
 

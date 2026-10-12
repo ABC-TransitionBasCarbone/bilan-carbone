@@ -1,6 +1,8 @@
+import 'server-only'
+
 import { getAccountById } from '@/db/account'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
-import { auth } from '../auth.server'
+import { auth } from '../auth'
 
 export const getAuthenticatedAccountWithOrga = async () => {
   const session = await auth()

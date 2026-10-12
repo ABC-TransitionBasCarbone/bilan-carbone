@@ -1,5 +1,5 @@
 import { OrganizationVersionWithOrganization } from '@/db/organization'
-import { canCreateOrganization } from '@/services/permissions/organization.server'
+import { canCreateOrganization } from '@/services/permissions/organization'
 import Box from '@abc-transitionbascarbone/common/components/base/Box'
 import LinkButton from '@abc-transitionbascarbone/common/components/base/LinkButton'
 import Image from '@abc-transitionbascarbone/common/components/document/Image'

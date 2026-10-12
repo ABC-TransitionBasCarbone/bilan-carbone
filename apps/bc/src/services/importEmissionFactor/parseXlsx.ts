@@ -1,5 +1,5 @@
 import * as XLSX from 'xlsx'
-import { ImportEmissionFactor, numberColumns, validStatuses } from './import.server'
+import { ImportEmissionFactor, numberColumns, validStatuses } from './import'
 
 const xlsxNumberFields = [...numberColumns, 'Incertitude'] as string[]
 

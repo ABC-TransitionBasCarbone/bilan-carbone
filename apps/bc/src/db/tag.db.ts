@@ -1,6 +1,6 @@
 import 'server-only'
 
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 
 export const getStudyTagsFromIds = async (studyId: string, tagIds: string[]) =>
   prismaClient.studyTag.findMany({

@@ -1,6 +1,6 @@
 import type { DeactivatableFeature, Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment, UserSource } from '@abc-transitionbascarbone/common/db/enums'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 
 export type RestrictionsTypes = UserSource | Environment
 

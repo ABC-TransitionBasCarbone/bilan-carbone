@@ -1,4 +1,4 @@
-import { isSourceForEnv } from '@/services/importEmissionFactor/import.server'
+import { isSourceForEnv } from '@/services/importEmissionFactor/import'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { FeFilters } from '@/types/filters'
 import { unique } from '@/utils/array'
@@ -15,7 +15,7 @@ import {
 } from '@abc-transitionbascarbone/common/db/enums'
 import { LocaleType } from '@abc-transitionbascarbone/common/i18n/config'
 import { Session } from 'next-auth'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 import { getOrgVersionWithOrgId } from './organization'
 
 const versionsSelect = {

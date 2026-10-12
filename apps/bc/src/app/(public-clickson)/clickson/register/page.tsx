@@ -1,5 +1,5 @@
 import SignUpFormClickson from '@/components/auth/SignUpFormClickson'
-import { auth } from '@/services/auth.server'
+import { auth } from '@/services/auth'
 import { redirect } from 'next/navigation'
 
 const ClicksonSignUpPage = async () => {

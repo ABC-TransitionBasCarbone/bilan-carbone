@@ -1,3 +1,5 @@
+import 'client-only'
+
 import { storageKeys } from '@/constants/storage.constants'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { resolveFilterIds } from '@/utils/scopeFilter'

@@ -1,4 +1,4 @@
-import { getMainActualitiesLocale } from '@/db/actuality.server'
+import { getMainActualitiesLocale } from '@/db/actuality'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import classNames from 'classnames'

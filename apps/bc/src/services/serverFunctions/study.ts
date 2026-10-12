@@ -10,7 +10,7 @@ import {
   getAccountsFromOrganization,
   getAccountsUserLevel,
 } from '@/db/account'
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { findCncByCncCode, updateNumberOfProgrammedFilms } from '@/db/cnc'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
@@ -140,7 +140,7 @@ import fs from 'fs/promises'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import { v4 as uuidv4 } from 'uuid'
-import { auth, dbActualizedAuth } from '../auth.server'
+import { auth, dbActualizedAuth } from '../auth'
 import { customDataToSituationByEnvironment, TiltCustomDataFields } from '../customDataToSituation'
 import { getCaracterisationsBySubPost } from '../emissionSource'
 import { allowedFlowFileTypes, isAllowedFileType } from '../file'
@@ -151,7 +151,7 @@ import {
   hasSimplifiedStudies,
 } from '../permissions/environment'
 import { hasAccessToEngagementActions, isTiltSimplified } from '../permissions/environmentAdvanced'
-import { isInOrgaOrParentFromId } from '../permissions/organization.server'
+import { isInOrgaOrParentFromId } from '../permissions/organization'
 import {
   canAccessFlowFromStudy,
   canAddContributorOnStudy,
@@ -171,7 +171,7 @@ import {
   canUpgradeSourceVersion,
   getEnvironmentsForDuplication,
   NEWGetAccountRoleOnStudy,
-} from '../permissions/study.server'
+} from '../permissions/study'
 import { isAdminOnStudyOrga } from '../permissions/study.utils'
 import { TILT_SIMPLIFIED_POSTS_CONFIG_VERSION } from '../publicodes/simplifiedPublicodesConfig'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'

@@ -1,6 +1,6 @@
 'use server'
 
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import {
   createManyObjectiveSites,
   createManyObjectiveSubPosts,
@@ -19,7 +19,7 @@ import { getTrajectoryWithTransitionPlan, getTransitionPlanById } from '@/db/tra
 import { withServerResponse } from '@/utils/serverResponse'
 import { SubPost, TrajectoryType } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
-import { hasEditAccessOnStudy } from '../permissions/study.server'
+import { hasEditAccessOnStudy } from '../permissions/study'
 
 export interface CreateObjectiveInput {
   name?: string
