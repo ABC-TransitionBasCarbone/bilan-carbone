@@ -1,5 +1,5 @@
 import { checkCronRequest } from '@/app/api/cron/utils'
-import { getTrainingSessionsFromFTP } from '@/scripts/ftp/importTrainingSessions'
+import { importCourseSessionsFromFTP } from '@/scripts/ftp/importTrainingSessions'
 import { NextResponse, type NextRequest } from 'next/server'
 import { POST } from './route'
 
@@ -25,7 +25,7 @@ jest.mock('@/app/api/cron/utils', () => ({
 }))
 
 jest.mock('@/scripts/ftp/importTrainingSessions', () => ({
-  getTrainingSessionsFromFTP: jest.fn(),
+  importCourseSessionsFromFTP: jest.fn(),
 }))
 
 describe('POST /api/cron/import-training-sessions', () => {
@@ -47,28 +47,25 @@ describe('POST /api/cron/import-training-sessions', () => {
     const response = await POST(req)
 
     expect(response).toBe(errorResponse)
-    expect(getTrainingSessionsFromFTP).not.toHaveBeenCalled()
+    expect(importCourseSessionsFromFTP).not.toHaveBeenCalled()
   })
 
   it('returns 200 when import succeeds', async () => {
     jest.mocked(checkCronRequest).mockReturnValue(null)
-    const trainingSessions = [
-      { formationName: 'MACF - Application', userEmail: 'alex@example.org' },
-      { formationName: 'MACF - Initiation', userEmail: 'camille@example.org' },
-    ]
-    jest.mocked(getTrainingSessionsFromFTP).mockResolvedValue(trainingSessions)
+    const importResult = { importedSessions: 2, createdUsers: 1, createdAccounts: 3 }
+    jest.mocked(importCourseSessionsFromFTP).mockResolvedValue(importResult)
 
     const response = await POST(req)
 
-    expect(getTrainingSessionsFromFTP).toHaveBeenCalledTimes(1)
+    expect(importCourseSessionsFromFTP).toHaveBeenCalledTimes(1)
     expect(response.status).toBe(200)
-    await expect(response.text()).resolves.toBe(JSON.stringify(trainingSessions))
+    await expect(response.text()).resolves.toBe(JSON.stringify(importResult))
   })
 
   it('returns 500 when import fails', async () => {
     const error = new Error('FTP down')
     jest.mocked(checkCronRequest).mockReturnValue(null)
-    jest.mocked(getTrainingSessionsFromFTP).mockRejectedValue(error)
+    jest.mocked(importCourseSessionsFromFTP).mockRejectedValue(error)
 
     const response = await POST(req)
 

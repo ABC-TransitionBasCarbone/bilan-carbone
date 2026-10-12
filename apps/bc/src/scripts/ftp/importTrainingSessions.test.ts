@@ -1,42 +1,69 @@
+import { prismaClient } from '@/db/client.server'
+import { Client } from 'basic-ftp'
+import { getJsDateFromExcel } from 'excel-date-to-js'
 import fs from 'fs'
 import xlsx from 'node-xlsx'
-import { getTrainingSessionsFromFTP } from './importTrainingSessions'
-
-const accessMock = jest.fn()
-const downloadToMock = jest.fn()
-const closeMock = jest.fn()
+import { getCourseSessionsFromFTP, parseCourseSessionWorkbook } from './importTrainingSessions'
 
 jest.mock('basic-ftp', () => ({
-  Client: jest.fn(() => ({
-    access: accessMock,
-    downloadTo: downloadToMock,
-    close: closeMock,
-  })),
+  Client: jest.fn(() => ({ access: jest.fn(), downloadTo: jest.fn(), close: jest.fn() })),
 }))
+
+jest.mock('@/db/client.server', () => ({
+  prismaClient: {
+    courseOrganism: { findMany: jest.fn() },
+    account: { findMany: jest.fn() },
+    courseSession: { upsert: jest.fn() },
+    $transaction: jest.fn(),
+  },
+}))
+
+jest.mock('@/db/user', () => ({ createUsersWithAccount: jest.fn() }))
 
 jest.mock('fs', () => {
   const mockedFs = {
     createWriteStream: jest.fn(),
-    promises: {
-      readFile: jest.fn(),
-    },
+    promises: { readFile: jest.fn() },
   }
-
-  return {
-    __esModule: true,
-    default: mockedFs,
-    ...mockedFs,
-  }
+  return { __esModule: true, default: mockedFs, ...mockedFs }
 })
 
 jest.mock('node-xlsx', () => ({
   __esModule: true,
-  default: {
-    parse: jest.fn(),
-  },
+  default: { parse: jest.fn() },
 }))
 
-describe('getTrainingSessionsFromFTP', () => {
+const mockFindCourseOrganisms = jest.mocked(prismaClient.courseOrganism.findMany)
+const workbook = [
+  {
+    name: 'Sessions',
+    data: [
+      ['Nom de la session ', 'Date de début ', 'Date de fin ', 'Environment'],
+      ['Session Numéro 1', 46277, 46377, 'BC'],
+      ['Session Numéro 2 ', 46368, 46508, 'TILT'],
+    ],
+  },
+  {
+    name: 'Stagiaires',
+    data: [
+      ['Nom de la session ', 'Stagiaires'],
+      ['Session Numéro 1', 'chloe.molle@neuf.fr'],
+      ['Session Numéro 2 ', 'bc-admin-0@yopmail.com'],
+      ['Session Numéro 1', 'chloe.molle@abc-transitionbascarbone.fr'],
+      ['Session Numéro 2 ', 'test-formation@yopmail.com'],
+    ],
+  },
+  {
+    name: 'Formateur',
+    data: [
+      ['Nom de la session ', 'Formateur'],
+      ['Session Numéro 1', 'onboarding@yopmail.com'],
+      ['Session Numéro 2 ', 'bc-cr-admin-0@yopmail.com'],
+    ],
+  },
+]
+
+describe('getCourseSessionsFromFTP', () => {
   const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => undefined)
 
   beforeEach(() => {
@@ -45,146 +72,82 @@ describe('getTrainingSessionsFromFTP', () => {
     process.env.FTP_USER = 'user'
     process.env.FTP_PASSWORD = 'password'
     process.env.FTP_PORT = '21'
-    jest.mocked(fs.promises.readFile).mockResolvedValue(Buffer.from('xlsx content'))
-    jest.mocked(xlsx.parse).mockReturnValue([
-      {
-        name: 'Sessions',
-        data: [
-          [
-            'Date début session',
-            'Date fin session',
-            'Organisme de formation',
-            'Organisation',
-            'Nom de Formation',
-            'Civilite',
-            'Nom',
-            'Prenom',
-            'Fonction',
-            'E-mail',
-            'Telephone fixe',
-            'Mobile',
-            'Adresse',
-            'Complement',
-            'Code Postal',
-            'Ville',
-            'Pays',
-            'SIRET',
-            'Numero Fiscal',
-            'TVA',
-            'Produits achetés',
-            'Code session',
-          ],
-          [
-            '2026-09-15',
-            '2026-09-16',
-            'IFC',
-            'Example Co',
-            'MACF - Application',
-            'M.',
-            'Martin',
-            'Alex',
-            'Consultant',
-            'alex@example.org',
-          ],
-          [
-            '2026-09-17',
-            '2026-09-18',
-            'Nepsen',
-            'Demo Corp',
-            'MACF - Initiation',
-            'Madame',
-            'Durand',
-            'Camille',
-            'Responsable',
-            'camille@example.org',
-          ],
-          [
-            '2026-09-19',
-            '2026-09-20',
-            'Sami Academy',
-            'Sample Ltd',
-            'MACF - Application',
-            'M.',
-            'Bernard',
-            'Louis',
-            'Directeur',
-            'louis@example.org',
-          ],
-          [
-            '2026-09-21',
-            '2026-09-22',
-            'take[air]',
-            'Test SARL',
-            'MACF - Initiation',
-            'Madame',
-            'Petit',
-            'Emma',
-            'Analyste',
-            'emma@example.org',
-          ],
-        ],
-      },
-      { name: 'Liste', data: [['Nom de Formation'], ['Formation 1'], ['Formation 2']] },
-    ])
     process.env.FTP_TRAINING_SESSIONS_FILE_PATH = '/training/'
     process.env.FTP_TRAINING_SESSIONS_FILE_NAME = 'sessions.xlsx'
-  })
-
-  it('reads the training sessions file and confirms success', async () => {
-    jest.mocked(fs.createWriteStream).mockReturnValue('stream' as unknown as fs.WriteStream)
-
-    const worksheets = await getTrainingSessionsFromFTP()
-
-    expect(accessMock).toHaveBeenCalledWith({
-      host: 'host',
-      user: 'user',
-      password: 'password',
-      port: 21,
-    })
-    expect(downloadToMock).toHaveBeenCalledWith('stream', '/training/sessions.xlsx')
-    expect(fs.promises.readFile).toHaveBeenCalledWith('sessions.xlsx')
-    expect(xlsx.parse).toHaveBeenCalledWith(Buffer.from('xlsx content'))
-    expect(closeMock).toHaveBeenCalledTimes(1)
-    expect(worksheets).toEqual([
+    mockFindCourseOrganisms.mockResolvedValue([
       {
-        formationStartDate: '2026-09-15',
-        formationEndDate: '2026-09-16',
-        companyName: 'Example Co',
-        formationName: 'MACF - Application',
-        lastName: 'Martin',
-        firstName: 'Alex',
-        userEmail: 'alex@example.org',
-      },
-      {
-        formationStartDate: '2026-09-17',
-        formationEndDate: '2026-09-18',
-        companyName: 'Demo Corp',
-        formationName: 'MACF - Initiation',
-        lastName: 'Durand',
-        firstName: 'Camille',
-        userEmail: 'camille@example.org',
-      },
-      {
-        formationStartDate: '2026-09-19',
-        formationEndDate: '2026-09-20',
-        companyName: 'Sample Ltd',
-        formationName: 'MACF - Application',
-        lastName: 'Bernard',
-        firstName: 'Louis',
-        userEmail: 'louis@example.org',
-      },
-      {
-        formationStartDate: '2026-09-21',
-        formationEndDate: '2026-09-22',
-        companyName: 'Test SARL',
-        formationName: 'MACF - Initiation',
-        lastName: 'Petit',
-        firstName: 'Emma',
-        userEmail: 'emma@example.org',
+        id: 'organism-1',
+        ftpPath: 'partner-a',
+        name: 'Partner A',
+        contactEmail: 'contact@example.org',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     ])
-    expect(consoleLogSpy).toHaveBeenCalledWith(worksheets)
-    expect(consoleLogSpy).toHaveBeenCalledWith('Training sessions file read successfully')
+    jest.mocked(fs.createWriteStream).mockReturnValue('stream' as unknown as fs.WriteStream)
+    jest.mocked(fs.promises.readFile).mockResolvedValue(Buffer.from('xlsx content'))
+    jest.mocked(xlsx.parse).mockReturnValue(workbook)
+  })
+
+  it('reads and maps all three sheets from the organism FTP path', async () => {
+    const sessions = await getCourseSessionsFromFTP()
+    const ftpClient = jest.mocked(Client).mock.results[0].value
+
+    expect(ftpClient.access).toHaveBeenCalledWith({ host: 'host', user: 'user', password: 'password', port: 21 })
+    expect(ftpClient.downloadTo).toHaveBeenCalledWith(expect.anything(), '/training/partner-a/sessions.xlsx')
+    expect(fs.promises.readFile).toHaveBeenCalledWith('sessions.xlsx')
+    expect(xlsx.parse).toHaveBeenCalledWith(Buffer.from('xlsx content'))
+    expect(ftpClient.close).toHaveBeenCalledTimes(1)
+    expect(sessions).toEqual([
+      {
+        courseOrganismId: 'organism-1',
+        name: 'Session Numéro 1',
+        startDate: getJsDateFromExcel(46277),
+        endDate: getJsDateFromExcel(46377),
+        environment: 'COURSE_BC',
+        traineeEmails: ['chloe.molle@neuf.fr', 'chloe.molle@abc-transitionbascarbone.fr'],
+        professorEmail: 'onboarding@yopmail.com',
+      },
+      {
+        courseOrganismId: 'organism-1',
+        name: 'Session Numéro 2',
+        startDate: getJsDateFromExcel(46368),
+        endDate: getJsDateFromExcel(46508),
+        environment: 'COURSE_TILT',
+        traineeEmails: ['bc-admin-0@yopmail.com', 'test-formation@yopmail.com'],
+        professorEmail: 'bc-cr-admin-0@yopmail.com',
+      },
+    ])
+  })
+
+  it('rejects a professor who is also a trainee', () => {
+    const [sessions, trainees, professors] = workbook
+    jest
+      .mocked(xlsx.parse)
+      .mockReturnValue([
+        sessions,
+        { ...trainees, data: [...trainees.data, ['Session Numéro 1', 'onboarding@yopmail.com']] },
+        professors,
+      ])
+
+    expect(() => parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')).toThrow(
+      'Professor is also a trainee in training session Session Numéro 1',
+    )
+  })
+
+  it('rejects more than one professor for a session', () => {
+    const [sessions, trainees, professors] = workbook
+    jest
+      .mocked(xlsx.parse)
+      .mockReturnValue([
+        sessions,
+        trainees,
+        { ...professors, data: [...professors.data, ['Session Numéro 1', 'other@example.org']] },
+      ])
+
+    expect(() => parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')).toThrow(
+      'Training session Session Numéro 1 must have exactly one professor',
+    )
   })
 
   afterAll(() => {

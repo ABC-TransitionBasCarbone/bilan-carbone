@@ -241,6 +241,7 @@ export const createUsersWithAccount = async (
     where: { email: { in: emails } },
   })
 
+  console.log('Created users:', createdUsers)
   let newAccountCount = 0
   for (const user of createdUsers) {
     const originalUsers = filteredUsers.filter((u) => u.email === user.email)
@@ -249,8 +250,9 @@ export const createUsersWithAccount = async (
     }
 
     for (const originalUser of originalUsers) {
-      const accoutAlreadyExists = await getAccountByEmailAndEnvironment(user.email, originalUser.account.environment)
-      if (accoutAlreadyExists) {
+      const accountAlreadyExists = await getAccountByEmailAndEnvironment(user.email, originalUser.account.environment)
+      console.log(`Account already exists for user ${user.email} in environment ${originalUser.account.environment}`)
+      if (accountAlreadyExists) {
         continue
       }
       await prismaClient.account.create({
@@ -264,6 +266,7 @@ export const createUsersWithAccount = async (
       newAccountCount++
     }
   }
+  console.log('New account count:', newAccountCount)
 
   return { newUsers, newAccounts: { count: newAccountCount } }
 }

@@ -20,6 +20,8 @@ model CourseSession {
 
   startDate DateTime @map("start_date")
   endDate   DateTime @map("end_date")
+  name           String
+  environment    Environment
   traineeCode    String          @map("trainee_code")
   professorCode  String?         @map("professor_code")
 
@@ -31,6 +33,7 @@ model CourseSession {
 
   traineeList Account[] @relation("CourseSessionTraineeList")
 
+  @@unique([courseOrganismId, name, environment])
   @@map("course_session")
   @@schema("bilan_carbone")
 }
