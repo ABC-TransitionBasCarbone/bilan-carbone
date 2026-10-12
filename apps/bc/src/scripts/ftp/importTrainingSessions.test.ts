@@ -1,9 +1,14 @@
 import { prismaClient } from '@/db/client.server'
+import { createUsersWithAccount } from '@/db/user'
 import { Client } from 'basic-ftp'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import fs from 'fs'
 import xlsx from 'node-xlsx'
-import { getCourseSessionsFromFTP, parseCourseSessionWorkbook } from './importTrainingSessions'
+import {
+  getCourseSessionsFromFTP,
+  importCourseSessionsFromFTP,
+  parseCourseSessionWorkbook,
+} from './importTrainingSessions'
 
 jest.mock('basic-ftp', () => ({
   Client: jest.fn(() => ({ access: jest.fn(), downloadTo: jest.fn(), close: jest.fn() })),
@@ -12,8 +17,8 @@ jest.mock('basic-ftp', () => ({
 jest.mock('@/db/client.server', () => ({
   prismaClient: {
     courseOrganism: { findMany: jest.fn() },
-    account: { findMany: jest.fn() },
-    courseSession: { upsert: jest.fn() },
+    account: { findMany: jest.fn(), update: jest.fn() },
+    courseSession: { findMany: jest.fn(), upsert: jest.fn() },
     $transaction: jest.fn(),
   },
 }))
@@ -34,6 +39,12 @@ jest.mock('node-xlsx', () => ({
 }))
 
 const mockFindCourseOrganisms = jest.mocked(prismaClient.courseOrganism.findMany)
+const mockFindAccounts = jest.mocked(prismaClient.account.findMany)
+const mockUpdateAccount = jest.mocked(prismaClient.account.update)
+const mockFindCourseSessions = jest.mocked(prismaClient.courseSession.findMany)
+const mockUpsertCourseSession = jest.mocked(prismaClient.courseSession.upsert)
+const mockCreateUsersWithAccount = jest.mocked(createUsersWithAccount)
+const mockTransaction = jest.mocked(prismaClient.$transaction)
 const workbook = [
   {
     name: 'Sessions',
@@ -46,19 +57,19 @@ const workbook = [
   {
     name: 'Stagiaires',
     data: [
-      ['Nom de la session ', 'Stagiaires'],
-      ['Session Numéro 1', 'chloe.molle@neuf.fr'],
-      ['Session Numéro 2 ', 'bc-admin-0@yopmail.com'],
-      ['Session Numéro 1', 'chloe.molle@abc-transitionbascarbone.fr'],
-      ['Session Numéro 2 ', 'test-formation@yopmail.com'],
+      ['Nom de la session ', 'Stagiaires', 'Prénom', 'Nom'],
+      ['Session Numéro 1', 'chloe.molle@neuf.fr', 'Chloé', 'Molle'],
+      ['Session Numéro 2 ', 'bc-admin-0@yopmail.com', 'Admin', 'BC'],
+      ['Session Numéro 1', 'chloe.molle@abc-transitionbascarbone.fr', 'Chloé', 'Molle'],
+      ['Session Numéro 2 ', 'test-formation@yopmail.com', 'Test', 'Formation'],
     ],
   },
   {
     name: 'Formateur',
     data: [
-      ['Nom de la session ', 'Formateur'],
-      ['Session Numéro 1', 'onboarding@yopmail.com'],
-      ['Session Numéro 2 ', 'bc-cr-admin-0@yopmail.com'],
+      ['Nom de la session ', 'Formateur', 'Prénom', 'Nom'],
+      ['Session Numéro 1', 'onboarding@yopmail.com', 'Onboarding', 'Yopmail'],
+      ['Session Numéro 2 ', 'bc-cr-admin-0@yopmail.com', 'Admin', 'CR'],
     ],
   },
 ]
@@ -105,8 +116,11 @@ describe('getCourseSessionsFromFTP', () => {
         startDate: getJsDateFromExcel(46277),
         endDate: getJsDateFromExcel(46377),
         environment: 'COURSE_BC',
-        traineeEmails: ['chloe.molle@neuf.fr', 'chloe.molle@abc-transitionbascarbone.fr'],
-        professorEmail: 'onboarding@yopmail.com',
+        trainees: [
+          { email: 'chloe.molle@neuf.fr', firstName: 'Chloé', lastName: 'Molle' },
+          { email: 'chloe.molle@abc-transitionbascarbone.fr', firstName: 'Chloé', lastName: 'Molle' },
+        ],
+        professor: { email: 'onboarding@yopmail.com', firstName: 'Onboarding', lastName: 'Yopmail' },
       },
       {
         courseOrganismId: 'organism-1',
@@ -114,21 +128,97 @@ describe('getCourseSessionsFromFTP', () => {
         startDate: getJsDateFromExcel(46368),
         endDate: getJsDateFromExcel(46508),
         environment: 'COURSE_TILT',
-        traineeEmails: ['bc-admin-0@yopmail.com', 'test-formation@yopmail.com'],
-        professorEmail: 'bc-cr-admin-0@yopmail.com',
+        trainees: [
+          { email: 'bc-admin-0@yopmail.com', firstName: 'Admin', lastName: 'BC' },
+          { email: 'test-formation@yopmail.com', firstName: 'Test', lastName: 'Formation' },
+        ],
+        professor: { email: 'bc-cr-admin-0@yopmail.com', firstName: 'Admin', lastName: 'CR' },
       },
     ])
   })
 
+  it('creates a personal organization for each account and links trainees to their sessions', async () => {
+    mockCreateUsersWithAccount.mockResolvedValue({
+      newUsers: { count: 6 },
+      newAccounts: { count: 6 },
+    })
+    const accountEntries = [
+      ['chloe.molle@neuf.fr', 'Chloé', 'Molle', 'COURSE_BC'],
+      ['chloe.molle@abc-transitionbascarbone.fr', 'Chloé', 'Molle', 'COURSE_BC'],
+      ['onboarding@yopmail.com', 'Onboarding', 'Yopmail', 'COURSE_BC'],
+      ['bc-admin-0@yopmail.com', 'Admin', 'BC', 'COURSE_TILT'],
+      ['test-formation@yopmail.com', 'Test', 'Formation', 'COURSE_TILT'],
+      ['bc-cr-admin-0@yopmail.com', 'Admin', 'CR', 'COURSE_TILT'],
+    ] as const
+    mockFindAccounts.mockResolvedValue(
+      accountEntries.map(([email, firstName, lastName, environment], index) => ({
+        id: `account-${index}`,
+        email,
+        environment,
+        organizationVersionId: null,
+        user: { email, firstName, lastName },
+      })) as never,
+    )
+    mockFindCourseSessions.mockResolvedValue([])
+
+    await importCourseSessionsFromFTP()
+
+    expect(mockCreateUsersWithAccount).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({
+          email: 'chloe.molle@neuf.fr',
+          firstName: 'Chloé',
+          lastName: 'Molle',
+        }),
+      ]),
+    )
+    expect(mockUpdateAccount).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: 'account-0' },
+        data: {
+          organizationVersion: {
+            create: {
+              environment: 'COURSE_BC',
+              organization: { create: { name: 'Chloé Molle' } },
+            },
+          },
+        },
+      }),
+    )
+    expect(mockUpsertCourseSession).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          courseOrganismId_name_environment: {
+            courseOrganismId: 'organism-1',
+            name: 'Session Numéro 1',
+            environment: 'COURSE_BC',
+          },
+        },
+        create: expect.objectContaining({
+          trainees: {
+            create: [{ account: { connect: { id: 'account-0' } } }, { account: { connect: { id: 'account-1' } } }],
+          },
+        }),
+        update: expect.objectContaining({
+          trainees: {
+            deleteMany: {},
+            create: [{ account: { connect: { id: 'account-0' } } }, { account: { connect: { id: 'account-1' } } }],
+          },
+        }),
+      }),
+    )
+  })
+
   it('rejects a professor who is also a trainee', () => {
     const [sessions, trainees, professors] = workbook
-    jest
-      .mocked(xlsx.parse)
-      .mockReturnValue([
-        sessions,
-        { ...trainees, data: [...trainees.data, ['Session Numéro 1', 'onboarding@yopmail.com']] },
-        professors,
-      ])
+    jest.mocked(xlsx.parse).mockReturnValue([
+      sessions,
+      {
+        ...trainees,
+        data: [...trainees.data, ['Session Numéro 1', 'onboarding@yopmail.com', 'Onboarding', 'Yopmail']],
+      },
+      professors,
+    ])
 
     expect(() => parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')).toThrow(
       'Professor is also a trainee in training session Session Numéro 1',
@@ -137,13 +227,14 @@ describe('getCourseSessionsFromFTP', () => {
 
   it('rejects more than one professor for a session', () => {
     const [sessions, trainees, professors] = workbook
-    jest
-      .mocked(xlsx.parse)
-      .mockReturnValue([
-        sessions,
-        trainees,
-        { ...professors, data: [...professors.data, ['Session Numéro 1', 'other@example.org']] },
-      ])
+    jest.mocked(xlsx.parse).mockReturnValue([
+      sessions,
+      trainees,
+      {
+        ...professors,
+        data: [...professors.data, ['Session Numéro 1', 'other@example.org', 'Other', 'Example']],
+      },
+    ])
 
     expect(() => parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')).toThrow(
       'Training session Session Numéro 1 must have exactly one professor',

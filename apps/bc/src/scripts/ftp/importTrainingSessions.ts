@@ -13,14 +13,20 @@ type Worksheet = {
   data: unknown[][]
 }
 
+type CourseParticipant = {
+  email: string
+  firstName: string
+  lastName: string
+}
+
 type CourseSession = {
   courseOrganismId: string
   name: string
   startDate: Date
   endDate: Date
   environment: Environment
-  traineeEmails: string[]
-  professorEmail: string
+  trainees: CourseParticipant[]
+  professor: CourseParticipant | null
 }
 
 const COURSE_ENVIRONMENT_BY_WORKBOOK_VALUE: Record<string, Environment> = {
@@ -88,6 +94,12 @@ const normalizeEmail = (value: unknown) => {
   return value.trim().toLowerCase()
 }
 
+const getParticipant = (record: Record<string, unknown>, emailField: string): CourseParticipant => ({
+  email: normalizeEmail(record[emailField]),
+  firstName: getRequiredText(record, 'Prénom'),
+  lastName: getRequiredText(record, 'Nom'),
+})
+
 const getRecords = (worksheets: Worksheet[], name: string) => {
   const worksheet = worksheets.find((item) => item.name.trim() === name)
   if (!worksheet) {
@@ -132,26 +144,27 @@ export const parseCourseSessionWorkbook = (data: Buffer, courseOrganismId: strin
       startDate,
       endDate,
       environment,
-      traineeEmails: [],
-      professorEmail: '',
+      trainees: [],
+      professor: null,
     })
   }
 
   for (const record of getRecords(worksheets, 'Stagiaires')) {
     const session = getSession(sessions, record)
-    const email = normalizeEmail(record.Stagiaires)
-    if (!session.traineeEmails.includes(email)) {
-      session.traineeEmails.push(email)
+    const trainee = getParticipant(record, 'Stagiaires')
+    if (!session.trainees.some(({ email }) => email === trainee.email)) {
+      session.trainees.push(trainee)
     }
   }
 
   const professorsBySession = new Map<string, Set<string>>()
   for (const record of getRecords(worksheets, 'Formateur')) {
     const session = getSession(sessions, record)
-    const email = normalizeEmail(record.Formateur)
+    const professor = getParticipant(record, 'Formateur')
     const professors = professorsBySession.get(session.name) ?? new Set<string>()
-    professors.add(email)
+    professors.add(professor.email)
     professorsBySession.set(session.name, professors)
+    session.professor = professor
   }
 
   for (const session of sessions.values()) {
@@ -159,8 +172,7 @@ export const parseCourseSessionWorkbook = (data: Buffer, courseOrganismId: strin
     if (professors.size !== 1) {
       throw new Error(`Training session ${session.name} must have exactly one professor`)
     }
-    session.professorEmail = [...professors][0]
-    if (session.traineeEmails.includes(session.professorEmail)) {
+    if (session.trainees.some(({ email }) => email === session.professor?.email)) {
       throw new Error(`Professor is also a trainee in training session ${session.name}`)
     }
   }
@@ -212,22 +224,29 @@ export const importCourseSessionsFromFTP = async () => {
     return { importedSessions: 0, createdUsers: 0, createdAccounts: 0 }
   }
 
-  const usersByEmailAndEnvironment: { email: string; environment: Environment }[] = []
+  const usersByEmailAndEnvironment = new Map<string, CourseParticipant & { environment: Environment }>()
   for (const session of sessions) {
-    for (const email of [...session.traineeEmails, session.professorEmail]) {
-      usersByEmailAndEnvironment.push({
-        email,
-        environment: session.environment,
-      })
+    for (const participant of [...session.trainees, session.professor!]) {
+      const key = `${session.environment}:${participant.email}`
+      const existingParticipant = usersByEmailAndEnvironment.get(key)
+      if (
+        existingParticipant &&
+        (existingParticipant.firstName !== participant.firstName ||
+          existingParticipant.lastName !== participant.lastName)
+      ) {
+        throw new Error(`Conflicting name for ${participant.email} in training sessions file`)
+      }
+      usersByEmailAndEnvironment.set(key, { ...participant, environment: session.environment })
     }
   }
 
-  console.log('Users by email and environment:', usersByEmailAndEnvironment)
+  const userAccountEntries = [...usersByEmailAndEnvironment.values()]
+  console.log('Users by email and environment:', userAccountEntries)
   const { newUsers, newAccounts } = await createUsersWithAccount(
-    usersByEmailAndEnvironment.map(({ email, environment }) => ({
+    userAccountEntries.map(({ email, firstName, lastName, environment }) => ({
       email,
-      firstName: '',
-      lastName: '',
+      firstName,
+      lastName,
       source: UserSource.CRON,
       account: {
         environment,
@@ -241,11 +260,34 @@ export const importCourseSessionsFromFTP = async () => {
   const accounts = await prismaClient.account.findMany({
     where: {
       environment: { in: [...new Set(sessions.map(({ environment }) => environment))] },
-      user: { email: { in: usersByEmailAndEnvironment.map(({ email }) => email) } },
+      user: { email: { in: userAccountEntries.map(({ email }) => email) } },
     },
-    select: { id: true, environment: true, user: { select: { email: true } } },
+    select: {
+      id: true,
+      environment: true,
+      organizationVersionId: true,
+      user: { select: { email: true, firstName: true, lastName: true } },
+    },
   })
   const accountIds = new Map(accounts.map((account) => [`${account.environment}:${account.user.email}`, account.id]))
+
+  await prismaClient.$transaction(
+    accounts
+      .filter(({ organizationVersionId }) => !organizationVersionId)
+      .map((account) =>
+        prismaClient.account.update({
+          where: { id: account.id },
+          data: {
+            organizationVersion: {
+              create: {
+                environment: account.environment,
+                organization: { create: { name: `${account.user.firstName} ${account.user.lastName}` } },
+              },
+            },
+          },
+        }),
+      ),
+  )
 
   let traineeCode = randomInt(99999999).toString()
   let professorCode = randomInt(99999999).toString()
@@ -269,8 +311,8 @@ export const importCourseSessionsFromFTP = async () => {
 
   await prismaClient.$transaction(
     sessions.map((session) => {
-      const professorId = getAccountId(accountIds, session.professorEmail, session.environment)
-      const traineeIds = session.traineeEmails.map((email) => getAccountId(accountIds, email, session.environment))
+      const professorId = getAccountId(accountIds, session.professor!.email, session.environment)
+      const traineeIds = session.trainees.map(({ email }) => getAccountId(accountIds, email, session.environment))
       return prismaClient.courseSession.upsert({
         where: {
           courseOrganismId_name_environment: {
@@ -288,13 +330,18 @@ export const importCourseSessionsFromFTP = async () => {
           traineeCode,
           professorCode,
           professorId,
-          traineeList: { connect: traineeIds.map((id) => ({ id })) },
+          trainees: {
+            create: traineeIds.map((accountId) => ({ account: { connect: { id: accountId } } })),
+          },
         },
         update: {
           startDate: session.startDate,
           endDate: session.endDate,
           professorId,
-          traineeList: { set: traineeIds.map((id) => ({ id })) },
+          trainees: {
+            deleteMany: {},
+            create: traineeIds.map((accountId) => ({ account: { connect: { id: accountId } } })),
+          },
         },
       })
     }),
