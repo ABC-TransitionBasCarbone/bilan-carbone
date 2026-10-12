@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { getEmissionFactorById } from '@/db/emissionFactors'
 import { FullStudy, getStudyById, getStudySites } from '@/db/study'
 import { AccountWithUser } from '@/types/account.types'
@@ -6,7 +8,7 @@ import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import type { StudyEmissionSource } from '@abc-transitionbascarbone/common/db'
 import { Environment, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
 import { canBeValidated } from '../emissionSource'
-import { canReadStudy } from './study.server'
+import { canReadStudy } from './study'
 import { isAdminOnStudyOrga } from './study.utils'
 
 export const hasStudyBasicRights = async (account: AccountWithUser, study: FullStudy) => {

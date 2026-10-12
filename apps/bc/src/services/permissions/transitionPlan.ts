@@ -1,8 +1,10 @@
+import 'server-only'
+
 import { getTransitionPlanById } from '@/db/transitionPlan'
 import { getEnvironment } from '@/i18n/environment'
 import { DeactivatableFeature, Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
-import { hasEditAccessOnStudy, hasReadAccessOnStudy } from './study.server'
+import { hasEditAccessOnStudy, hasReadAccessOnStudy } from './study'
 
 export const isFeatureTransitionPlanActive = async (environment: Environment) => {
   const isTransitionPlanFeatureActive = await isDeactivableFeatureActiveForEnvironment(

@@ -1,7 +1,7 @@
 import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
-import { isSourceForEnv } from '@/services/importEmissionFactor/import.server'
+import { isSourceForEnv } from '@/services/importEmissionFactor/import'
 import { hasAccessToCreateStudyWithEmissionFactorVersions } from '@/services/permissions/environment'
-import { filterAllowedStudies } from '@/services/permissions/study.server'
+import { filterAllowedStudies } from '@/services/permissions/study'
 import { subPostsByPost } from '@/services/posts'
 import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
 import { mapCncToStudySite } from '@/utils/cnc'
@@ -32,7 +32,7 @@ import { UserSession } from 'next-auth'
 import { cache } from 'react'
 import { getAccountOrganizationVersions } from './account'
 import { AccountWithUserSelect } from './account.select'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 import { getOrganizationVersionsByIds } from './organizationVersions'
 
 export type StudyTagFamilyWithTags = Omit<StudyTagFamily, 'createdAt' | 'updatedAt'> & {

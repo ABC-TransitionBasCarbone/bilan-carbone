@@ -1,6 +1,6 @@
 'use server'
 
-import { dbActualizedAuth } from '@/services/auth.server'
+import { dbActualizedAuth } from '@/services/auth'
 import { withServerResponse } from '@/utils/serverResponse'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import axios, { isAxiosError } from 'axios'

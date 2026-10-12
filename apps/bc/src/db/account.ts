@@ -5,7 +5,7 @@ import { DeactivatableFeature, Environment, Role, UserStatus } from '@abc-transi
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { UserSession } from 'next-auth'
 import { AccountWithUserSelect } from './account.select'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 import { OrganizationVersionWithOrganizationSelect } from './organization.select'
 
 export const getAccountByEmailAndOrganizationVersionId = (email: string, organizationVersionId: string | null) => {

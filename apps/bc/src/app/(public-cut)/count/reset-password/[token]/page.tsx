@@ -1,5 +1,5 @@
 import ResetForm from '@/components/auth/ResetForm'
-import { auth } from '@/services/auth.server'
+import { auth } from '@/services/auth'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 
 interface Props {

@@ -43,7 +43,7 @@ jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),
 }))
 
-jest.mock('@/services/auth.server', () => ({
+jest.mock('@/services/auth', () => ({
   auth: jest.fn(),
   dbActualizedAuth: jest.fn(),
 }))
@@ -52,7 +52,7 @@ jest.mock('@/services/checklist', () => ({}))
 jest.mock('@/db/account')
 jest.mock('@/db/cnc')
 jest.mock('@/db/deactivableFeatures')
-jest.mock('@/db/client.server', () => ({
+jest.mock('@/db/client', () => ({
   prismaClient: {
     $transaction: jest.fn((callback) => callback({})),
   },

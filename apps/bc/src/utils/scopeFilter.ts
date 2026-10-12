@@ -1,3 +1,5 @@
+import 'client-only'
+
 import { SubPost } from '@abc-transitionbascarbone/common/db/enums'
 
 const filtersMatcheScope = (scope: string[], filters: string[]): boolean => {

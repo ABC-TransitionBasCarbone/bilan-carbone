@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { getAccountMipById } from '@/db/accountMip'
 import { getUserByEmailWithSensibleInformations } from '@/db/user'
 import { AccountMipWithUser } from '@/types/accountMip.types'

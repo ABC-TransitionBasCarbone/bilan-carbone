@@ -1,6 +1,6 @@
 'use server'
 
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { getStudyStartDate } from '@/db/study'
 import {
   createTrajectoryWithObjectives as dbCreateTrajectoryWithObjectives,
@@ -16,7 +16,7 @@ import { getDefaultObjectivesForTrajectoryType } from '@/utils/trajectory'
 import { TrajectoryType } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import type { ApiResponse } from '@abc-transitionbascarbone/common/utils/serverResponse'
-import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study.server'
+import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
 import { SectorPercentages } from './trajectory.command'
 
 type TrajectoryValidationInput = {

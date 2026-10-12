@@ -1,4 +1,4 @@
-import { auth } from '@/services/auth.server'
+import { auth } from '@/services/auth'
 import type { ApiResponse } from '@abc-transitionbascarbone/common/utils/serverResponse'
 import { logServerFunctionCall } from '@abc-transitionbascarbone/common/utils/serverResponse'
 
