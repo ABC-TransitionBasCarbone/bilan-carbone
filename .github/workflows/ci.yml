@@ -310,6 +310,7 @@ jobs:
       - name: Launch e2e tests
         env:
           NODE_OPTIONS: --max-old-space-size=4096
+          CYPRESS_URL: http://localhost:3000
         run: yarn cypress run --spec "src/tests/end-to-end/app/${{ matrix.group }}/**/*.cy.ts" --headless
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
@@ -390,6 +391,7 @@ jobs:
       - name: Launch e2e tests
         env:
           NODE_OPTIONS: --max-old-space-size=4096
+          CYPRESS_URL: http://localhost:3002
         run: yarn cypress run --spec "src/tests/end-to-end/app/${{ matrix.group }}/**/*.cy.ts" --headless
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
