@@ -15,8 +15,8 @@ declare module 'next-auth' {
 
   interface UserSession
     extends
-    Pick<PrismaAccount, 'id' | 'userId' | 'role' | 'organizationVersionId'>,
-    Pick<PrismaUser, 'firstName' | 'lastName' | 'level'> {
+      Pick<PrismaAccount, 'id' | 'userId' | 'role' | 'organizationVersionId'>,
+      Pick<PrismaUser, 'firstName' | 'lastName' | 'level'> {
     email: PrismaUser['email']
     accountId: string
     organizationId: string | null
