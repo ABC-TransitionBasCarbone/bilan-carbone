@@ -7,10 +7,11 @@ model CourseOrganism {
   contactEmail   String          @map("contact_email")
   ftpPath        String          @map("ftp_path")
 
+  courseSessions CourseSession[]
+
   @@unique([name])
   @@map("course_organism")
   @@schema("bilan_carbone")
-  courseSessions CourseSession[]
 }
 
 model CourseSession {
@@ -28,8 +29,8 @@ model CourseSession {
   courseOrganism   CourseOrganism @relation(fields: [courseOrganismId], references: [id], onDelete: Cascade)
   courseOrganismId String         @map("course_organism_id")
 
-  professor   Account @relation("CourseSessionProfessor", fields: [professorId], references: [id], onDelete: Cascade)
-  professorId String         @map("professor_id")
+  professor   Account? @relation("CourseSessionProfessor", fields: [professorId], references: [id], onDelete: Cascade)
+  professorId String?         @map("professor_id")
 
   trainees CourseSessionTrainee[]
 
@@ -40,9 +41,9 @@ model CourseSession {
 
 model CourseSessionTrainee {
   courseSessionId String @map("course_session_id")
-  accountId       String @map("account_id")
-
   courseSession CourseSession @relation(fields: [courseSessionId], references: [id], onDelete: Cascade)
+
+  accountId       String @map("account_id")
   account       Account       @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@id([courseSessionId, accountId])

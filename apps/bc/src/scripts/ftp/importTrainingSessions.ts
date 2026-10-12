@@ -211,36 +211,39 @@ export const getCourseSessionsFromFTP = async (): Promise<CourseSession[]> => {
     client?.close()
   }
 }
-const getAccountId = (accountIds: Map<string, string>, email: string, environment: Environment) => {
-  const id = accountIds.get(`${environment}:${email}`)
-  if (!id) {
-    throw new Error(`Could not find account for ${email} in ${environment}`)
-  }
-  return id
+
+const getAccountId = (
+  accounts: {
+    id: string
+    organizationVersionId: string | null
+    environment: Environment
+    user: {
+      email: string
+      firstName: string
+      lastName: string
+    }
+  }[],
+  email: string,
+  environment: Environment,
+) => {
+  return accounts.find(
+    ({ user, environment: accEnvironment }) => user.email === email && accEnvironment === environment,
+  )?.id
 }
+
 export const importCourseSessionsFromFTP = async () => {
   const sessions = await getCourseSessionsFromFTP()
   if (sessions.length === 0) {
     return { importedSessions: 0, createdUsers: 0, createdAccounts: 0 }
   }
 
-  const usersByEmailAndEnvironment = new Map<string, CourseParticipant & { environment: Environment }>()
+  const userAccountEntries = []
   for (const session of sessions) {
     for (const participant of [...session.trainees, session.professor!]) {
-      const key = `${session.environment}:${participant.email}`
-      const existingParticipant = usersByEmailAndEnvironment.get(key)
-      if (
-        existingParticipant &&
-        (existingParticipant.firstName !== participant.firstName ||
-          existingParticipant.lastName !== participant.lastName)
-      ) {
-        throw new Error(`Conflicting name for ${participant.email} in training sessions file`)
-      }
-      usersByEmailAndEnvironment.set(key, { ...participant, environment: session.environment })
+      userAccountEntries.push({ ...participant, environment: session.environment })
     }
   }
 
-  const userAccountEntries = [...usersByEmailAndEnvironment.values()]
   const { newUsers, newAccounts } = await createUsersWithAccount(
     userAccountEntries.map(({ email, firstName, lastName, environment }) => ({
       email,
@@ -268,8 +271,6 @@ export const importCourseSessionsFromFTP = async () => {
       user: { select: { email: true, firstName: true, lastName: true } },
     },
   })
-  const accountIds = new Map(accounts.map((account) => [`${account.environment}:${account.user.email}`, account.id]))
-
   await prismaClient.$transaction(
     accounts
       .filter(({ organizationVersionId }) => !organizationVersionId)
@@ -310,8 +311,9 @@ export const importCourseSessionsFromFTP = async () => {
 
   await prismaClient.$transaction(
     sessions.map((session) => {
-      const professorId = getAccountId(accountIds, session.professor!.email, session.environment)
-      const traineeIds = session.trainees.map(({ email }) => getAccountId(accountIds, email, session.environment))
+      const professorId = getAccountId(accounts, session.professor!.email, session.environment)
+      const traineeIds = session.trainees.map(({ email }) => getAccountId(accounts, email, session.environment))
+
       return prismaClient.courseSession.upsert({
         where: {
           courseOrganismId_name_environment: {
