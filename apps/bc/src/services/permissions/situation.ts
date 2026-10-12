@@ -1,6 +1,8 @@
+import 'server-only'
+
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import type { UserSession } from 'next-auth'
-import { hasEditAccessOnStudy } from './study.server'
+import { hasEditAccessOnStudy } from './study'
 export const isSimplifiedContributor = (
   study: { contributors: Array<{ accountId: string }> },
   session: { user: UserSession },

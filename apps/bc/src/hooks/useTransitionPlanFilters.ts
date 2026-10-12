@@ -1,3 +1,5 @@
+import 'client-only'
+
 import { storageKeys } from '@/constants/storage.constants'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
 import { readStoredStringArray } from '@/utils/localStorage'

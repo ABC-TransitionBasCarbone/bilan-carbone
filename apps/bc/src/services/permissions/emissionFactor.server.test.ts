@@ -4,7 +4,7 @@ import { getMockedAccount } from '@/tests/utils/models/user'
 import * as organizationUtils from '@/utils/organization'
 import { Level, Role } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
-import { canCreateEmissionFactor } from './emissionFactor.server'
+import { canCreateEmissionFactor } from './emissionFactorAccess'
 
 jest.mock('@/db/organization', () => ({ getOrganizationVersionForRightsCheck: jest.fn() }))
 jest.mock('@/db/user', () => ({ getUserById: jest.fn() }))

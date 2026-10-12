@@ -1,5 +1,5 @@
 import ActivationForm from '@/components/auth/ActivationForm'
-import { auth } from '@/services/auth.server'
+import { auth } from '@/services/auth'
 import { redirect } from 'next/navigation'
 
 const ActivationPage = async () => {

@@ -1,12 +1,12 @@
 import { Import } from '@abc-transitionbascarbone/common/db/enums'
 import { MIN, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils'
-import { prismaClient } from '../../db/client.server'
+import { prismaClient } from '../../db/client'
 import {
   getEmissionFactorOverrideData,
   getEmissionFactorPartOverrideData,
   getType,
   ImportEmissionFactor,
-} from './import.server'
+} from './import'
 
 export const applyOverridesFromRows = async (source: Import, rows: ImportEmissionFactor[], dryRun = false) => {
   const efRows = rows.filter((r) => r.Type_Ligne !== 'Poste')

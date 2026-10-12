@@ -34,7 +34,7 @@ import dayjs from 'dayjs'
 import type { ResultType } from '../types/study.types'
 import { AdditionalResultTypes, BaseResultsBySite, ResultsByPost } from '../types/study.types'
 import { getEmissionResults, getEmissionSourceEmission } from './emissionSource'
-import { download } from './file'
+import { download } from './fileDownload'
 import { hasAccessToBcExport, hasBCExportWithSimplifiedStudy, hasSpecificExport } from './permissions/environment'
 import { isTiltSimplified } from './permissions/environmentAdvanced'
 import {

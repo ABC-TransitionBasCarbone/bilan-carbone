@@ -1,4 +1,4 @@
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 
 export const getResponsesByCampaignId = (campaignId: string) =>
   prismaClient.response.findMany({

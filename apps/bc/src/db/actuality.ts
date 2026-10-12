@@ -1,7 +1,7 @@
 import { getLocale } from '@/i18n/locale'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 
 export const getAllActualitiesLocale = async (environment: Environment) => {
   const locale = await getLocale()

@@ -24,13 +24,13 @@ import {
 } from '@abc-transitionbascarbone/common/db/enums'
 import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import { UserSession } from 'next-auth'
-import { dbActualizedAuth } from '../auth.server'
+import { dbActualizedAuth } from '../auth'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
 import { getUserActiveAccounts } from '../serverFunctions/user'
 import { canCreateStudyOnlyAsAdministrator, canCreateStudyWithoutSpecificRights, isTilt } from './environment'
-import { isTiltSimplifiedFeatureActive } from './environment.server'
 import { hasAccessToDuplicateStudy, isTiltSimplified } from './environmentAdvanced'
-import { isInOrgaOrParentFromId } from './organization.server'
+import { isTiltSimplifiedFeatureActive } from './environmentFeature'
+import { isInOrgaOrParentFromId } from './organization'
 import { isAdminOnStudyOrga } from './study.utils'
 
 export const canReadStudy = async (user: UserSession | UserWithAllowedStudies, studyId: string) => {

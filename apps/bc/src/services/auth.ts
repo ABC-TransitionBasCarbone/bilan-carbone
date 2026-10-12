@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { getAccountById, getAccountsFromUser } from '@/db/account'
 import { getUserByEmailWithSensibleInformations } from '@/db/user'
 import { AccountWithUser } from '@/types/account.types'

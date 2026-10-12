@@ -3,7 +3,7 @@ import SimplifiedStudies from '@/components/pages/SimplifiedStudies'
 import TiltSimplifiedComingSoon from '@/components/pages/TiltSimplifiedComingSoon'
 import { getOrgNameByOrgVersionId } from '@/db/organization'
 import { hasAccessToSimplifiedStudies, isTilt } from '@/services/permissions/environment'
-import { isTiltSimplifiedFeatureActive } from '@/services/permissions/environment.server'
+import { isTiltSimplifiedFeatureActive } from '@/services/permissions/environmentFeature'
 import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 
 const MyFootprints = async ({ user }: UserSessionProps) => {
