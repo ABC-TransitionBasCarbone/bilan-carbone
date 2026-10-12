@@ -5,19 +5,46 @@ describe('Survey completion', () => {
     cy.resetTestDatabase()
   })
 
-  const completeSurveyFromCurrentPage = (remainingSteps = 200) => {
+  const completeSurveyFromCurrentPage = (remainingSteps = 200): Cypress.Chainable<null> => {
     if (remainingSteps <= 0) {
       throw new Error('Survey completion exceeded maximum number of navigation steps')
     }
 
-    cy.get('body').then(($body) => {
-      if ($body.find('[data-testid="survey-complete-button"]').length > 0) {
-        cy.getByTestId('survey-complete-button').click()
-        return
+    return cy.get('body').then(($body): Cypress.Chainable<null> => {
+      const hasCompleteButton = $body.find('[data-testid="survey-complete-button"]').length > 0
+      const isOnInterstitial = $body.find('[data-testid="survey-category-interstitial"]').length > 0
+
+      if (hasCompleteButton && isOnInterstitial) {
+        return cy
+          .getByTestId('survey-complete-button')
+          .click()
+          .then(() => cy.url().should('include', `/${surveyId}/results`))
+          .then(() => cy.wrap(null))
       }
 
-      cy.getByTestId('survey-next-button').click()
-      completeSurveyFromCurrentPage(remainingSteps - 1)
+      if (hasCompleteButton) {
+        return cy
+          .getByTestId('survey-complete-button')
+          .click()
+          .then(() => cy.getByTestId('survey-category-interstitial').should('be.visible'))
+          .then(() => completeSurveyFromCurrentPage(remainingSteps - 1))
+      }
+
+      if ($body.find('[data-testid="survey-start-button"]').length > 0) {
+        return cy
+          .getByTestId('survey-start-button')
+          .click()
+          .then(() => completeSurveyFromCurrentPage(remainingSteps - 1))
+      }
+
+      if ($body.find('[data-testid="survey-next-button"]').length > 0) {
+        return cy
+          .getByTestId('survey-next-button')
+          .click()
+          .then(() => completeSurveyFromCurrentPage(remainingSteps - 1))
+      }
+
+      throw new Error('Survey completion stopped before the completion button')
     })
   }
 
@@ -37,22 +64,24 @@ describe('Survey completion', () => {
     cy.clearLocalStorage(`mip-publicodes-state-${surveyId}`)
 
     cy.visit(`/${surveyId}/survey`)
+    cy.getByTestId('survey-start-button').click()
     cy.getByTestId('survey-categories-sidebar')
-      .find('span')
-      .filter((_, element) => element.textContent?.endsWith(' kg') ?? false)
-      .each(($value) => {
-        cy.wrap($value).should('have.text', '0 kg')
+      .find('progress')
+      .should('have.length', 5)
+      .each(($progress) => {
+        cy.wrap($progress).should('have.attr', 'value', '0')
       })
-    cy.getByTestId('survey-categories-sidebar').find('progress').first().should('have.attr', 'value', '0')
 
     cy.getByTestId('survey-next-button').click()
-    cy.getByTestId('survey-categories-sidebar').find('progress').first().should('have.attr', 'value', '1')
+    cy.getByTestId('survey-categories-sidebar').find('progress').first().should('have.attr', 'value', '0')
 
     completeSurveyFromCurrentPage()
 
     cy.url().should('include', `/${surveyId}/results`)
     cy.window().then((window) => {
-      const state = JSON.parse(window.localStorage.getItem(`mip-publicodes-state-${surveyId}`) ?? '{}')
+      const state = JSON.parse(window.localStorage.getItem(`mip-publicodes-state-${surveyId}`) ?? '{}') as {
+        situation?: unknown
+      }
       expect(state.situation).to.deep.equal({})
     })
     cy.getByTestId('survey-completion-footprint-banner').should('be.visible')

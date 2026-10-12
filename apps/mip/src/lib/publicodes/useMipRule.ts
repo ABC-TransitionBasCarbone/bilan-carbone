@@ -1,15 +1,20 @@
 import { getUpdatedSituationWithInputValue } from '@abc-transitionbascarbone/common/publicodes/form/utils'
+import { useEffect, useRef } from 'react'
 import { useMipPublicodes } from './MipPublicodesProvider'
 import { getFormQuestions, getMosaicResetSituation, getPlancherWarning, getQuestionType } from './mip-rules'
 
 export const useMipRule = (ruleName: string) => {
   const { engine, meta, simulation, currentQuestion, setCurrentQuestion, updateSimulation, safeEvaluate, safeGetRule } =
     useMipPublicodes()
+  const situationRef = useRef(simulation.situation)
+  useEffect(() => {
+    situationRef.current = simulation.situation
+  }, [simulation.situation])
   const rule = safeGetRule(ruleName) as { rawNode?: { suggestions?: Record<string, unknown> } } | undefined
   const value = safeEvaluate(ruleName)?.nodeValue
 
   const setValue = (inputValue: string | number | boolean | undefined, targetRuleName = ruleName) => {
-    const situation = getUpdatedSituationWithInputValue(engine, engine.getSituation(), targetRuleName, inputValue)
+    const situation = getUpdatedSituationWithInputValue(engine, situationRef.current, targetRuleName, inputValue)
     const mosaicParent = Object.entries(meta.mosaicChildrenWithParent).find(([, children]) =>
       children.includes(targetRuleName),
     )
@@ -18,6 +23,7 @@ export const useMipRule = (ruleName: string) => {
       ...situation,
       ...getMosaicResetSituation(engine, mosaicChildren, situation),
     }
+    situationRef.current = nextSituation
     const nextEngine = engine.shallowCopy().setSituation(nextSituation)
     const questions = getFormQuestions(nextEngine, meta, simulation.foldedSteps)
     const progression = questions.relevantQuestions.length
