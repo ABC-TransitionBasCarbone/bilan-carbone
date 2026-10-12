@@ -1,8 +1,11 @@
+import { isBCEnvironment } from '@/services/permissions/environment'
 import { courseEnvironments } from '@abc-transitionbascarbone/common/utils/environments'
 import dayjs from 'dayjs'
 
-for (let i = 0; i < courseEnvironments.length; i++) {
-  const env = courseEnvironments[i]
+const environments = courseEnvironments.filter(isBCEnvironment)
+
+for (let i = 0; i < environments.length; i++) {
+  const env = environments[i]
   describe(`BC Course - ${env}`, () => {
     before(() => {
       cy.resetTestDatabase()

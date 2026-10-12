@@ -1,5 +1,6 @@
 import { KG_CO2E_PREFIX_REGEX } from '@/constants/import'
 import { findEmissionFactorByIdForMatch } from '@/db/emissionFactors'
+import { isBCEnvironment } from '@/services/permissions/environment'
 import { environmentSubPostsMapping } from '@/services/posts'
 import { qualityKeys } from '@/services/uncertainty'
 import { AmbiguousRow, FEChoices, ImportError, ImportWarning } from '@/types/import.types'
@@ -84,7 +85,7 @@ function matchCaracterisationLabelFromTranslations(
 }
 
 export function getValidSubPostsForEnvironment(environment: Environment): Set<SubPost> {
-  if (environment === Environment.MIP) {
+  if (!isBCEnvironment(environment)) {
     return new Set([])
   }
 
@@ -293,11 +294,11 @@ type ResolvedEf = { efId: string; efName: string; efValue: string; efUnit: strin
 
 export type ResolveEfRowsResult =
   | {
-      type: 'warnings'
-      warnings: ImportWarning[]
-      ambiguousRows: AmbiguousRow[]
-      resolvedByLine: Map<number, ResolvedEf>
-    }
+    type: 'warnings'
+    warnings: ImportWarning[]
+    ambiguousRows: AmbiguousRow[]
+    resolvedByLine: Map<number, ResolvedEf>
+  }
   | { type: 'ambiguous'; ambiguousRows: AmbiguousRow[] }
   | { type: 'resolved'; resolvedByLine: Map<number, ResolvedEf> }
 
@@ -357,11 +358,11 @@ function collectWarningsAndAmbiguities(
       candidates: tooMany
         ? []
         : ef.candidates.map((c) => ({
-            id: c.id,
-            foundTitle: c.foundTitle,
-            foundValue: c.foundValue,
-            foundUnit: formatPrefixedUnitDisplayOptional(locale, c.foundUnit),
-          })),
+          id: c.id,
+          foundTitle: c.foundTitle,
+          foundValue: c.foundValue,
+          foundUnit: formatPrefixedUnitDisplayOptional(locale, c.foundUnit),
+        })),
     })
     return
   }
@@ -408,7 +409,7 @@ export async function resolveEmissionFactorRows(
             efName:
               getEmissionFactorFullName(
                 chosenEf.metaData.find((m) => m.language === locale) ??
-                  chosenEf.metaData[0] ?? { title: null, attribute: null, frontiere: null },
+                chosenEf.metaData[0] ?? { title: null, attribute: null, frontiere: null },
               ) ||
               (row.emissionFactorName ?? ''),
             efValue: String(getEmissionFactorValue(chosenEf, environment)),

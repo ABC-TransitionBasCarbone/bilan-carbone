@@ -12,7 +12,7 @@ import {
   hasSufficientLevel,
   StudyWithRoleFields,
 } from '@/utils/study'
-import type { Prisma, Study, User } from '@abc-transitionbascarbone/common/db'
+import type { Account, Prisma, Study, User } from '@abc-transitionbascarbone/common/db'
 import { DeactivatableFeature, Environment, Level, Role, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
 import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
@@ -76,7 +76,7 @@ export const filterAllowedStudies = async (user: UserSession, studies: Study[]) 
 }
 
 export const canCreateAStudy = async (
-  user: Pick<UserSession, 'level' | 'role' | 'organizationVersionId' | 'environment'>,
+  user: Pick<Account, 'role' | 'organizationVersionId' | 'environment'> & Pick<User, 'level'>,
   simplified: boolean = false,
 ) => {
   if (simplified && !user.level && isTilt(user.environment)) {

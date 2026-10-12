@@ -2,13 +2,31 @@ import 'server-only'
 
 import { getAccountById, getAccountsFromUser } from '@/db/account'
 import { getUserByEmailWithSensibleInformations } from '@/db/user'
+import { isBCEnvironment } from '@/services/permissions/environment'
 import { AccountWithUser } from '@/types/account.types'
-import { Environment, Level, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { accountWithUserToUserSession } from '@/utils/userAccounts'
+import { Level, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { DAY } from '@abc-transitionbascarbone/common/utils'
 import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession, NextAuthOptions, Session } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
+
+const buildSession = (account: AccountWithUser) => {
+  if (
+    account.status !== UserStatus.ACTIVE ||
+    !isBCEnvironment(account.environment) ||
+    (account.organizationVersion && !isBCEnvironment(account.organizationVersion.environment))
+  ) {
+    return null
+  }
+
+  return {
+    ...accountWithUserToUserSession(account),
+    environment: account.environment,
+    needsAccountSelection: false,
+  }
+}
 
 const switchAccount = async (accountId: string) => {
   const session = await auth()
@@ -54,21 +72,12 @@ export const authOptions: NextAuthOptions = {
 
         const accountId = user.accountId
         const account = accountId ? await getAccountById(accountId) : null
+        const accountSession = account ? buildSession(account) : null
 
-        if (account && account.status === UserStatus.ACTIVE) {
+        if (accountSession) {
           return {
             ...token,
-            id: account.user.id,
-            userId: account.user.id,
-            accountId: account.id,
-            firstName: account.user.firstName,
-            lastName: account.user.lastName,
-            organizationVersionId: account.organizationVersionId,
-            organizationId: account?.organizationVersion?.organizationId,
-            role: account.role,
-            level: account.user.level,
-            environment: account.environment,
-            needsAccountSelection: false,
+            ...accountSession,
           }
         } else {
           return { sessionInvalid: true }
@@ -77,20 +86,11 @@ export const authOptions: NextAuthOptions = {
 
       if (trigger === 'update') {
         const dbAccount = await getAccountById(token.accountId as string)
-        if (dbAccount && dbAccount.status === UserStatus.ACTIVE && token.id === dbAccount.user.id) {
+        const accountSession = dbAccount ? buildSession(dbAccount) : null
+        if (accountSession && token.id === accountSession.userId) {
           return {
             ...token,
-            id: dbAccount.user.id,
-            userId: dbAccount.user.id,
-            accountId: dbAccount.id,
-            firstName: dbAccount.user.firstName,
-            lastName: dbAccount.user.lastName,
-            role: dbAccount?.role,
-            organizationVersionId: dbAccount?.organizationVersionId,
-            organizationId: '',
-            level: dbAccount.user.level,
-            environment: dbAccount?.organizationVersion?.environment,
-            needsAccountSelection: false,
+            ...accountSession,
           }
         } else {
           return { sessionInvalid: true }
@@ -109,6 +109,10 @@ export const authOptions: NextAuthOptions = {
         return session
       }
 
+      if (!isBCEnvironment(token.environment)) {
+        return { sessionInvalid: true, expires: '' }
+      }
+
       if (session.user) {
         session.user = {
           ...session.user,
@@ -118,7 +122,7 @@ export const authOptions: NextAuthOptions = {
           firstName: token.firstName as string,
           lastName: token.lastName as string,
           organizationVersionId: token.organizationVersionId as string,
-          environment: token.environment as Environment,
+          environment: token.environment,
           organizationId: token.organizationId as string,
           role: token.role as Role,
           level: token.level as Level,
@@ -141,26 +145,6 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials) {
           return null
-        }
-
-        const buildSession = (account: AccountWithUser) => {
-          if (!account || account.status !== UserStatus.ACTIVE) {
-            return null
-          }
-          return {
-            id: account.user.id,
-            userId: account.user.id,
-            accountId: account.id,
-            firstName: account.user.firstName,
-            lastName: account.user.lastName,
-            role: account.role,
-            email: account.user.email,
-            organizationVersionId: account.organizationVersionId,
-            organizationId: account.organizationVersion?.organizationId,
-            level: account.user.level,
-            environment: account.environment,
-            needsAccountSelection: false,
-          }
         }
 
         if (credentials.accountId) {
@@ -222,20 +206,19 @@ export async function dbActualizedAuth(
   ...args: [GetServerSidePropsContext['req'], GetServerSidePropsContext['res']] | [NextApiRequest, NextApiResponse] | []
 ): Promise<Session | null> {
   const session = await getServerSession(...args, authOptions)
-  if (!session || !session.user) {
+  if (!session || !session.user || session.sessionInvalid || session.user.needsAccountSelection) {
     return null
   }
   const account = await getAccountById(session.user.accountId)
-  if (!account || account.status !== UserStatus.ACTIVE) {
+  const accountSession = account ? buildSession(account) : null
+  if (!accountSession) {
     return null
   }
   return {
     ...session,
     user: {
       ...session.user,
-      role: account.role,
-      organizationVersionId: account.organizationVersionId,
-      level: account.user.level,
+      ...accountSession,
     },
   }
 }

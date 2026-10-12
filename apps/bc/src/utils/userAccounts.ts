@@ -1,3 +1,4 @@
+import { isBCEnvironment } from '@/services/permissions/environment'
 import { AccountWithUser } from '@/types/account.types'
 import type { OrganizationVersion, User } from '@abc-transitionbascarbone/common/db'
 import { UserSession } from 'next-auth'
@@ -8,22 +9,29 @@ export const hasOrganizationVersion = <T extends { organizationVersion: Partial<
 ): account is T & { organizationVersion: NonNullable<T['organizationVersion']> } => !!account.organizationVersion
 
 export const accountWithUserToUserSession = (
-  account: Pick<AccountWithUser, 'id' | 'role' | 'organizationVersionId' | 'organizationVersion'> & {
+  account: Pick<AccountWithUser, 'id' | 'role' | 'organizationVersionId' | 'organizationVersion' | 'environment'> & {
     user: Pick<AccountWithUser['user'], 'id' | 'email' | 'firstName' | 'lastName' | 'level'>
   },
-): UserSession => ({
-  id: account.user.id,
-  accountId: account.id,
-  userId: account.user.id,
-  role: account.role,
-  organizationVersionId: account.organizationVersionId,
-  email: account.user.email,
-  firstName: account.user.firstName,
-  lastName: account.user.lastName,
-  level: account.user.level,
-  environment: account.organizationVersion?.environment,
-  organizationId: account.organizationVersion?.organizationId ?? null,
-})
+): UserSession => {
+  const environment = account.organizationVersion?.environment ?? account.environment
+  if (!isBCEnvironment(account.environment) || !isBCEnvironment(environment)) {
+    throw new Error('Invalid BC account environment')
+  }
+
+  return {
+    id: account.user.id,
+    accountId: account.id,
+    userId: account.user.id,
+    role: account.role,
+    organizationVersionId: account.organizationVersionId,
+    email: account.user.email,
+    firstName: account.user.firstName,
+    lastName: account.user.lastName,
+    level: account.user.level,
+    environment,
+    organizationId: account.organizationVersion?.organizationId ?? null,
+  }
+}
 
 export const userSessionToDbUser = (
   userSession: UserSession,

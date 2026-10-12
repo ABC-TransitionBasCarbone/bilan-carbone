@@ -6,7 +6,7 @@ import pluginPrettier from 'eslint-plugin-prettier'
 import reactCompiler from 'eslint-plugin-react-compiler'
 import { defineConfig, globalIgnores } from 'eslint/config'
 import globals from 'globals'
-import { dtsOverride, sharedRules } from '../../eslint.config.base.mjs'
+import { dtsOverride, sharedRules, typeAwareRules } from '../../eslint.config.base.mjs'
 
 export default defineConfig([
   ...nextVitals,
@@ -38,6 +38,16 @@ export default defineConfig([
     },
   },
   dtsOverride,
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    rules: typeAwareRules,
+  },
   {
     files: ['**/*.test.*', 'src/tests/**/*'],
     languageOptions: {

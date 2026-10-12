@@ -15,7 +15,7 @@
     "start": "node -r dotenv/config .next/standalone/apps/mip/server.js dotenv_config_path=.env",
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
-    "ts": "tsc --noEmit",
+    "ts": "tsc --noEmit && node ../../packages/common/tooling/config/check-declarations.js",
     "seed": "dotenv -e .env tsx prisma/seed/index.ts",
     "tsx": "dotenv -e .env -- tsx",
     "cypress": "cypress run",

@@ -9,6 +9,10 @@ import { isAdmin } from '@/utils/user'
 import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 
 const Campaigns = async ({ user }: UserSessionProps) => {
+  if (!user.organizationVersionMipId) {
+    return <NotFound />
+  }
+
   const modelCampaign = await getModelCampaignByOrganizationVersionMipId(user.organizationVersionMipId)
   if (!modelCampaign) {
     return <NotFound />

@@ -14,7 +14,7 @@
     "prebuild": "yarn workspace @abc-transitionbascarbone/publicodes-packages compile",
     "build": "next build && node ../../packages/common/tooling/config/copy-assets.js apps/bc",
     "start": "node -r dotenv/config .next/standalone/apps/bc/server.js dotenv_config_path=.env",
-    "ts": "tsc --noEmit",
+    "ts": "tsc --noEmit && node ../../packages/common/tooling/config/check-declarations.js",
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
     "test": "jest",

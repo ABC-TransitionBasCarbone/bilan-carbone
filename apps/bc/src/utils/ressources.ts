@@ -1,3 +1,4 @@
+import { isBCEnvironment } from '@/services/permissions/environment'
 import { Translations } from '@abc-transitionbascarbone/common'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { getEnvVar } from '@abc-transitionbascarbone/common/utils/environment'
@@ -7,7 +8,7 @@ import { getTranslations } from 'next-intl/server'
 const getUrlFromId = (typeformId: string) => `https://form.typeform.com/to/${typeformId}`
 
 export const getFeedbackFormUrl = async (env: Environment) => {
-  if (env === Environment.MIP) {
+  if (!isBCEnvironment(env)) {
     return ''
   }
 
@@ -32,12 +33,12 @@ export const getEnvironnementRessources = async (env: Environment, t: Translatio
         { title: t('openCarbonPractice'), link: linksT('openCarbonPracticeUrl') },
         ...(hasTranslatedLinks(env)
           ? [
-              {
-                title: t('contacterViaFormulaire', { supportEmail }),
-                link: linksT('contactFormUrl'),
-                isTranslated: true,
-              },
-            ]
+            {
+              title: t('contacterViaFormulaire', { supportEmail }),
+              link: linksT('contactFormUrl'),
+              isTranslated: true,
+            },
+          ]
           : []),
       ],
     },

@@ -36,7 +36,7 @@ jobs:
       - name: Prebuild application
         run: yarn prebuild
       - name: TypeScript check
-        run: npx tsc --noEmit
+        run: yarn ts
 
   mip-lint-and-typecheck:
     timeout-minutes: 10
@@ -65,7 +65,7 @@ jobs:
       - name: Linter
         run: yarn lint
       - name: TypeScript check
-        run: npx tsc --noEmit
+        run: yarn ts
 
   mip-build-app:
     timeout-minutes: 15

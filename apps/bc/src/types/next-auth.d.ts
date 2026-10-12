@@ -1,5 +1,6 @@
-import { OrganizationVersion, Account as PrismaAccount, User as PrismaUser } from '@abc-transitionbascarbone/common/db'
-import 'next-auth'
+import { BCEnvironment } from '@/types/environment'
+import { Account as PrismaAccount, User as PrismaUser } from '@abc-transitionbascarbone/common/db'
+import { DefaultUser } from 'next-auth'
 import 'next-auth/jwt'
 
 declare module 'next-auth' {
@@ -14,13 +15,12 @@ declare module 'next-auth' {
 
   interface UserSession
     extends
-      Pick<PrismaAccount, 'id' | 'userId' | 'role' | 'organizationVersionId'>,
-      Pick<PrismaUser, 'firstName' | 'lastName' | 'level'>,
-      Pick<OrganizationVersion, 'environment'> {
+    Pick<PrismaAccount, 'id' | 'userId' | 'role' | 'organizationVersionId'>,
+    Pick<PrismaUser, 'firstName' | 'lastName' | 'level'> {
     email: PrismaUser['email']
     accountId: string
     organizationId: string | null
-    environment: PrismaOrganizationVersion['environment']
+    environment: BCEnvironment
     needsAccountSelection?: boolean
   }
 

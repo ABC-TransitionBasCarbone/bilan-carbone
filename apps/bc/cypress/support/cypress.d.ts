@@ -1,3 +1,4 @@
+import { AllBCEnvironments } from '@abc-transitionbascarbone/common/utils/types'
 import '../../../../packages/common/types/cypress-commands'
 
 declare global {
