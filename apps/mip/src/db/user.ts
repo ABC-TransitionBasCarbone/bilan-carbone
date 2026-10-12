@@ -7,7 +7,7 @@ import { AddMemberCommand } from '@abc-transitionbascarbone/common/services/serv
 import { signPassword } from '@abc-transitionbascarbone/common/utils/auth'
 import { UserSession } from 'next-auth'
 import { addAccountMip, getAccountMipByEmailAndOrganizationVersionMipId, updateAccountMip } from './accountMip'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 
 export type UserWithAccountsMip = Prisma.UserGetPayload<{ include: { accountsMip: true } }>
 

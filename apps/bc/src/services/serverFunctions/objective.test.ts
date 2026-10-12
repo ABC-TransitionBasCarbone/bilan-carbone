@@ -1,8 +1,8 @@
 import * as objectiveDbModule from '@/db/objective.db'
 import * as trajectoryDbModule from '@/db/trajectory'
 import * as transitionPlanDbModule from '@/db/transitionPlan'
-import * as authModule from '@/services/auth.server'
-import * as studyPermissionsModule from '@/services/permissions/study.server'
+import * as authModule from '@/services/auth'
+import * as studyPermissionsModule from '@/services/permissions/study'
 import { SubPost, TrajectoryType } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import {
@@ -18,7 +18,7 @@ jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),
 }))
 
-jest.mock('../../db/client.server', () => ({
+jest.mock('../../db/client', () => ({
   prismaClient: {
     $transaction: jest.fn((callback) => callback({})),
   },
@@ -53,11 +53,11 @@ jest.mock('@abc-transitionbascarbone/common/services/permissions/check', () => (
   NOT_AUTHORIZED: 'NOT_AUTHORIZED',
 }))
 
-jest.mock('../permissions/study.server', () => ({
+jest.mock('../permissions/study', () => ({
   hasEditAccessOnStudy: jest.fn(),
 }))
 
-jest.mock('../auth.server', () => ({
+jest.mock('../auth', () => ({
   auth: jest.fn(),
 }))
 

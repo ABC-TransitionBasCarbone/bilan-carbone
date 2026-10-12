@@ -1,4 +1,4 @@
-import { getAllActualitiesLocale } from '@/db/actuality.server'
+import { getAllActualitiesLocale } from '@/db/actuality'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import classNames from 'classnames'
 import ActualityRow from './Actuality'

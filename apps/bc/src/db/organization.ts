@@ -5,7 +5,7 @@ import { unique } from '@/utils/array'
 import type { Organization, OrganizationVersion, Site } from '@abc-transitionbascarbone/common/db'
 import { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment, EstablishmentType, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 import { OrganizationVersionWithOrganizationSelect } from './organization.select'
 import { deleteStudy } from './study'
 
