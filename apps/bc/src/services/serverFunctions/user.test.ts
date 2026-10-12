@@ -404,6 +404,7 @@ describe('signUpWithSiretOrCNC', () => {
         organizationVersionId: mockedOrganizationVersionId,
         status: UserStatus.IMPORTED,
         role: Role.DEFAULT,
+        environment: Environment.TILT,
         organizationVersion: { environment: Environment.TILT, organizationId: mockedOrganizationId },
         user: {
           id: mockedUserId,
