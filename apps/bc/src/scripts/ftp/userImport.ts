@@ -4,7 +4,6 @@ import { getAccountByEmailAndEnvironment } from '@/db/account'
 import {
   createOrUpdateOrganization,
   getOrganizationVersionByOrganizationIdAndEnvironment,
-  getRawOrganizationById,
   getRawOrganizationBySiret,
 } from '@/db/organization'
 import { createUsersWithAccount, organizationVersionActiveAccountsCount, updateAccount } from '@/db/user'
@@ -41,7 +40,7 @@ type UserImportRecord = {
 }
 
 type RawFTPRecord = Record<string, unknown>
-type ImportEnvironment = Exclude<Environment, 'CUT' | 'CLICKSON'>
+type ImportEnvironment = Extract<Environment, 'BC' | 'TILT'>
 
 type ImportedUser = Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput }
 type ExistingAccount = NonNullable<Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>>
@@ -75,9 +74,7 @@ const normalizeRecord = (raw: RawFTPRecord): UserImportRecord => {
 }
 
 const isImportEnvironment = (environment: string): environment is ImportEnvironment =>
-  Object.values(Environment).includes(environment as Environment) &&
-  environment !== Environment.CUT &&
-  environment !== Environment.CLICKSON
+  environment === Environment.BC || environment === Environment.TILT
 
 const getImportEnvironment = (environment?: string): ImportEnvironment => {
   const normalizedEnvironment = environment || Environment.BC
@@ -104,22 +101,6 @@ const parseTrainings = (rawTrainings: UserImportRecord['trainings']): Training[]
   }
 }
 
-const getDefaultRole = async (dbAccount: ExistingAccount | null, importedLevel: Level | undefined) => {
-  if (dbAccount?.status !== UserStatus.IMPORTED) {
-    return Role.COLLABORATOR
-  }
-  if (!dbAccount.organizationVersion) {
-    return dbAccount.role ?? Role.COLLABORATOR
-  }
-
-  const activeAccountsCount = (await organizationVersionActiveAccountsCount(dbAccount.organizationVersion.id)) ?? 0
-  if (activeAccountsCount > 0) {
-    return dbAccount.role
-  }
-
-  return importedLevel !== undefined || dbAccount.user.level !== undefined ? Role.ADMIN : Role.GESTIONNAIRE
-}
-
 const getTrainingData = (trainings: Training[]) => {
   if (trainings.length === 0) {
     return undefined
@@ -142,7 +123,6 @@ const getTrainingData = (trainings: Training[]) => {
 }
 
 type OrganizationSyncInput = {
-  dbAccount: ExistingAccount | null
   companyNumber: string | undefined
   companyName: string | undefined
   siret: string | undefined
@@ -150,12 +130,6 @@ type OrganizationSyncInput = {
   activatedLicence: number[] | undefined
   importedFileDate: Date
   environment: ImportEnvironment
-}
-
-type UserImportPath = {
-  getRole: (dbAccount: ExistingAccount | null, importedLevel: Level | undefined) => Promise<Role>
-  shouldSyncOrganization: (dbAccount: ExistingAccount | null) => boolean
-  syncOrganization: (input: OrganizationSyncInput) => Promise<OrganizationSyncUpdates>
 }
 
 const updateUserOrganization = async (
@@ -208,32 +182,6 @@ const syncBCAndTILTUserOrganization = async (input: OrganizationSyncInput): Prom
   return updateUserOrganization(input, organization)
 }
 
-const syncUserOrganization = async (input: OrganizationSyncInput): Promise<OrganizationSyncUpdates> => {
-  const { dbAccount, companyNumber } = input
-  if (!companyNumber) {
-    return {}
-  }
-
-  const organization = dbAccount?.organizationVersion
-    ? await getRawOrganizationById(dbAccount.organizationVersion.organizationId)
-    : await getRawOrganizationBySiret(companyNumber)
-
-  return updateUserOrganization(input, organization)
-}
-
-const bcAndTiltImportPath: UserImportPath = {
-  getRole: async () => Role.DEFAULT,
-  shouldSyncOrganization: (dbAccount) =>
-    !dbAccount || dbAccount.status === UserStatus.IMPORTED || dbAccount.status === UserStatus.ACTIVE,
-  syncOrganization: syncBCAndTILTUserOrganization,
-}
-
-const defaultUserImportPath: UserImportPath = {
-  getRole: getDefaultRole,
-  shouldSyncOrganization: (dbAccount) => !dbAccount || dbAccount.status === UserStatus.IMPORTED,
-  syncOrganization: syncUserOrganization,
-}
-
 const updateExistingAccount = async (
   dbAccount: ExistingAccount,
   user: ImportedUser,
@@ -247,9 +195,6 @@ const updateExistingAccount = async (
   await updateAccount(
     dbAccount.id,
     {
-      ...(dbAccount.status === UserStatus.IMPORTED && {
-        role: user.account.role as Exclude<Role, 'SUPER_ADMIN'>,
-      }),
       ...(shouldUpdateOrganization && {
         organizationVersion: user.account.organizationVersion,
       }),
@@ -277,8 +222,6 @@ const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
   const activatedLicence = (value.membershipYear || '').match(/\d{4}/g)?.map(Number)
 
   const dbAccount = await getAccountByEmailAndEnvironment(email, environment)
-  const importPath =
-    environment === Environment.BC || environment === Environment.TILT ? bcAndTiltImportPath : defaultUserImportPath
 
   const trainingData = getTrainingData(trainings)
   const sessionLevel = value.sessionCode
@@ -287,10 +230,9 @@ const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
       : Level.Initial
     : undefined
   const level = trainingData?.level ?? sessionLevel
-  const role = await importPath.getRole(dbAccount, level)
 
   const account: Prisma.AccountCreateInput = {
-    role,
+    role: Role.DEFAULT,
     status: UserStatus.IMPORTED,
     importedFileDate,
     environment,
@@ -305,9 +247,8 @@ const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
   }
 
   let organizationUpdates: OrganizationSyncUpdates = {}
-  if (importPath.shouldSyncOrganization(dbAccount)) {
-    organizationUpdates = await importPath.syncOrganization({
-      dbAccount,
+  if (!dbAccount || dbAccount.status === UserStatus.IMPORTED || dbAccount.status === UserStatus.ACTIVE) {
+    organizationUpdates = await syncBCAndTILTUserOrganization({
       companyNumber,
       companyName: value.companyName,
       siret: value.siret,

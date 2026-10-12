@@ -441,7 +441,7 @@ export const activateEmail = async (email: string, userEnv: Environment, fromRes
           {
             ...(account.status === UserStatus.IMPORTED && {
               role:
-                env === Environment.TILT || (env === Environment.BC && account.user.level === undefined)
+                (env === Environment.BC || env === Environment.TILT) && account.user.level === undefined
                   ? Role.GESTIONNAIRE
                   : Role.ADMIN,
             }),

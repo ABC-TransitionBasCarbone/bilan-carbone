@@ -80,7 +80,7 @@ describe('processUsers', () => {
     await processUsers([{ userEmail: 'existing@example.com' }], new Date('2026-01-15T12:00:00.000Z'))
 
     expect(updateAccount).toHaveBeenCalledTimes(1)
-    expect(jest.mocked(updateAccount).mock.calls[0][1]).toEqual(expect.objectContaining({ role: Role.DEFAULT }))
+    expect(jest.mocked(updateAccount).mock.calls[0][1]).not.toHaveProperty('role')
     expect(createUsersWithAccount).not.toHaveBeenCalled()
     expect(consoleLogSpy).toHaveBeenCalledWith('No new users to create')
     expect(consoleLogSpy).toHaveBeenCalledWith('1 accounts updated')
@@ -172,23 +172,27 @@ describe('processUsers', () => {
     expect(createOrUpdateOrganization).not.toHaveBeenCalled()
   })
 
-  it.each([Environment.CUT, Environment.CLICKSON, 'UNKNOWN'])(
-    'rejects FTP records for unsupported environment %s',
-    async (environment) => {
-      await expect(processUsers([{ userEmail: 'unsupported@example.com', environment }], new Date())).rejects.toThrow(
-        `Unsupported FTP environment: ${environment}`,
-      )
+  it.each([
+    Environment.CUT,
+    Environment.CLICKSON,
+    Environment.MIP,
+    Environment.COURSE_BC,
+    Environment.COURSE_TILT,
+    'UNKNOWN',
+  ])('rejects FTP records for unsupported environment %s', async (environment) => {
+    await expect(processUsers([{ userEmail: 'unsupported@example.com', environment }], new Date())).rejects.toThrow(
+      `Unsupported FTP environment: ${environment}`,
+    )
 
-      expect(getAccountByEmailAndEnvironment).not.toHaveBeenCalled()
-    },
-  )
+    expect(getAccountByEmailAndEnvironment).not.toHaveBeenCalled()
+  })
 
   it.each([
     [Environment.BC, undefined],
     [Environment.BC, Level.Advanced],
     [Environment.TILT, undefined],
     [Environment.TILT, Level.Advanced],
-  ])('keeps imported %s accounts at the default role until activation', async (environment, level) => {
+  ])('does not change imported %s account roles before activation', async (environment, level) => {
     jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue({
       id: 'account-id',
       status: UserStatus.IMPORTED,
@@ -207,7 +211,7 @@ describe('processUsers', () => {
       new Date(),
     )
 
-    expect(jest.mocked(updateAccount).mock.calls[0][1]).toEqual(expect.objectContaining({ role: Role.DEFAULT }))
+    expect(jest.mocked(updateAccount).mock.calls[0][1]).not.toHaveProperty('role')
   })
 
   it.each([

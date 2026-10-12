@@ -166,7 +166,7 @@ describe('signUpWithSiretOrCNC', () => {
       [Environment.BC, undefined, Role.GESTIONNAIRE],
       [Environment.BC, Level.Advanced, Role.ADMIN],
       [Environment.TILT, undefined, Role.GESTIONNAIRE],
-      [Environment.TILT, Level.Advanced, Role.GESTIONNAIRE],
+      [Environment.TILT, Level.Advanced, Role.ADMIN],
       [Environment.CUT, undefined, Role.ADMIN],
       [Environment.CLICKSON, undefined, Role.ADMIN],
       [Environment.MIP, undefined, Role.ADMIN],
