@@ -16,16 +16,13 @@
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
     "ts": "tsc --noEmit && node ../../packages/common/tooling/config/check-declarations.js",
-    "seed": "dotenv -e .env tsx prisma/seed/index.ts",
+    "seed": "dotenv -e .env -- tsx prisma/seed/index.ts",
     "tsx": "dotenv -e .env -- tsx",
     "cypress": "cypress run",
     "cypress:gui": "cypress open",
     "db:test:reset": "dotenv -e .env.test -- prisma migrate reset --force --schema=../../packages/common/db/prisma/schema/schema.prisma && dotenv -e .env.test -- tsx prisma/seed/index.ts",
     "dev:test": "dotenv -e .env.test -- next dev --port 3001",
     "start:test": "dotenv -e .env.test -- env PORT=3001 node .next/standalone/apps/mip/server.js"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed/index.ts"
   },
   "dependencies": {
     "@abc-transitionbascarbone/common": "*",

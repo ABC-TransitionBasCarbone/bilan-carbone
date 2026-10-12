@@ -33,7 +33,7 @@
     "lint": "turbo run lint",
     "format": "turbo run format",
     "prisma": "yarn workspace @abc-transitionbascarbone/common run prisma",
-    "seed": "yarn seed:all",
+    "seed": "yarn all:seed",
     "all:seed": "yarn workspace @abc-transitionbascarbone/common tsx db/prisma/seed/index.ts --target all",
     "bc:seed": "yarn workspace @abc-transitionbascarbone/common tsx db/prisma/seed/index.ts --target bc",
     "db:reset": "cd apps/bc && npx prisma migrate reset --config ../../packages/common/db/prisma.config.ts",
