@@ -1,11 +1,11 @@
 import * as situationDbModule from '@/db/situation'
 import * as studyDbModule from '@/db/study'
-import * as authModule from '@/services/auth.server'
-import * as situationPermissionsModule from '@/services/permissions/situation.server'
+import * as authModule from '@/services/auth'
+import * as situationPermissionsModule from '@/services/permissions/situation'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { saveSituation } from './situation'
 
-jest.mock('../auth.server', () => ({
+jest.mock('../auth', () => ({
   auth: jest.fn(),
   dbActualizedAuth: jest.fn(),
 }))
@@ -20,11 +20,11 @@ jest.mock('../../db/study', () => ({
   getStudyById: jest.fn(),
 }))
 
-jest.mock('../permissions/study.server', () => ({
+jest.mock('../permissions/study', () => ({
   hasReadAccessOnStudy: jest.fn(),
 }))
 
-jest.mock('../permissions/situation.server', () => ({
+jest.mock('../permissions/situation', () => ({
   canSaveSituationOnStudy: jest.fn(),
 }))
 

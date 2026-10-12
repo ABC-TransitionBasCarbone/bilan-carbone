@@ -1,5 +1,5 @@
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 
 export const getEmissionSourceById = (id: string) =>
   prismaClient.studyEmissionSource.findUnique({ where: { id }, include: { emissionSourceTags: true } })

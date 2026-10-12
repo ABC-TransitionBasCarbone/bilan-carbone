@@ -22,7 +22,7 @@ import { LocaleType } from '@abc-transitionbascarbone/common/i18n/config'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { getAuthenticatedAccountWithOrga } from '../permissions/account.permissions.server'
 import { canReadEmissionFactor } from '../permissions/emissionFactor'
-import { canCreateEmissionFactor } from '../permissions/emissionFactor.server'
+import { canCreateEmissionFactor } from '../permissions/emissionFactorAccess'
 import { prepareExcel } from './file'
 
 async function checkAuth(requireCreatePermission = true): Promise<AccountWithUser> {
