@@ -1,4 +1,4 @@
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { createCourseOrganismList } from '@/db/courseOrganism'
 import { CourseOrganism } from '@abc-transitionbascarbone/common/db'
 import { Command } from 'commander'
