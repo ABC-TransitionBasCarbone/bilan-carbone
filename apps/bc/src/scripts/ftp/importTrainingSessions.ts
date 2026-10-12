@@ -241,7 +241,6 @@ export const importCourseSessionsFromFTP = async () => {
   }
 
   const userAccountEntries = [...usersByEmailAndEnvironment.values()]
-  console.log('Users by email and environment:', userAccountEntries)
   const { newUsers, newAccounts } = await createUsersWithAccount(
     userAccountEntries.map(({ email, firstName, lastName, environment }) => ({
       email,
