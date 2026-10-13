@@ -16,6 +16,7 @@ export const isClickson = (environment: Environment) => environment === CLICKSON
 
 export const getLocalesForEnv = (environment: Environment) => {
   switch (environment) {
+    case Environment.COURSE_TILT:
     case Environment.TILT:
     case Environment.CUT:
       return [Locale.FR]
@@ -101,7 +102,7 @@ export const hasAccessToResultsRatioTab = isCut
 export const hasAccessToAdvancedEmissionAnalysis = isTilt
 
 export const hasAlwaysAccessToOrganizationVersion = (environment: Environment) =>
-  ([TILT, CLICKSON] as Environment[]).includes(environment)
+  isTilt(environment) || isClickson(environment)
 
 export const hasStartLinkOnFootprints = isTilt
 

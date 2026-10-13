@@ -1,4 +1,4 @@
-import { isCut } from '@/services/permissions/environment'
+import { isCut, isTilt } from '@/services/permissions/environment'
 import { hasAccessToEngagementActions, isTiltSimplified } from '@/services/permissions/environmentAdvanced'
 import { Translations } from '@abc-transitionbascarbone/common'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
@@ -38,7 +38,7 @@ export const getStudyNavbarMenu = (
 ): Menu => {
   const genericEnv = getEnvironmentHandlingGenericEnvs(environment)
 
-  if (isCut(environment) || isTiltSimplified(genericEnv)) {
+  if (isCut(environment) || isTiltSimplified(genericEnv, studySimplified)) {
     return {
       title: {
         href: `/etudes/${studyId}`,
@@ -49,7 +49,7 @@ export const getStudyNavbarMenu = (
           links: [
             {
               href: `/etudes/${studyId}/cadrage`,
-              label: isTiltSimplified(genericEnv) ? t('generalData') : t('framing'),
+              label: isTilt(genericEnv) ? t('generalData') : t('framing'),
               testId: 'study-cadrage-link',
             },
             {

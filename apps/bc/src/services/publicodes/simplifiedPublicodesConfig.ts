@@ -89,9 +89,9 @@ export const getSimplifiedPublicodesConfig = (
     return TILT_SIMPLIFIED_POSTS_CONFIG as SimplifiedPublicodesConfig
   }
   const environment = getEnvironmentHandlingGenericEnvs(env)
-  const config = (
-    SIMPLIFIED_PUBLICODES_CONFIGS as Partial<Record<EnvironmentWithSimplifiedStudies, SimplifiedPublicodesConfig>>
-  )[environment]
+  const config = (SIMPLIFIED_PUBLICODES_CONFIGS as Partial<Record<Environment, SimplifiedPublicodesConfig>>)[
+    environment
+  ]
   if (!config) {
     throw new Error(`No simplified publicodes config found for environment: ${environment}`)
   }
