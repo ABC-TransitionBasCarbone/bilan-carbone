@@ -59,7 +59,7 @@ const workbook = [
       ['Nom de la session ', 'Stagiaires', 'Prénom', 'Nom'],
       ['Session Numéro 1', 'test.abc2@abc-transitionbascarbone.fr', 'Test', 'ABC'],
       ['Session Numéro 2 ', 'bc-admin-0@yopmail.com', 'Admin', 'BC'],
-      ['Session Numéro 1', 'chloe.molle@abc-transitionbascarbone.fr', 'Test', 'ABC'],
+      ['Session Numéro 1', 'test.abc@abc-transitionbascarbone.fr', 'Test', 'ABC'],
       ['Session Numéro 2 ', 'test-formation@yopmail.com', 'Test', 'Formation'],
     ],
   },
@@ -117,7 +117,7 @@ describe('getCourseSessionsFromFTP', () => {
         environment: 'COURSE_BC',
         trainees: [
           { email: 'test.abc2@abc-transitionbascarbone.fr', firstName: 'Test', lastName: 'ABC' },
-          { email: 'chloe.molle@abc-transitionbascarbone.fr', firstName: 'Test', lastName: 'ABC' },
+          { email: 'test.abc@abc-transitionbascarbone.fr', firstName: 'Test', lastName: 'ABC' },
         ],
         professor: { email: 'onboarding@yopmail.com', firstName: 'Onboarding', lastName: 'Yopmail' },
       },
