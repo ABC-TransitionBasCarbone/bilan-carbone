@@ -4,7 +4,7 @@ import { useMipPublicodes } from '@/lib/publicodes/MipPublicodesProvider'
 import { useMipRule } from '@/lib/publicodes/useMipRule'
 import { MipSimulationState } from '@/utils/survey'
 import { beforeEach, describe, expect, it } from '@jest/globals'
-import { act, createElement } from 'react'
+import { act, createElement, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
@@ -27,8 +27,9 @@ let mockPublicodes: Pick<
 
 type MipRuleResult = ReturnType<typeof useMipRule>
 
-const MipRuleHarness = ({ ruleName, ruleRef }: { ruleName: string; ruleRef: { current: MipRuleResult | null } }) => {
-  ruleRef.current = useMipRule(ruleName)
+const MipRuleHarness = ({ ruleName, onRule }: { ruleName: string; onRule: (rule: MipRuleResult) => void }) => {
+  const rule = useMipRule(ruleName)
+  useEffect(() => onRule(rule))
   return null
 }
 
@@ -72,16 +73,25 @@ describe('MIP answer updates', () => {
 
   it('clears every selected mosaic option without overwriting earlier answers or advancing', () => {
     const root = createRoot(document.createElement('div'))
-    const ruleRef: { current: MipRuleResult | null } = { current: null }
-    act(() => root.render(createElement(MipRuleHarness, { ruleName: 'DT', ruleRef })))
-    const rule = ruleRef.current
-    if (!rule) {
+    let rule: MipRuleResult | null = null
+    act(() =>
+      root.render(
+        createElement(MipRuleHarness, {
+          ruleName: 'DT',
+          onRule: (r) => {
+            rule = r
+          },
+        }),
+      ),
+    )
+    const renderedRule = rule as MipRuleResult | null
+    if (!renderedRule) {
       throw new Error('useMipRule did not render')
     }
 
     act(() => {
-      rule.setValue(false, voiture)
-      rule.setValue(false, train)
+      renderedRule.setValue(false, voiture)
+      renderedRule.setValue(false, train)
     })
     act(() => root.unmount())
 
@@ -98,16 +108,25 @@ describe('MIP answer updates', () => {
     engine.setSituation({ alimentation: 3 })
     const previousOrder = getFormQuestions(engine, meta, []).relevantQuestions
     const root = createRoot(document.createElement('div'))
-    const ruleRef: { current: MipRuleResult | null } = { current: null }
-    act(() => root.render(createElement(MipRuleHarness, { ruleName: 'DT', ruleRef })))
-    const rule = ruleRef.current
-    if (!rule) {
+    let rule: MipRuleResult | null = null
+    act(() =>
+      root.render(
+        createElement(MipRuleHarness, {
+          ruleName: 'DT',
+          onRule: (r) => {
+            rule = r
+          },
+        }),
+      ),
+    )
+    const renderedRule = rule as MipRuleResult | null
+    if (!renderedRule) {
       throw new Error('useMipRule did not render')
     }
 
     act(() => {
-      rule.setValue(true, voiture)
-      rule.setValue(true, train)
+      renderedRule.setValue(true, voiture)
+      renderedRule.setValue(true, train)
     })
     act(() => root.unmount())
     const questions = getFormQuestions(engine, meta, [])
