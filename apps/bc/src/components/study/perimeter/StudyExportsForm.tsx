@@ -19,6 +19,7 @@ interface Props<T extends StudyExportsCommand> {
   t: Translations
   disabled?: boolean
   duplicateStudyId?: string | null
+  separateResultsFormats?: boolean
   onSave?: (exports: Export[], controlMode: ControlMode) => void
 }
 
@@ -30,6 +31,7 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
   t,
   disabled,
   duplicateStudyId,
+  separateResultsFormats = false,
   onSave,
 }: Props<T>) => {
   const tGlossary = useTranslations('study.new.glossary')
@@ -46,7 +48,7 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
             <div className="flex">
               <FormLabel component="legend" className={styles.exportsLabel}>
                 <div className={classNames(formStyles.gapped, 'align-center')}>
-                  <span className="inputLabel bold">{t('exports')}</span>
+                  <span className="inputLabel bold">{t(separateResultsFormats ? 'resultsFormats' : 'exports')}</span>
                   <div className={formStyles.icon}>
                     {<HelpIcon onClick={() => setGlossary('exports')} label={tGlossary('title')} />}
                   </div>
@@ -66,6 +68,7 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
             <FormGroup>
               <ExportCheckboxes
                 values={form.getValues()}
+                sectionTitle={separateResultsFormats ? t('exports') : undefined}
                 setControl={(value: ControlMode) => {
                   setValue('controlMode', value)
                   onSave?.(form.getValues().exports, value)

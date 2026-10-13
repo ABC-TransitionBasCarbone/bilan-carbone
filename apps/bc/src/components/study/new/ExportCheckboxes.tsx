@@ -26,6 +26,7 @@ type ExportValues = {
 
 interface Props {
   study?: FullStudy
+  sectionTitle?: string
   values: ExportValues
   onChange: (value: Export[]) => void
   setControl: (value: ControlMode) => void
@@ -35,7 +36,7 @@ interface Props {
 
 const ghgpActivation = process.env.NEXT_PUBLIC_GHGP_ACTIVATION_DATE
 
-const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, duplicateStudyId }: Props) => {
+const ExportCheckboxes = ({ study, sectionTitle, values, onChange, setControl, disabled, duplicateStudyId }: Props) => {
   const { callServerFunction } = useServerFunction()
   const t = useTranslations('exports')
   const [pendingExportCheck, setPendingExportCheck] = useState<Export | null>(null)
@@ -150,6 +151,7 @@ const ExportCheckboxes = ({ study, values, onChange, setControl, disabled, dupli
             label={t('consolidated')}
           />
         </div>
+        {sectionTitle && <div className={styles.sectionTitle}>{sectionTitle}</div>}
         {Object.keys(Export)
           .sort(sortAlphabetically)
           .map((exportType, i) => (
