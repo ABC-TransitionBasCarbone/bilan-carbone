@@ -163,16 +163,16 @@ describe('signUpWithSiretOrCNC', () => {
     })
 
     it.each([
-      [Environment.BC, undefined, Role.GESTIONNAIRE],
-      [Environment.BC, Level.Advanced, Role.ADMIN],
-      [Environment.TILT, undefined, Role.GESTIONNAIRE],
-      [Environment.TILT, Level.Advanced, Role.ADMIN],
-      [Environment.CUT, undefined, Role.ADMIN],
-      [Environment.CLICKSON, undefined, Role.ADMIN],
-      [Environment.MIP, undefined, Role.ADMIN],
-      [Environment.COURSE_BC, undefined, Role.ADMIN],
-      [Environment.COURSE_TILT, undefined, Role.ADMIN],
-    ])('assigns the first %s account role from its environment and training', async (environment, level, role) => {
+      [Environment.BC, undefined],
+      [Environment.BC, Level.Advanced],
+      [Environment.TILT, undefined],
+      [Environment.TILT, Level.Advanced],
+      [Environment.CUT, undefined],
+      [Environment.CLICKSON, undefined],
+      [Environment.MIP, undefined],
+      [Environment.COURSE_BC, undefined],
+      [Environment.COURSE_TILT, undefined],
+    ])('does not assign an organization role during %s email activation', async (environment, level) => {
       mockGetUserByEmail.mockResolvedValue({
         id: mockedUserId,
         email: testEmail,
@@ -206,10 +206,11 @@ describe('signUpWithSiretOrCNC', () => {
       expect(result.success).toBe(true)
       expect(mockUpdateAccount).toHaveBeenCalledWith(
         mockedAccountId,
-        expect.objectContaining({ role, activationRequestedAt: expect.any(Date) }),
+        expect.objectContaining({ activationRequestedAt: expect.any(Date) }),
         undefined,
         expect.anything(),
       )
+      expect(mockUpdateAccount.mock.calls[0][1]).not.toHaveProperty('role')
     })
 
     it('rejects activation when active organization members have no active approver', async () => {

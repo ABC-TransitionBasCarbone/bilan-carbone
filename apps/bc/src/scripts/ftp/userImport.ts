@@ -46,6 +46,8 @@ type ImportedUser = Prisma.UserCreateManyInput & { account: Prisma.AccountCreate
 type ExistingAccount = NonNullable<Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>>
 type OrganizationSyncUpdates = Partial<Pick<Prisma.AccountCreateInput, 'organizationVersion'>>
 
+const importEnvironments: readonly string[] = [Environment.BC, Environment.TILT]
+
 const normalizeRecord = (raw: RawFTPRecord): UserImportRecord => {
   const getString = (camel: string, pascal: string): string | undefined => {
     const val = raw[camel] ?? raw[pascal]
@@ -74,7 +76,7 @@ const normalizeRecord = (raw: RawFTPRecord): UserImportRecord => {
 }
 
 const isImportEnvironment = (environment: string): environment is ImportEnvironment =>
-  environment === Environment.BC || environment === Environment.TILT
+  importEnvironments.includes(environment)
 
 const getImportEnvironment = (environment?: string): ImportEnvironment => {
   const normalizedEnvironment = environment || Environment.BC
@@ -188,16 +190,10 @@ const updateExistingAccount = async (
   value: UserImportRecord,
   environment: ImportEnvironment,
 ) => {
-  const shouldUpdateOrganization =
-    dbAccount.status === UserStatus.IMPORTED ||
-    (dbAccount.status === UserStatus.ACTIVE && user.account.organizationVersion !== undefined)
-
   await updateAccount(
     dbAccount.id,
     {
-      ...(shouldUpdateOrganization && {
-        organizationVersion: user.account.organizationVersion,
-      }),
+      ...(user.account.organizationVersion && { organizationVersion: user.account.organizationVersion }),
       environment,
       ...(user.account.formationName !== undefined && { formationName: user.account.formationName }),
       ...(user.account.formationStartDate !== undefined && { formationStartDate: user.account.formationStartDate }),
@@ -246,18 +242,15 @@ const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
     },
   }
 
-  let organizationUpdates: OrganizationSyncUpdates = {}
-  if (!dbAccount || dbAccount.status === UserStatus.IMPORTED || dbAccount.status === UserStatus.ACTIVE) {
-    organizationUpdates = await syncBCAndTILTUserOrganization({
-      companyNumber,
-      companyName: value.companyName,
-      siret: value.siret,
-      isCR,
-      activatedLicence,
-      importedFileDate,
-      environment,
-    })
-  }
+  const organizationUpdates = await syncBCAndTILTUserOrganization({
+    companyNumber,
+    companyName: value.companyName,
+    siret: value.siret,
+    isCR,
+    activatedLicence,
+    importedFileDate,
+    environment,
+  })
 
   const user: ImportedUser = {
     id: dbAccount?.user.id,
