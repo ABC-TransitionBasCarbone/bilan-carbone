@@ -2,7 +2,7 @@ import xlsx from 'node-xlsx'
 
 type ParseSheetError = { lineNumber: number | null; key: string }
 
-export function parseExcelSheet(
+export const parseExcelSheet = (
   buffer: Buffer,
   options?: {
     firstHeader?: string
@@ -10,7 +10,7 @@ export function parseExcelSheet(
     ignoredColumns?: number[]
   },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): { success: false; errors: ParseSheetError[] } | { success: true; dataRows: any[][]; headerRowIndex: number } {
+): { success: false; errors: ParseSheetError[] } | { success: true; dataRows: any[][]; headerRowIndex: number } => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let workbook: ReturnType<typeof xlsx.parse<any[]>>
   try {
@@ -53,4 +53,26 @@ export function parseExcelSheet(
   }
 
   return { success: true, dataRows, headerRowIndex }
+}
+
+export type Worksheet = {
+  name: string
+  data: unknown[][]
+}
+const getWorksheetRecords = (worksheet: Worksheet): Record<string, unknown>[] => {
+  const [headers, ...rows] = worksheet.data
+  if (!headers) {
+    return []
+  }
+
+  const headerIndexes = new Map(headers.map((header, index) => [String(header).trim(), index]))
+  return rows.map((row) => Object.fromEntries([...headerIndexes].map(([header, index]) => [header, row[index]])))
+}
+
+export const getRecords = (worksheets: Worksheet[], name: string) => {
+  const worksheet = worksheets.find((item) => item.name.trim() === name)
+  if (!worksheet) {
+    throw new Error(`Missing ${name} sheet in training sessions file`)
+  }
+  return getWorksheetRecords(worksheet)
 }

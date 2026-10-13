@@ -1,5 +1,6 @@
 import { prismaClient } from '@/db/client.server'
 import { createUsersWithAccount } from '@/db/user'
+import { getRecords, type Worksheet } from '@/utils/excel.utils'
 import { Environment, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { AccessOptions, Client } from 'basic-ftp'
 import { randomInt } from 'crypto'
@@ -7,11 +8,6 @@ import { getJsDateFromExcel } from 'excel-date-to-js'
 import fs from 'fs'
 import xlsx from 'node-xlsx'
 import path from 'path'
-
-type Worksheet = {
-  name: string
-  data: unknown[][]
-}
 
 type CourseParticipant = {
   email: string
@@ -52,16 +48,6 @@ const downloadFileFromFTP = async (client: Client, fullPath: string, fileName: s
   return fs.promises.readFile(fileName)
 }
 
-const getWorksheetRecords = (worksheet: Worksheet): Record<string, unknown>[] => {
-  const [headers, ...rows] = worksheet.data
-  if (!headers) {
-    return []
-  }
-
-  const headerIndexes = new Map(headers.map((header, index) => [String(header).trim(), index]))
-  return rows.map((row) => Object.fromEntries([...headerIndexes].map(([header, index]) => [header, row[index]])))
-}
-
 const getRequiredText = (record: Record<string, unknown>, field: string) => {
   const value = record[field]
   if (typeof value !== 'string' || !value.trim()) {
@@ -99,14 +85,6 @@ const getParticipant = (record: Record<string, unknown>, emailField: string): Co
   firstName: getRequiredText(record, 'Prénom'),
   lastName: getRequiredText(record, 'Nom'),
 })
-
-const getRecords = (worksheets: Worksheet[], name: string) => {
-  const worksheet = worksheets.find((item) => item.name.trim() === name)
-  if (!worksheet) {
-    throw new Error(`Missing ${name} sheet in training sessions file`)
-  }
-  return getWorksheetRecords(worksheet)
-}
 
 const getSession = (sessions: Map<string, CourseSession>, record: Record<string, unknown>) => {
   const name = getRequiredText(record, 'Nom de la session')

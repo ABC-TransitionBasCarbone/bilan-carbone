@@ -44,7 +44,6 @@ const mockUpdateAccount = jest.mocked(prismaClient.account.update)
 const mockFindCourseSessions = jest.mocked(prismaClient.courseSession.findMany)
 const mockUpsertCourseSession = jest.mocked(prismaClient.courseSession.upsert)
 const mockCreateUsersWithAccount = jest.mocked(createUsersWithAccount)
-const mockTransaction = jest.mocked(prismaClient.$transaction)
 const workbook = [
   {
     name: 'Sessions',
@@ -58,9 +57,9 @@ const workbook = [
     name: 'Stagiaires',
     data: [
       ['Nom de la session ', 'Stagiaires', 'Prénom', 'Nom'],
-      ['Session Numéro 1', 'chloe.molle@neuf.fr', 'Chloé', 'Molle'],
+      ['Session Numéro 1', 'test.abc2@abc-transitionbascarbone.fr', 'Test', 'ABC'],
       ['Session Numéro 2 ', 'bc-admin-0@yopmail.com', 'Admin', 'BC'],
-      ['Session Numéro 1', 'chloe.molle@abc-transitionbascarbone.fr', 'Chloé', 'Molle'],
+      ['Session Numéro 1', 'chloe.molle@abc-transitionbascarbone.fr', 'Test', 'ABC'],
       ['Session Numéro 2 ', 'test-formation@yopmail.com', 'Test', 'Formation'],
     ],
   },
@@ -117,8 +116,8 @@ describe('getCourseSessionsFromFTP', () => {
         endDate: getJsDateFromExcel(46377),
         environment: 'COURSE_BC',
         trainees: [
-          { email: 'chloe.molle@neuf.fr', firstName: 'Chloé', lastName: 'Molle' },
-          { email: 'chloe.molle@abc-transitionbascarbone.fr', firstName: 'Chloé', lastName: 'Molle' },
+          { email: 'test.abc2@abc-transitionbascarbone.fr', firstName: 'Test', lastName: 'ABC' },
+          { email: 'chloe.molle@abc-transitionbascarbone.fr', firstName: 'Test', lastName: 'ABC' },
         ],
         professor: { email: 'onboarding@yopmail.com', firstName: 'Onboarding', lastName: 'Yopmail' },
       },
@@ -143,8 +142,8 @@ describe('getCourseSessionsFromFTP', () => {
       newAccounts: { count: 6 },
     })
     const accountEntries = [
-      ['chloe.molle@neuf.fr', 'Chloé', 'Molle', 'COURSE_BC'],
-      ['chloe.molle@abc-transitionbascarbone.fr', 'Chloé', 'Molle', 'COURSE_BC'],
+      ['test.abc2@abc-transitionbascarbone.fr', 'Test', 'ABC', 'COURSE_BC'],
+      ['test.abc@abc-transitionbascarbone.fr', 'Test', 'ABC', 'COURSE_BC'],
       ['onboarding@yopmail.com', 'Onboarding', 'Yopmail', 'COURSE_BC'],
       ['bc-admin-0@yopmail.com', 'Admin', 'BC', 'COURSE_TILT'],
       ['test-formation@yopmail.com', 'Test', 'Formation', 'COURSE_TILT'],
@@ -166,9 +165,9 @@ describe('getCourseSessionsFromFTP', () => {
     expect(mockCreateUsersWithAccount).toHaveBeenCalledWith(
       expect.arrayContaining([
         expect.objectContaining({
-          email: 'chloe.molle@neuf.fr',
-          firstName: 'Chloé',
-          lastName: 'Molle',
+          email: 'test.abc2@abc-transitionbascarbone.fr',
+          firstName: 'Test',
+          lastName: 'ABC',
         }),
       ]),
     )
@@ -179,7 +178,7 @@ describe('getCourseSessionsFromFTP', () => {
           organizationVersion: {
             create: {
               environment: 'COURSE_BC',
-              organization: { create: { name: 'Chloé Molle' } },
+              organization: { create: { name: 'Test ABC' } },
             },
           },
         },
