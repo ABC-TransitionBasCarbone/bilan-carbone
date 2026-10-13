@@ -1,7 +1,7 @@
 'use server'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { Locale, LocaleType } from '@abc-transitionbascarbone/common/i18n/config'
-import { isCourse } from '@abc-transitionbascarbone/common/utils/environments'
+import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import { mergeObjects } from '@abc-transitionbascarbone/common/utils/object'
 import fs from 'fs'
 import path from 'path'
@@ -61,7 +61,7 @@ export const getMessages = async (locale: LocaleType, environment?: Environment)
   }
 
   let courseMessages = {}
-  if (isCourse(environment)) {
+  if (isCourseEnvironment(environment)) {
     const courseFile = path.join(process.cwd(), 'src/i18n/translations', `${locale}/course_common.json`)
     if (fs.existsSync(courseFile)) {
       courseMessages = JSON.parse(fs.readFileSync(courseFile, 'utf-8'))

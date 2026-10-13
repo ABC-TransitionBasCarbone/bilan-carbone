@@ -49,12 +49,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
   return (
     <DynamicTheme environment={environment}>
       <Box className={classNames('flex-col h100', { [styles.withOrganizationCard]: withOrganizationCard })}>
-        <Navbar
-          user={account}
-          environment={environment}
-          isFootprintsEnabled={isTiltSimplifiedActive}
-          hasTrainedUsers={hasTrainedUsers}
-        />
+        <Navbar user={account} isFootprintsEnabled={isTiltSimplifiedActive} hasTrainedUsers={hasTrainedUsers} />
         {withOrganizationCard && (
           <OrganizationCard
             account={account}

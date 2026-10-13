@@ -1,11 +1,16 @@
 import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
 import { DeactivatableFeature, Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { Locale } from '@abc-transitionbascarbone/common/i18n/config'
-import { advancedEnvironments, isAdvanced, isSimplified } from '@abc-transitionbascarbone/common/utils/environments'
-const { BC, CUT, TILT, CLICKSON } = Environment
+import {
+  advancedEnvironments,
+  getEnvironmentHandlingGenericEnvs,
+  isAdvanced,
+  isSimplified,
+} from '@abc-transitionbascarbone/common/utils/environments'
+const { BC, CUT, TILT, COURSE_TILT, CLICKSON } = Environment
 
 export const isBC = (environment: Environment) => environment === BC
-export const isTilt = (environment: Environment) => environment === TILT
+export const isTilt = (environment: Environment) => getEnvironmentHandlingGenericEnvs(environment) === TILT
 export const isCut = (environment: Environment) => environment === CUT
 export const isClickson = (environment: Environment) => environment === CLICKSON
 
@@ -105,11 +110,12 @@ export const hasAccessToPostTypeform = isTilt
 export const hasAccessToReductionObjectivesGlossary = isTilt
 
 export const isTiltSimplifiedFeatureActive = async (environment: Environment) => {
-  if (!isTilt(environment)) {
+  const genericEnvironment = getEnvironmentHandlingGenericEnvs(environment)
+  if (genericEnvironment && !isTilt(genericEnvironment)) {
     return true
   }
 
-  return isFeatureActiveForEnvironment(DeactivatableFeature.TiltSimplified, environment)
+  return !genericEnvironment || isFeatureActiveForEnvironment(DeactivatableFeature.TiltSimplified, genericEnvironment)
 }
 
 export const hasAccessToHomeSubtitle = isClickson
@@ -127,7 +133,7 @@ export const hasBCExportWithSimplifiedStudy = (environment: Environment) => {
   return environment === CUT
 }
 
-const environmentWithSimplifiedStudies = [CUT, CLICKSON, TILT] as const
+const environmentWithSimplifiedStudies = [CUT, CLICKSON, TILT, COURSE_TILT] as const
 export type EnvironmentWithSimplifiedStudies = (typeof environmentWithSimplifiedStudies)[number]
 
 export const hasSimplifiedStudies = (env: Environment): env is EnvironmentWithSimplifiedStudies => {
@@ -137,4 +143,4 @@ export const hasSimplifiedStudies = (env: Environment): env is EnvironmentWithSi
 export const isRedirectedToCadrage = (environment: Environment) => isCut(environment) || isClickson(environment)
 
 export const hasSpecificExport = (environment: Environment) =>
-  ([CUT, CLICKSON, TILT] as Environment[]).includes(environment)
+  isCut(environment) || isClickson(environment) || isTilt(environment)

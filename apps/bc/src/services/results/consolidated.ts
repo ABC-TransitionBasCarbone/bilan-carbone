@@ -5,6 +5,7 @@ import { getEmissionSourcesTotalCo2 } from '@/utils/emissionSources'
 import { Translations } from '@abc-transitionbascarbone/common'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { Post } from '@abc-transitionbascarbone/common/utils/charts'
+import { getEnvironmentHandlingGenericEnvs } from '@abc-transitionbascarbone/common/utils/environments'
 import { AdditionalResultTypes, ResultsByPost, ResultType } from '../../types/study.types'
 import { getEmissionResults, getEmissionSourcesTotalMonetaryCo2 } from '../emissionSource'
 import { hasCustomPostOrder } from '../permissions/environment'
@@ -29,7 +30,7 @@ export const computeResultsByPostFromEmissionSources = (
         return {
           ...emissionSource,
           subPost:
-            environment === Environment.TILT
+            getEnvironmentHandlingGenericEnvs(environment) === Environment.TILT
               ? convertTiltSubPostToBCSubPost(emissionSource.subPost)
               : emissionSource.subPost,
         }

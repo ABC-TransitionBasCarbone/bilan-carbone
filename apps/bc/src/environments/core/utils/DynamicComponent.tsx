@@ -1,12 +1,10 @@
 'use client'
 
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
-import { CourseEnvironment } from '@/types/environment'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import {
-  courseEnvironments,
   EnvironmentMode,
-  fallBackEnvironment,
+  getEnvironmentHandlingGenericEnvs,
   isAdvanced,
   isSimplified,
 } from '@abc-transitionbascarbone/common/utils/environments'
@@ -26,16 +24,9 @@ interface Props {
 const DynamicComponent = ({ defaultComponent, environmentComponents = {}, forceEnvironment }: Props) => {
   const { environment } = useAppEnvironmentStore()
 
-  let environmentToUse
-  if (
-    environment &&
-    courseEnvironments.includes(environment) &&
-    !(Object.keys(environmentComponents) as Environment[]).includes(environment)
-  ) {
-    environmentToUse = fallBackEnvironment[environment as CourseEnvironment]
-  }
-
-  environmentToUse = forceEnvironment || environmentToUse || environment
+  const environmentToUse =
+    forceEnvironment ||
+    getEnvironmentHandlingGenericEnvs(environment, Object.keys(environmentComponents) as Environment[])
 
   if (!environmentToUse) {
     return <EnvironmentLoader />

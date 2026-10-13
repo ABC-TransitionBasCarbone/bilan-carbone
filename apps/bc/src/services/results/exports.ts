@@ -10,6 +10,7 @@ import {
   Environment,
   Import,
 } from '@abc-transitionbascarbone/common/db/enums'
+import { getEnvironmentHandlingGenericEnvs } from '@abc-transitionbascarbone/common/utils/environments'
 import { convertTiltSubPostToBCSubPost } from '../posts'
 import {
   getSquaredStandardDeviationForEmissionSource,
@@ -153,7 +154,7 @@ export const computeResult = (
     .map((emissionSource) => ({
       ...emissionSource,
       subPost:
-        environment === Environment.TILT
+        getEnvironmentHandlingGenericEnvs(environment) === Environment.TILT
           ? convertTiltSubPostToBCSubPost(emissionSource.subPost)
           : emissionSource.subPost,
     }))
