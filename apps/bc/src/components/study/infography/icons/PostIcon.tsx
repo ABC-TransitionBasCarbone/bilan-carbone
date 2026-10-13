@@ -57,6 +57,7 @@ const PostIcon = ({ post, className }: Props) => {
     case Post.FinDeVieSimplified:
       return <FinDeVieIcon className={className} />
     case Post.IntrantsBiensEtMatieres:
+    case Post.IntrantsBiensEtMatieresTilt:
       return <IntrantsBiensEtMatieresIcon className={className} />
     case Post.Fret:
       return <FretIcon className={className} />

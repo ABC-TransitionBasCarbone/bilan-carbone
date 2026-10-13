@@ -1,7 +1,10 @@
 'use server'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { Locale, LocaleType } from '@abc-transitionbascarbone/common/i18n/config'
-import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
+import {
+  getEnvironmentHandlingGenericEnvs,
+  isCourseEnvironment,
+} from '@abc-transitionbascarbone/common/utils/environments'
 import { mergeObjects } from '@abc-transitionbascarbone/common/utils/object'
 import fs from 'fs'
 import path from 'path'
@@ -29,6 +32,17 @@ export const getMessages = async (locale: LocaleType, environment?: Environment)
     return {
       locale,
       messages: baseMessages,
+    }
+  }
+
+  const genericEnvironment = getEnvironmentHandlingGenericEnvs(environment)
+  let genericMessages = {}
+
+  if (genericEnvironment && genericEnvironment !== environment) {
+    const genericEnvLower = genericEnvironment.toLocaleLowerCase()
+    const genericFilePath = path.join(process.cwd(), 'src/i18n/translations', `${locale}/${genericEnvLower}.json`)
+    if (fs.existsSync(genericFilePath)) {
+      genericMessages = JSON.parse(fs.readFileSync(genericFilePath, 'utf-8'))
     }
   }
 
@@ -72,6 +86,14 @@ export const getMessages = async (locale: LocaleType, environment?: Environment)
 
   return {
     locale,
-    messages: mergeObjects({}, baseMessages, overrideMessages, publicodesRules, publicodesLayout, courseMessages),
+    messages: mergeObjects(
+      {},
+      baseMessages,
+      genericMessages,
+      overrideMessages,
+      publicodesRules,
+      publicodesLayout,
+      courseMessages,
+    ),
   }
 }
