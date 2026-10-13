@@ -1,10 +1,11 @@
 import NavbarOrganizationMenu from '@/components/navbar/NavbarOrganizationMenu'
-import { hasAlwaysAccessToOrganizationVersion, hasHomeButtonHeader } from '@/services/permissions/environment'
+import { hasAlwaysAccessToOrganizationVersion, hasHomeButtonHeader, isTilt } from '@/services/permissions/environment'
 import { hasAccessToEmissionFactors } from '@/services/permissions/environmentAdvanced'
 import { isAdmin } from '@/utils/user'
-import { Environment, Role } from '@abc-transitionbascarbone/common/db/enums'
+import { Role } from '@abc-transitionbascarbone/common/db/enums'
 import NavbarButton from '@abc-transitionbascarbone/common/ui/navbar/NavbarButton'
 import NavbarLink from '@abc-transitionbascarbone/common/ui/navbar/NavbarLink'
+import { getEnvironmentHandlingGenericEnvs } from '@abc-transitionbascarbone/common/utils/environments'
 import { Box, MenuItem } from '@mui/material'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -22,7 +23,7 @@ const TopLeftNavBar = ({ user, hasFormation, isFootprintsEnabled, hasTrainedUser
   const t = useTranslations('navigation')
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
-  const isTiltEnvironment = user.environment === Environment.TILT || user.environment === Environment.COURSE_TILT
+  const environment = getEnvironmentHandlingGenericEnvs(user.environment)
   const handleClickMenu = (event: MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget)
   const handleClose = () => setAnchorEl(null)
 
@@ -30,7 +31,7 @@ const TopLeftNavBar = ({ user, hasFormation, isFootprintsEnabled, hasTrainedUser
     <>
       {user.organizationVersionId && (
         <Box>
-          {hasHomeButtonHeader(user.environment) && (
+          {hasHomeButtonHeader(environment) && (
             <NavbarButton href="/" data-testid="button-menu-home" color="inherit">
               {t('home')}
             </NavbarButton>
@@ -47,7 +48,7 @@ const TopLeftNavBar = ({ user, hasFormation, isFootprintsEnabled, hasTrainedUser
           >
             {(isAdmin(user.role) ||
               user.role === Role.GESTIONNAIRE ||
-              hasAlwaysAccessToOrganizationVersion(user.environment)) && (
+              hasAlwaysAccessToOrganizationVersion(environment)) && (
               <MenuItem>
                 <NavbarLink
                   data-testid="link-edit-organisation"
@@ -63,14 +64,14 @@ const TopLeftNavBar = ({ user, hasFormation, isFootprintsEnabled, hasTrainedUser
                 {t('team')}
               </NavbarLink>
             </MenuItem>
-            {(!isTiltEnvironment || hasTrainedUsers) && (
+            {(!isTilt(environment) || hasTrainedUsers) && (
               <MenuItem onClick={handleClose}>
                 <NavbarLink data-testid="link-organization" href="/organisations" onClick={handleClose}>
                   {t('organizations')}
                 </NavbarLink>
               </MenuItem>
             )}
-            {isTiltEnvironment && isFootprintsEnabled && (
+            {isTilt(environment) && isFootprintsEnabled && (
               <MenuItem onClick={handleClose}>
                 <NavbarLink data-testid="link-organization" href="/mes-empreintes" onClick={handleClose}>
                   {t('footprints')}
@@ -80,7 +81,7 @@ const TopLeftNavBar = ({ user, hasFormation, isFootprintsEnabled, hasTrainedUser
           </NavbarOrganizationMenu>
         </Box>
       )}
-      {hasAccessToEmissionFactors(user.environment, user.level) && (
+      {hasAccessToEmissionFactors(environment, user.level) && (
         <NavbarButton href="/facteurs-d-emission" data-testid="navbar-facteur-demission">
           <span className={styles.big}>{t('factors')}</span>
           <span className={styles.small}>{t('fe')}</span>

@@ -10,7 +10,7 @@ import {
   Environment,
   Import,
 } from '@abc-transitionbascarbone/common/db/enums'
-import { getEnvironmentHandlingGenericEnvs } from '@abc-transitionbascarbone/common/utils/environments'
+import { isTilt } from '../permissions/environment'
 import { convertTiltSubPostToBCSubPost } from '../posts'
 import {
   getSquaredStandardDeviationForEmissionSource,
@@ -153,10 +153,7 @@ export const computeResult = (
   siteEmissionSources
     .map((emissionSource) => ({
       ...emissionSource,
-      subPost:
-        getEnvironmentHandlingGenericEnvs(environment) === Environment.TILT
-          ? convertTiltSubPostToBCSubPost(emissionSource.subPost)
-          : emissionSource.subPost,
+      subPost: isTilt(environment) ? convertTiltSubPostToBCSubPost(emissionSource.subPost) : emissionSource.subPost,
     }))
     .filter((emissionSource) => filterWithDependencies(emissionSource.subPost, withDependencies))
     .forEach((emissionSource) => {

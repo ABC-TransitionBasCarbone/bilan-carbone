@@ -5,10 +5,9 @@ import { getEmissionSourcesTotalCo2 } from '@/utils/emissionSources'
 import { Translations } from '@abc-transitionbascarbone/common'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { Post } from '@abc-transitionbascarbone/common/utils/charts'
-import { getEnvironmentHandlingGenericEnvs } from '@abc-transitionbascarbone/common/utils/environments'
 import { AdditionalResultTypes, ResultsByPost, ResultType } from '../../types/study.types'
 import { getEmissionResults, getEmissionSourcesTotalMonetaryCo2 } from '../emissionSource'
-import { hasCustomPostOrder } from '../permissions/environment'
+import { hasCustomPostOrder, isTilt } from '../permissions/environment'
 import { BCPost, convertTiltSubPostToBCSubPost, subPostsByPost } from '../posts'
 import { getSquaredStandardDeviationForEmissionSourceArray } from '../uncertainty'
 import { filterWithDependencies, getSiteEmissionSourcesWithoutMarketBase } from './utils'
@@ -29,10 +28,7 @@ export const computeResultsByPostFromEmissionSources = (
     ? siteEmissionSources.map((emissionSource) => {
         return {
           ...emissionSource,
-          subPost:
-            getEnvironmentHandlingGenericEnvs(environment) === Environment.TILT
-              ? convertTiltSubPostToBCSubPost(emissionSource.subPost)
-              : emissionSource.subPost,
+          subPost: isTilt(environment) ? convertTiltSubPostToBCSubPost(emissionSource.subPost) : emissionSource.subPost,
         }
       })
     : siteEmissionSources

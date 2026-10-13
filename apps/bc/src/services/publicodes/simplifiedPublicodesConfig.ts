@@ -78,7 +78,6 @@ const SIMPLIFIED_PUBLICODES_CONFIGS = {
   [Environment.CUT]: CUT_CONFIG,
   [Environment.CLICKSON]: CLICKSON_CONFIG,
   [Environment.TILT]: TILT_SIMPLIFIED_POSTS_CONFIG,
-  [Environment.COURSE_TILT]: TILT_SIMPLIFIED_POSTS_CONFIG,
 }
 
 // subPostsConfigVersion parameter will be relevant when additional versions are added (e.g. tilt-simplified-posts-v2)
@@ -90,10 +89,12 @@ export const getSimplifiedPublicodesConfig = (
     return TILT_SIMPLIFIED_POSTS_CONFIG as SimplifiedPublicodesConfig
   }
   const environment = getEnvironmentHandlingGenericEnvs(env)
-  const config = SIMPLIFIED_PUBLICODES_CONFIGS[environment]
+  const config = (
+    SIMPLIFIED_PUBLICODES_CONFIGS as Partial<Record<EnvironmentWithSimplifiedStudies, SimplifiedPublicodesConfig>>
+  )[environment]
   if (!config) {
     throw new Error(`No simplified publicodes config found for environment: ${environment}`)
   }
 
-  return config as SimplifiedPublicodesConfig
+  return config
 }

@@ -1,10 +1,12 @@
 import type { FullStudy } from '@/db/study'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { PublicodesSituationProvider } from '@/lib/publicodes/context'
+import { isTilt } from '@/services/permissions/environment'
 import { CutPost, TiltAdvancedPost } from '@/services/posts'
 import { computeResultsByPostFromEmissionSources } from '@/services/results/consolidated'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { getEnvironmentHandlingGenericEnvs } from '@abc-transitionbascarbone/common/utils/environments'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import { useEffect, useMemo, useState } from 'react'
@@ -37,7 +39,7 @@ const AllPostsInfographyContainer = ({ study, studySiteId, siteId }: Props) => {
     }
   }
 
-  const environment = useMemo(() => study.organizationVersion.environment, [study])
+  const genericEnv = useMemo(() => getEnvironmentHandlingGenericEnvs(study.organizationVersion.environment), [study])
 
   const data = useMemo(
     () =>
@@ -47,14 +49,10 @@ const AllPostsInfographyContainer = ({ study, studySiteId, siteId }: Props) => {
         siteId,
         true,
         validatedOnly,
-        environment === Environment.TILT || environment === Environment.COURSE_TILT
-          ? TiltAdvancedPost
-          : environment === Environment.CUT
-            ? CutPost
-            : undefined,
-        environment,
+        isTilt(genericEnv) ? TiltAdvancedPost : genericEnv === Environment.CUT ? CutPost : undefined,
+        genericEnv,
       ),
-    [study, tPost, siteId, validatedOnly, environment],
+    [study, tPost, siteId, validatedOnly, genericEnv],
   )
 
   return (

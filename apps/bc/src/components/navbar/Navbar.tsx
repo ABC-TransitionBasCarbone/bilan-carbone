@@ -2,7 +2,7 @@
 
 import TopLeftNavBar from '@/components/navbar/TopLeftNavBar'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
-import { hasAccessToStudyComments, isClickson } from '@/services/permissions/environment'
+import { hasAccessToStudyComments, isClickson, isTilt } from '@/services/permissions/environment'
 import { hasAccessToMethodology, hasAccessToSettings } from '@/services/permissions/environmentAdvanced'
 import { hasAccessToFormation } from '@/services/permissions/formations'
 import { getUserActiveAccounts } from '@/services/serverFunctions/user'
@@ -44,8 +44,6 @@ const Navbar = ({ user, isFootprintsEnabled, hasTrainedUsers }: Props) => {
   const locale = useLocale()
   const environment = getEnvironmentHandlingGenericEnvs(user.environment)
 
-  const isTiltEnvironment = environment === Environment.TILT
-
   useEffect(() => {
     const getFormationAccess = async () => {
       const hasAccess = await hasAccessToFormation(user)
@@ -64,7 +62,6 @@ const Navbar = ({ user, isFootprintsEnabled, hasTrainedUsers }: Props) => {
   }, [user])
 
   const methodologyLink = useMemo(() => {
-    const environment = getEnvironmentHandlingGenericEnvs(user.environment, [])
     switch (environment) {
       case Environment.TILT:
         return 'https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative'
@@ -73,7 +70,7 @@ const Navbar = ({ user, isFootprintsEnabled, hasTrainedUsers }: Props) => {
           ? 'https://www.bilancarbone-methode.com/'
           : 'https://www.bilancarbone-methode.com/english'
     }
-  }, [locale, user.environment])
+  }, [locale, environment])
 
   return (
     <AppBar position="sticky" elevation={0}>
@@ -138,7 +135,7 @@ const Navbar = ({ user, isFootprintsEnabled, hasTrainedUsers }: Props) => {
                 </NavbarButton>
               </div>
             </Box>
-            {isTiltEnvironment && (
+            {isTilt(environment) && (
               <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
                 <Logo />
               </NavbarLink>
