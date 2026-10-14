@@ -4,16 +4,17 @@ import { sortAlphabetically } from '@/services/utils'
 import { exportSpecificFields, getAllSpecificFieldsForExports } from '@/utils/study'
 import { HelpIcon } from '@abc-transitionbascarbone/common/components'
 import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
-import GlossaryModal from '@abc-transitionbascarbone/common/components/modals/GlossaryModal'
 import {
   ControlMode,
   EmissionFactorBase,
   EmissionSourceCaracterisation,
   Export,
 } from '@abc-transitionbascarbone/common/db/enums'
-import { Checkbox, FormControlLabel } from '@mui/material'
+import { Checkbox, FormControlLabel, FormLabel } from '@mui/material'
+import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo, useState } from 'react'
+import formStyles from '../../form/Form.module.css'
 import ExportActivationWarningModal from './ExportActivationWarningModal'
 import ExportCheckbox from './ExportCheckbox'
 import styles from './ExportCheckbox.module.css'
@@ -26,22 +27,34 @@ type ExportValues = {
 
 interface Props {
   study?: FullStudy
-  sectionTitle?: string
   values: ExportValues
   onChange: (value: Export[]) => void
   setControl: (value: ControlMode) => void
   disabled?: boolean
   duplicateStudyId?: string | null
+  showControl?: boolean
+  setGlossary: (key: string) => void
 }
 
 const ghgpActivation = process.env.NEXT_PUBLIC_GHGP_ACTIVATION_DATE
 
-const ExportCheckboxes = ({ study, sectionTitle, values, onChange, setControl, disabled, duplicateStudyId }: Props) => {
+const ExportCheckboxes = ({
+  study,
+  values,
+  onChange,
+  setControl,
+  setGlossary,
+  disabled,
+  duplicateStudyId,
+  showControl,
+}: Props) => {
   const { callServerFunction } = useServerFunction()
   const t = useTranslations('exports')
+  const tNew = useTranslations('study.new')
+  const tGlossary = useTranslations('study.new.glossary')
+
   const [pendingExportCheck, setPendingExportCheck] = useState<Export | null>(null)
   const [pendingExportUncheck, setPendingExportUncheck] = useState<Export | null>(null)
-  const [openGlossary, setOpenGlossary] = useState(false)
   const isNewStudy = useMemo(() => !study && !duplicateStudyId, [duplicateStudyId, study])
 
   const hasValidatedSources = useMemo(
@@ -143,15 +156,20 @@ const ExportCheckboxes = ({ study, sectionTitle, values, onChange, setControl, d
             control={<Checkbox checked className={styles.checkbox} disabled />}
             label={<span className={styles.bcExport}>{t('consolidated')}</span>}
           />
-          <HelpIcon
-            onClick={(e) => {
-              e.preventDefault()
-              setOpenGlossary((prevOpen) => !prevOpen)
-            }}
-            label={t('consolidated')}
-          />
         </div>
-        {sectionTitle && <div className={styles.sectionTitle}>{sectionTitle}</div>}
+        <div className="flex grow">
+          <div className={styles.sectionTitle}>{t('title')}</div>
+          {showControl && (
+            <FormLabel component="legend" className={classNames(styles.sectionTitle, 'grow justify-end align-end')}>
+              <div className={classNames(formStyles.gapped, 'align-center')}>
+                <span className="inputLabel bold">{tNew('control')}</span>
+                <div className={formStyles.icon}>
+                  {<HelpIcon onClick={() => setGlossary('control')} label={tGlossary('title')} />}
+                </div>
+              </div>
+            </FormLabel>
+          )}
+        </div>
         {Object.keys(Export)
           .sort(sortAlphabetically)
           .map((exportType, i) => (
@@ -184,16 +202,6 @@ const ExportCheckboxes = ({ study, sectionTitle, values, onChange, setControl, d
           onConfirm={confirmExportDeactivation}
           onCancel={() => setPendingExportUncheck(null)}
         />
-      )}
-      {openGlossary && (
-        <GlossaryModal
-          label="glossary-help-school-search"
-          glossary="consolidated"
-          t={t}
-          onClose={() => setOpenGlossary(false)}
-        >
-          {t('bc.checkboxDisabled')}
-        </GlossaryModal>
       )}
     </>
   )

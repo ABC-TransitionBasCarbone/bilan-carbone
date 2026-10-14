@@ -118,7 +118,6 @@ const NewStudyForm = ({ user, accounts, form, duplicateStudyId, sourceStudy }: P
         <StudyExportsForm
           form={form}
           showControl={showControl}
-          separateResultsFormats
           setGlossary={setGlossary}
           t={t}
           duplicateStudyId={duplicateStudyId}
