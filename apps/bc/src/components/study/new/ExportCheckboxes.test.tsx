@@ -68,6 +68,7 @@ mockGetAllSpecificFieldsForExports.mockImplementation((exports: Export[]): (keyo
 
 const mockOnChange = jest.fn()
 const mockSetControl = jest.fn()
+const mockSetGlossary = jest.fn()
 
 const renderWithTheme = (component: React.ReactElement) => {
   return render(<ThemeProvider theme={theme}>{component}</ThemeProvider>)
@@ -75,7 +76,7 @@ const renderWithTheme = (component: React.ReactElement) => {
 
 const defaultProps = {
   id: Export.Beges,
-  sectionTitle: 'Exports',
+  sectionTitle: jest.fn(),
   values: {
     exports: [],
     controlModde: ControlMode.Operational,
@@ -84,6 +85,7 @@ const defaultProps = {
   setControl: mockSetControl,
   disabled: false,
   duplicateStudyId: null,
+  setGlossary: mockSetGlossary,
 }
 
 const getExportCheckedValues = (exports: Export[]) => ({
@@ -173,7 +175,7 @@ describe('ExportCheckboxes', () => {
     renderWithTheme(<ExportCheckboxes {...defaultProps} />)
 
     const bilanCarboneCheckbox = screen.getByRole('checkbox', { name: 'consolidated' })
-    const exportsTitle = screen.getByText('Exports')
+    const exportsTitle = screen.getByText('title', { selector: 'div' })
     const begesCheckbox = screen.getByTestId(`export-checkbox-${Export.Beges}`)
 
     expect(bilanCarboneCheckbox).toBeChecked()

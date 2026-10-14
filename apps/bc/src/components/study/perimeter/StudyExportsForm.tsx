@@ -19,7 +19,6 @@ interface Props<T extends StudyExportsCommand> {
   t: Translations
   disabled?: boolean
   duplicateStudyId?: string | null
-  separateResultsFormats?: boolean
   onSave?: (exports: Export[], controlMode: ControlMode) => void
 }
 
