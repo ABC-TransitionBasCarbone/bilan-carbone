@@ -249,8 +249,8 @@ export const createUsersWithAccount = async (
     }
 
     for (const originalUser of originalUsers) {
-      const accoutAlreadyExists = await getAccountByEmailAndEnvironment(user.email, originalUser.account.environment)
-      if (accoutAlreadyExists) {
+      const accountAlreadyExists = await getAccountByEmailAndEnvironment(user.email, originalUser.account.environment)
+      if (accountAlreadyExists) {
         continue
       }
       await prismaClient.account.create({
@@ -264,6 +264,7 @@ export const createUsersWithAccount = async (
       newAccountCount++
     }
   }
+  console.log('New account count:', newAccountCount)
 
   return { newUsers, newAccounts: { count: newAccountCount } }
 }

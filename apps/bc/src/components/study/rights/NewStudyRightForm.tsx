@@ -61,7 +61,10 @@ const NewStudyRightForm = ({ study, accounts, existingAccounts, accountRole }: P
     form.setValue('email', value?.trim() || '')
     if (value) {
       const organizationVersionAccount = accounts.find((account) => account.user.email === value)
-      if (!organizationVersionAccount || hasSufficientLevel(organizationVersionAccount.user.level, study.level)) {
+      if (
+        !organizationVersionAccount ||
+        hasSufficientLevel(organizationVersionAccount.user.level, study.level, study.organizationVersion.environment)
+      ) {
         setReaderOnly(false)
       } else {
         setReaderOnly(true)

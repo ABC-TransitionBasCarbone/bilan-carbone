@@ -61,7 +61,7 @@ const StudyLevel = ({ user, study, disabled }: Props) => {
     }
   }, [level, form, study, callServerFunction, router])
 
-  const allowedLevels = useMemo(() => getAllowedLevels(user.level), [user])
+  const allowedLevels = useMemo(() => getAllowedLevels(user.level, user.environment), [user])
   return (
     <div className="grow">
       <FormSelect

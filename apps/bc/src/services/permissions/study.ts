@@ -150,7 +150,7 @@ const canCreateSpecificStudyBC = async (
     organizationVersionId,
   )
 
-  if (!commonRights || !dbAccount || !hasSufficientLevel(dbAccount.user.level, study.level)) {
+  if (!commonRights || !dbAccount || !hasSufficientLevel(dbAccount.user.level, study.level, dbAccount.environment)) {
     return false
   }
 
@@ -233,7 +233,7 @@ export const canChangeLevel = async (user: UserSession, study: FullStudy, level:
     return false
   }
 
-  if (!hasSufficientLevel(user.level, level)) {
+  if (!hasSufficientLevel(user.level, level, user.environment)) {
     return false
   }
 
@@ -258,7 +258,8 @@ const getRoleIfHasAccess = (user: UserSession, minimalStudy: MinimalStudyForRigh
     return StudyRole.Editor
   }
 
-  return hasSufficientLevel(user.level, minimalStudy.level) && hasActiveLicence(minimalStudy.organizationVersion)
+  return hasSufficientLevel(user.level, minimalStudy.level, user.environment) &&
+    hasActiveLicence(minimalStudy.organizationVersion)
     ? (overrideRole ?? StudyRole.Validator)
     : StudyRole.Reader
 }

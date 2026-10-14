@@ -355,7 +355,8 @@ const normalizeAllowedUsers = async <T extends AllowedUserWithLevel>(
   return allowedUsers.map((allowedUser) => {
     const orgaVersion = organizationVersions.find((ov) => ov.id === allowedUser.account.organizationVersionId)
     const readerOnly =
-      !(orgaVersion && hasActiveLicence(orgaVersion)) || !hasSufficientLevel(allowedUser.account.user.level, studyLevel)
+      !(orgaVersion && hasActiveLicence(orgaVersion)) ||
+      !hasSufficientLevel(allowedUser.account.user.level, studyLevel, orgaVersion.environment)
     return { ...allowedUser, account: { ...allowedUser.account, readerOnly } }
   })
 }
@@ -395,7 +396,9 @@ export const getAllowedStudiesByAccount = async (user: UserSession) => {
                 in: accountOrganizationVersions.map((organizationVersion) => organizationVersion.id),
               },
             },
-            ...(isAdmin(user.role) ? [] : [{ isPublic: true, level: { in: getAllowedLevels(user.level) } }]),
+            ...(isAdmin(user.role)
+              ? []
+              : [{ isPublic: true, level: { in: getAllowedLevels(user.level, user.environment) } }]),
           ],
         },
         { allowedUsers: { some: { accountId: user.accountId } } },
@@ -460,7 +463,7 @@ export const getAllowedStudyIdByAccount = async (account: UserSession) => {
                   { organizationVersionId: { in: organizationVersionIds } },
                   ...(isAdmin(account.role)
                     ? []
-                    : [{ isPublic: true, level: { in: getAllowedLevels(account.level) } }]),
+                    : [{ isPublic: true, level: { in: getAllowedLevels(account.level, account.environment) } }]),
                 ],
               },
             ]
