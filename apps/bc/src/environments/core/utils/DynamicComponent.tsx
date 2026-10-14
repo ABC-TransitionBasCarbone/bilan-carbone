@@ -29,11 +29,8 @@ const DynamicComponent = ({
   useGenericEnv = true,
 }: Props) => {
   const { environment } = useAppEnvironmentStore()
-
-  const genericEnv = getEnvironmentHandlingGenericEnvs(environment)
-  const hasGenericEnvAssociated = useGenericEnv && genericEnv !== environment
-  const environmentToUse =
-    (useGenericEnv && hasGenericEnvAssociated ? genericEnv : forceEnvironment) || forceEnvironment
+  const currentEnvironment = forceEnvironment || environment
+  const environmentToUse = useGenericEnv ? getEnvironmentHandlingGenericEnvs(currentEnvironment) : currentEnvironment
 
   if (!environmentToUse) {
     return <EnvironmentLoader />
