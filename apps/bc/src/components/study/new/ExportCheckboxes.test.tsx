@@ -68,6 +68,7 @@ mockGetAllSpecificFieldsForExports.mockImplementation((exports: Export[]): (keyo
 
 const mockOnChange = jest.fn()
 const mockSetControl = jest.fn()
+const mockSetGlossary = jest.fn()
 
 const renderWithTheme = (component: React.ReactElement) => {
   return render(<ThemeProvider theme={theme}>{component}</ThemeProvider>)
@@ -75,6 +76,7 @@ const renderWithTheme = (component: React.ReactElement) => {
 
 const defaultProps = {
   id: Export.Beges,
+  sectionTitle: jest.fn(),
   values: {
     exports: [],
     controlModde: ControlMode.Operational,
@@ -83,6 +85,7 @@ const defaultProps = {
   setControl: mockSetControl,
   disabled: false,
   duplicateStudyId: null,
+  setGlossary: mockSetGlossary,
 }
 
 const getExportCheckedValues = (exports: Export[]) => ({
@@ -166,6 +169,19 @@ const clickExportCheckbox = async (user: ReturnType<typeof userEvent.setup>, exp
 describe('ExportCheckboxes', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+  })
+
+  it('shows the mandatory Bilan Carbone format above the optional exports', () => {
+    renderWithTheme(<ExportCheckboxes {...defaultProps} />)
+
+    const bilanCarboneCheckbox = screen.getByRole('checkbox', { name: 'consolidated' })
+    const exportsTitle = screen.getByText('title', { selector: 'div' })
+    const begesCheckbox = screen.getByTestId(`export-checkbox-${Export.Beges}`)
+
+    expect(bilanCarboneCheckbox).toBeChecked()
+    expect(bilanCarboneCheckbox).toBeDisabled()
+    expect(bilanCarboneCheckbox.compareDocumentPosition(exportsTitle) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(exportsTitle.compareDocumentPosition(begesCheckbox) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
   describe('BegesActivationWarningModal', () => {

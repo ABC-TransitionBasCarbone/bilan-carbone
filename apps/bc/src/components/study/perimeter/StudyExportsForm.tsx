@@ -33,6 +33,7 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
   onSave,
 }: Props<T>) => {
   const tGlossary = useTranslations('study.new.glossary')
+  const tNew = useTranslations('study.new')
   const control = form?.control as Control<StudyExportsCommand>
   const setValue = form?.setValue as UseFormSetValue<StudyExportsCommand>
 
@@ -44,24 +45,14 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
         render={({ fieldState: { error } }) => (
           <FormControl error={!!error} component="fieldset">
             <div className="flex">
-              <FormLabel component="legend" className={styles.exportsLabel}>
+              <FormLabel component="legend" className={classNames(styles.exportsLabel, 'grow')}>
                 <div className={classNames(formStyles.gapped, 'align-center')}>
-                  <span className="inputLabel bold">{t('exports')}</span>
+                  <span className="inputLabel bold">{tNew('resultsFormats')}</span>
                   <div className={formStyles.icon}>
                     {<HelpIcon onClick={() => setGlossary('exports')} label={tGlossary('title')} />}
                   </div>
                 </div>
               </FormLabel>
-              {showControl && (
-                <FormLabel component="legend">
-                  <div className={classNames(formStyles.gapped, 'align-center')}>
-                    <span className="inputLabel bold">{t('control')}</span>
-                    <div className={formStyles.icon}>
-                      {<HelpIcon onClick={() => setGlossary('control')} label={tGlossary('title')} />}
-                    </div>
-                  </div>
-                </FormLabel>
-              )}
             </div>
             <FormGroup>
               <ExportCheckboxes
@@ -85,6 +76,8 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
                 study={study}
                 disabled={disabled}
                 duplicateStudyId={duplicateStudyId}
+                showControl={showControl}
+                setGlossary={setGlossary}
               />
             </FormGroup>
           </FormControl>

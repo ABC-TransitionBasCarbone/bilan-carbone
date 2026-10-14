@@ -425,6 +425,7 @@
       "studyDates": "Périmètre temporel de l'étude",
       "realizationDates": "Dates de la réalisation de l'étude",
       "level": "Niveau de maturité du Bilan Carbone®",
+      "resultsFormats": "Formats d'affichage des résultats",
       "exports": "Exports",
       "control": "Mode de contrôle des exports",
       "CapitalShare": "Part de capital",
