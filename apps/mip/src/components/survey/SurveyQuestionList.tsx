@@ -17,7 +17,7 @@ const SurveyQuestionList = ({ groupedElements, engine, setValue }: Props) => {
   const t = useTranslations('survey')
 
   return (
-    <div className="p0">
+    <div className="p0" data-testid="survey-question-list">
       {groupedElements.map((group) =>
         group.type === 'mosaic' ? (
           <Fragment key={group.parent}>

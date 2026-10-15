@@ -29,8 +29,11 @@ export const updateModelCampaignCommand = async (command: UpdateModelCampaignCom
 export const updateCampaignCommand = async (command: UpdateCampaignCommand) =>
   withServerResponse('updateCampaignCommand', async () => {
     const session = await auth()
-    if (!session) {
-      console.error('updateCampaignCommand: NOT_AUTHORIZED missing session')
+    if (!session?.user.organizationVersionMipId) {
+      console.error('updateCampaignCommand: NOT_AUTHORIZED missing session or organization', {
+        accountMipId: session?.user.accountMipId,
+        organizationVersionMipId: session?.user.organizationVersionMipId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 

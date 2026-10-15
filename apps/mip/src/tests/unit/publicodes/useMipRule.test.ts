@@ -4,6 +4,10 @@ import { useMipPublicodes } from '@/lib/publicodes/MipPublicodesProvider'
 import { useMipRule } from '@/lib/publicodes/useMipRule'
 import { MipSimulationState } from '@/utils/survey'
 import { beforeEach, describe, expect, it } from '@jest/globals'
+import { act, createElement, useEffect } from 'react'
+import { createRoot } from 'react-dom/client'
+
+Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
 
 jest.mock('@/lib/publicodes/MipPublicodesProvider', () => ({
   useMipPublicodes: () => mockPublicodes,
@@ -20,6 +24,14 @@ let mockPublicodes: Pick<
   | 'safeEvaluate'
   | 'safeGetRule'
 >
+
+type MipRuleResult = ReturnType<typeof useMipRule>
+
+const MipRuleHarness = ({ ruleName, onRule }: { ruleName: string; onRule: (rule: MipRuleResult) => void }) => {
+  const rule = useMipRule(ruleName)
+  useEffect(() => onRule(rule))
+  return null
+}
 
 const voiture = 'DT . voiture . présent'
 const train = 'DT . train . présent'
@@ -60,9 +72,28 @@ describe('MIP answer updates', () => {
   })
 
   it('clears every selected mosaic option without overwriting earlier answers or advancing', () => {
-    const rule = useMipRule('DT')
-    rule.setValue(false, voiture)
-    rule.setValue(false, train)
+    const root = createRoot(document.createElement('div'))
+    let rule: MipRuleResult | null = null
+    act(() =>
+      root.render(
+        createElement(MipRuleHarness, {
+          ruleName: 'DT',
+          onRule: (r) => {
+            rule = r
+          },
+        }),
+      ),
+    )
+    const renderedRule = rule as MipRuleResult | null
+    if (!renderedRule) {
+      throw new Error('useMipRule did not render')
+    }
+
+    act(() => {
+      renderedRule.setValue(false, voiture)
+      renderedRule.setValue(false, train)
+    })
+    act(() => root.unmount())
 
     expect(mockPublicodes.engine.getSituation()).toEqual({ [voiture]: 'non', [train]: 'non', alimentation: 3 })
     expect(mockPublicodes.setCurrentQuestion).not.toHaveBeenCalled()
@@ -76,9 +107,28 @@ describe('MIP answer updates', () => {
     const { engine, meta } = mockPublicodes
     engine.setSituation({ alimentation: 3 })
     const previousOrder = getFormQuestions(engine, meta, []).relevantQuestions
-    const rule = useMipRule('DT')
-    rule.setValue(true, voiture)
-    rule.setValue(true, train)
+    const root = createRoot(document.createElement('div'))
+    let rule: MipRuleResult | null = null
+    act(() =>
+      root.render(
+        createElement(MipRuleHarness, {
+          ruleName: 'DT',
+          onRule: (r) => {
+            rule = r
+          },
+        }),
+      ),
+    )
+    const renderedRule = rule as MipRuleResult | null
+    if (!renderedRule) {
+      throw new Error('useMipRule did not render')
+    }
+
+    act(() => {
+      renderedRule.setValue(true, voiture)
+      renderedRule.setValue(true, train)
+    })
+    act(() => root.unmount())
     const questions = getFormQuestions(engine, meta, [])
 
     expect(engine.getSituation()).toEqual({ alimentation: 3, [voiture]: 'oui', [train]: 'oui' })

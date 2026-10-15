@@ -1,5 +1,5 @@
-import { MipAccount as PrismaMipAccount, User as PrismaUser } from '@abc-transitionbascarbone/common/db'
-import 'next-auth'
+import { AccountMip as PrismaMipAccount, User as PrismaUser } from '@abc-transitionbascarbone/common/db'
+import { DefaultUser } from 'next-auth'
 
 declare module 'next-auth' {
   interface Session {

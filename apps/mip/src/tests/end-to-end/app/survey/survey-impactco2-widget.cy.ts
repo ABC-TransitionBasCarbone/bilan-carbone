@@ -8,6 +8,7 @@ describe('Survey impactco2 widgets', () => {
   beforeEach(() => {
     cy.clearLocalStorage(`mip-publicodes-state-${surveyId}`)
     cy.visit(`/${surveyId}/survey`)
+    cy.getByTestId('survey-start-button').click()
   })
 
   it('displays the categories sidebar on the survey page', () => {

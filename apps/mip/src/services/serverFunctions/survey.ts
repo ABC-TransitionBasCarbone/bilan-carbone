@@ -36,7 +36,7 @@ export const createSurveyResponse = async (campaignId: string, answers: string) 
 
 export const getSurveyResults = async (campaignId: string): Promise<SurveyResults | null> => {
   const session = await dbActualizedAuth()
-  if (!session?.user) {
+  if (!session?.user.organizationVersionMipId) {
     return null
   }
 
@@ -115,8 +115,12 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
 export const exportSurveyResponsesToCSV = async (campaignId: string) =>
   withServerResponse('exportSurveyResponsesToCSV', async () => {
     const session = await dbActualizedAuth()
-    if (!session?.user) {
-      console.error('exportSurveyResponsesToCSV: unauthorized access', { campaignId })
+    if (!session?.user.organizationVersionMipId) {
+      console.error('exportSurveyResponsesToCSV: unauthorized access', {
+        campaignId,
+        accountMipId: session?.user.accountMipId,
+        organizationVersionMipId: session?.user.organizationVersionMipId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 

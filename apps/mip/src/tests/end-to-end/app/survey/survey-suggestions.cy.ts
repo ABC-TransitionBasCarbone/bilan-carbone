@@ -1,12 +1,19 @@
 const surveyId = 'campaign-admin-seed-id'
 
+const waitForSurveyNavigation = (previousText: string) =>
+  cy.get('body').should(($body) => {
+    const nextText = $body.find('[data-testid="survey-question-list"]').text()
+    const isInterstitial = $body.find('[data-testid="survey-category-interstitial"]').length > 0
+    expect(nextText !== previousText || isInterstitial).to.equal(true)
+  })
+
 const goToQuestion = (questionSnippet: string, remainingSteps = 250): Cypress.Chainable<null> => {
   if (remainingSteps <= 0) {
     throw new Error(`Could not find question containing: ${questionSnippet}`)
   }
 
   return cy.get('body').then(($body): Cypress.Chainable<null> => {
-    const pageText = $body.text()
+    const pageText = $body.find('[data-testid="survey-question-list"]').text()
     if (pageText.includes(questionSnippet)) {
       return cy.wrap(null)
     }
@@ -15,13 +22,15 @@ const goToQuestion = (questionSnippet: string, remainingSteps = 250): Cypress.Ch
       return cy
         .getByTestId('survey-start-button')
         .click()
+        .then(() => waitForSurveyNavigation(pageText))
         .then(() => goToQuestion(questionSnippet, remainingSteps - 1))
     }
 
     if ($body.find('[data-testid="survey-category-interstitial"]').length > 0) {
       return cy
-        .getByTestId('survey-interstitial-continue')
+        .getByTestId('survey-next-button')
         .click()
+        .then(() => waitForSurveyNavigation(pageText))
         .then(() => goToQuestion(questionSnippet, remainingSteps - 1))
     }
 
@@ -29,6 +38,7 @@ const goToQuestion = (questionSnippet: string, remainingSteps = 250): Cypress.Ch
       return cy
         .getByTestId('survey-next-button')
         .click()
+        .then(() => waitForSurveyNavigation(pageText))
         .then(() => goToQuestion(questionSnippet, remainingSteps - 1))
     }
 
@@ -42,7 +52,7 @@ const getFirstVisibleQuestion = (questionSnippets: string[], remainingSteps = 25
   }
 
   return cy.get('body').then(($body): Cypress.Chainable<string> => {
-    const pageText = $body.text()
+    const pageText = $body.find('[data-testid="survey-question-list"]').text()
 
     for (const questionSnippet of questionSnippets) {
       if (pageText.includes(questionSnippet)) {
@@ -54,13 +64,15 @@ const getFirstVisibleQuestion = (questionSnippets: string[], remainingSteps = 25
       return cy
         .getByTestId('survey-start-button')
         .click()
+        .then(() => waitForSurveyNavigation(pageText))
         .then(() => getFirstVisibleQuestion(questionSnippets, remainingSteps - 1))
     }
 
     if ($body.find('[data-testid="survey-category-interstitial"]').length > 0) {
       return cy
-        .getByTestId('survey-interstitial-continue')
+        .getByTestId('survey-next-button')
         .click()
+        .then(() => waitForSurveyNavigation(pageText))
         .then(() => getFirstVisibleQuestion(questionSnippets, remainingSteps - 1))
     }
 
@@ -68,6 +80,7 @@ const getFirstVisibleQuestion = (questionSnippets: string[], remainingSteps = 25
       return cy
         .getByTestId('survey-next-button')
         .click()
+        .then(() => waitForSurveyNavigation(pageText))
         .then(() => getFirstVisibleQuestion(questionSnippets, remainingSteps - 1))
     }
 
@@ -83,6 +96,7 @@ describe('Survey suggestions behavior', () => {
   beforeEach(() => {
     cy.clearLocalStorage(`mip-publicodes-state-${surveyId}`)
     cy.visit(`/${surveyId}/survey`)
+    cy.getByTestId('survey-start-button').should('be.visible')
   })
 
   it('shows ordered telework suggestions and category-specific suggestion color', () => {
@@ -94,15 +108,19 @@ describe('Survey suggestions behavior', () => {
       expect(labels).to.deep.equal(['aucun', 'un jour', 'deux jours', 'trois jours', 'quatre jours', 'cinq jours'])
     })
 
-    cy.getByTestId('survey-suggestion-1').invoke('css', 'background-color').as('ttSuggestionColor')
+    cy.getByTestId('survey-suggestion-1').then(($chip) => {
+      const suggestionColor = window.getComputedStyle($chip[0]).getPropertyValue('--suggestion-bg')
+      cy.wrap(suggestionColor).as('ttSuggestionColor')
+    })
 
     goToQuestion('Quelle est votre consommation de boissons chaudes par jour')
 
     cy.getByTestId('survey-suggestions').should('be.visible')
     cy.get('@ttSuggestionColor').then((ttSuggestionColor) => {
-      cy.getByTestId('survey-suggestion-1')
-        .invoke('css', 'background-color')
-        .should('not.equal', String(ttSuggestionColor))
+      cy.getByTestId('survey-suggestion-1').then(($chip) => {
+        const suggestionColor = window.getComputedStyle($chip[0]).getPropertyValue('--suggestion-bg')
+        expect(suggestionColor).not.to.equal(String(ttSuggestionColor))
+      })
     })
   })
 
@@ -119,7 +137,7 @@ describe('Survey suggestions behavior', () => {
     goToQuestion('Comment se composent vos repas du midi sur une semaine type de travail')
 
     cy.getByTestId('survey-suggestions').should('be.visible')
-    cy.getByTestId('survey-suggestion-1').click()
+    cy.contains('[data-testid^="survey-suggestion-"]', 'végétarien').click()
 
     cy.get('input').then(($inputs) => {
       const values = [...$inputs].map((input) => Number((input as HTMLInputElement).value || 0))
@@ -132,7 +150,7 @@ describe('Survey suggestions behavior', () => {
     goToQuestion('Quelle est votre consommation de boissons chaudes par jour')
 
     cy.getByTestId('survey-suggestions').should('be.visible')
-    cy.getByTestId('survey-suggestion-1').click()
+    cy.contains('[data-testid^="survey-suggestion-"]', 'un café matin et midi').click()
 
     cy.get('input').then(($inputs) => {
       const values = [...$inputs].map((input) => Number((input as HTMLInputElement).value || 0))

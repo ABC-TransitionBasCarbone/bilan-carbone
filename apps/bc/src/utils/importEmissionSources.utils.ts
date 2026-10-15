@@ -1,5 +1,6 @@
 import { KG_CO2E_PREFIX_REGEX } from '@/constants/import'
 import { findEmissionFactorByIdForMatch } from '@/db/emissionFactors'
+import { isBCEnvironment } from '@/services/permissions/environment'
 import { environmentSubPostsMapping } from '@/services/posts'
 import { qualityKeys } from '@/services/uncertainty'
 import { AmbiguousRow, FEChoices, ImportError, ImportWarning } from '@/types/import.types'
@@ -84,7 +85,7 @@ function matchCaracterisationLabelFromTranslations(
 }
 
 export function getValidSubPostsForEnvironment(environment: Environment): Set<SubPost> {
-  if (environment === Environment.MIP) {
+  if (!isBCEnvironment(environment)) {
     return new Set([])
   }
 

@@ -9,6 +9,7 @@ import { UpdateEmissionSourceCommand } from '@/services/serverFunctions/emission
 import { sortAlphabetically } from '@/services/utils'
 import { ResultsByPost } from '@/types/study.types'
 import { isAdmin } from '@/utils/user'
+import type { Account, User } from '@abc-transitionbascarbone/common/db'
 import {
   EmissionFactorBase,
   EmissionFactorPartType,
@@ -31,7 +32,7 @@ import { getEmissionSourcesTotalCo2 } from './emissionSources'
 import { hasActiveLicence, isInOrgaOrParent } from './organization'
 
 export const getUserRoleOnPublicStudy = (
-  user: Pick<UserSession, 'role' | 'level' | 'environment'>,
+  user: Pick<Account, 'role' | 'environment'> & Pick<User, 'level'>,
   studyLevel: Level,
 ) => {
   if (isAdmin(user.role)) {

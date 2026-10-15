@@ -1,4 +1,5 @@
 import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
+import { BCEnvironment } from '@/types/environment'
 import { DeactivatableFeature, Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { Locale } from '@abc-transitionbascarbone/common/i18n/config'
 import {
@@ -8,6 +9,12 @@ import {
   isSimplified,
 } from '@abc-transitionbascarbone/common/utils/environments'
 const { BC, CUT, TILT, COURSE_TILT, CLICKSON } = Environment
+
+const bcEnvironments = new Set<unknown>(
+  Object.values(Environment).filter((environment) => environment !== Environment.MIP),
+)
+
+export const isBCEnvironment = (environment: unknown): environment is BCEnvironment => bcEnvironments.has(environment)
 
 export const isBC = (environment: Environment) => environment === BC
 export const isTilt = (environment: Environment) => getEnvironmentHandlingGenericEnvs(environment) === TILT
