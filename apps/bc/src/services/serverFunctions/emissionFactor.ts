@@ -162,6 +162,17 @@ export const isFromEmissionFactorOrganization = async (id: string) =>
     return emissionFactor.organizationId === session.user.organizationId
   })
 
+export const canEditEmissionFactor = async (id: string) => {
+  const session = await dbActualizedAuth()
+
+  if (!session || !(await canCreateEmissionFactor(session.user))) {
+    return false
+  }
+
+  const ownership = await isFromEmissionFactorOrganization(id)
+  return ownership.success && !!ownership.data
+}
+
 export const isEmissionFactorFromActiveOrganization = async (id: string) =>
   withServerResponse('isEmissionFactorFromActiveOrganization', async () => {
     const [session, emissionFactor] = await Promise.all([dbActualizedAuth(), getEmissionFactorById(id)])

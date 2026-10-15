@@ -1,8 +1,11 @@
 import withAuth from '@/components/hoc/withAuth'
 import EditEmissionFactorPage from '@/components/pages/EditEmissionFactor'
-import { canEditEmissionFactor } from '@/services/permissions/emissionFactor'
 import { hasAccessToEmissionFactors } from '@/services/permissions/environmentAdvanced'
-import { getDetailedEmissionFactor, getEmissionFactorLocations } from '@/services/serverFunctions/emissionFactor'
+import {
+  canEditEmissionFactor,
+  getDetailedEmissionFactor,
+  getEmissionFactorLocations,
+} from '@/services/serverFunctions/emissionFactor'
 import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 import { UserSession } from 'next-auth'
 import { redirect } from 'next/navigation'

@@ -7,7 +7,7 @@ import { getMockedAccount, getMockedDbActualizedAuth } from '@/tests/utils/model
 import { Import, Unit } from '@abc-transitionbascarbone/common/db/enums'
 import { Locale } from '@abc-transitionbascarbone/common/i18n/config'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
-import { deleteEmissionFactor, updateEmissionFactorCommand } from './emissionFactor'
+import { canEditEmissionFactor, deleteEmissionFactor, updateEmissionFactorCommand } from './emissionFactor'
 import { UpdateEmissionFactorCommand } from './emissionFactor.command'
 
 jest.mock('@/db/account', () => ({ getAccountById: jest.fn() }))
@@ -53,6 +53,7 @@ const mockGetAccountById = getAccountById as jest.Mock
 const mockGetEmissionFactorById = getEmissionFactorById as jest.Mock
 
 describe.each([
+  ['check edit permission', () => canEditEmissionFactor(command.id)],
   ['delete', () => deleteEmissionFactor(command.id)],
   ['update', () => updateEmissionFactorCommand(command)],
 ] as const)('%s emission factor permissions', (action, execute) => {
@@ -71,11 +72,13 @@ describe.each([
   })
 
   it('allows an authorized account to mutate its own organization factor', async () => {
-    await expect(execute()).resolves.toEqual({ success: true, data: undefined })
-    expect(canCreateEmissionFactor).toHaveBeenCalledWith(account)
+    await expect(execute()).resolves.toEqual(
+      action === 'check edit permission' ? true : { success: true, data: undefined },
+    )
+    expect(canCreateEmissionFactor).toHaveBeenCalledWith(session.user)
     if (action === 'delete') {
       expect(deleteEmissionFactorAndDependencies).toHaveBeenCalledWith(command.id)
-    } else {
+    } else if (action === 'update') {
       expect(updateEmissionFactor).toHaveBeenCalledWith(session, Locale.FR, command)
     }
   })
@@ -83,7 +86,9 @@ describe.each([
   it('denies accounts without creation rights', async () => {
     jest.mocked(canCreateEmissionFactor).mockResolvedValue(false)
 
-    await expect(execute()).resolves.toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+    await expect(execute()).resolves.toEqual(
+      action === 'check edit permission' ? false : { success: false, errorMessage: NOT_AUTHORIZED },
+    )
     expect(deleteEmissionFactorAndDependencies).not.toHaveBeenCalled()
     expect(updateEmissionFactor).not.toHaveBeenCalled()
   })
@@ -94,7 +99,9 @@ describe.each([
       organizationId: 'another-organization',
     })
 
-    await expect(execute()).resolves.toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+    await expect(execute()).resolves.toEqual(
+      action === 'check edit permission' ? false : { success: false, errorMessage: NOT_AUTHORIZED },
+    )
     expect(deleteEmissionFactorAndDependencies).not.toHaveBeenCalled()
     expect(updateEmissionFactor).not.toHaveBeenCalled()
   })
@@ -102,7 +109,9 @@ describe.each([
   it('denies missing factors', async () => {
     jest.mocked(getEmissionFactorById).mockResolvedValue(null)
 
-    await expect(execute()).resolves.toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+    await expect(execute()).resolves.toEqual(
+      action === 'check edit permission' ? false : { success: false, errorMessage: NOT_AUTHORIZED },
+    )
     expect(deleteEmissionFactorAndDependencies).not.toHaveBeenCalled()
     expect(updateEmissionFactor).not.toHaveBeenCalled()
   })
@@ -111,7 +120,9 @@ describe.each([
     jest.mocked(auth).mockResolvedValue(null)
     jest.mocked(dbActualizedAuth).mockResolvedValue(null)
 
-    await expect(execute()).resolves.toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+    await expect(execute()).resolves.toEqual(
+      action === 'check edit permission' ? false : { success: false, errorMessage: NOT_AUTHORIZED },
+    )
     expect(deleteEmissionFactorAndDependencies).not.toHaveBeenCalled()
     expect(updateEmissionFactor).not.toHaveBeenCalled()
   })

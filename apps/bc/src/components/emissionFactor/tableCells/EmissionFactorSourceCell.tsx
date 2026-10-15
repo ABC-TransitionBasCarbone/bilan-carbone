@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import { canEditEmissionFactor } from '@/services/permissions/emissionFactor'
 import { Import } from '@abc-transitionbascarbone/common/db/enums'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
@@ -39,7 +38,7 @@ export const EmissionFactorSourceCell = ({
 
   const editEmissionFactor = useCallback(
     async (emissionFactorId: string, action: 'edit' | 'delete') => {
-      if (!canEdit || !(await canEditEmissionFactor(emissionFactorId))) {
+      if (!canEdit) {
         return
       }
       setTargetedEmission(emissionFactorId)
