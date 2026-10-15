@@ -1,12 +1,6 @@
-import { sendEmailToAddedUser } from '@/services/serverFunctions/user'
-import { userSessionToDbUser } from '@/utils/userAccounts'
 import { Prisma } from '@abc-transitionbascarbone/common/db'
 import { RoleMip, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
-import { AddMemberCommand } from '@abc-transitionbascarbone/common/services/serverFunctions/user.command'
-import { signPassword } from '@abc-transitionbascarbone/common/utils/auth'
-import { UserSession } from 'next-auth'
-import { addAccountMip, getAccountMipByEmailAndOrganizationVersionMipId, updateAccountMip } from './accountMip'
+import { getAccountMipByEmailAndOrganizationVersionMipId } from './accountMip'
 import { prismaClient } from './client.server'
 
 export type UserWithAccountsMip = Prisma.UserGetPayload<{ include: { accountsMip: true } }>
@@ -28,43 +22,6 @@ export const getUserByEmailWithSensibleInformations = (email: string) =>
     },
     where: { email },
   })
-
-export const updateUserPasswordForEmail = async (email: string, password: string) => {
-  const signedPassword = await signPassword(password)
-  const user = await prismaClient.user.update({
-    where: { email },
-    data: { resetToken: null, password: signedPassword },
-  })
-
-  if (!user) {
-    throw new Error(`User with email ${email} not found`)
-  }
-
-  const accountMip = await prismaClient.accountMip.findFirst({
-    where: {
-      userId: user.id,
-    },
-  })
-
-  if (!accountMip) {
-    throw new Error(`Account with email ${email} not found`)
-  }
-
-  const accountsMip = await prismaClient.accountMip.findMany({
-    where: {
-      userId: user.id,
-    },
-  })
-
-  if (accountsMip.length > 0) {
-    await prismaClient.accountMip.updateMany({
-      where: { userId: user.id },
-      data: { status: UserStatus.ACTIVE },
-    })
-  }
-
-  return user
-}
 
 export const updateUserResetTokenForEmail = async (email: string, resetToken: string) =>
   prismaClient.user.update({
@@ -89,71 +46,6 @@ export const addUser = async (
       },
     },
   })
-}
-
-export const handleAddingUser = async (creator: UserSession, newUser: AddMemberCommand) => {
-  const memberExists = await getUserByEmail(newUser.email.toLowerCase())
-
-  const isMemberActiveInSomeEnv = memberExists?.accountsMip.some((a) => a.status === UserStatus.ACTIVE)
-  const memberAccountMip = memberExists?.accountsMip[0]
-
-  if (memberAccountMip?.role === RoleMip.SUPER_ADMIN || newUser.role === RoleMip.SUPER_ADMIN) {
-    throw new Error(NOT_AUTHORIZED)
-  }
-
-  const userFromDb = await getUserByEmail(creator.email)
-  if (!userFromDb || !creator.organizationVersionMipId) {
-    throw new Error(NOT_AUTHORIZED)
-  }
-
-  if (!memberExists) {
-    const newMember = {
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
-      email: newUser.email.toLowerCase(),
-      level: null,
-      source: userFromDb.source,
-      accountsMip: {
-        create: {
-          role: newUser.role as RoleMip,
-          status: UserStatus.VALIDATED,
-          organizationVersionMipId: creator.organizationVersionMipId,
-        },
-      },
-    }
-
-    await addUser(newMember)
-  } else if (!memberAccountMip) {
-    await addAccountMip({
-      status: isMemberActiveInSomeEnv ? UserStatus.ACTIVE : UserStatus.VALIDATED,
-      role: newUser.role as Exclude<RoleMip, 'SUPER_ADMIN'>,
-      user: { connect: { id: memberExists.id } },
-      organizationVersionMip: { connect: { id: creator.organizationVersionMipId } },
-    })
-  } else {
-    if (memberAccountMip.status === UserStatus.ACTIVE && memberAccountMip.organizationVersionMipId) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
-    const updateMember = {
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
-    }
-
-    const updateMemberAccountMip = {
-      status: isMemberActiveInSomeEnv ? UserStatus.ACTIVE : UserStatus.VALIDATED,
-      role: memberAccountMip.role,
-      organizationVersionMip: { connect: { id: creator.organizationVersionMipId } },
-    }
-    await updateAccountMip(memberAccountMip.id, updateMemberAccountMip, updateMember)
-  }
-
-  await sendEmailToAddedUser(
-    newUser.email.toLowerCase(),
-    userSessionToDbUser(creator),
-    newUser.firstName,
-    creator.organizationVersionMipId,
-  )
 }
 
 export const deleteAccountMipFromOrgaVersionMip = async (email: string, organizationVersionMipId: string | null) => {

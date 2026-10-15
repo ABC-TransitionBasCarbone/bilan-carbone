@@ -1,8 +1,6 @@
-import { canEditMemberRole } from '@/utils/user'
 import { Prisma } from '@abc-transitionbascarbone/common/db'
 import { findAccountMipSelect } from '@abc-transitionbascarbone/common/db/db/common.select'
-import { Environment, RoleMip, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
-import { UserSession } from 'next-auth'
+import { Environment, RoleMip } from '@abc-transitionbascarbone/common/db/enums'
 import { AccountMipWithUserSelect } from './accountMip.select'
 import { prismaClient } from './client.server'
 
@@ -22,15 +20,13 @@ export const getAccountMipById = (id: string) =>
     select: AccountMipWithUserSelect,
   })
 
-export const getAccountMipFromUserOrganization = (user: UserSession) =>
+export const getAccountsMipForTeam = (where: Prisma.AccountMipWhereInput) =>
   prismaClient.accountMip.findMany({
     select: findAccountMipSelect(),
-    where: canEditMemberRole(user)
-      ? { organizationVersionMipId: user.organizationVersionMipId }
-      : { status: UserStatus.ACTIVE, organizationVersionMipId: user.organizationVersionMipId },
+    where,
     orderBy: { user: { email: 'asc' } },
   })
-export type TeamMember = AsyncReturnType<typeof getAccountMipFromUserOrganization>[number]
+export type TeamMember = AsyncReturnType<typeof getAccountsMipForTeam>[number]
 
 export const changeAccountMipRole = (id: string, role: RoleMip) =>
   prismaClient.accountMip.update({

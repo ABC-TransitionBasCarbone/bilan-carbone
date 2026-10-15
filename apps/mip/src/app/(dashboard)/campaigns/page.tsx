@@ -1,11 +1,8 @@
 'use server'
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import CampaignsPage from '@/components/pages/Campaigns'
-import {
-  getAllAllowedCampaigns,
-  getAllOrganizationVersionMipCampaigns,
-  getModelCampaignByOrganizationVersionMipId,
-} from '@/db/campaign'
+import { getModelCampaignByOrganizationVersionMipId } from '@/db/campaign'
+import { getAllAllowedCampaigns, getAllOrganizationVersionMipCampaigns } from '@/services/campaigns'
 import { isAdmin } from '@/utils/user'
 import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 

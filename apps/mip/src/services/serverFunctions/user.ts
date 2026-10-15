@@ -6,7 +6,6 @@ import {
   getAccountMipByEmailAndEnvironment,
   getAccountMipByEmailAndOrganizationVersionMipId,
   getAccountMipById,
-  getAccountMipFromUserOrganization,
   updateAccountMip,
 } from '@/db/accountMip'
 import { addOrganizationVersionMipIdToModelCampaign } from '@/db/campaign'
@@ -15,7 +14,6 @@ import {
   addUser,
   deleteAccountMipFromOrgaVersionMip,
   getUserByEmail,
-  handleAddingUser,
   UserWithAccountsMip,
   validateUser,
 } from '@/db/user'
@@ -37,8 +35,10 @@ import { AddMemberCommand } from '@abc-transitionbascarbone/common/services/serv
 import { DAY, HOUR, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils'
 import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/common/utils/user.server'
 import jwt from 'jsonwebtoken'
+import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/user'
+import { getAccountMipFromUserOrganization } from '../team'
 
 export const resetPassword = async (email: string) =>
   withServerResponse('resetPassword', async () => {
@@ -89,6 +89,69 @@ export const changeRole = async (email: string, role: RoleMip | Role) =>
     }
     await changeAccountMipRole(accountMipToChange.id, role as RoleMip)
   })
+
+const handleAddingUser = async (creator: UserSession, newUser: AddMemberCommand) => {
+  const memberExists = await getUserByEmail(newUser.email.toLowerCase())
+  const isMemberActiveInSomeEnv = memberExists?.accountsMip.some((account) => account.status === UserStatus.ACTIVE)
+  const memberAccountMip = memberExists?.accountsMip[0]
+
+  if (memberAccountMip?.role === RoleMip.SUPER_ADMIN || newUser.role === RoleMip.SUPER_ADMIN) {
+    console.error('handleAddingUser', creator.email, newUser.email)
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  const userFromDb = await getUserByEmail(creator.email)
+  if (!userFromDb || !creator.organizationVersionMipId) {
+    console.error('handleAddingUser', creator.email, creator.organizationVersionMipId)
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  if (!memberExists) {
+    await addUser({
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      email: newUser.email.toLowerCase(),
+      level: null,
+      source: userFromDb.source,
+      accountsMip: {
+        create: {
+          role: newUser.role as RoleMip,
+          status: UserStatus.VALIDATED,
+          organizationVersionMip: { connect: { id: creator.organizationVersionMipId } },
+        },
+      },
+    })
+  } else if (!memberAccountMip) {
+    await addAccountMip({
+      status: isMemberActiveInSomeEnv ? UserStatus.ACTIVE : UserStatus.VALIDATED,
+      role: newUser.role as Exclude<RoleMip, 'SUPER_ADMIN'>,
+      user: { connect: { id: memberExists.id } },
+      organizationVersionMip: { connect: { id: creator.organizationVersionMipId } },
+    })
+  } else {
+    if (memberAccountMip.status === UserStatus.ACTIVE && memberAccountMip.organizationVersionMipId) {
+      console.error('handleAddingUser', creator.email, memberAccountMip.id)
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    await updateAccountMip(
+      memberAccountMip.id,
+      {
+        status: isMemberActiveInSomeEnv ? UserStatus.ACTIVE : UserStatus.VALIDATED,
+        role: memberAccountMip.role,
+        organizationVersionMip: { connect: { id: creator.organizationVersionMipId } },
+      },
+      { firstName: newUser.firstName, lastName: newUser.lastName },
+    )
+  }
+
+  await sendEmailToAddedUser(
+    newUser.email.toLowerCase(),
+    userSessionToDbUser(creator),
+    newUser.firstName,
+    creator.organizationVersionMipId,
+  )
+}
 
 export const addMember = async (member: AddMemberCommand) =>
   withServerResponse('addMember', async () => {

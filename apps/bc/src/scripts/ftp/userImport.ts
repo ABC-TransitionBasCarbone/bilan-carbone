@@ -1,15 +1,23 @@
 'use server'
 
-import { getAccountByEmailAndEnvironment } from '@/db/account'
+import { addAccount, getAccountByEmailAndEnvironment } from '@/db/account'
 import {
   createOrUpdateOrganization,
   getOrganizationVersionByOrganizationIdAndEnvironment,
   getRawOrganizationById,
   getRawOrganizationBySiret,
 } from '@/db/organization'
-import { createUsersWithAccount, organizationVersionActiveAccountsCount, updateAccount } from '@/db/user'
+import { createUsers, getUsersByEmails, organizationVersionActiveAccountsCount, updateAccount } from '@/db/user'
+import { getDeactivableFeatureRestrictions } from '@/services/serverFunctions/deactivableFeatures'
 import { Prisma } from '@abc-transitionbascarbone/common/db'
-import { Environment, Level, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import {
+  DeactivatableFeature,
+  Environment,
+  Level,
+  Role,
+  UserSource,
+  UserStatus,
+} from '@abc-transitionbascarbone/common/db/enums'
 import { getEnvRoleFromBase } from '../../../prisma/seed/utils'
 
 type Training = {
@@ -219,6 +227,46 @@ const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
   return user
 }
 
+const createUsersAndAccounts = async (
+  users: (Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput })[],
+) => {
+  if (!users.length) {
+    return { newUsers: { count: 0 }, newAccounts: { count: 0 } }
+  }
+
+  const newUsers = await createUsers(
+    users.map(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      ({ account, ...user }) => user,
+    ),
+  )
+  const createdUsers = await getUsersByEmails(users.map(({ email }) => email))
+  let newAccountCount = 0
+
+  for (const user of createdUsers) {
+    const usersForEmail = users.filter((item) => item.email === user.email)
+    if (!usersForEmail.length) {
+      throw new Error(`No account info for user ${user.email}`)
+    }
+
+    for (const originalUser of usersForEmail) {
+      const existingAccount = await getAccountByEmailAndEnvironment(user.email, originalUser.account.environment)
+      if (existingAccount) {
+        continue
+      }
+
+      await addAccount({
+        ...originalUser.account,
+        role: originalUser.account.role as Exclude<Role, 'SUPER_ADMIN'>,
+        user: { connect: { id: user.id } },
+      })
+      newAccountCount++
+    }
+  }
+
+  return { newUsers, newAccounts: { count: newAccountCount } }
+}
+
 export const processUsers = async (values: RawFTPRecord[], importedFileDate: Date) => {
   const BATCH_SIZE = 20
   const usersWithAccount: (Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput })[] = []
@@ -236,7 +284,21 @@ export const processUsers = async (values: RawFTPRecord[], importedFileDate: Dat
     }
   }
   if (usersWithAccount.length > 0) {
-    const { newUsers, newAccounts } = await createUsersWithAccount(usersWithAccount)
+    const restrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
+    let usersToCreate = usersWithAccount
+    if (restrictions?.active) {
+      const hasBlockedUsers = usersWithAccount.some(({ account }) =>
+        restrictions.deactivatedEnvironments.includes(account.environment),
+      )
+      usersToCreate = usersWithAccount.filter(
+        ({ account }) => !restrictions.deactivatedEnvironments.includes(account.environment),
+      )
+      if (hasBlockedUsers) {
+        console.log('Creation of users from these environments is not allowed: ', restrictions.deactivatedEnvironments)
+      }
+    }
+
+    const { newUsers, newAccounts } = await createUsersAndAccounts(usersToCreate)
     console.log(`${newUsers.count} users created`)
     console.log(`${newAccounts.count} accounts created`)
   } else {

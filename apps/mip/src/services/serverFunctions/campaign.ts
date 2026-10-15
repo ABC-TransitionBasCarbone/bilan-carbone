@@ -1,9 +1,9 @@
 'use server'
 
-import { getAccountMipFromUserOrganization } from '@/db/accountMip'
 import { getAllOrganizationVersionMipCampaigns, syncCampaigns, updateModelCampaign } from '@/db/campaign'
 import { getOrgNameByOrgVersionMipId } from '@/db/organization'
 import { UpdateModelCampaignCommand } from '@/services/serverFunctions/modelCampaign.command'
+import { getAccountMipFromUserOrganization } from '@/services/team'
 import { withServerResponse } from '@/utils/serverResponse'
 import { isAdmin } from '@/utils/user'
 import { Role } from '@abc-transitionbascarbone/common/db/enums'

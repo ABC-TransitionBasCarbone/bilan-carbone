@@ -1,9 +1,7 @@
 import { isSourceForEnv } from '@/services/importEmissionFactor/import'
-import { EmissionFactorCommand, UpdateEmissionFactorCommand } from '@/services/serverFunctions/emissionFactor.command'
 import { FeFilters } from '@/types/filters'
 import { unique } from '@/utils/array'
-import { getEmissionFactorSubPostsMap, isMonetaryEmissionFactor } from '@/utils/emissionFactors'
-import { flattenSubposts } from '@/utils/post'
+import { getEmissionFactorSubPostsMap } from '@/utils/emissionFactors'
 import { Prisma } from '@abc-transitionbascarbone/common/db'
 import {
   EmissionFactorBase,
@@ -14,9 +12,7 @@ import {
   Unit,
 } from '@abc-transitionbascarbone/common/db/enums'
 import { LocaleType } from '@abc-transitionbascarbone/common/i18n/config'
-import { Session } from 'next-auth'
 import { prismaClient } from './client.server'
-import { getOrgVersionWithOrgId } from './organization'
 
 const versionsSelect = {
   select: {
@@ -346,44 +342,29 @@ export const getEmissionFactorsByImportedIdsAndVersion = (ids: string[], importV
 
 export const createEmissionFactorWithParts = (
   emissionFactor: Prisma.EmissionFactorCreateInput,
-  parts: EmissionFactorCommand['parts'],
-  local: LocaleType,
+  parts: Prisma.EmissionFactorPartCreateWithoutEmissionFactorInput[],
 ) =>
   prismaClient.$transaction(async (transaction) => {
-    const createdEmissionFactor = await transaction.emissionFactor.create({
-      data: { ...emissionFactor, isMonetary: isMonetaryEmissionFactor(emissionFactor) },
-    })
+    const createdEmissionFactor = await transaction.emissionFactor.create({ data: emissionFactor })
     await Promise.all(
-      parts.map(({ name, ...part }) =>
+      parts.map((part) =>
         transaction.emissionFactorPart.create({
           data: {
             emissionFactorId: createdEmissionFactor.id,
             ...part,
-            metaData: { create: { language: local, title: name } },
           },
         }),
       ),
     )
   })
 
-export const updateEmissionFactor = async (
-  session: Session,
-  local: string,
-  { id, name, unit, attribute, comment, parts, subPosts, ...command }: UpdateEmissionFactorCommand,
-) => {
-  const accountOrganizationVersion = await getOrgVersionWithOrgId(session.user.organizationVersionId)
-
-  const emissionFactor = {
-    ...command,
-    importedFrom: Import.Manual,
-    status: EmissionFactorStatus.Valid,
-    organization: { connect: { id: accountOrganizationVersion?.organizationId } },
-    unit: unit as Unit,
-    isMonetary: isMonetaryEmissionFactor(command),
-    subPosts: flattenSubposts(subPosts),
-  }
-
-  await prismaClient.$transaction(async (transaction) => {
+export const updateEmissionFactor = (
+  id: string,
+  emissionFactor: Prisma.EmissionFactorUpdateInput,
+  metaData: Prisma.EmissionFactorMetaDataCreateWithoutEmissionFactorInput,
+  parts: Prisma.EmissionFactorPartCreateWithoutEmissionFactorInput[],
+) =>
+  prismaClient.$transaction(async (transaction) => {
     await transaction.emissionFactor.update({
       where: { id },
       data: emissionFactor,
@@ -391,10 +372,10 @@ export const updateEmissionFactor = async (
 
     await transaction.emissionFactorMetaData.upsert({
       where: {
-        emissionFactorId_language: { emissionFactorId: id, language: local },
+        emissionFactorId_language: { emissionFactorId: id, language: metaData.language },
       },
-      create: { emissionFactorId: id, language: local, title: name, attribute, comment },
-      update: { language: local, title: name, attribute, comment },
+      create: { emissionFactorId: id, ...metaData },
+      update: metaData,
     })
 
     const emissionFactorParts = await transaction.emissionFactorPart.findMany({
@@ -411,20 +392,16 @@ export const updateEmissionFactor = async (
     await transaction.emissionFactorPart.deleteMany({ where: { id: { in: emissionFactorPartIds } } })
 
     await Promise.all(
-      parts.map(({ name, ...part }) =>
-        prismaClient.emissionFactorPart.create({
+      parts.map((part) =>
+        transaction.emissionFactorPart.create({
           data: {
             emissionFactorId: id,
             ...part,
-            metaData: {
-              create: { language: local, title: name },
-            },
           },
         }),
       ),
     )
   })
-}
 
 export const deleteEmissionFactorAndDependencies = (id: string) =>
   prismaClient.$transaction(async (transaction) => {

@@ -1,10 +1,5 @@
-import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
 import { isSourceForEnv } from '@/services/importEmissionFactor/import'
-import { hasAccessToCreateStudyWithEmissionFactorVersions } from '@/services/permissions/environment'
 import { filterAllowedStudies } from '@/services/permissions/study'
-import { subPostsByPost } from '@/services/posts'
-import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.command'
-import { mapCncToStudySite } from '@/utils/cnc'
 import { hasActiveLicence, isAdminOnOrga } from '@/utils/organization'
 import { getAllowedLevels, getUserRoleOnPublicStudy, hasSufficientLevel, StudyWithRoleFields } from '@/utils/study'
 import { isAdmin } from '@/utils/user'
@@ -26,7 +21,6 @@ import {
   Import,
   StudyRole,
 } from '@abc-transitionbascarbone/common/db/enums'
-import { Post } from '@abc-transitionbascarbone/common/utils/charts'
 import { getEnvVar } from '@abc-transitionbascarbone/common/utils/environment'
 import { UserSession } from 'next-auth'
 import { cache } from 'react'
@@ -39,14 +33,9 @@ export type StudyTagFamilyWithTags = Omit<StudyTagFamily, 'createdAt' | 'updated
   tags: Omit<StudyTag, 'familyId' | 'createdAt' | 'updatedAt'>[]
 }
 
-export const createStudy = async (
-  data: Prisma.StudyCreateInput,
-  environment: Environment,
-  shouldCreateFEVersions = true,
-  tx?: Prisma.TransactionClient,
-) => {
+export const createStudy = async (data: Prisma.StudyCreateInput, tx?: Prisma.TransactionClient) => {
   const client = tx ?? prismaClient
-  const dbStudy = await client.study.create({
+  return client.study.create({
     data,
     select: {
       id: true,
@@ -55,42 +44,15 @@ export const createStudy = async (
       simplified: true,
     },
   })
-
-  if (hasAccessToCreateStudyWithEmissionFactorVersions(environment) || shouldCreateFEVersions) {
-    let studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = []
-    if (environment === Environment.CUT) {
-      studyEmissionFactorVersions = (await getSourceCutImportVersionIds()).map((importVersion) => ({
-        studyId: dbStudy.id,
-        source: importVersion.source,
-        importVersionId: importVersion.id,
-      }))
-    } else if (environment === Environment.CLICKSON) {
-      studyEmissionFactorVersions = (await getSourceEnvironmentImportVersionIds(Environment.CLICKSON)).map(
-        (importVersion) => ({
-          studyId: dbStudy.id,
-          source: importVersion.source,
-          importVersionId: importVersion.id,
-        }),
-      )
-    } else {
-      const hasGHGP = dbStudy.exports?.types.includes(Export.GHGP)
-      const sources = Object.values(Import).filter(
-        (source) => source !== Import.Manual && source !== Import.CUT && (source !== Import.AIB || hasGHGP),
-      )
-
-      const latestVersions = await getSourcesLatestImportVersionId(sources)
-      if (latestVersions) {
-        studyEmissionFactorVersions = latestVersions.map((latestImportVersion) => ({
-          studyId: dbStudy.id,
-          source: latestImportVersion.source,
-          importVersionId: latestImportVersion.id,
-        }))
-      }
-    }
-    await client.studyEmissionFactorVersion.createMany({ data: studyEmissionFactorVersions })
-  }
-  return dbStudy
 }
+
+export const createStudyEmissionFactorVersions = (
+  data: Prisma.StudyEmissionFactorVersionCreateManyInput[],
+  tx?: Prisma.TransactionClient,
+) => (tx ?? prismaClient).studyEmissionFactorVersion.createMany({ data })
+
+export const createStudyEmissionFactorVersionIfAbsent = (data: Prisma.StudyEmissionFactorVersionCreateManyInput) =>
+  prismaClient.studyEmissionFactorVersion.createMany({ data, skipDuplicates: true })
 
 const fullStudyInclude = {
   emissionSources: {
@@ -624,25 +586,12 @@ export const getStudiesForCards = async (ids: string[]) => {
   return Object.fromEntries(studies.map((study) => [study.id, study]))
 }
 
-export const getStudiesValidatedEmissionsSources = async (ids: string[]) => {
-  const groups = await prismaClient.studyEmissionSource.groupBy({
+export const getStudyEmissionSourceValidationGroups = (ids: string[]) =>
+  prismaClient.studyEmissionSource.groupBy({
     by: ['studyId', 'validated'],
     where: { studyId: { in: ids } },
     _count: true,
   })
-
-  const result: Record<string, { total: number; validated: number }> = {}
-  for (const id of ids) {
-    result[id] = { total: 0, validated: 0 }
-  }
-  for (const group of groups) {
-    result[group.studyId].total += group._count
-    if (group.validated) {
-      result[group.studyId].validated += group._count
-    }
-  }
-  return result
-}
 
 type StudiesForCardsMap = AsyncReturnType<typeof getStudiesForCards>
 
@@ -713,20 +662,8 @@ export const deleteAccountOnStudy = async (studyId: string, accountId: string) =
     where: { studyId_accountId: { studyId, accountId } },
   })
 
-export const deleteContributor = async (studyId: string, contributor: StudyContributorDeleteParams) => {
-  const where: Prisma.ContributorsWhereInput = {
-    studyId,
-    accountId: contributor.accountId,
-  }
-  if (contributor.subPosts[0] !== 'allSubPost') {
-    where.subPost = contributor.subPosts[0] as SubPost
-  } else if (contributor.post !== 'allPost') {
-    const subPosts = subPostsByPost[contributor.post as Post]
-    where.subPost = { in: subPosts }
-  }
-
-  return prismaClient.contributors.deleteMany({ where })
-}
+export const deleteContributors = (where: Prisma.ContributorsWhereInput) =>
+  prismaClient.contributors.deleteMany({ where })
 
 export const getUsersLevel = async (userIds: string[]) =>
   prismaClient.user.findMany({
@@ -753,64 +690,6 @@ export const updateStudySiteData = async (studySiteId: string, data: Prisma.Stud
   return prismaClient.studySite.update({
     where: { id: studySiteId },
     data,
-  })
-}
-
-export const updateStudySites = async (
-  studyId: string,
-  newStudySites: Prisma.StudySiteCreateManyInput[],
-  deletedSiteIds: string[],
-) => {
-  return prismaClient.$transaction(async (transaction) => {
-    const promises = []
-    if (deletedSiteIds.length) {
-      await transaction.studyEmissionSource.deleteMany({ where: { studyId, studySiteId: { in: deletedSiteIds } } })
-      promises.push(transaction.studySite.deleteMany({ where: { id: { in: deletedSiteIds }, studyId } }))
-    }
-    if (newStudySites.length) {
-      const siteIds = newStudySites.map((site) => site.siteId)
-      const sitesWithCNC = await transaction.site.findMany({
-        where: { id: { in: siteIds } },
-        include: {
-          cnc: {
-            select: {
-              seances: true,
-              entrees2024: true,
-              entrees2023: true,
-              semainesActivite: true,
-              latitude: true,
-              longitude: true,
-            },
-          },
-        },
-      })
-
-      newStudySites.forEach((studySite) => {
-        const siteWithCNC = sitesWithCNC.find((s) => s.id === studySite.siteId)
-        const cncData = siteWithCNC?.cnc
-
-        const enhancedStudySite = { ...studySite }
-
-        if (cncData) {
-          Object.assign(enhancedStudySite, mapCncToStudySite(cncData, enhancedStudySite))
-        }
-
-        promises.push(
-          transaction.studySite.upsert({
-            where: { studyId_siteId: { studyId, siteId: studySite.siteId } },
-            update: {
-              ca: studySite.ca,
-              etp: studySite.etp,
-              volunteerNumber: studySite.volunteerNumber,
-              beneficiaryNumber: studySite.beneficiaryNumber,
-            },
-            create: enhancedStudySite,
-          }),
-        )
-      })
-    }
-
-    return Promise.all(promises)
   })
 }
 
@@ -1012,53 +891,6 @@ export const upsertStudyExport = async (studyId: string, types: Export[], contro
 export const countOrganizationStudiesFromOtherUsers = async (organizationVersionId: string, accountId: string) =>
   prismaClient.study.count({ where: { organizationVersionId, createdById: { not: accountId } } })
 
-export const updateStudyOpeningHours = async (
-  studySiteId: string,
-  openingHours: ChangeStudyCinemaCommand['openingHours'],
-  openingHoursHoliday: ChangeStudyCinemaCommand['openingHoursHoliday'],
-) => {
-  await prismaClient.$transaction(async (prisma) => {
-    const existingOpeningHours = await prisma.openingHours.findMany({
-      where: { studySiteId },
-      select: { id: true },
-    })
-    const mergedOpeningHours = [...Object.values(openingHours || {}), ...Object.values(openingHoursHoliday || {})]
-
-    const existingIds = new Set(existingOpeningHours.map((openingHour) => openingHour.id))
-    const updateIds = new Set(mergedOpeningHours.map((openingHour) => openingHour.id))
-
-    const openingHourIdsToDelete = [...existingIds].filter((id) => !updateIds.has(id))
-
-    if (openingHourIdsToDelete.length > 0) {
-      await prisma.openingHours.deleteMany({
-        where: { id: { in: openingHourIdsToDelete } },
-      })
-    }
-
-    await prismaClient.$transaction(async (prisma) => {
-      await Promise.all(
-        mergedOpeningHours
-          .map((openingHour) => {
-            if (!openingHour.id) {
-              return prisma.openingHours.create({
-                data: {
-                  ...openingHour,
-                  studySite: { connect: { id: studySiteId } },
-                },
-              })
-            }
-
-            return prisma.openingHours.update({
-              where: { id: openingHour.id },
-              data: openingHour,
-            })
-          })
-          .filter((promise) => promise !== undefined),
-      )
-    })
-  })
-}
-
 export const deleteStudyMemberFromOrganization = async (accountId: string, organizationVersionIds: string[]) => {
   const studies = await getAllowedStudiesByAccountIdAndOrganizationId(organizationVersionIds)
   return prismaClient.userOnStudy.deleteMany({
@@ -1190,28 +1022,6 @@ export const updateEngagementAction = async (id: string, data: Prisma.Engagement
   prismaClient.engagementAction.update({ where: { id }, data })
 
 export const deleteEngagementAction = async (id: string) => prismaClient.engagementAction.delete({ where: { id } })
-
-export const addSourceToStudy = async (source: Import, studyId: string) => {
-  const [study, importVersion] = await Promise.all([
-    prismaClient.study.findFirst({
-      where: { id: studyId },
-      select: {
-        id: true,
-        organizationVersion: {
-          select: { environment: true },
-        },
-      },
-    }),
-    getSourceLatestImportVersionId(source),
-  ])
-
-  if (study && !!importVersion && (await isSourceForEnv(study.organizationVersion.environment)).includes(source)) {
-    await prismaClient.studyEmissionFactorVersion.createMany({
-      data: { studyId: study.id, source, importVersionId: importVersion.id },
-      skipDuplicates: true,
-    })
-  }
-}
 
 export const removeSourceToStudy = async (source: Import, studyId: string) =>
   prismaClient.$transaction(async (tx) => {

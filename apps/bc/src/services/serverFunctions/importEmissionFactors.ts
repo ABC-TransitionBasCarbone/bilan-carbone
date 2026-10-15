@@ -1,7 +1,8 @@
 'use server'
 
-import { createEmissionFactorWithParts, getManualEmissionFactorsByOrganization } from '@/db/emissionFactors'
+import { getManualEmissionFactorsByOrganization } from '@/db/emissionFactors'
 import { getLocale } from '@/i18n/locale'
+import { createEmissionFactorWithParts } from '@/services/emissionFactorMutations'
 import { AccountWithUser } from '@/types/account.types'
 import { BCEnvironment } from '@/types/environment'
 import {

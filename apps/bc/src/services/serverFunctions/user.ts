@@ -1,12 +1,10 @@
 'use server'
 
 import {
-  addAccount,
   changeAccountRole,
   getAccountByEmailAndEnvironment,
   getAccountByEmailAndOrganizationVersionId,
   getAccountById,
-  getAccountFromUserOrganization,
   getAccountsFromOrganization,
   getAccountsFromOrganizationForActivation,
   getAccountsFromUser,
@@ -28,7 +26,6 @@ import {
 import { addSite } from '@/db/site'
 import { MinimalStudyForRights } from '@/db/study'
 import {
-  addUser,
   createOrUpdateUserCheckedStep,
   deleteUserFromOrga,
   finalizeUserChecklist,
@@ -39,7 +36,6 @@ import {
   getUsers,
   getUsersCheckedSteps,
   getUserSourceById,
-  handleAddingUser,
   organizationVersionActiveAccountsCount,
   startUserFormationForm,
   updateAccount,
@@ -99,6 +95,8 @@ import {
 import { isBC, isTilt } from '../permissions/environment'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from '../permissions/user'
 import { establishmentTypeMap, School } from '../schoolApi'
+import { getAccountFromUserOrganization } from '../team'
+import { addAccount, addUser } from '../userCreation'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
 import { EditProfileCommand, EditSettingsCommand } from './user.command'
 
@@ -236,6 +234,81 @@ export const sendInvitation = async (
 const sendActivation = async (email: string, fromReset: boolean, env: Environment) => {
   const token = await updateUserResetToken(email, 1 * HOUR)
   return sendActivationEmail(email, token, fromReset, env)
+}
+
+const handleAddingUser = async (creator: UserSession, newUser: AddMemberCommand) => {
+  const environment = creator.environment
+  const memberExists = await getUserByEmail(newUser.email.toLowerCase())
+
+  const isMemberActiveInSomeEnv = memberExists?.accounts.some((a) => a.status === UserStatus.ACTIVE)
+  const memberAccountForEnv = memberExists?.accounts.find((a) => a.environment === environment)
+
+  if (memberAccountForEnv?.role === Role.SUPER_ADMIN || newUser.role === Role.SUPER_ADMIN) {
+    console.error('handleAddingUser', creator.email, newUser.email, environment)
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  const userFromDb = await getUserByEmail(creator.email)
+  if (!userFromDb || !creator.organizationVersionId) {
+    console.error('handleAddingUser', creator.email, creator.organizationVersionId)
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  if (!memberExists) {
+    const newMember = {
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      email: newUser.email.toLowerCase(),
+      level: null,
+      source: userFromDb.source,
+      accounts: {
+        create: {
+          role: getRoleToSetForUntrained(newUser.role, environment),
+          status: UserStatus.VALIDATED,
+          organizationVersionId: creator.organizationVersionId,
+          environment,
+        },
+      },
+    }
+
+    await addUser(newMember)
+    await addUserChecklistItem(UserChecklist.AddCollaborator)
+  } else if (!memberAccountForEnv) {
+    await addAccount({
+      status: isMemberActiveInSomeEnv ? UserStatus.ACTIVE : UserStatus.VALIDATED,
+      role: memberExists.level ? newUser.role : getRoleToSetForUntrained(newUser.role, environment),
+      environment,
+      user: { connect: { id: memberExists.id } },
+      organizationVersion: { connect: { id: creator.organizationVersionId } },
+    })
+  } else {
+    if (memberAccountForEnv.status === UserStatus.ACTIVE && memberAccountForEnv.organizationVersionId) {
+      console.error('handleAddingUser', creator.email, memberAccountForEnv.id)
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const updateMember = {
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+    }
+
+    const updateMemberAccount = {
+      status: isMemberActiveInSomeEnv ? UserStatus.ACTIVE : UserStatus.VALIDATED,
+      role: memberExists.level
+        ? memberAccountForEnv.role
+        : getRoleToSetForUntrained(memberAccountForEnv.role, creator.environment),
+      organizationVersion: { connect: { id: creator.organizationVersionId } },
+    }
+    await updateAccount(memberAccountForEnv.id, updateMemberAccount, updateMember)
+  }
+
+  await sendEmailToAddedUser(
+    newUser.email.toLowerCase(),
+    userSessionToDbUser(creator),
+    newUser.firstName,
+    creator.environment,
+    creator.organizationVersionId,
+  )
 }
 
 export const addMember = async (member: AddMemberCommand) =>

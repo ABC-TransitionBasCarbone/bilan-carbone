@@ -1,8 +1,6 @@
-import { getDeactivableFeatureRestrictions } from '@/services/serverFunctions/deactivableFeatures'
-import { findUserInfo } from '@/utils/user'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
-import { DeactivatableFeature, Environment, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
+import { findAccountSelect } from '@abc-transitionbascarbone/common/db/db/common.select'
+import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { UserSession } from 'next-auth'
 import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client.server'
@@ -64,9 +62,13 @@ export const getAccountByEmailAndEnvironment = (email: string, environment: Envi
 
 export type OrganizationWithSites = AsyncReturnType<typeof getAccountOrganizationVersions>[0]
 
-export const getAccountFromUserOrganization = (user: Pick<UserSession, 'role' | 'organizationVersionId'>) =>
-  prismaClient.account.findMany({ ...findUserInfo(user), orderBy: { user: { email: 'asc' } } })
-export type TeamMember = AsyncReturnType<typeof getAccountFromUserOrganization>[number]
+export const getAccountsForTeam = (where: Prisma.AccountWhereInput) =>
+  prismaClient.account.findMany({
+    select: findAccountSelect({ formationName: true }),
+    where,
+    orderBy: { user: { email: 'asc' } },
+  })
+export type TeamMember = AsyncReturnType<typeof getAccountsForTeam>[number]
 
 export const getAccountsFromOrganization = (
   organizationVersionId: string,
@@ -147,20 +149,11 @@ export const removeOtherAccountActivation = async (
   return true
 }
 
-export const addAccount = async (account: Prisma.AccountCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> }) => {
-  const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
-  if (
-    deactivatedFeaturesRestrictions?.active &&
-    deactivatedFeaturesRestrictions.deactivatedEnvironments.includes(account.environment)
-  ) {
-    throw new Error(NOT_AUTHORIZED)
-  }
-
-  return prismaClient.account.create({
+export const addAccount = (account: Prisma.AccountCreateInput & { role: Exclude<Role, 'SUPER_ADMIN'> }) =>
+  prismaClient.account.create({
     data: account,
     select: AccountWithUserSelect,
   })
-}
 export const getAccountsUserLevel = (ids: string[]) =>
   prismaClient.account.findMany({
     where: { id: { in: ids } },
