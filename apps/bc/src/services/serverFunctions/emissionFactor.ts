@@ -3,7 +3,6 @@
 import { getAccountById } from '@/db/account'
 import { prismaClient } from '@/db/client.server'
 import {
-  createEmissionFactorWithParts,
   deleteEmissionFactorAndDependencies,
   findEmissionFactorByImportedId,
   getAllEmissionFactors,
@@ -16,7 +15,6 @@ import {
   getEmissionFactorImportVersionsCUT,
   getManualEmissionFactors,
   setEmissionFactorUnitAsCustom,
-  updateEmissionFactor,
   type EmissionFactorList,
 } from '@/db/emissionFactors'
 import { getOrganizationVersionByOrganizationIdAndEnvironment, getOrgVersionWithOrgId } from '@/db/organization'
@@ -31,6 +29,7 @@ import { EmissionFactorStatus, Environment, Import, Unit } from '@abc-transition
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import type { IsSuccess } from '@abc-transitionbascarbone/common/utils/serverResponse'
 import { auth, dbActualizedAuth } from '../auth'
+import { createEmissionFactorWithParts, updateManualEmissionFactor } from '../emissionFactorMutations'
 import { canCreateEmissionFactor } from '../permissions/emissionFactor.server'
 import { canReadStudy } from '../permissions/study'
 import { getStudyParentOrganizationId, getStudyParentOrganizationVersionId } from '../study.server'
@@ -248,7 +247,7 @@ export const updateEmissionFactorCommand = async (command: UpdateEmissionFactorC
       throw new Error(NOT_AUTHORIZED)
     }
 
-    await updateEmissionFactor(session, local, command)
+    await updateManualEmissionFactor(session, local, command)
   })
 
 export const deleteEmissionFactor = async (id: string) =>

@@ -1,10 +1,35 @@
 'use server'
 
-import { getUserByEmailWithSensibleInformations, updateUserPasswordForEmail } from '@/db/user'
+import { prismaClient } from '@/db/client.server'
+import { getUserByEmailWithSensibleInformations } from '@/db/user'
 import { withServerResponse } from '@/utils/serverResponse'
-import { computePasswordValidation } from '@abc-transitionbascarbone/common/utils/auth'
+import { UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { computePasswordValidation, signPassword } from '@abc-transitionbascarbone/common/utils/auth'
 import { hashResetToken } from '@abc-transitionbascarbone/common/utils/user.server'
 import jwt from 'jsonwebtoken'
+
+const updateUserPasswordForEmail = async (email: string, password: string) => {
+  const signedPassword = await signPassword(password)
+  const user = await prismaClient.user.update({
+    where: { email },
+    data: { resetToken: null, password: signedPassword },
+  })
+
+  if (!user) {
+    throw new Error(`User with email ${email} not found`)
+  }
+
+  const accountMip = await prismaClient.accountMip.findFirst({ where: { userId: user.id } })
+  if (!accountMip) {
+    throw new Error(`Account with email ${email} not found`)
+  }
+
+  const accountsMip = await prismaClient.accountMip.findMany({ where: { userId: user.id } })
+  if (accountsMip.length > 0) {
+    await prismaClient.accountMip.updateMany({ where: { userId: user.id }, data: { status: UserStatus.ACTIVE } })
+  }
+  return user
+}
 
 export const checkToken = async (token: string) => {
   try {

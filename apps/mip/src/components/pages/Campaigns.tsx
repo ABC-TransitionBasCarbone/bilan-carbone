@@ -1,7 +1,8 @@
 'use client'
 
 import { isCsvExportDisabled } from '@/constants/survey'
-import type { CampaignsWithResponses, ModelCampaignLight } from '@/db/campaign'
+import type { ModelCampaignLight } from '@/db/campaign'
+import type { CampaignsWithResponses } from '@/services/campaigns'
 import { updateCampaignCommand } from '@/services/serverFunctions/campaign'
 import { UpdateCampaignCommand, UpdateCampaignCommandValidation } from '@/services/serverFunctions/campaign.command'
 import { exportSurveyResponsesToCSV } from '@/services/serverFunctions/survey'

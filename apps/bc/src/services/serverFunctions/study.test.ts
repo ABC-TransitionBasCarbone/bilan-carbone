@@ -1,5 +1,6 @@
 import * as studyUtilsModule from '@/utils/study'
 import { Environment, Import, StudyRole, SubPost } from '@abc-transitionbascarbone/common/db/enums'
+import { Post } from '@abc-transitionbascarbone/common/utils/charts'
 import { expect } from '@jest/globals'
 import { v4 as uuidv4 } from 'uuid'
 import * as accountModule from '../../db/account'
@@ -12,6 +13,7 @@ import * as transitionPlanDbModule from '../../db/transitionPlan'
 import * as userDbModule from '../../db/user'
 import * as authModule from '../../services/auth'
 import * as studyPermissionsModule from '../../services/permissions/study'
+import { subPostsByPost } from '../../services/posts'
 import * as userModule from '../../services/serverFunctions/user'
 import {
   getMockedDuplicateStudyCommand,
@@ -53,10 +55,15 @@ jest.mock('../../db/study', () => ({
   createStudy: jest.fn(),
   updateStudy: jest.fn(),
   updateStudyEmissionFactorVersion: jest.fn(),
+  deleteContributors: jest.fn(),
   createContributorOnStudy: jest.fn(),
   createEmissionSourceTags: jest.fn(),
+  createStudyEmissionFactorVersions: jest.fn(),
   updateUserOnStudy: jest.fn(),
   getMinimalStudyForRights: jest.fn(),
+  getSourceCutImportVersionIds: jest.fn().mockResolvedValue([]),
+  getSourceEnvironmentImportVersionIds: jest.fn().mockResolvedValue([]),
+  getSourcesLatestImportVersionId: jest.fn().mockResolvedValue([]),
 }))
 const mockTransaction = {
   site: {
@@ -108,6 +115,10 @@ jest.mock('../../services/serverFunctions/user', () => ({
   sendInvitation: jest.fn(),
   getUserActiveAccounts: jest.fn(),
 }))
+jest.mock('../../services/userCreation', () => ({
+  addAccount: jest.fn(),
+  addUser: jest.fn(),
+}))
 jest.mock('../../utils/serverResponse', () => ({
   withServerResponse: jest.fn(async (_name, fn) => {
     try {
@@ -156,6 +167,7 @@ jest.mock('../../utils/number', () => ({
 jest.mock('../posts', () => ({
   environmentPostMapping: { BC: 'bc-mapping', CUT: 'cut-mapping', TILT: 'tilt-mapping' },
   subPostsByPostBC: {},
+  subPostsByPost: { Alimentation: ['Achats'] },
   Post: {
     DechetsDirects: 'DechetsDirects',
     IntrantsBiensEtMatieres: 'IntrantsBiensEtMatieres',
@@ -192,7 +204,8 @@ jest.mock('../../services/serverFunctions/transitionPlan', () => ({
   getLinkedAndExternalStudies: jest.fn(),
 }))
 
-const { duplicateStudyCommand, duplicateSiteAndEmissionSources, changeStudyDates } = jest.requireActual('./study')
+const { duplicateStudyCommand, duplicateSiteAndEmissionSources, changeStudyDates, deleteStudyContributors } =
+  jest.requireActual('./study')
 
 const mockedSessionValidator = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.validator })
 const mockedSession = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.currentUser })
@@ -206,6 +219,7 @@ const mockCreateStudyEmissionSource = studyDbModule.createStudyEmissionSource as
 const mockCreateUserOnStudy = studyDbModule.createUserOnStudy as jest.Mock
 const mockCreateStudy = studyDbModule.createStudy as jest.Mock
 const mockUpdateStudyEmissionFactorVersion = studyDbModule.updateStudyEmissionFactorVersion as jest.Mock
+const mockDeleteContributors = studyDbModule.deleteContributors as jest.Mock
 const mockCreateContributorOnStudy = studyDbModule.createContributorOnStudy as jest.Mock
 const mockCreateEmissionSourceTags = studyDbModule.createEmissionSourceTags as jest.Mock
 const mockUpdateUserOnStudy = studyDbModule.updateUserOnStudy as jest.Mock
@@ -241,6 +255,30 @@ const mockGetLinkedAndExternalStudies = (
     getLinkedAndExternalStudies: jest.Mock
   }
 ).getLinkedAndExternalStudies
+
+describe('deleteStudyContributors', () => {
+  it('maps contributor scope to database filters', async () => {
+    mockDeleteContributors.mockResolvedValue({ count: 1 })
+
+    await deleteStudyContributors('study-id', [
+      { accountId: 'all-posts', post: 'allPost', subPosts: ['allSubPost'] },
+      { accountId: 'one-post', post: Post.Alimentation, subPosts: ['allSubPost'] },
+      { accountId: 'one-sub-post', post: 'allPost', subPosts: [SubPost.Achats] },
+    ])
+
+    expect(mockDeleteContributors).toHaveBeenNthCalledWith(1, { studyId: 'study-id', accountId: 'all-posts' })
+    expect(mockDeleteContributors).toHaveBeenNthCalledWith(2, {
+      studyId: 'study-id',
+      accountId: 'one-post',
+      subPost: { in: subPostsByPost[Post.Alimentation] },
+    })
+    expect(mockDeleteContributors).toHaveBeenNthCalledWith(3, {
+      studyId: 'study-id',
+      accountId: 'one-sub-post',
+      subPost: SubPost.Achats,
+    })
+  })
+})
 
 describe('study', () => {
   describe('duplicateStudyCommand', () => {
@@ -475,8 +513,6 @@ describe('study', () => {
               })),
             },
           }),
-          Environment.BC,
-          true,
           mockTransaction,
         )
 

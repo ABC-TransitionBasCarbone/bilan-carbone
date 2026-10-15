@@ -5,12 +5,12 @@ import {
   addAccount,
   getAccountByEmailAndEnvironment,
   getAccountById,
-  getAccountFromUserOrganization,
   getAccountsFromOrganization,
   getAccountsFromOrganizationForActivation,
   removeOtherAccountActivation,
 } from '@/db/account'
 import { findCncByCncCode } from '@/db/cnc'
+import { getFeatureRestictions } from '@/db/deactivableFeatures'
 import {
   createOrganizationWithVersion,
   getOrganizationVersionByOrganizationIdAndEnvironment,
@@ -33,6 +33,8 @@ import { EMAIL_SENT, NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/ser
 import { mockedOrganizationId } from '@abc-transitionbascarbone/common/services/tests/models/organization'
 import { mockedUserId } from '@abc-transitionbascarbone/common/services/tests/models/user'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
+import { getAccountFromUserOrganization } from '../team'
+import { addAccount as addAccountWithRestrictions, addUser as addUserWithRestrictions } from '../userCreation'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
 import { activateEmail, signUpWithSiretOrCNC } from './user'
 
@@ -61,6 +63,7 @@ jest.mock('@/db/organization')
 jest.mock('@/db/site')
 jest.mock('@/db/study', () => ({}))
 jest.mock('@/db/user')
+jest.mock('../team', () => ({ getAccountFromUserOrganization: jest.fn() }))
 jest.mock('@/services/associationApi')
 jest.mock('@abc-transitionbascarbone/common/db/db')
 jest.mock('@abc-transitionbascarbone/common/services/email/email', () => ({
@@ -108,6 +111,54 @@ const actualActivateEmail = jest.requireActual('./user').activateEmail as typeof
 const testEmail = 'test@example.com'
 const testSiret = '12345678901234'
 const testCNC = 'CNC123'
+
+describe('user creation restrictions', () => {
+  const member = {
+    email: 'new@example.com',
+    firstName: 'New',
+    lastName: 'Member',
+    accounts: {
+      create: {
+        environment: Environment.BC,
+        role: Role.DEFAULT,
+        status: UserStatus.VALIDATED,
+      },
+    },
+  }
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it('blocks account creation in a deactivated environment before writing', async () => {
+    jest.mocked(getFeatureRestictions).mockResolvedValue({
+      active: true,
+      deactivatedSources: [],
+      deactivatedEnvironments: [Environment.BC],
+    })
+
+    await expect(
+      addAccountWithRestrictions({
+        environment: Environment.BC,
+        role: Role.DEFAULT,
+        status: UserStatus.VALIDATED,
+        user: { connect: { id: 'user-id' } },
+      }),
+    ).rejects.toThrow(NOT_AUTHORIZED)
+    expect(addAccount).not.toHaveBeenCalled()
+  })
+
+  it('blocks user creation in a deactivated environment before writing', async () => {
+    jest.mocked(getFeatureRestictions).mockResolvedValue({
+      active: true,
+      deactivatedSources: [],
+      deactivatedEnvironments: [Environment.BC],
+    })
+
+    await expect(addUserWithRestrictions(member)).rejects.toThrow(NOT_AUTHORIZED)
+    expect(addUser).not.toHaveBeenCalled()
+  })
+})
 
 describe('signUpWithSiretOrCNC', () => {
   beforeEach(() => {

@@ -5,7 +5,6 @@ import {
   getAllowedStudiesByUserAndOrganization,
   getExternalAllowedStudiesByUser,
   getStudiesForCards,
-  getStudiesValidatedEmissionsSources,
 } from '@/db/study'
 import {
   canCreateStudyOnlyAsAdministrator,
@@ -13,6 +12,7 @@ import {
   isTiltSimplifiedFeatureActive,
 } from '@/services/permissions/environment'
 import { canCreateAStudy } from '@/services/permissions/study'
+import { getStudiesValidatedEmissionsSources } from '@/services/studyMetrics'
 import { hasActiveLicence } from '@/utils/organization'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import Box from '@abc-transitionbascarbone/common/components/base/Box'

@@ -1,22 +1,6 @@
-import { getDeactivableFeatureRestrictions } from '@/services/serverFunctions/deactivableFeatures'
-import { addUserChecklistItem, sendEmailToAddedUser } from '@/services/serverFunctions/user'
-import { AuthorizedInOrgaUserStatus } from '@/services/users'
-import { getRoleToSetForUntrained } from '@/utils/user'
-import { userSessionToDbUser } from '@/utils/userAccounts'
 import { Prisma } from '@abc-transitionbascarbone/common/db'
-import {
-  DeactivatableFeature,
-  Environment,
-  Role,
-  UserChecklist,
-  UserStatus,
-} from '@abc-transitionbascarbone/common/db/enums'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
-import { AddMemberCommand } from '@abc-transitionbascarbone/common/services/serverFunctions/user.command'
-import { signPassword } from '@abc-transitionbascarbone/common/utils/auth'
-import { environmentsWithChecklist } from '@abc-transitionbascarbone/common/utils/environments'
-import { UserSession } from 'next-auth'
-import { addAccount, getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
+import { Role, UserChecklist, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { getAccountByEmailAndOrganizationVersionId } from './account'
 import { prismaClient } from './client.server'
 
 export const getUserByEmailWithSensibleInformations = (email: string) =>
@@ -80,57 +64,6 @@ export const getAccountByIdWithAllowedStudies = (id: string) =>
 
 export type UserWithAllowedStudies = AsyncReturnType<typeof getAccountByIdWithAllowedStudies>
 
-export const updateUserPasswordForEmail = async (email: string, password: string, env: Environment) => {
-  const signedPassword = await signPassword(password)
-  const user = await prismaClient.user.update({
-    where: { email },
-    data: { resetToken: null, password: signedPassword },
-  })
-
-  if (!user) {
-    throw new Error(`User with email ${email} not found`)
-  }
-
-  const account = await prismaClient.account.findFirst({
-    where: {
-      userId: user.id,
-      environment: env,
-      status: { in: AuthorizedInOrgaUserStatus },
-    },
-  })
-
-  if (!account) {
-    throw new Error(`Account with email ${email} for environment ${env} not found or has a wrong status`)
-  }
-
-  const accounts = await prismaClient.account.findMany({
-    where: {
-      userId: user.id,
-      status: { in: AuthorizedInOrgaUserStatus },
-    },
-  })
-
-  if (accounts.length > 0) {
-    await Promise.all([
-      ...accounts
-        .filter((account) => environmentsWithChecklist.includes(account.environment))
-        .map((account) =>
-          prismaClient.userCheckedStep.upsert({
-            where: { accountId_step: { accountId: account.id, step: UserChecklist.CreateAccount } },
-            update: {},
-            create: { accountId: account.id, step: UserChecklist.CreateAccount },
-          }),
-        ),
-      prismaClient.account.update({
-        where: { userId_environment: { userId: user.id, environment: env } },
-        data: { activationRequestedAt: null, status: UserStatus.ACTIVE },
-      }),
-    ])
-  }
-
-  return user
-}
-
 export const deleteUserFromOrga = async (email: string, organizationVersionId: string | null) => {
   const account = await getAccountByEmailAndOrganizationVersionId(email, organizationVersionId)
   if (!account) {
@@ -152,8 +85,8 @@ export const validateUser = (accountId: string, transaction: Prisma.TransactionC
 export const hasAccountToValidateInOrganization = async (organizationVersionId: string | null) =>
   organizationVersionId
     ? prismaClient.account.count({
-        where: { organizationVersionId, status: UserStatus.PENDING_REQUEST },
-      })
+      where: { organizationVersionId, status: UserStatus.PENDING_REQUEST },
+    })
     : 0
 
 export const organizationVersionActiveAccountsCount = async (organizationVersionId: string) =>
@@ -208,66 +141,11 @@ export const updateUser = (userId: string, data: Partial<Prisma.UserCreateInput>
     data,
   })
 
-export const createUsersWithAccount = async (
-  users: (Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput })[],
-) => {
-  const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
-  let filteredUsers = users
+export const createUsers = (data: Prisma.UserCreateManyInput[]) =>
+  prismaClient.user.createMany({ data, skipDuplicates: true })
 
-  if (deactivatedFeaturesRestrictions?.active) {
-    const notAllowedEnvironments = users.some(({ account }) =>
-      deactivatedFeaturesRestrictions.deactivatedEnvironments.includes(account.environment),
-    )
-    filteredUsers = users.filter(
-      ({ account }) => !deactivatedFeaturesRestrictions.deactivatedEnvironments.includes(account.environment),
-    )
-    if (notAllowedEnvironments) {
-      console.log(
-        'Creation of users from these environments is not allowed: ',
-        deactivatedFeaturesRestrictions.deactivatedEnvironments,
-      )
-    }
-  }
-
-  const newUsers = await prismaClient.user.createMany({
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    data: filteredUsers.map(({ account, ...user }) => user),
-    skipDuplicates: true,
-  })
-
-  const emails = filteredUsers.map(({ email }) => email)
-
-  const createdUsers = await prismaClient.user.findMany({
-    where: { email: { in: emails } },
-  })
-
-  let newAccountCount = 0
-  for (const user of createdUsers) {
-    const originalUsers = filteredUsers.filter((u) => u.email === user.email)
-    if (!originalUsers.length) {
-      throw new Error(`No account info for user ${user.email}`)
-    }
-
-    for (const originalUser of originalUsers) {
-      const accountAlreadyExists = await getAccountByEmailAndEnvironment(user.email, originalUser.account.environment)
-      if (accountAlreadyExists) {
-        continue
-      }
-      await prismaClient.account.create({
-        data: {
-          ...originalUser.account,
-          user: {
-            connect: { id: user.id },
-          },
-        },
-      })
-      newAccountCount++
-    }
-  }
-  console.log('New account count:', newAccountCount)
-
-  return { newUsers, newAccounts: { count: newAccountCount } }
-}
+export const getUsersByEmails = (emails: string[]) =>
+  prismaClient.user.findMany({ where: { email: { in: emails } }, select: { id: true, email: true } })
 
 export const updateAccount = (
   accountId: string,
@@ -297,18 +175,6 @@ export const addUser = async (
     role?: Exclude<Role, 'SUPER_ADMIN'>
   },
 ) => {
-  const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
-  if (deactivatedFeaturesRestrictions?.active) {
-    const createAccount = newMember.accounts.create
-
-    const notAllowedEnvironments =
-      createAccount.environment === undefined ||
-      deactivatedFeaturesRestrictions.deactivatedEnvironments.includes(createAccount.environment)
-
-    if (notAllowedEnvironments) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-  }
   return prismaClient.user.create({
     data: newMember,
     select: {
@@ -321,77 +187,4 @@ export const addUser = async (
       },
     },
   })
-}
-
-export const handleAddingUser = async (creator: UserSession, newUser: AddMemberCommand) => {
-  const environment = creator.environment
-  const memberExists = await getUserByEmail(newUser.email.toLowerCase())
-
-  const isMemberActiveInSomeEnv = memberExists?.accounts.some((a) => a.status === UserStatus.ACTIVE)
-  const memberAccountForEnv = memberExists?.accounts.find((a) => a.environment === environment)
-
-  if (memberAccountForEnv?.role === Role.SUPER_ADMIN || newUser.role === Role.SUPER_ADMIN) {
-    throw new Error(NOT_AUTHORIZED)
-  }
-
-  const userFromDb = await getUserByEmail(creator.email)
-  if (!userFromDb || !creator.organizationVersionId) {
-    throw new Error(NOT_AUTHORIZED)
-  }
-
-  if (!memberExists) {
-    const newMember = {
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
-      email: newUser.email.toLowerCase(),
-      level: null,
-      source: userFromDb.source,
-      accounts: {
-        create: {
-          role: getRoleToSetForUntrained(newUser.role, environment),
-          status: UserStatus.VALIDATED,
-          organizationVersionId: creator.organizationVersionId,
-          environment: environment,
-        },
-      },
-    }
-
-    await addUser(newMember)
-
-    await addUserChecklistItem(UserChecklist.AddCollaborator)
-  } else if (!memberAccountForEnv) {
-    await addAccount({
-      status: isMemberActiveInSomeEnv ? UserStatus.ACTIVE : UserStatus.VALIDATED,
-      role: memberExists.level ? newUser.role : getRoleToSetForUntrained(newUser.role, environment),
-      environment,
-      user: { connect: { id: memberExists.id } },
-      organizationVersion: { connect: { id: creator.organizationVersionId } },
-    })
-  } else {
-    if (memberAccountForEnv.status === UserStatus.ACTIVE && memberAccountForEnv.organizationVersionId) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
-    const updateMember = {
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
-    }
-
-    const updateMemberAccount = {
-      status: isMemberActiveInSomeEnv ? UserStatus.ACTIVE : UserStatus.VALIDATED,
-      role: memberExists.level
-        ? memberAccountForEnv.role
-        : getRoleToSetForUntrained(memberAccountForEnv.role, creator.environment),
-      organizationVersion: { connect: { id: creator.organizationVersionId } },
-    }
-    await updateAccount(memberAccountForEnv.id, updateMemberAccount, updateMember)
-  }
-
-  await sendEmailToAddedUser(
-    newUser.email.toLowerCase(),
-    userSessionToDbUser(creator),
-    newUser.firstName,
-    creator.environment,
-    creator.organizationVersionId,
-  )
 }

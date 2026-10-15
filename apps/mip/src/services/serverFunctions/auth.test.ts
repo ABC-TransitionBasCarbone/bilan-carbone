@@ -1,4 +1,5 @@
-import { getUserByEmailWithSensibleInformations, updateUserPasswordForEmail } from '@/db/user'
+import { prismaClient } from '@/db/client.server'
+import { getUserByEmailWithSensibleInformations } from '@/db/user'
 import { hashResetToken } from '@abc-transitionbascarbone/common/utils/user.server'
 import { expect } from '@jest/globals'
 import jwt from 'jsonwebtoken'
@@ -6,7 +7,13 @@ import { checkToken, reset } from './auth'
 
 jest.mock('@/db/user', () => ({
   getUserByEmailWithSensibleInformations: jest.fn(),
-  updateUserPasswordForEmail: jest.fn(),
+}))
+
+jest.mock('@/db/client.server', () => ({
+  prismaClient: {
+    user: { update: jest.fn() },
+    accountMip: { findFirst: jest.fn(), findMany: jest.fn(), updateMany: jest.fn() },
+  },
 }))
 
 jest.mock('@/utils/serverResponse', () => ({
@@ -24,7 +31,10 @@ jest.mock('@/utils/serverResponse', () => ({
 }))
 
 const mockGetUserByEmailWithSensibleInformations = getUserByEmailWithSensibleInformations as jest.Mock
-const mockUpdateUserPasswordForEmail = updateUserPasswordForEmail as jest.Mock
+const mockUserUpdate = prismaClient.user.update as jest.Mock
+const mockAccountMipFindFirst = prismaClient.accountMip.findFirst as jest.Mock
+const mockAccountMipFindMany = prismaClient.accountMip.findMany as jest.Mock
+const mockAccountMipUpdateMany = prismaClient.accountMip.updateMany as jest.Mock
 
 const email = 'user@example.com'
 const resetToken = 'reset-token'
@@ -38,7 +48,10 @@ describe('password reset server functions', () => {
     jest.clearAllMocks()
     process.env.NEXTAUTH_SECRET = 'test-secret'
     mockGetUserByEmailWithSensibleInformations.mockResolvedValue({ email, resetToken: hashResetToken(resetToken) })
-    mockUpdateUserPasswordForEmail.mockResolvedValue({ email })
+    mockUserUpdate.mockResolvedValue({ id: 'user-id', email })
+    mockAccountMipFindFirst.mockResolvedValue({ id: 'account-mip-id' })
+    mockAccountMipFindMany.mockResolvedValue([{ id: 'account-mip-id' }])
+    mockAccountMipUpdateMany.mockResolvedValue({ count: 1 })
   })
 
   it('accepts a reset link only when the token reset value still matches the user', async () => {
@@ -57,7 +70,14 @@ describe('password reset server functions', () => {
 
     expect(result).toEqual({ success: true, data: true })
     expect(mockGetUserByEmailWithSensibleInformations).toHaveBeenCalledWith(email)
-    expect(mockUpdateUserPasswordForEmail).toHaveBeenCalledWith(email, password)
+    expect(mockUserUpdate).toHaveBeenCalledWith({
+      where: { email },
+      data: { resetToken: null, password: expect.any(String) },
+    })
+    expect(mockAccountMipUpdateMany).toHaveBeenCalledWith({
+      where: { userId: 'user-id' },
+      data: { status: 'ACTIVE' },
+    })
   })
 
   it('does not update the password when the stored reset token does not match the link token', async () => {
@@ -66,6 +86,6 @@ describe('password reset server functions', () => {
     const result = await reset(password, getToken())
 
     expect(result).toEqual({ success: false, errorMessage: 'Email or token is invalid' })
-    expect(mockUpdateUserPasswordForEmail).not.toHaveBeenCalled()
+    expect(mockUserUpdate).not.toHaveBeenCalled()
   })
 })

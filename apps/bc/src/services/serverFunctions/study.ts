@@ -3,7 +3,6 @@
 import { StudyContributorDeleteParams } from '@/components/study/rights/StudyContributorsTable'
 import { DefaultStudyTags } from '@/constants/tag.constants'
 import {
-  addAccount,
   getAccountByEmailAndEnvironment,
   getAccountByEmailAndOrganizationVersionId,
   getAccountsByUserIdsAndEnvironment,
@@ -30,7 +29,6 @@ import {
 } from '@/db/organization'
 import { getSituationByStudySite, updateSituationFields } from '@/db/situation'
 import {
-  addSourceToStudy,
   clearEmissionSourceEmissionFactor,
   countOrganizationStudiesFromOtherUsers,
   createContributorOnStudy,
@@ -38,11 +36,12 @@ import {
   createEngagementAction,
   createStudy,
   createStudyComment,
+  createStudyEmissionFactorVersions,
   createStudyEmissionSource,
   createUserOnStudy,
   deleteEngagementAction as dbDeleteEngagementAction,
   deleteAccountOnStudy,
-  deleteContributor,
+  deleteContributors as deleteContributorsInDb,
   deleteStudy,
   deleteStudyComment,
   downgradeStudyUserRoles,
@@ -52,6 +51,9 @@ import {
   getMinimalStudyForRights,
   getOrganizationStudiesBeforeDate,
   getPendingStudyCommentsCountFromAuthor,
+  getSourceCutImportVersionIds,
+  getSourceEnvironmentImportVersionIds,
+  getSourcesLatestImportVersionId,
   getStudiesSitesFromIds,
   getStudyAllowedUsersUnfiltered,
   getStudyById,
@@ -70,16 +72,13 @@ import {
   updateStudy,
   updateStudyComment,
   updateStudyEmissionFactorVersion,
-  updateStudyOpeningHours,
   updateStudySiteData,
-  updateStudySites,
   updateUserOnStudy,
   upsertStudyExport,
   upsertStudyTemplate,
 } from '@/db/study'
 import { getTransitionPlanByStudyId, getTransitionPlansWhereStudyIsLinked } from '@/db/transitionPlan'
 import {
-  addUser,
   getUserApplicationSettings,
   getUserByEmail,
   getUserSourceById,
@@ -108,6 +107,7 @@ import { mapStudyForReport } from '@/utils/studyReport.utils'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import { LocaleType } from '@abc-transitionbascarbone/common/i18n/config'
+import type { Post } from '@abc-transitionbascarbone/common/utils/charts'
 import type { IsSuccess } from '@abc-transitionbascarbone/common/utils/serverResponse'
 
 import type {
@@ -147,6 +147,7 @@ import { allowedFlowFileTypes, isAllowedFileType } from '../file'
 import { ALREADY_IN_STUDY, TOO_MANY_COMMENTS } from '../permissions/check'
 import {
   EnvironmentWithSimplifiedStudies,
+  hasAccessToCreateStudyWithEmissionFactorVersions,
   hasReaderRoleOnStudyAsContributor,
   hasSimplifiedStudies,
 } from '../permissions/environment'
@@ -173,9 +174,14 @@ import {
   NEWGetAccountRoleOnStudy,
 } from '../permissions/study'
 import { isAdminOnStudyOrga } from '../permissions/study.utils'
+import { subPostsByPost } from '../posts'
 import { TILT_SIMPLIFIED_POSTS_CONFIG_VERSION } from '../publicodes/simplifiedPublicodesConfig'
 import { deleteFileFromBucket, getFileFromBucket, uploadFileToBucket } from '../serverFunctions/scaleway'
 import { getTransEnvironmentSubPost } from '../study'
+import { updateStudyOpeningHours } from '../studyOpeningHours'
+import { updateStudySites } from '../studySites'
+import { addSourceToStudy } from '../studySources'
+import { addAccount, addUser } from '../userCreation'
 import { UpdateEmissionSourceCommand } from './emissionSource.command'
 import { saveSituation as saveSituationInDB } from './situation'
 import {
@@ -197,6 +203,50 @@ import {
 } from './study.command'
 import { getLinkedAndExternalStudies } from './transitionPlan'
 import { addUserChecklistItem, getUserActiveAccounts, sendInvitation } from './user'
+
+const createStudyWithEmissionFactorVersions = async (
+  data: Prisma.StudyCreateInput,
+  environment: Environment,
+  shouldCreateFEVersions = true,
+  tx?: Prisma.TransactionClient,
+) => {
+  const dbStudy = await createStudy(data, tx)
+
+  if (hasAccessToCreateStudyWithEmissionFactorVersions(environment) || shouldCreateFEVersions) {
+    let studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = []
+    if (environment === Environment.CUT) {
+      studyEmissionFactorVersions = (await getSourceCutImportVersionIds()).map((importVersion) => ({
+        studyId: dbStudy.id,
+        source: importVersion.source,
+        importVersionId: importVersion.id,
+      }))
+    } else if (environment === Environment.CLICKSON) {
+      studyEmissionFactorVersions = (await getSourceEnvironmentImportVersionIds(Environment.CLICKSON)).map(
+        (importVersion) => ({
+          studyId: dbStudy.id,
+          source: importVersion.source,
+          importVersionId: importVersion.id,
+        }),
+      )
+    } else {
+      const hasGHGP = dbStudy.exports?.types.includes(Export.GHGP)
+      const sources = Object.values(Import).filter(
+        (source) => source !== Import.Manual && source !== Import.CUT && (source !== Import.AIB || hasGHGP),
+      )
+
+      const latestVersions = await getSourcesLatestImportVersionId(sources)
+      if (latestVersions) {
+        studyEmissionFactorVersions = latestVersions.map((latestImportVersion) => ({
+          studyId: dbStudy.id,
+          source: latestImportVersion.source,
+          importVersionId: latestImportVersion.id,
+        }))
+      }
+    }
+    await createStudyEmissionFactorVersions(studyEmissionFactorVersions, tx)
+  }
+  return dbStudy
+}
 
 export const getStudy = async (studyId: string) =>
   withServerResponse('getStudy', async () => {
@@ -360,7 +410,7 @@ export const createStudyCommand = async (
     }
 
     try {
-      const createdStudy = await createStudy(study, session.user.environment, true, tx)
+      const createdStudy = await createStudyWithEmissionFactorVersions(study, session.user.environment, true, tx)
       if (!tx) {
         // This cannot be part of a transaction easily so it is done in the duplication flow after the transaction is committed
         await addUserChecklistItem(UserChecklist.CreateFirstStudy)
@@ -736,7 +786,7 @@ export const adaptFeSourceWithExport = async (studyId: string, types: Export[]) 
   if (study.data.exports?.types.includes(Export.GHGP) && (!types || !types.includes(Export.GHGP))) {
     await removeSourceToStudy(Import.AIB, studyId)
   } else if (!study.data.exports?.types.includes(Export.GHGP) && types && types.includes(Export.GHGP)) {
-    await addSourceToStudy(Import.AIB, studyId)
+    await addSourceToStudy(Import.AIB, studyId, study.data.organizationVersion.environment)
   }
 }
 
@@ -1265,6 +1315,16 @@ export const deleteStudyMember = async (member: { accountId: string }, studyId: 
 
     await deleteAccountOnStudy(studyId, member.accountId)
   })
+
+const deleteContributor = (studyId: string, contributor: StudyContributorDeleteParams) => {
+  const where: Prisma.ContributorsWhereInput = { studyId, accountId: contributor.accountId }
+  if (contributor.subPosts[0] !== 'allSubPost') {
+    where.subPost = contributor.subPosts[0] as SubPost
+  } else if (contributor.post !== 'allPost') {
+    where.subPost = { in: subPostsByPost[contributor.post as Post] }
+  }
+  return deleteContributorsInDb(where)
+}
 
 export const deleteStudyContributor = async (contributor: StudyContributorDeleteParams, studyId: string) =>
   withServerResponse('deleteStudyContributor', async () => {
@@ -1877,7 +1937,7 @@ export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEn
     )
 
     await prismaClient.$transaction(async (tx) => {
-      const createdStudy = await createStudy(studyCommand, targetEnvironment, false, tx)
+      const createdStudy = await createStudyWithEmissionFactorVersions(studyCommand, targetEnvironment, false, tx)
       const createdStudyWithSites = (await getStudyById(
         createdStudy.id,
         targetUserAccount.organizationVersionId,
@@ -2115,7 +2175,7 @@ export const duplicateStudyTemplateForAccounts = async (
   )
 
   await prismaClient.$transaction(async (tx) => {
-    const createdStudy = await createStudy(studyCommand, environment, false, tx)
+    const createdStudy = await createStudyWithEmissionFactorVersions(studyCommand, environment, false, tx)
     const createdStudyWithSites = (await getStudyById(createdStudy.id, organizationVersionId, tx)) as FullStudy
 
     await duplicateEmissionSources(

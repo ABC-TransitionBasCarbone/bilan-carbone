@@ -1,9 +1,11 @@
-import { getAccountByEmailAndEnvironment } from '@/db/account'
-import { createUsersWithAccount, updateAccount } from '@/db/user'
+import { addAccount, getAccountByEmailAndEnvironment } from '@/db/account'
+import { createUsers, getUsersByEmails, updateAccount } from '@/db/user'
+import { getDeactivableFeatureRestrictions } from '@/services/serverFunctions/deactivableFeatures'
 import { Environment, Level, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { processUsers } from './userImport'
 
 jest.mock('@/db/account', () => ({
+  addAccount: jest.fn(),
   getAccountByEmailAndEnvironment: jest.fn(),
 }))
 
@@ -15,9 +17,14 @@ jest.mock('@/db/organization', () => ({
 }))
 
 jest.mock('@/db/user', () => ({
-  createUsersWithAccount: jest.fn(),
+  createUsers: jest.fn(),
+  getUsersByEmails: jest.fn(),
   organizationVersionActiveAccountsCount: jest.fn(),
   updateAccount: jest.fn(),
+}))
+
+jest.mock('@/services/serverFunctions/deactivableFeatures', () => ({
+  getDeactivableFeatureRestrictions: jest.fn().mockResolvedValue(undefined),
 }))
 
 jest.mock('../../../prisma/seed/utils', () => ({
@@ -29,6 +36,17 @@ describe('processUsers', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    jest.mocked(getDeactivableFeatureRestrictions).mockResolvedValue(null)
+    jest.mocked(createUsers).mockResolvedValue({ count: 0 })
+    jest
+      .mocked(getUsersByEmails)
+      .mockImplementation(
+        (emails) =>
+          Promise.resolve(emails.map((email, index) => ({ id: `${index}`, email }))) as ReturnType<
+            typeof getUsersByEmails
+          >,
+      )
+    jest.mocked(addAccount).mockResolvedValue({} as Awaited<ReturnType<typeof addAccount>>)
   })
 
   afterAll(() => {
@@ -37,30 +55,33 @@ describe('processUsers', () => {
 
   it('creates users with sanitized email and computed level for new accounts', async () => {
     jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue(null)
-    jest.mocked(createUsersWithAccount).mockResolvedValue({
-      newUsers: { count: 1 },
-      newAccounts: { count: 1 },
-    })
+    jest.mocked(createUsers).mockResolvedValue({ count: 1 })
 
     const importedFileDate = new Date('2026-01-15T12:00:00.000Z')
     await processUsers([{ userEmail: '  NEW.USER@Example.COM ', sessionCode: 'FORM-BCM2' }], importedFileDate)
 
-    expect(createUsersWithAccount).toHaveBeenCalledTimes(1)
-    expect(createUsersWithAccount).toHaveBeenCalledWith([
+    expect(createUsers).toHaveBeenCalledTimes(1)
+    expect(createUsers).toHaveBeenCalledWith([
       expect.objectContaining({
         email: 'new.user@example.com',
         level: Level.Advanced,
-        account: expect.objectContaining({
-          role: Role.COLLABORATOR,
-          status: UserStatus.IMPORTED,
-          environment: Environment.BC,
-          importedFileDate,
-        }),
       }),
     ])
+    expect(addAccount).toHaveBeenCalledTimes(1)
     expect(consoleLogSpy).toHaveBeenCalledWith('1 users created')
     expect(consoleLogSpy).toHaveBeenCalledWith('1 accounts created')
     expect(consoleLogSpy).not.toHaveBeenCalledWith(expect.stringContaining('Progress:'))
+  })
+
+  it('filters new users from environments where creation is deactivated', async () => {
+    jest.mocked(getDeactivableFeatureRestrictions).mockResolvedValue({
+      active: true,
+      deactivatedSources: [],
+      deactivatedEnvironments: [Environment.BC],
+    })
+    await processUsers([{ userEmail: 'blocked@example.com', sessionCode: 'FORM-BCM2' }], new Date())
+
+    expect(createUsers).not.toHaveBeenCalled()
   })
 
   it('updates imported existing accounts and skips bulk create when no new users', async () => {
@@ -78,7 +99,7 @@ describe('processUsers', () => {
     await processUsers([{ userEmail: 'existing@example.com' }], new Date('2026-01-15T12:00:00.000Z'))
 
     expect(updateAccount).toHaveBeenCalledTimes(1)
-    expect(createUsersWithAccount).not.toHaveBeenCalled()
+    expect(createUsers).not.toHaveBeenCalled()
     expect(consoleLogSpy).toHaveBeenCalledWith('No new users to create')
     expect(consoleLogSpy).toHaveBeenCalledWith('1 accounts updated')
     expect(consoleLogSpy).not.toHaveBeenCalledWith(expect.stringContaining('Progress:'))
@@ -86,10 +107,7 @@ describe('processUsers', () => {
 
   it('processes multiple new users with trainings and computes the correct level for each', async () => {
     jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue(null)
-    jest.mocked(createUsersWithAccount).mockResolvedValue({
-      newUsers: { count: 2 },
-      newAccounts: { count: 2 },
-    })
+    jest.mocked(createUsers).mockResolvedValue({ count: 2 })
 
     const importedFileDate = new Date('2026-01-15T12:00:00.000Z')
     const users = [
@@ -132,34 +150,20 @@ describe('processUsers', () => {
 
     await processUsers(users, importedFileDate)
 
-    expect(createUsersWithAccount).toHaveBeenCalledTimes(1)
-    expect(createUsersWithAccount).toHaveBeenCalledWith(
+    expect(createUsers).toHaveBeenCalledTimes(1)
+    expect(createUsers).toHaveBeenCalledWith(
       expect.arrayContaining([
         expect.objectContaining({
           email: 'advanced.before2026@yopmail.com',
           firstName: 'Advanced',
           lastName: 'Before2026',
           level: Level.Advanced,
-          account: expect.objectContaining({
-            role: Role.COLLABORATOR,
-            status: UserStatus.IMPORTED,
-            environment: Environment.BC,
-            importedFileDate,
-            formationName: 'Bilan Carbone® Maitrise',
-          }),
         }),
         expect.objectContaining({
           email: 'initial.user@yopmail.com',
           firstName: 'Initial',
           lastName: 'User',
           level: Level.Initial,
-          account: expect.objectContaining({
-            role: Role.COLLABORATOR,
-            status: UserStatus.IMPORTED,
-            environment: Environment.BC,
-            importedFileDate,
-            formationName: 'Bilan Carbone® Découverte',
-          }),
         }),
       ]),
     )
@@ -170,10 +174,7 @@ describe('processUsers', () => {
 
   it('handles old PascalCase FTP format (without trainings) and maps fields correctly', async () => {
     jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue(null)
-    jest.mocked(createUsersWithAccount).mockResolvedValue({
-      newUsers: { count: 1 },
-      newAccounts: { count: 1 },
-    })
+    jest.mocked(createUsers).mockResolvedValue({ count: 1 })
 
     const importedFileDate = new Date('2026-01-15T12:00:00.000Z')
     await processUsers(
@@ -196,19 +197,14 @@ describe('processUsers', () => {
       importedFileDate,
     )
 
-    expect(createUsersWithAccount).toHaveBeenCalledTimes(1)
-    expect(createUsersWithAccount).toHaveBeenCalledWith([
+    expect(createUsers).toHaveBeenCalledTimes(1)
+    expect(createUsers).toHaveBeenCalledWith([
       expect.objectContaining({
         email: 'test@yopmail.com',
         level: Level.Advanced,
-        account: expect.objectContaining({
-          role: Role.COLLABORATOR,
-          status: UserStatus.IMPORTED,
-          environment: Environment.BC,
-          importedFileDate,
-        }),
       }),
     ])
+    expect(addAccount).toHaveBeenCalledTimes(1)
     expect(consoleLogSpy).toHaveBeenCalledWith('1 users created')
   })
 
@@ -221,16 +217,13 @@ describe('processUsers', () => {
         status: UserStatus.IMPORTED,
         user: { id: 'user-existing', email: 'existing@example.com', firstName: 'Existing', lastName: 'User' },
       } as Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>)
-    jest.mocked(createUsersWithAccount).mockResolvedValue({
-      newUsers: { count: 1 },
-      newAccounts: { count: 1 },
-    })
+    jest.mocked(createUsers).mockResolvedValue({ count: 1 })
 
     const importedFileDate = new Date('2026-01-15T12:00:00.000Z')
     await processUsers([{ userEmail: 'new@example.com' }, { userEmail: 'existing@example.com' }], importedFileDate)
 
-    expect(createUsersWithAccount).toHaveBeenCalledTimes(1)
-    expect(createUsersWithAccount).toHaveBeenCalledWith([expect.objectContaining({ email: 'new@example.com' })])
+    expect(createUsers).toHaveBeenCalledTimes(1)
+    expect(createUsers).toHaveBeenCalledWith([expect.objectContaining({ email: 'new@example.com' })])
 
     expect(updateAccount).toHaveBeenCalledTimes(1)
     expect(consoleLogSpy).toHaveBeenCalledWith('1 users created')
