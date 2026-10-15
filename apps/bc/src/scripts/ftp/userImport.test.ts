@@ -88,7 +88,7 @@ describe('processUsers', () => {
   })
 
   it.each([Environment.BC, Environment.TILT])(
-    'updates organization and personal data for invited %s accounts without changing their role or status',
+    'updates personal data for validated %s accounts without changing their organization, role or status',
     async (environment) => {
       jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue({
         id: 'account-id',
@@ -103,11 +103,6 @@ describe('processUsers', () => {
           source: UserSource.CRON,
         },
       } as Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>)
-      jest.mocked(getRawOrganizationBySiret).mockResolvedValue(null)
-      jest.mocked(createOrUpdateOrganization).mockResolvedValue({ id: 'new-organization-id' } as never)
-      jest
-        .mocked(getOrganizationVersionByOrganizationIdAndEnvironment)
-        .mockResolvedValue({ id: 'new-organization-version-id' } as never)
 
       await processUsers(
         [
@@ -138,9 +133,7 @@ describe('processUsers', () => {
       )
       expect(accountData).not.toHaveProperty('role')
       expect(accountData).not.toHaveProperty('status')
-      expect(accountData).toHaveProperty('organizationVersion', {
-        connect: { id: 'new-organization-version-id' },
-      })
+      expect(accountData).not.toHaveProperty('organizationVersion')
       expect(userData).toEqual(
         expect.objectContaining({
           firstName: 'Updated',
@@ -148,43 +141,38 @@ describe('processUsers', () => {
           source: UserSource.TUNISIE,
         }),
       )
-      expect(createOrUpdateOrganization).toHaveBeenCalledTimes(1)
+      expect(getRawOrganizationBySiret).not.toHaveBeenCalled()
+      expect(createOrUpdateOrganization).not.toHaveBeenCalled()
       expect(createUsersWithAccount).not.toHaveBeenCalled()
     },
   )
 
-  it('syncs organization data for pending requests without changing account access', async () => {
-    jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue({
-      id: 'account-id',
-      status: UserStatus.PENDING_REQUEST,
-      role: Role.COLLABORATOR,
-      organizationVersionId: 'organization-version-id',
-      user: {
-        id: 'user-id',
-        email: 'pending@example.com',
-        firstName: 'Pending',
-        lastName: 'User',
-      },
-    } as Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>)
-    jest.mocked(getRawOrganizationBySiret).mockResolvedValue(null)
-    jest.mocked(createOrUpdateOrganization).mockResolvedValue({ id: 'new-organization-id' } as never)
-    jest
-      .mocked(getOrganizationVersionByOrganizationIdAndEnvironment)
-      .mockResolvedValue({ id: 'new-organization-version-id' } as never)
+  it.each([Environment.BC, Environment.TILT])(
+    'preserves the organization of pending %s requests',
+    async (environment) => {
+      jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue({
+        id: 'account-id',
+        status: UserStatus.PENDING_REQUEST,
+        role: Role.COLLABORATOR,
+        organizationVersionId: 'organization-version-id',
+        user: {
+          id: 'user-id',
+          email: 'pending@example.com',
+          firstName: 'Pending',
+          lastName: 'User',
+        },
+      } as Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>)
 
-    await processUsers(
-      [{ userEmail: 'pending@example.com', siret: '12345678901234', environment: Environment.BC }],
-      new Date(),
-    )
+      await processUsers([{ userEmail: 'pending@example.com', siret: '12345678901234', environment }], new Date())
 
-    const [, accountData] = jest.mocked(updateAccount).mock.calls[0]
-    expect(accountData).not.toHaveProperty('role')
-    expect(accountData).not.toHaveProperty('status')
-    expect(accountData).toHaveProperty('organizationVersion', {
-      connect: { id: 'new-organization-version-id' },
-    })
-    expect(createOrUpdateOrganization).toHaveBeenCalledTimes(1)
-  })
+      const [, accountData] = jest.mocked(updateAccount).mock.calls[0]
+      expect(accountData).not.toHaveProperty('role')
+      expect(accountData).not.toHaveProperty('status')
+      expect(accountData).not.toHaveProperty('organizationVersion')
+      expect(getRawOrganizationBySiret).not.toHaveBeenCalled()
+      expect(createOrUpdateOrganization).not.toHaveBeenCalled()
+    },
+  )
 
   it.each([
     Environment.CUT,
@@ -228,57 +216,8 @@ describe('processUsers', () => {
     expect(jest.mocked(updateAccount).mock.calls[0][1]).not.toHaveProperty('role')
   })
 
-  it.each([
-    [Environment.BC, undefined],
-    [Environment.BC, 'BCM2'],
-    [Environment.TILT, undefined],
-    [Environment.TILT, 'BCM2'],
-  ])(
-    'links an active %s account to an empty target organization without changing its role',
-    async (environment, sessionCode) => {
-      jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue({
-        id: 'account-id',
-        status: UserStatus.ACTIVE,
-        role: Role.COLLABORATOR,
-        organizationVersion: { id: 'old-version-id', organizationId: 'old-organization-id' },
-        user: {
-          id: 'user-id',
-          email: 'active@example.com',
-          firstName: 'Active',
-          lastName: 'User',
-        },
-      } as Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>)
-      jest.mocked(getRawOrganizationBySiret).mockResolvedValue({ id: 'target-organization-id' } as never)
-      jest
-        .mocked(getOrganizationVersionByOrganizationIdAndEnvironment)
-        .mockResolvedValue({ id: 'target-version-id' } as never)
-      jest.mocked(organizationVersionActiveAccountsCount).mockResolvedValue(0)
-      jest.mocked(createOrUpdateOrganization).mockResolvedValue({ id: 'target-organization-id' } as never)
-
-      await processUsers(
-        [{ userEmail: 'active@example.com', siret: '12345678901234', environment, sessionCode }],
-        new Date(),
-      )
-
-      const [, accountData] = jest.mocked(updateAccount).mock.calls[0]
-      expect(accountData).toEqual(
-        expect.objectContaining({
-          organizationVersion: { connect: { id: 'target-version-id' } },
-        }),
-      )
-      expect(accountData).not.toHaveProperty('role')
-      expect(jest.mocked(createOrUpdateOrganization).mock.calls[0][0]).toEqual(
-        expect.objectContaining({ id: 'target-organization-id' }),
-      )
-      expect(getOrganizationVersionByOrganizationIdAndEnvironment).toHaveBeenCalledWith(
-        'target-organization-id',
-        environment,
-      )
-    },
-  )
-
   it.each([Environment.BC, Environment.TILT])(
-    'does not move an active %s account into an organization with active members',
+    'does not update the organization of an active %s account',
     async (environment) => {
       jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue({
         id: 'account-id',
@@ -292,14 +231,17 @@ describe('processUsers', () => {
           lastName: 'User',
         },
       } as Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>)
-      jest.mocked(getRawOrganizationBySiret).mockResolvedValue({ id: 'target-organization-id' } as never)
-      jest
-        .mocked(getOrganizationVersionByOrganizationIdAndEnvironment)
-        .mockResolvedValue({ id: 'target-version-id' } as never)
-      jest.mocked(organizationVersionActiveAccountsCount).mockResolvedValue(1)
 
       await processUsers(
-        [{ userEmail: 'active@example.com', siret: '12345678901234', environment, sessionCode: 'BCM2' }],
+        [
+          {
+            userEmail: 'active@example.com',
+            companyName: 'Updated Company Name',
+            siret: '12345678901234',
+            environment,
+            sessionCode: 'BCM2',
+          },
+        ],
         new Date(),
       )
 
@@ -307,6 +249,7 @@ describe('processUsers', () => {
       expect(accountData).not.toHaveProperty('role')
       expect(accountData).not.toHaveProperty('organizationVersion')
       expect(userData).toEqual(expect.objectContaining({ level: Level.Advanced }))
+      expect(getRawOrganizationBySiret).not.toHaveBeenCalled()
       expect(createOrUpdateOrganization).not.toHaveBeenCalled()
     },
   )
@@ -347,7 +290,7 @@ describe('processUsers', () => {
   )
 
   it.each([Environment.BC, Environment.TILT])(
-    'does not link a new %s account to an organization that already has active members',
+    'links a new %s account to an active organization without changing its data',
     async (environment) => {
       jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue(null)
       jest.mocked(getRawOrganizationBySiret).mockResolvedValue({ id: 'target-organization-id' } as never)
@@ -364,8 +307,38 @@ describe('processUsers', () => {
 
       const importedUser = jest.mocked(createUsersWithAccount).mock.calls[0][0][0]
       expect(importedUser.account.role).toBe(Role.DEFAULT)
-      expect(importedUser.account).not.toHaveProperty('organizationVersion')
+      expect(importedUser.account.status).toBe(UserStatus.IMPORTED)
+      expect(importedUser.account.organizationVersion).toEqual({ connect: { id: 'target-version-id' } })
       expect(createOrUpdateOrganization).not.toHaveBeenCalled()
+    },
+  )
+
+  it.each([Environment.BC, Environment.TILT])(
+    'links an imported %s account to an active organization without changing its data or account access',
+    async (environment) => {
+      jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue({
+        id: 'account-id',
+        status: UserStatus.IMPORTED,
+        role: Role.DEFAULT,
+        user: { id: 'user-id', email: 'imported@example.com' },
+      } as Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>)
+      jest.mocked(getRawOrganizationBySiret).mockResolvedValue({ id: 'target-organization-id' } as never)
+      jest.mocked(getOrganizationVersionByOrganizationIdAndEnvironment).mockResolvedValue({
+        id: 'target-version-id',
+      } as never)
+      jest.mocked(organizationVersionActiveAccountsCount).mockResolvedValue(1)
+
+      await processUsers(
+        [{ userEmail: 'imported@example.com', siret: '12345678901234', companyName: 'FTP name', environment }],
+        new Date(),
+      )
+
+      const [, accountData] = jest.mocked(updateAccount).mock.calls[0]
+      expect(accountData.organizationVersion).toEqual({ connect: { id: 'target-version-id' } })
+      expect(accountData).not.toHaveProperty('role')
+      expect(accountData).not.toHaveProperty('status')
+      expect(createOrUpdateOrganization).not.toHaveBeenCalled()
+      expect(createUsersWithAccount).not.toHaveBeenCalled()
     },
   )
 

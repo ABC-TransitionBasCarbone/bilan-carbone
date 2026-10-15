@@ -234,7 +234,7 @@ export const sendInvitation = async (
   })
 
 const sendActivation = async (email: string, fromReset: boolean, env: Environment) => {
-  const token = await updateUserResetToken(email, 1 * HOUR)
+  const token = await updateUserResetToken(email, 1 * DAY)
   return sendActivationEmail(email, token, fromReset, env)
 }
 

@@ -163,7 +163,7 @@ const updateUserOrganization = async (
   return { organizationVersion: organizationVersion ? { connect: { id: organizationVersion.id } } : undefined }
 }
 
-const syncBCAndTILTUserOrganization = async (input: OrganizationSyncInput): Promise<OrganizationSyncUpdates> => {
+const syncUserOrganization = async (input: OrganizationSyncInput): Promise<OrganizationSyncUpdates> => {
   const { companyNumber, environment } = input
   if (!companyNumber) {
     return {}
@@ -178,7 +178,7 @@ const syncBCAndTILTUserOrganization = async (input: OrganizationSyncInput): Prom
     existingOrganizationVersion &&
     ((await organizationVersionActiveAccountsCount(existingOrganizationVersion.id)) ?? 0) > 0
   ) {
-    return {}
+    return { organizationVersion: { connect: { id: existingOrganizationVersion.id } } }
   }
 
   return updateUserOrganization(input, organization)
@@ -242,15 +242,18 @@ const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
     },
   }
 
-  const organizationUpdates = await syncBCAndTILTUserOrganization({
-    companyNumber,
-    companyName: value.companyName,
-    siret: value.siret,
-    isCR,
-    activatedLicence,
-    importedFileDate,
-    environment,
-  })
+  const organizationUpdates =
+    dbAccount && dbAccount.status !== UserStatus.IMPORTED
+      ? {}
+      : await syncUserOrganization({
+          companyNumber,
+          companyName: value.companyName,
+          siret: value.siret,
+          isCR,
+          activatedLicence,
+          importedFileDate,
+          environment,
+        })
 
   const user: ImportedUser = {
     id: dbAccount?.user.id,
