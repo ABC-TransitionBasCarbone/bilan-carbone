@@ -1,0 +1,15 @@
+{
+  "login": {
+    "welcome": "Bienvenue sur la plateforme formation du BC+ !"
+  },
+  "activation": {
+    "description": "Enter the email address and session code provided by the training organization accompanying you.",
+    "sessionCode": "Session code",
+    "sessionCodePlaceholder": "Session code provided by your training organization",
+    "consent": "I understand that I am creating an account as part of my training, and that the training organization supporting me will be able to see what I do on my account.",
+    "validation": {
+      "sessionCode": "Please enter the session code",
+      "consent": "You must accept this condition to activate your account"
+    }
+  }
+}
