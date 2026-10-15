@@ -1,4 +1,4 @@
-import { DeactivatableFeature, Environment, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { DeactivatableFeature, Environment, Level, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 
 import {
@@ -32,6 +32,8 @@ import { sendActivationEmail, sendActivationRequest } from '@abc-transitionbasca
 import { EMAIL_SENT, NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { mockedOrganizationId } from '@abc-transitionbascarbone/common/services/tests/models/organization'
 import { mockedUserId } from '@abc-transitionbascarbone/common/services/tests/models/user'
+import { DAY, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils'
+import jwt from 'jsonwebtoken'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
 import { activateEmail, signUpWithSiretOrCNC } from './user'
@@ -160,9 +162,154 @@ describe('signUpWithSiretOrCNC', () => {
   describe('activateEmail', () => {
     beforeEach(() => {
       jest.clearAllMocks()
+      jest.useFakeTimers({ now: new Date('2026-10-15T12:00:00.000Z') })
     })
 
-    it('blocks self activation while another manager activation is still reserved', async () => {
+    afterEach(() => {
+      jest.useRealTimers()
+    })
+
+    it.each([
+      [Environment.BC, undefined],
+      [Environment.BC, Level.Advanced],
+      [Environment.TILT, undefined],
+      [Environment.TILT, Level.Advanced],
+      [Environment.CUT, undefined],
+      [Environment.CLICKSON, undefined],
+      [Environment.MIP, undefined],
+      [Environment.COURSE_BC, undefined],
+      [Environment.COURSE_TILT, undefined],
+    ])('does not assign an organization role during %s email activation', async (environment, level) => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId, environment, status: UserStatus.IMPORTED }],
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        status: UserStatus.IMPORTED,
+        role: Role.COLLABORATOR,
+        user: {
+          id: mockedUserId,
+          email: testEmail,
+          firstName: 'Test',
+          lastName: 'User',
+          level,
+        },
+      })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+        activatedLicence: [1],
+      })
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(0)
+      mockGetAccountsFromOrganizationForActivation.mockResolvedValue([])
+      mockValidateUser.mockResolvedValue(undefined)
+
+      const beforeActivation = Math.round(Date.now() / TIME_IN_MS)
+      const result = await actualActivateEmail(testEmail, environment)
+
+      expect(result.success).toBe(true)
+      expect(mockUpdateAccount).toHaveBeenCalledWith(
+        mockedAccountId,
+        expect.objectContaining({ activationRequestedAt: expect.any(Date) }),
+        undefined,
+        expect.anything(),
+      )
+      expect(mockUpdateAccount.mock.calls[0][1]).not.toHaveProperty('role')
+      const token = mockSendActivationEmail.mock.calls[0][1]
+      const payload = jwt.verify(token, process.env.NEXTAUTH_SECRET as string)
+      expect(typeof payload).toBe('object')
+      if (typeof payload === 'string' || payload.exp === undefined) {
+        throw new Error('Activation token has no expiration')
+      }
+      const expiresAt = payload.exp
+      expect(expiresAt).toBeGreaterThanOrEqual(beforeActivation + DAY)
+      expect(expiresAt).toBeLessThanOrEqual(Math.round(Date.now() / TIME_IN_MS) + DAY)
+      expect(() =>
+        jwt.verify(token, process.env.NEXTAUTH_SECRET as string, { clockTimestamp: expiresAt - 1 }),
+      ).not.toThrow()
+      expect(() => jwt.verify(token, process.env.NEXTAUTH_SECRET as string, { clockTimestamp: expiresAt })).toThrow(
+        jwt.TokenExpiredError,
+      )
+    })
+
+    it('rejects activation when active organization members have no active approver', async () => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId, environment: Environment.BC, status: UserStatus.IMPORTED }],
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        organizationVersion: { environment: Environment.BC, organizationId: mockedOrganizationId },
+        status: UserStatus.IMPORTED,
+        role: Role.DEFAULT,
+        user: { id: mockedUserId, email: testEmail, firstName: 'Test', lastName: 'User' },
+      })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+        activatedLicence: [1],
+      })
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(1)
+      mockGetAccountFromUserOrganization.mockResolvedValue([
+        { role: Role.COLLABORATOR, status: UserStatus.ACTIVE, user: { email: 'member@example.com' } },
+      ])
+
+      const result = await actualActivateEmail(testEmail, Environment.BC)
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(result.errorMessage).toBe(NOT_AUTHORIZED)
+      }
+      expect(mockSendActivationRequest).not.toHaveBeenCalled()
+      expect(mockUpdateAccount).not.toHaveBeenCalled()
+    })
+
+    it('sends activation requests to active managers when the organization has active accounts', async () => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId, environment: Environment.BC, status: UserStatus.IMPORTED }],
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        organizationVersion: { environment: Environment.BC, organizationId: mockedOrganizationId },
+        status: UserStatus.IMPORTED,
+        role: Role.DEFAULT,
+        user: { id: mockedUserId, email: testEmail, firstName: 'Test', lastName: 'User' },
+      })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+        activatedLicence: [1],
+      })
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(1)
+      mockGetAccountFromUserOrganization.mockResolvedValue([
+        { role: Role.GESTIONNAIRE, status: UserStatus.ACTIVE, user: { email: 'manager@example.com' } },
+      ])
+
+      const result = await actualActivateEmail(testEmail, Environment.BC)
+
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data).toBe(REQUEST_SENT)
+      }
+      expect(mockSendActivationRequest).toHaveBeenCalledWith(['manager@example.com'], testEmail, 'Test User')
+      expect(mockUpdateAccount).toHaveBeenCalledWith(mockedAccountId, {
+        status: UserStatus.PENDING_REQUEST,
+        activationRequestedAt: null,
+      })
+    })
+
+    it.each([0, DAY * TIME_IN_MS - 1])('blocks self activation when the reservation is %s ms old', async (age) => {
       mockGetUserByEmail.mockResolvedValue({
         id: mockedUserId,
         email: testEmail,
@@ -192,7 +339,7 @@ describe('signUpWithSiretOrCNC', () => {
           id: 'reserved-account-id',
           role: Role.GESTIONNAIRE,
           status: UserStatus.VALIDATED,
-          activationRequestedAt: new Date(),
+          activationRequestedAt: new Date(Date.now() - age),
           user: { email: 'reserved@example.com', firstName: 'Reserved', lastName: 'User' },
         },
       ])
@@ -207,7 +354,7 @@ describe('signUpWithSiretOrCNC', () => {
       expect(mockUpdateAccount).not.toHaveBeenCalled()
     })
 
-    it('hands off expired manager activation to the new requester', async () => {
+    it.each([DAY * TIME_IN_MS, 2 * DAY * TIME_IN_MS])('hands off an expired reservation at %s ms', async (age) => {
       mockGetUserByEmail.mockResolvedValue({
         id: mockedUserId,
         email: testEmail,
@@ -236,7 +383,7 @@ describe('signUpWithSiretOrCNC', () => {
         id: 'expired-account-id',
         role: Role.GESTIONNAIRE,
         status: UserStatus.VALIDATED,
-        activationRequestedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+        activationRequestedAt: new Date(Date.now() - age),
         user: { email: 'expired@example.com', firstName: 'Expired', lastName: 'User' },
       }
       mockGetAccountsFromOrganizationForActivation.mockResolvedValue([expiredAccount])

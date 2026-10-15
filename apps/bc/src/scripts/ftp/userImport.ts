@@ -4,13 +4,11 @@ import { getAccountByEmailAndEnvironment } from '@/db/account'
 import {
   createOrUpdateOrganization,
   getOrganizationVersionByOrganizationIdAndEnvironment,
-  getRawOrganizationById,
   getRawOrganizationBySiret,
 } from '@/db/organization'
 import { createUsersWithAccount, organizationVersionActiveAccountsCount, updateAccount } from '@/db/user'
 import { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment, Level, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
-import { getEnvRoleFromBase } from '../../../prisma/seed/utils'
 
 type Training = {
   trainingTypeId: number
@@ -42,6 +40,13 @@ type UserImportRecord = {
 }
 
 type RawFTPRecord = Record<string, unknown>
+type ImportEnvironment = Extract<Environment, 'BC' | 'TILT'>
+
+type ImportedUser = Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput }
+type ExistingAccount = NonNullable<Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>>
+type OrganizationSyncUpdates = Partial<Pick<Prisma.AccountCreateInput, 'organizationVersion'>>
+
+const importEnvironments: readonly string[] = [Environment.BC, Environment.TILT]
 
 const normalizeRecord = (raw: RawFTPRecord): UserImportRecord => {
   const getString = (camel: string, pascal: string): string | undefined => {
@@ -70,149 +75,198 @@ const normalizeRecord = (raw: RawFTPRecord): UserImportRecord => {
   }
 }
 
+const isImportEnvironment = (environment: string): environment is ImportEnvironment =>
+  importEnvironments.includes(environment)
+
+const getImportEnvironment = (environment?: string): ImportEnvironment => {
+  const normalizedEnvironment = environment || Environment.BC
+
+  if (!isImportEnvironment(normalizedEnvironment)) {
+    throw new Error(`Unsupported FTP environment: ${normalizedEnvironment}`)
+  }
+
+  return normalizedEnvironment
+}
+
+const parseTrainings = (rawTrainings: UserImportRecord['trainings']): Training[] => {
+  if (Array.isArray(rawTrainings)) {
+    return rawTrainings
+  }
+  if (!rawTrainings) {
+    return []
+  }
+
+  try {
+    return JSON.parse(rawTrainings)
+  } catch {
+    return []
+  }
+}
+
+const getTrainingData = (trainings: Training[]) => {
+  if (trainings.length === 0) {
+    return undefined
+  }
+
+  const highestLevelTraining = trainings.reduce((previous, current) => {
+    const previousLevel = getTrainingLevel([previous])
+    const currentLevel = getTrainingLevel([current])
+    return currentLevel && (!previousLevel || currentLevel > previousLevel) ? current : previous
+  }, trainings[0])
+
+  return {
+    level: getTrainingLevel([highestLevelTraining]),
+    formationName: highestLevelTraining.trainingName,
+    formationStartDate: highestLevelTraining.sessionStartDate
+      ? new Date(highestLevelTraining.sessionStartDate)
+      : undefined,
+    formationEndDate: highestLevelTraining.sessionEndDate ? new Date(highestLevelTraining.sessionEndDate) : undefined,
+  }
+}
+
+type OrganizationSyncInput = {
+  companyNumber: string | undefined
+  companyName: string | undefined
+  siret: string | undefined
+  isCR: boolean
+  activatedLicence: number[] | undefined
+  importedFileDate: Date
+  environment: ImportEnvironment
+}
+
+const updateUserOrganization = async (
+  input: OrganizationSyncInput,
+  organization: Awaited<ReturnType<typeof getRawOrganizationBySiret>>,
+): Promise<OrganizationSyncUpdates> => {
+  const { companyNumber, companyName, siret, isCR, activatedLicence, importedFileDate, environment } = input
+  if (!companyNumber) {
+    return {}
+  }
+
+  const updatedOrganization = await createOrUpdateOrganization(
+    {
+      id: organization?.id,
+      name: companyName,
+      wordpressId: companyNumber,
+      ...(siret && { siret }),
+    } as Prisma.OrganizationCreateInput,
+    isCR,
+    activatedLicence,
+    importedFileDate,
+    environment,
+  )
+
+  const organizationVersion = await getOrganizationVersionByOrganizationIdAndEnvironment(
+    updatedOrganization.id,
+    environment,
+  )
+  return { organizationVersion: organizationVersion ? { connect: { id: organizationVersion.id } } : undefined }
+}
+
+const syncUserOrganization = async (input: OrganizationSyncInput): Promise<OrganizationSyncUpdates> => {
+  const { companyNumber, environment } = input
+  if (!companyNumber) {
+    return {}
+  }
+
+  const organization = await getRawOrganizationBySiret(companyNumber)
+  const existingOrganizationVersion = organization
+    ? await getOrganizationVersionByOrganizationIdAndEnvironment(organization.id, environment)
+    : null
+
+  if (
+    existingOrganizationVersion &&
+    ((await organizationVersionActiveAccountsCount(existingOrganizationVersion.id)) ?? 0) > 0
+  ) {
+    return { organizationVersion: { connect: { id: existingOrganizationVersion.id } } }
+  }
+
+  return updateUserOrganization(input, organization)
+}
+
+const updateExistingAccount = async (
+  dbAccount: ExistingAccount,
+  user: ImportedUser,
+  value: UserImportRecord,
+  environment: ImportEnvironment,
+) => {
+  await updateAccount(
+    dbAccount.id,
+    {
+      ...(user.account.organizationVersion && { organizationVersion: user.account.organizationVersion }),
+      environment,
+      ...(user.account.formationName !== undefined && { formationName: user.account.formationName }),
+      ...(user.account.formationStartDate !== undefined && { formationStartDate: user.account.formationStartDate }),
+      ...(user.account.formationEndDate !== undefined && { formationEndDate: user.account.formationEndDate }),
+    },
+    {
+      ...dbAccount.user,
+      ...(value.firstName && { firstName: value.firstName }),
+      ...(value.lastName && { lastName: value.lastName }),
+      ...(value.source && { source: value.source as UserSource }),
+      level: user.level,
+    },
+  )
+}
+
 const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
-  const {
-    firstName = '',
-    lastName = '',
-    userEmail,
-    purchasedProducts,
-    sessionCode,
-    companyName,
-    siret,
-    siren,
-    vat,
-    taxNumber,
-    membershipYear,
-    trainings: rawTrainings,
-    source,
-    environment: dataEnvironment,
-    formationName,
-    formationStartDate,
-    formationEndDate,
-  } = value
-
-  const trainings: Training[] = Array.isArray(rawTrainings)
-    ? rawTrainings
-    : rawTrainings
-      ? (() => {
-          try {
-            return JSON.parse(rawTrainings)
-          } catch {
-            return []
-          }
-        })()
-      : []
-
-  const environment = (dataEnvironment || Environment.BC) as Environment
-
-  const email = (userEmail || '').replace(/ /g, '').toLowerCase()
-
-  const companyNumber = siret || siren || vat || taxNumber
-  const isCR = ['adhesion_conseil', 'licence_exploitation'].includes(purchasedProducts ?? '')
-  const activatedLicence = (membershipYear || '').match(/\d{4}/g)?.map(Number)
+  const trainings = parseTrainings(value.trainings)
+  const environment = getImportEnvironment(value.environment)
+  const email = (value.userEmail || '').replace(/ /g, '').toLowerCase()
+  const companyNumber = value.siret || value.siren || value.vat || value.taxNumber
+  const isCR = ['adhesion_conseil', 'licence_exploitation'].includes(value.purchasedProducts ?? '')
+  const activatedLicence = (value.membershipYear || '').match(/\d{4}/g)?.map(Number)
 
   const dbAccount = await getAccountByEmailAndEnvironment(email, environment)
 
-  let role = environment === Environment.CUT ? getEnvRoleFromBase(Role.COLLABORATOR) : Role.COLLABORATOR
+  const trainingData = getTrainingData(trainings)
+  const sessionLevel = value.sessionCode
+    ? value.sessionCode.includes('BCM2') || value.sessionCode.includes('BCM3')
+      ? Level.Advanced
+      : Level.Initial
+    : undefined
+  const level = trainingData?.level ?? sessionLevel
 
-  // If the user already has an account but is not linked to an organization version, or if they are the last active account of their organization version, they should be set as admin to avoid locking themselves out of their organization
-  if (
-    dbAccount &&
-    dbAccount.user.level !== undefined &&
-    ((dbAccount.organizationVersion &&
-      ((await organizationVersionActiveAccountsCount(dbAccount.organizationVersion.id)) ?? 0) <= 1) ||
-      !dbAccount.organizationVersion)
-  ) {
-    role = Role.ADMIN
-  }
-
-  const user: Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput } = {
-    id: dbAccount?.user.id,
-    email,
-    firstName,
-    lastName,
-    source: source as UserSource,
-    account: {
-      role,
-      status: UserStatus.IMPORTED,
-      importedFileDate,
-      environment,
-      formationName,
-      formationStartDate,
-      formationEndDate,
-      user: {
-        create: undefined,
-        connectOrCreate: undefined,
-        connect: undefined,
-      },
+  const account: Prisma.AccountCreateInput = {
+    role: Role.DEFAULT,
+    status: UserStatus.IMPORTED,
+    importedFileDate,
+    environment,
+    formationName: trainingData ? trainingData.formationName : value.formationName,
+    formationStartDate: trainingData ? trainingData.formationStartDate : value.formationStartDate,
+    formationEndDate: trainingData ? trainingData.formationEndDate : value.formationEndDate,
+    user: {
+      create: undefined,
+      connectOrCreate: undefined,
+      connect: undefined,
     },
   }
 
-  if (sessionCode) {
-    user.level = sessionCode.includes('BCM2') || sessionCode.includes('BCM3') ? Level.Advanced : Level.Initial
-  }
+  const organizationUpdates =
+    dbAccount && dbAccount.status !== UserStatus.IMPORTED
+      ? {}
+      : await syncUserOrganization({
+          companyNumber,
+          companyName: value.companyName,
+          siret: value.siret,
+          isCR,
+          activatedLicence,
+          importedFileDate,
+          environment,
+        })
 
-  if (trainings && Array.isArray(trainings) && trainings.length > 0) {
-    const highestLevelTraining = trainings.reduce((prev, current) => {
-      const prevLevel = getUserLevel([prev])
-      const currentLevel = getUserLevel([current])
-      return currentLevel && (!prevLevel || currentLevel > prevLevel) ? current : prev
-    }, trainings[0])
-
-    user.account.formationName = highestLevelTraining.trainingName
-    user.account.formationStartDate = highestLevelTraining.sessionStartDate
-      ? new Date(highestLevelTraining.sessionStartDate)
-      : undefined
-    user.account.formationEndDate = highestLevelTraining.sessionEndDate
-      ? new Date(highestLevelTraining.sessionEndDate)
-      : undefined
-
-    const computedLevel = getUserLevel([highestLevelTraining])
-    if (computedLevel) {
-      user.level = computedLevel
-    }
-  }
-
-  if (companyNumber) {
-    let organization = dbAccount?.organizationVersion
-      ? await getRawOrganizationById(dbAccount.organizationVersion?.organizationId)
-      : await getRawOrganizationBySiret(companyNumber)
-
-    organization = await createOrUpdateOrganization(
-      {
-        id: organization?.id,
-        name: companyName,
-        wordpressId: companyNumber,
-        ...(siret && { siret }),
-      } as Prisma.OrganizationCreateInput,
-      isCR,
-      activatedLicence,
-      importedFileDate,
-      environment,
-    )
-
-    const organizationVersion = await getOrganizationVersionByOrganizationIdAndEnvironment(
-      organization?.id,
-      environment,
-    )
-    user.account.organizationVersion = organizationVersion ? { connect: { id: organizationVersion.id } } : undefined
+  const user: ImportedUser = {
+    id: dbAccount?.user.id,
+    email,
+    firstName: value.firstName || '',
+    lastName: value.lastName || '',
+    source: value.source as UserSource,
+    ...(level !== undefined && { level }),
+    account: { ...account, ...organizationUpdates },
   }
 
   if (dbAccount) {
-    await updateAccount(
-      dbAccount.id,
-      {
-        ...(dbAccount.status === UserStatus.IMPORTED && {
-          role: user.account.role as Exclude<Role, 'SUPER_ADMIN'>,
-          organizationVersion: user.account?.organizationVersion,
-        }),
-        environment,
-      },
-      {
-        ...dbAccount.user,
-        level: user.level,
-      },
-    )
+    await updateExistingAccount(dbAccount, user, value, environment)
     return null
   }
 
@@ -247,7 +301,7 @@ export const processUsers = async (values: RawFTPRecord[], importedFileDate: Dat
   }
 }
 
-const getUserLevel = (trainings: Training[]): Level | undefined => {
+const getTrainingLevel = (trainings: Training[]): Level | undefined => {
   // Retrieve all relevant trainings
   const formationNames = trainings.map((t) => t.trainingName)
   // Find the first session date to determine the year

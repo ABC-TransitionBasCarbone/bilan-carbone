@@ -82,53 +82,67 @@ export type UserWithAllowedStudies = AsyncReturnType<typeof getAccountByIdWithAl
 
 export const updateUserPasswordForEmail = async (email: string, password: string, env: Environment) => {
   const signedPassword = await signPassword(password)
-  const user = await prismaClient.user.update({
-    where: { email },
-    data: { resetToken: null, password: signedPassword },
-  })
+  return prismaClient.$transaction(
+    async (transaction) => {
+      const user = await transaction.user.findUnique({ where: { email } })
+      if (!user) {
+        throw new Error(`User with email ${email} not found`)
+      }
 
-  if (!user) {
-    throw new Error(`User with email ${email} not found`)
-  }
+      const account = await transaction.account.findFirst({
+        where: {
+          userId: user.id,
+          environment: env,
+          status: { in: AuthorizedInOrgaUserStatus },
+        },
+      })
+      if (!account) {
+        throw new Error(`Account with email ${email} for environment ${env} not found or has a wrong status`)
+      }
 
-  const account = await prismaClient.account.findFirst({
-    where: {
-      userId: user.id,
-      environment: env,
-      status: { in: AuthorizedInOrgaUserStatus },
+      const isFirstTiltActivation =
+        env === Environment.TILT &&
+        account.status === UserStatus.VALIDATED &&
+        account.role === Role.DEFAULT &&
+        account.organizationVersionId &&
+        (await transaction.account.count({
+          where: { organizationVersionId: account.organizationVersionId, status: UserStatus.ACTIVE },
+        })) === 0
+
+      const updatedUser = await transaction.user.update({
+        where: { email },
+        data: { resetToken: null, password: signedPassword },
+      })
+      const accounts = await transaction.account.findMany({
+        where: {
+          userId: user.id,
+          status: { in: AuthorizedInOrgaUserStatus },
+        },
+      })
+      await Promise.all([
+        ...accounts
+          .filter((account) => environmentsWithChecklist.includes(account.environment))
+          .map((account) =>
+            transaction.userCheckedStep.upsert({
+              where: { accountId_step: { accountId: account.id, step: UserChecklist.CreateAccount } },
+              update: {},
+              create: { accountId: account.id, step: UserChecklist.CreateAccount },
+            }),
+          ),
+        transaction.account.update({
+          where: { userId_environment: { userId: user.id, environment: env } },
+          data: {
+            activationRequestedAt: null,
+            status: UserStatus.ACTIVE,
+            ...(isFirstTiltActivation && { role: user.level ? Role.ADMIN : Role.GESTIONNAIRE }),
+          },
+        }),
+      ])
+
+      return updatedUser
     },
-  })
-
-  if (!account) {
-    throw new Error(`Account with email ${email} for environment ${env} not found or has a wrong status`)
-  }
-
-  const accounts = await prismaClient.account.findMany({
-    where: {
-      userId: user.id,
-      status: { in: AuthorizedInOrgaUserStatus },
-    },
-  })
-
-  if (accounts.length > 0) {
-    await Promise.all([
-      ...accounts
-        .filter((account) => environmentsWithChecklist.includes(account.environment))
-        .map((account) =>
-          prismaClient.userCheckedStep.upsert({
-            where: { accountId_step: { accountId: account.id, step: UserChecklist.CreateAccount } },
-            update: {},
-            create: { accountId: account.id, step: UserChecklist.CreateAccount },
-          }),
-        ),
-      prismaClient.account.update({
-        where: { userId_environment: { userId: user.id, environment: env } },
-        data: { activationRequestedAt: null, status: UserStatus.ACTIVE },
-      }),
-    ])
-  }
-
-  return user
+    { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
+  )
 }
 
 export const deleteUserFromOrga = async (email: string, organizationVersionId: string | null) => {
