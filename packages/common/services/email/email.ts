@@ -1,3 +1,4 @@
+import type { CourseSession, User } from '@abc-transitionbascarbone/common/db'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { getEnvVar } from '@abc-transitionbascarbone/common/utils/environment'
 import { EnvironmentNames } from '@abc-transitionbascarbone/common/utils/environments'
@@ -12,6 +13,32 @@ const tSubject = async (keys: string, object?: Record<string, string | number | 
 
 const tBody = async (keys: string, object?: Record<string, string | number | Date>) =>
   (await getTranslations('email.body'))(keys, object)
+
+type TrainingSessionSummary = Pick<
+  CourseSession,
+  'name' | 'environment' | 'startDate' | 'endDate' | 'traineeCode' | 'professorCode'
+> & {
+  trainees: Pick<User, 'email' | 'firstName' | 'lastName'>[]
+  professor: Pick<User, 'email' | 'firstName' | 'lastName'> | null
+}
+
+export const sendCourseSessionsCreatedEmail = async (
+  toEmail: string,
+  organismName: string,
+  sessions: TrainingSessionSummary[],
+) => {
+  return sendEmail(Environment.BC, [toEmail], 'Vos nouvelles sessions de formation', 'course-sessions-created', {
+    organismName,
+    sessions: sessions
+      .toSorted((a, b) => a.startDate.getTime() - b.startDate.getTime() || a.name.localeCompare(b.name, 'fr'))
+      .map((session) => ({
+        ...session,
+        environment: EnvironmentNames[session.environment],
+        startDate: session.startDate.toLocaleDateString('fr-FR', { timeZone: 'UTC' }),
+        endDate: session.endDate.toLocaleDateString('fr-FR', { timeZone: 'UTC' }),
+      })),
+  })
+}
 
 export const sendResetPassword = async (toEmail: string, token: string, env: Environment = Environment.BC) => {
   return sendEmail(env, [toEmail], await tSubject('resetPassword'), 'reset-password', {
