@@ -5,6 +5,7 @@ import { EnvironmentNames } from '@abc-transitionbascarbone/common/utils/environ
 import { getTranslations } from 'next-intl/server'
 import { sendEmail } from './send'
 import { getEnvResetLink } from './utils'
+import { formatDateFr } from '@abc-transitionbascarbone/common/utils'
 
 const BASE_URL = process.env.NEXTAUTH_URL
 
@@ -22,21 +23,48 @@ type TrainingSessionSummary = Pick<
   professor: Pick<User, 'email' | 'firstName' | 'lastName'> | null
 }
 
+export type TrainingSessionUpdate = Pick<TrainingSessionSummary, 'name' | 'environment' | 'startDate'> & {
+  courseOrganismId: string
+  dates: { label: string; before: Date; after: Date }[]
+  professor: {
+    before: TrainingSessionSummary['professor']
+    after: TrainingSessionSummary['professor']
+  } | null
+  addedTrainees: TrainingSessionSummary['trainees']
+  removedTrainees: TrainingSessionSummary['trainees']
+}
+
+const compareTrainingSessions = (
+  a: Pick<TrainingSessionSummary, 'startDate' | 'name'>,
+  b: Pick<TrainingSessionSummary, 'startDate' | 'name'>,
+) => a.startDate.getTime() - b.startDate.getTime() || a.name.localeCompare(b.name, 'fr')
+
 export const sendCourseSessionsCreatedEmail = async (
   toEmail: string,
   organismName: string,
   sessions: TrainingSessionSummary[],
+  updatedSessions: TrainingSessionUpdate[] = [],
 ) => {
-  return sendEmail(Environment.BC, [toEmail], 'Vos nouvelles sessions de formation', 'course-sessions-created', {
+  const subject = updatedSessions.length
+    ? 'Vos sessions de formation : créations et mises à jour'
+    : 'Vos nouvelles sessions de formation'
+  return sendEmail(Environment.BC, [toEmail], subject, 'course-sessions-created', {
     organismName,
-    sessions: sessions
-      .toSorted((a, b) => a.startDate.getTime() - b.startDate.getTime() || a.name.localeCompare(b.name, 'fr'))
-      .map((session) => ({
-        ...session,
-        environment: EnvironmentNames[session.environment],
-        startDate: session.startDate.toLocaleDateString('fr-FR', { timeZone: 'UTC' }),
-        endDate: session.endDate.toLocaleDateString('fr-FR', { timeZone: 'UTC' }),
+    sessions: sessions.toSorted(compareTrainingSessions).map((session) => ({
+      ...session,
+      environment: EnvironmentNames[session.environment],
+      startDate: formatDateFr(session.startDate),
+      endDate: formatDateFr(session.endDate),
+    })),
+    updatedSessions: updatedSessions.toSorted(compareTrainingSessions).map((session) => ({
+      ...session,
+      environment: EnvironmentNames[session.environment],
+      dates: session.dates.map((date) => ({
+        ...date,
+        before: formatDateFr(date.before),
+        after: formatDateFr(date.after),
       })),
+    })),
   })
 }
 
