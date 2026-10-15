@@ -2,7 +2,12 @@
 
 import { useAppEnvironmentStore } from '@/store/AppEnvironment'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
-import { EnvironmentMode, isAdvanced, isSimplified } from '@abc-transitionbascarbone/common/utils/environments'
+import {
+  EnvironmentMode,
+  getEnvironmentHandlingGenericEnvs,
+  isAdvanced,
+  isSimplified,
+} from '@abc-transitionbascarbone/common/utils/environments'
 import { ReactNode } from 'react'
 import EnvironmentLoader from './EnvironmentLoader'
 
@@ -13,13 +18,19 @@ type EnvironmentMap = {
 interface Props {
   defaultComponent?: ReactNode
   environmentComponents?: EnvironmentMap
-  forceEnvironment?: Environment
+  forceEnvironment?: Environment // is used when the current env is undefined or not the right one
+  useGenericEnv?: boolean // is used if we do not want to use generic environment for course but the course env. If force environment is a course one, we have to use both forceEnv + useGenericEnv to false
 }
 
-const DynamicComponent = ({ defaultComponent, environmentComponents = {}, forceEnvironment }: Props) => {
+const DynamicComponent = ({
+  defaultComponent,
+  environmentComponents = {},
+  forceEnvironment,
+  useGenericEnv = true,
+}: Props) => {
   const { environment } = useAppEnvironmentStore()
-
-  const environmentToUse = forceEnvironment || environment
+  const currentEnvironment = forceEnvironment || environment
+  const environmentToUse = useGenericEnv ? getEnvironmentHandlingGenericEnvs(currentEnvironment) : currentEnvironment
 
   if (!environmentToUse) {
     return <EnvironmentLoader />

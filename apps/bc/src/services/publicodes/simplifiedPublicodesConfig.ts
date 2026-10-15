@@ -20,6 +20,7 @@ import { getTiltEngine } from '@/environments/tilt/publicodes/tilt-engine'
 import { EnvironmentWithSimplifiedStudies } from '@/services/permissions/environment'
 import { Environment, SubPost } from '@abc-transitionbascarbone/common/db/enums'
 import { FormLayout } from '@abc-transitionbascarbone/common/publicodes/form/layouts'
+import { getEnvironmentHandlingGenericEnvs } from '@abc-transitionbascarbone/common/utils/environments'
 import Engine from 'publicodes'
 import {
   ClicksonPost,
@@ -87,5 +88,13 @@ export const getSimplifiedPublicodesConfig = (
   if (subPostsConfigVersion === TILT_SIMPLIFIED_POSTS_CONFIG_VERSION) {
     return TILT_SIMPLIFIED_POSTS_CONFIG as SimplifiedPublicodesConfig
   }
-  return SIMPLIFIED_PUBLICODES_CONFIGS[env] as SimplifiedPublicodesConfig
+  const environment = getEnvironmentHandlingGenericEnvs(env)
+  const config = (SIMPLIFIED_PUBLICODES_CONFIGS as Partial<Record<Environment, SimplifiedPublicodesConfig>>)[
+    environment
+  ]
+  if (!config) {
+    throw new Error(`No simplified publicodes config found for environment: ${environment}`)
+  }
+
+  return config
 }

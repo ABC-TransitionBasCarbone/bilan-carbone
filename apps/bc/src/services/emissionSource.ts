@@ -10,6 +10,7 @@ import {
   Import,
   SubPost,
 } from '@abc-transitionbascarbone/common/db/enums'
+import { isTilt } from './permissions/environment'
 import { convertTiltSubPostToBCSubPost } from './posts'
 import { getConfidenceInterval, getSquaredStandardDeviationForEmissionSource } from './uncertainty'
 
@@ -398,7 +399,12 @@ export const getCaracterisationsBySubPost = (
   controlMode: ControlMode,
 ) => {
   let subPostToUse = subPost
-  if (environment === Environment.TILT) {
+
+  if (!environment) {
+    return []
+  }
+
+  if (isTilt(environment)) {
     const bcSubpost = convertTiltSubPostToBCSubPost(subPost)
     subPostToUse = bcSubpost
   }

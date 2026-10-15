@@ -12,6 +12,7 @@ import { signOutEnv } from '@abc-transitionbascarbone/common/services/auth/auth.
 import AppBar from '@abc-transitionbascarbone/common/ui/navbar/AppBar'
 import NavbarButton from '@abc-transitionbascarbone/common/ui/navbar/NavbarButton'
 import NavbarLink from '@abc-transitionbascarbone/common/ui/navbar/NavbarLink'
+import { getEnvironmentHandlingGenericEnvs } from '@abc-transitionbascarbone/common/utils/environments'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import MenuBookIcon from '@mui/icons-material/MenuBook'
@@ -32,16 +33,16 @@ const CutTopLeftNavBar = dynamic(() => import('@/environments/cut/navbar/TopLeft
 
 interface Props {
   user: UserSession
-  environment: Environment
   isFootprintsEnabled: boolean
   hasTrainedUsers: boolean
 }
 
-const Navbar = ({ user, environment, isFootprintsEnabled, hasTrainedUsers }: Props) => {
+const Navbar = ({ user, isFootprintsEnabled, hasTrainedUsers }: Props) => {
   const t = useTranslations('navigation')
   const [hasFormation, setHasFormation] = useState(false)
   const [hasMultipleAccounts, setHasMultipleAccounts] = useState(false)
   const locale = useLocale()
+  const environment = getEnvironmentHandlingGenericEnvs(user.environment)
 
   useEffect(() => {
     const getFormationAccess = async () => {
@@ -61,7 +62,7 @@ const Navbar = ({ user, environment, isFootprintsEnabled, hasTrainedUsers }: Pro
   }, [user])
 
   const methodologyLink = useMemo(() => {
-    switch (user.environment) {
+    switch (environment) {
       case Environment.TILT:
         return 'https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative'
       default:
@@ -69,7 +70,7 @@ const Navbar = ({ user, environment, isFootprintsEnabled, hasTrainedUsers }: Pro
           ? 'https://www.bilancarbone-methode.com/'
           : 'https://www.bilancarbone-methode.com/english'
     }
-  }, [locale, user.environment])
+  }, [locale, environment])
 
   return (
     <AppBar position="sticky" elevation={0}>
@@ -134,7 +135,7 @@ const Navbar = ({ user, environment, isFootprintsEnabled, hasTrainedUsers }: Pro
                 </NavbarButton>
               </div>
             </Box>
-            {isTilt(user.environment) && (
+            {isTilt(environment) && (
               <NavbarLink href="/" aria-label={t('home')} title={t('home')}>
                 <Logo />
               </NavbarLink>

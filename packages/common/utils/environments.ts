@@ -1,13 +1,21 @@
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 
 const { BC, CUT, TILT, CLICKSON, MIP, COURSE_BC, COURSE_TILT } = Environment
-export const courseEnvironments = [COURSE_BC, COURSE_TILT] as Environment[]
+export const courseEnvironments = [COURSE_BC, COURSE_TILT] as const
+export type CourseEnvironment = typeof courseEnvironments[number]
+
 export const advancedEnvironments: Environment[] = [BC, TILT, ...courseEnvironments]
 const simplifiedEnvironments: Environment[] = [CUT, CLICKSON]
 
 export const isAdvanced = (environment: Environment) => advancedEnvironments.includes(environment)
 export const isSimplified = (environment: Environment) => simplifiedEnvironments.includes(environment)
-export const isCourse = (environment: Environment) => courseEnvironments.includes(environment)
+export const isCourseEnvironment = (environment: Environment): environment is CourseEnvironment =>
+  courseEnvironments.includes(environment as CourseEnvironment)
+
+export const fallBackEnvironment = {
+  [COURSE_BC]: BC,
+  [COURSE_TILT]: TILT,
+} as const
 
 export const environmentWithOnboarding: Environment[] = [BC, CLICKSON]
 export const environmentsWithChecklist: Environment[] = [BC]
@@ -57,3 +65,18 @@ export const getEnvRoute = (path: string, env?: Environment) => {
 }
 
 export const ENV_ROUTES = [COUNT_ROUTE, TILT_ROUTE, CLICKSON_ROUTE, COURSE_BC_ROUTE, COURSE_TILT_ROUTE]
+
+export const getEnvironmentHandlingGenericEnvs = <T extends Environment | undefined>(
+  environment: T,
+  availableEnvironments: Environment[] = [],
+): T | (typeof fallBackEnvironment)[CourseEnvironment] => {
+  if (
+    environment &&
+    isCourseEnvironment(environment) &&
+    !availableEnvironments.includes(environment)
+  ) {
+    return fallBackEnvironment[environment]
+  }
+
+  return environment
+}
