@@ -22,7 +22,7 @@ import {
   Unit,
 } from '@abc-transitionbascarbone/common/db/enums'
 import { Post, STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/common/utils/charts'
-import { courseEnvironments } from '@abc-transitionbascarbone/common/utils/environments'
+import { isCourse } from '@abc-transitionbascarbone/common/utils/environments'
 import { formatNumber } from '@abc-transitionbascarbone/common/utils/number'
 import { Getter } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
@@ -404,7 +404,7 @@ export const getActionReductionRatio = (
 }
 
 export const getAllowedLevels = (level: Level | null, environment: Environment) => {
-  if (courseEnvironments.includes(environment)) {
+  if (isCourse(environment)) {
     return Object.values(Level)
   }
 
