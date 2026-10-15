@@ -1,4 +1,4 @@
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { createUsersWithAccount } from '@/db/user'
 import { getRecords, type Worksheet } from '@/utils/excel.utils'
 import { Environment, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
