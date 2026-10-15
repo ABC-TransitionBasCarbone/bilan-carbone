@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
 import { DeactivatableFeature, Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { isTilt } from './environment'
