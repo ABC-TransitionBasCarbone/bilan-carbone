@@ -1,7 +1,7 @@
 'use server'
 
 import { getAccountById } from '@/db/account'
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import {
   createEmissionFactorWithParts,
   deleteEmissionFactorAndDependencies,
@@ -31,9 +31,9 @@ import { EmissionFactorStatus, Environment, Import, Unit } from '@abc-transition
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import type { IsSuccess } from '@abc-transitionbascarbone/common/utils/serverResponse'
 import { auth, dbActualizedAuth } from '../auth'
-import { canCreateEmissionFactor } from '../permissions/emissionFactor.server'
+import { canCreateEmissionFactor } from '../permissions/emissionFactorAccess'
 import { canReadStudy } from '../permissions/study'
-import { getStudyParentOrganizationId, getStudyParentOrganizationVersionId } from '../study.server'
+import { getStudyParentOrganizationId, getStudyParentOrganizationVersionId } from '../studyAccess'
 import { sortAlphabetically } from '../utils'
 import { EmissionFactorCommand, UpdateEmissionFactorCommand } from './emissionFactor.command'
 

@@ -9,7 +9,7 @@ const WORKSPACES: Record<Exclude<SeedTarget, 'all'>, string> = {
 }
 
 const runWorkspaceSeed = (workspace: string) => {
-    console.log(`\n> yarn workspace ${workspace} tsx prisma/seed/index.ts`)
+    console.log(`\n> yarn workspace ${workspace} tsx --conditions=react-server prisma/seed/index.ts`)
 
     const yarnPath = process.env.npm_execpath ?? 'yarn'
     if (yarnPath.includes('yarn')) {
@@ -18,6 +18,7 @@ const runWorkspaceSeed = (workspace: string) => {
             'workspace',
             workspace,
             'tsx',
+            '--conditions=react-server',
             'prisma/seed/index.ts',
         ], {
             stdio: 'inherit',

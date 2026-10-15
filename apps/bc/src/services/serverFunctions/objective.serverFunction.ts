@@ -1,6 +1,6 @@
 'use server'
 
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import {
   createManyObjectiveSites,
   createManyObjectiveSubPosts,

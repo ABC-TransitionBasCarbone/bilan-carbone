@@ -3,7 +3,7 @@ import { Import } from '@abc-transitionbascarbone/common/db/enums'
 import { MIN, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils'
 import { parse } from 'csv-parse'
 import fs from 'fs'
-import { prismaClient } from '../../db/client.server'
+import { prismaClient } from '../../db/client'
 import { getEncoding } from '../../utils/csv'
 import {
   addSourceToStudies,

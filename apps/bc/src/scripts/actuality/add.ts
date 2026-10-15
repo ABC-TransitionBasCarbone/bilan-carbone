@@ -1,4 +1,4 @@
-import { createActualities } from '@/db/actuality.server'
+import { createActualities } from '@/db/actuality'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { Locale } from '@abc-transitionbascarbone/common/i18n/config'

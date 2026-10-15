@@ -1,3 +1,5 @@
+import 'client-only'
+
 import type { JsonValue } from '@abc-transitionbascarbone/common/db/types'
 
 export const handleCopy = async (link: string): Promise<void> => {

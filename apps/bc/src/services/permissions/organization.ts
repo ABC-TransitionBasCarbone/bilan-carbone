@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { getAccountById } from '@/db/account'
 import {
   getOrganizationVersionForRightsCheck,

@@ -1,6 +1,6 @@
 'use server'
 
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { EmissionFactorList, findEmissionFactorByIdForMatch } from '@/db/emissionFactors'
 import { createEmissionSourcesWithReturn, getFamilyTagsForStudy } from '@/db/emissionSource'
 import { createEmissionSourceTags, FullStudy, getStudyById } from '@/db/study'
@@ -44,7 +44,7 @@ import { canBeValidated, getCaracterisationsBySubPost, getEmissionSourceEmission
 import { getAuthenticatedAccountWithOrga } from '../permissions/account.permissions'
 import { hasStudyBasicRights } from '../permissions/emissionSource'
 import { canReadStudy } from '../permissions/study'
-import { getStudyParentOrganizationId } from '../study.server'
+import { getStudyParentOrganizationId } from '../studyAccess'
 import {
   getQualitativeUncertaintyFromQuality,
   getQualitativeUncertaintyFromSquaredStandardDeviation,

@@ -2,7 +2,7 @@
 
 import ImportFileModal from '@/components/base/ImportFileModal/ImportFileModal'
 import WasteEmissionFactorModal from '@/components/emissionFactor/WasteEmissionFactorModal'
-import { download } from '@/services/file'
+import { download } from '@/services/fileDownloadClient'
 import {
   getImportEmissionSourcesTemplate,
   importEmissionSourcesFromFile,
