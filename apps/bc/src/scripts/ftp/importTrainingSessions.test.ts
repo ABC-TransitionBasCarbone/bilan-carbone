@@ -1,5 +1,8 @@
 import { prismaClient } from '@/db/client.server'
 import { createUsersWithAccount } from '@/db/user'
+import type { CourseSession } from '@abc-transitionbascarbone/common/db'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { sendCourseSessionsCreatedEmail } from '@abc-transitionbascarbone/common/services/email/email'
 import { Client } from 'basic-ftp'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import fs from 'fs'
@@ -19,11 +22,15 @@ jest.mock('@/db/client.server', () => ({
     courseOrganism: { findMany: jest.fn() },
     account: { findMany: jest.fn(), update: jest.fn() },
     courseSession: { findMany: jest.fn(), upsert: jest.fn() },
-    $transaction: jest.fn(),
+    $transaction: jest.fn((operations: Promise<unknown>[]) => Promise.all(operations)),
   },
 }))
 
 jest.mock('@/db/user', () => ({ createUsersWithAccount: jest.fn() }))
+
+jest.mock('@abc-transitionbascarbone/common/services/email/email', () => ({
+  sendCourseSessionsCreatedEmail: jest.fn(),
+}))
 
 jest.mock('fs', () => {
   const mockedFs = {
@@ -44,6 +51,35 @@ const mockUpdateAccount = jest.mocked(prismaClient.account.update)
 const mockFindCourseSessions = jest.mocked(prismaClient.courseSession.findMany)
 const mockUpsertCourseSession = jest.mocked(prismaClient.courseSession.upsert)
 const mockCreateUsersWithAccount = jest.mocked(createUsersWithAccount)
+const mockSendCourseSessionsCreatedEmail = jest.mocked(sendCourseSessionsCreatedEmail)
+const savedSessions: CourseSession[] = [
+  {
+    id: 'session-1',
+    courseOrganismId: 'organism-1',
+    name: 'Session Numéro 1',
+    environment: Environment.COURSE_BC,
+    startDate: getJsDateFromExcel(46277),
+    endDate: getJsDateFromExcel(46377),
+    traineeCode: '12345678',
+    professorCode: '87654321',
+    professorId: 'account-2',
+    createdAt: new Date('2026-10-15'),
+    updatedAt: new Date('2026-10-15'),
+  },
+  {
+    id: 'session-2',
+    courseOrganismId: 'organism-1',
+    name: 'Session Numéro 2',
+    environment: Environment.COURSE_TILT,
+    startDate: getJsDateFromExcel(46368),
+    endDate: getJsDateFromExcel(46508),
+    traineeCode: '23456789',
+    professorCode: '98765432',
+    professorId: 'account-5',
+    createdAt: new Date('2026-10-15'),
+    updatedAt: new Date('2026-10-15'),
+  },
+]
 const workbook = [
   {
     name: 'Sessions',
@@ -73,6 +109,16 @@ const workbook = [
   },
 ]
 
+const withParticipants = (session: CourseSession) => {
+  const participants = parseCourseSessionWorkbook(Buffer.from('xlsx content'), session.courseOrganismId)
+  const importedSession = participants.find(({ name }) => name === session.name)!
+  return {
+    ...session,
+    trainees: importedSession.trainees.map((user) => ({ account: { user } })),
+    professor: importedSession.professor ? { user: importedSession.professor } : null,
+  }
+}
+
 describe('getCourseSessionsFromFTP', () => {
   const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => undefined)
 
@@ -97,6 +143,17 @@ describe('getCourseSessionsFromFTP', () => {
     jest.mocked(fs.createWriteStream).mockReturnValue('stream' as unknown as fs.WriteStream)
     jest.mocked(fs.promises.readFile).mockResolvedValue(Buffer.from('xlsx content'))
     jest.mocked(xlsx.parse).mockReturnValue(workbook)
+    mockCreateUsersWithAccount.mockResolvedValue({
+      newUsers: { count: 6 },
+      newAccounts: { count: 6 },
+    })
+    mockFindAccounts.mockResolvedValue([])
+    mockFindCourseSessions.mockReset().mockResolvedValue([])
+    mockUpsertCourseSession
+      .mockReset()
+      .mockResolvedValueOnce(withParticipants(savedSessions[0]))
+      .mockResolvedValueOnce(withParticipants(savedSessions[1]))
+    mockSendCourseSessionsCreatedEmail.mockReset()
   })
 
   it('reads and maps all three sheets from the organism FTP path', async () => {
@@ -134,6 +191,45 @@ describe('getCourseSessionsFromFTP', () => {
         professor: { email: 'bc-cr-admin-0@yopmail.com', firstName: 'Admin', lastName: 'CR' },
       },
     ])
+  })
+
+  it('imports a session without a professor and creates only trainee accounts', async () => {
+    const [sessions, trainees, professors] = workbook
+    jest.mocked(xlsx.parse).mockReturnValue([
+      { ...sessions, data: sessions.data.slice(0, 2) },
+      { ...trainees, data: [trainees.data[0], trainees.data[1], trainees.data[3]] },
+      { ...professors, data: [] },
+    ])
+    mockCreateUsersWithAccount.mockResolvedValue({
+      newUsers: { count: 2 },
+      newAccounts: { count: 2 },
+    })
+    mockUpsertCourseSession
+      .mockReset()
+      .mockResolvedValueOnce(withParticipants({ ...savedSessions[0], professorId: null }))
+
+    await expect(importCourseSessionsFromFTP()).resolves.toEqual({
+      importedSessions: 1,
+      createdUsers: 2,
+      createdAccounts: 2,
+    })
+
+    expect(mockCreateUsersWithAccount).toHaveBeenCalledWith([
+      expect.objectContaining({ email: 'test.abc2@abc-transitionbascarbone.fr' }),
+      expect.objectContaining({ email: 'test.abc@abc-transitionbascarbone.fr' }),
+    ])
+    expect(mockUpsertCourseSession).toHaveBeenCalledWith(
+      expect.objectContaining({
+        create: expect.objectContaining({ professorId: null }),
+        update: expect.objectContaining({ professorId: null }),
+      }),
+    )
+    expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalledWith(
+      'contact@example.org',
+      'Partner A',
+      [expect.objectContaining({ professor: null, trainees: expect.any(Array) })],
+      [],
+    )
   })
 
   it('creates a personal organization for each account and links trainees to their sessions', async () => {
@@ -224,6 +320,203 @@ describe('getCourseSessionsFromFTP', () => {
     )
   })
 
+  it('sends a single email containing the saved codes and participants of all new sessions', async () => {
+    await importCourseSessionsFromFTP()
+
+    expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalledTimes(1)
+    expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalledWith(
+      'contact@example.org',
+      'Partner A',
+      [
+        expect.objectContaining({
+          ...savedSessions[0],
+          trainees: [
+            { email: 'test.abc2@abc-transitionbascarbone.fr', firstName: 'Test', lastName: 'ABC' },
+            { email: 'test.abc@abc-transitionbascarbone.fr', firstName: 'Test', lastName: 'ABC' },
+          ],
+          professor: { email: 'onboarding@yopmail.com', firstName: 'Onboarding', lastName: 'Yopmail' },
+        }),
+        expect.objectContaining({
+          ...savedSessions[1],
+          trainees: [
+            { email: 'bc-admin-0@yopmail.com', firstName: 'Admin', lastName: 'BC' },
+            { email: 'test-formation@yopmail.com', firstName: 'Test', lastName: 'Formation' },
+          ],
+        }),
+      ],
+      [],
+    )
+  })
+
+  it('excludes existing sessions from the email', async () => {
+    mockFindCourseSessions.mockResolvedValueOnce([]).mockResolvedValueOnce([withParticipants(savedSessions[0])])
+
+    await importCourseSessionsFromFTP()
+
+    expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalledTimes(1)
+    expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalledWith(
+      'contact@example.org',
+      'Partner A',
+      [expect.objectContaining({ id: 'session-2' })],
+      [],
+    )
+  })
+
+  it('does not send an email when all sessions already exist', async () => {
+    mockFindCourseSessions.mockResolvedValueOnce([]).mockResolvedValueOnce(savedSessions.map(withParticipants))
+
+    await importCourseSessionsFromFTP()
+
+    expect(mockSendCourseSessionsCreatedEmail).not.toHaveBeenCalled()
+  })
+
+  it('keeps each organism sessions in a separate email', async () => {
+    const firstOrganism = (await mockFindCourseOrganisms())[0]
+    mockFindCourseOrganisms.mockResolvedValue([
+      firstOrganism,
+      { ...firstOrganism, id: 'organism-2', name: 'Partner B', contactEmail: 'partner-b@example.org' },
+    ])
+    mockUpsertCourseSession
+      .mockResolvedValueOnce(withParticipants({ ...savedSessions[0], id: 'session-3', courseOrganismId: 'organism-2' }))
+      .mockResolvedValueOnce(withParticipants({ ...savedSessions[1], id: 'session-4', courseOrganismId: 'organism-2' }))
+
+    await importCourseSessionsFromFTP()
+
+    expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalledTimes(2)
+    expect(mockSendCourseSessionsCreatedEmail).toHaveBeenNthCalledWith(
+      1,
+      'contact@example.org',
+      'Partner A',
+      [
+        expect.objectContaining({ id: 'session-1', courseOrganismId: 'organism-1' }),
+        expect.objectContaining({ id: 'session-2', courseOrganismId: 'organism-1' }),
+      ],
+      [],
+    )
+    expect(mockSendCourseSessionsCreatedEmail).toHaveBeenNthCalledWith(
+      2,
+      'partner-b@example.org',
+      'Partner B',
+      [
+        expect.objectContaining({ id: 'session-3', courseOrganismId: 'organism-2' }),
+        expect.objectContaining({ id: 'session-4', courseOrganismId: 'organism-2' }),
+      ],
+      [],
+    )
+  })
+
+  it('sends creations and date, professor and trainee changes in the same email', async () => {
+    const before = withParticipants(savedSessions[0])
+    const oldProfessor = { email: 'old-professor@example.org', firstName: 'Old', lastName: 'Professor' }
+    const removedTrainee = { email: 'removed@example.org', firstName: 'Removed', lastName: 'Trainee' }
+    before.startDate = new Date('2026-01-01')
+    before.endDate = new Date('2026-01-02')
+    before.professor = { user: oldProfessor }
+    before.trainees = [before.trainees[0], { account: { user: removedTrainee } }]
+    mockFindCourseSessions.mockResolvedValueOnce([]).mockResolvedValueOnce([before])
+
+    await importCourseSessionsFromFTP()
+
+    expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalledTimes(1)
+    expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalledWith(
+      'contact@example.org',
+      'Partner A',
+      [expect.objectContaining({ id: 'session-2' })],
+      [
+        {
+          name: savedSessions[0].name,
+          environment: savedSessions[0].environment,
+          courseOrganismId: 'organism-1',
+          startDate: savedSessions[0].startDate,
+          dates: [
+            { label: 'Date de début', before: before.startDate, after: savedSessions[0].startDate },
+            { label: 'Date de fin', before: before.endDate, after: savedSessions[0].endDate },
+          ],
+          professor: {
+            before: oldProfessor,
+            after: withParticipants(savedSessions[0]).professor?.user,
+          },
+          addedTrainees: [{ email: 'test.abc@abc-transitionbascarbone.fr', firstName: 'Test', lastName: 'ABC' }],
+          removedTrainees: [removedTrainee],
+        },
+      ],
+    )
+  })
+
+  it.each(['startDate', 'endDate', 'professor', 'trainees'] as const)(
+    'sends an update-only email when only %s changes',
+    async (field) => {
+      const previous = savedSessions.map(withParticipants)
+      if (field === 'startDate' || field === 'endDate') {
+        previous[0][field] = new Date('2026-01-01')
+      } else if (field === 'professor') {
+        previous[0].professor = null
+      } else {
+        previous[0].trainees = []
+      }
+      mockFindCourseSessions.mockResolvedValueOnce([]).mockResolvedValueOnce(previous)
+
+      await importCourseSessionsFromFTP()
+
+      expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalledTimes(1)
+      expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalledWith(
+        'contact@example.org',
+        'Partner A',
+        [],
+        [expect.objectContaining({ name: savedSessions[0].name })],
+      )
+    },
+  )
+
+  it('ignores trainee order changes', async () => {
+    const previous = savedSessions.map(withParticipants)
+    previous[0].trainees.reverse()
+    mockFindCourseSessions.mockResolvedValueOnce([]).mockResolvedValueOnce(previous)
+
+    await importCourseSessionsFromFTP()
+
+    expect(mockSendCourseSessionsCreatedEmail).not.toHaveBeenCalled()
+  })
+
+  it('does not send an email if saving the sessions fails', async () => {
+    const error = new Error('Database unavailable')
+    jest.mocked(prismaClient.$transaction).mockResolvedValueOnce([]).mockRejectedValueOnce(error)
+
+    await expect(importCourseSessionsFromFTP()).rejects.toThrow(error)
+
+    expect(mockUpsertCourseSession).toHaveBeenCalledTimes(2)
+    expect(mockSendCourseSessionsCreatedEmail).not.toHaveBeenCalled()
+  })
+
+  it('reports email failures after saving the sessions', async () => {
+    const error = new Error('SMTP unavailable')
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined)
+    mockSendCourseSessionsCreatedEmail.mockRejectedValueOnce(error)
+
+    try {
+      await expect(importCourseSessionsFromFTP()).rejects.toThrow(error)
+      expect(mockUpsertCourseSession).toHaveBeenCalledTimes(2)
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Error sending training sessions email:',
+        { courseOrganismId: 'organism-1' },
+        error,
+      )
+    } finally {
+      consoleErrorSpy.mockRestore()
+    }
+  })
+
+  it('does not send an email when no sessions are imported', async () => {
+    mockFindCourseOrganisms.mockResolvedValue([])
+
+    await expect(importCourseSessionsFromFTP()).resolves.toEqual({
+      importedSessions: 0,
+      createdUsers: 0,
+      createdAccounts: 0,
+    })
+    expect(mockSendCourseSessionsCreatedEmail).not.toHaveBeenCalled()
+  })
+
   it('rejects more than one professor for a session', () => {
     const [sessions, trainees, professors] = workbook
     jest.mocked(xlsx.parse).mockReturnValue([
@@ -238,6 +531,25 @@ describe('getCourseSessionsFromFTP', () => {
     expect(() => parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')).toThrow(
       'Training session Session Numéro 1 must have exactly one professor',
     )
+  })
+
+  it('parses sessions without a professor', () => {
+    const [sessions, trainees, professors] = workbook
+    jest.mocked(xlsx.parse).mockReturnValue([
+      sessions,
+      trainees,
+      {
+        ...professors,
+        data: [],
+      },
+    ])
+
+    const parsedSessions = parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')
+
+    expect(parsedSessions).toEqual([
+      expect.objectContaining({ name: 'Session Numéro 1', professor: null }),
+      expect.objectContaining({ name: 'Session Numéro 2', professor: null }),
+    ])
   })
 
   afterAll(() => {

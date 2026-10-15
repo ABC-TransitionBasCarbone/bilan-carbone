@@ -1,9 +1,11 @@
+import type { CourseSession, User } from '@abc-transitionbascarbone/common/db'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { getEnvVar } from '@abc-transitionbascarbone/common/utils/environment'
 import { EnvironmentNames } from '@abc-transitionbascarbone/common/utils/environments'
 import { getTranslations } from 'next-intl/server'
 import { sendEmail } from './send'
 import { getEnvResetLink } from './utils'
+import { formatDateFr } from '@abc-transitionbascarbone/common/utils'
 
 const BASE_URL = process.env.NEXTAUTH_URL
 
@@ -12,6 +14,59 @@ const tSubject = async (keys: string, object?: Record<string, string | number | 
 
 const tBody = async (keys: string, object?: Record<string, string | number | Date>) =>
   (await getTranslations('email.body'))(keys, object)
+
+type TrainingSessionSummary = Pick<
+  CourseSession,
+  'name' | 'environment' | 'startDate' | 'endDate' | 'traineeCode' | 'professorCode'
+> & {
+  trainees: Pick<User, 'email' | 'firstName' | 'lastName'>[]
+  professor: Pick<User, 'email' | 'firstName' | 'lastName'> | null
+}
+
+export type TrainingSessionUpdate = Pick<TrainingSessionSummary, 'name' | 'environment' | 'startDate'> & {
+  courseOrganismId: string
+  dates: { label: string; before: Date; after: Date }[]
+  professor: {
+    before: TrainingSessionSummary['professor']
+    after: TrainingSessionSummary['professor']
+  } | null
+  addedTrainees: TrainingSessionSummary['trainees']
+  removedTrainees: TrainingSessionSummary['trainees']
+}
+
+const compareTrainingSessions = (
+  a: Pick<TrainingSessionSummary, 'startDate' | 'name'>,
+  b: Pick<TrainingSessionSummary, 'startDate' | 'name'>,
+) => a.startDate.getTime() - b.startDate.getTime() || a.name.localeCompare(b.name, 'fr')
+
+export const sendCourseSessionsCreatedEmail = async (
+  toEmail: string,
+  organismName: string,
+  sessions: TrainingSessionSummary[],
+  updatedSessions: TrainingSessionUpdate[] = [],
+) => {
+  const subject = updatedSessions.length
+    ? 'Vos sessions de formation : créations et mises à jour'
+    : 'Vos nouvelles sessions de formation'
+  return sendEmail(Environment.BC, [toEmail], subject, 'course-sessions-created', {
+    organismName,
+    sessions: sessions.toSorted(compareTrainingSessions).map((session) => ({
+      ...session,
+      environment: EnvironmentNames[session.environment],
+      startDate: formatDateFr(session.startDate),
+      endDate: formatDateFr(session.endDate),
+    })),
+    updatedSessions: updatedSessions.toSorted(compareTrainingSessions).map((session) => ({
+      ...session,
+      environment: EnvironmentNames[session.environment],
+      dates: session.dates.map((date) => ({
+        ...date,
+        before: formatDateFr(date.before),
+        after: formatDateFr(date.after),
+      })),
+    })),
+  })
+}
 
 export const sendResetPassword = async (toEmail: string, token: string, env: Environment = Environment.BC) => {
   return sendEmail(env, [toEmail], await tSubject('resetPassword'), 'reset-password', {

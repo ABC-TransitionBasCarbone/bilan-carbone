@@ -1,7 +1,12 @@
 import { prismaClient } from '@/db/client.server'
 import { createUsersWithAccount } from '@/db/user'
 import { getRecords, type Worksheet } from '@/utils/excel.utils'
+import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import {
+  sendCourseSessionsCreatedEmail,
+  type TrainingSessionUpdate,
+} from '@abc-transitionbascarbone/common/services/email/email'
 import { AccessOptions, Client } from 'basic-ftp'
 import { randomInt } from 'crypto'
 import { getJsDateFromExcel } from 'excel-date-to-js'
@@ -28,6 +33,58 @@ type CourseSession = {
 const COURSE_ENVIRONMENT_BY_WORKBOOK_VALUE: Record<string, Environment> = {
   BC: Environment.COURSE_BC,
   TILT: Environment.COURSE_TILT,
+}
+
+const sessionEmailSelect = {
+  id: true,
+  trainees: {
+    select: {
+      account: { select: { user: { select: { email: true, firstName: true, lastName: true } } } },
+    },
+  },
+  professor: { select: { user: { select: { email: true, firstName: true, lastName: true } } } },
+  courseOrganismId: true,
+  name: true,
+  environment: true,
+  startDate: true,
+  endDate: true,
+  traineeCode: true,
+  professorCode: true,
+} satisfies Prisma.CourseSessionSelect
+
+type SavedCourseSession = Prisma.CourseSessionGetPayload<{ select: typeof sessionEmailSelect }>
+
+const getSessionUpdate = (before: SavedCourseSession, after: SavedCourseSession): TrainingSessionUpdate | null => {
+  const dates: TrainingSessionUpdate['dates'] = []
+  if (before.startDate.getTime() !== after.startDate.getTime()) {
+    dates.push({ label: 'Date de début', before: before.startDate, after: after.startDate })
+  }
+  if (before.endDate.getTime() !== after.endDate.getTime()) {
+    dates.push({ label: 'Date de fin', before: before.endDate, after: after.endDate })
+  }
+  const previousTrainees = before.trainees.map(({ account }) => account.user)
+  const currentTrainees = after.trainees.map(({ account }) => account.user)
+  const previousEmails = new Set(previousTrainees.map(({ email }) => email))
+  const currentEmails = new Set(currentTrainees.map(({ email }) => email))
+  const addedTrainees = currentTrainees.filter(({ email }) => !previousEmails.has(email))
+  const removedTrainees = previousTrainees.filter(({ email }) => !currentEmails.has(email))
+  const professor =
+    before.professor?.user.email !== after.professor?.user.email
+      ? { before: before.professor?.user ?? null, after: after.professor?.user ?? null }
+      : null
+  if (!dates.length && !professor && !addedTrainees.length && !removedTrainees.length) {
+    return null
+  }
+  return {
+    name: after.name,
+    environment: after.environment,
+    startDate: after.startDate,
+    courseOrganismId: after.courseOrganismId,
+    dates,
+    professor,
+    addedTrainees,
+    removedTrainees,
+  }
 }
 
 const getFTPClient = async () => {
@@ -147,7 +204,7 @@ export const parseCourseSessionWorkbook = (data: Buffer, courseOrganismId: strin
 
   for (const session of sessions.values()) {
     const professors = professorsBySession.get(session.name) ?? new Set<string>()
-    if (professors.size !== 1) {
+    if (professors.size > 1) {
       throw new Error(`Training session ${session.name} must have exactly one professor`)
     }
     if (session.trainees.some(({ email }) => email === session.professor?.email)) {
@@ -217,8 +274,11 @@ export const importCourseSessionsFromFTP = async () => {
 
   const userAccountEntries = []
   for (const session of sessions) {
-    for (const participant of [...session.trainees, session.professor!]) {
+    for (const participant of session.trainees) {
       userAccountEntries.push({ ...participant, environment: session.environment })
+    }
+    if (session.professor) {
+      userAccountEntries.push({ ...session.professor, environment: session.environment })
     }
   }
 
@@ -287,9 +347,18 @@ export const importCourseSessionsFromFTP = async () => {
     throw new Error('Failed to generate unique session codes after 10 attempts')
   }
 
-  await prismaClient.$transaction(
+  const existingSessions = await prismaClient.courseSession.findMany({
+    where: {
+      OR: sessions.map(({ courseOrganismId, name, environment }) => ({ courseOrganismId, name, environment })),
+    },
+    select: sessionEmailSelect,
+  })
+
+  const importedSessions = await prismaClient.$transaction(
     sessions.map((session) => {
-      const professorId = getAccountId(accounts, session.professor!.email, session.environment)
+      const professorId = session.professor
+        ? getAccountId(accounts, session.professor.email, session.environment)
+        : null
       const traineeIds = session.trainees.map(({ email }) => getAccountId(accounts, email, session.environment))
 
       return prismaClient.courseSession.upsert({
@@ -300,6 +369,7 @@ export const importCourseSessionsFromFTP = async () => {
             environment: session.environment,
           },
         },
+        select: sessionEmailSelect,
         create: {
           courseOrganismId: session.courseOrganismId,
           name: session.name,
@@ -325,6 +395,50 @@ export const importCourseSessionsFromFTP = async () => {
       })
     }),
   )
+
+  const existingSessionIds = new Set(existingSessions.map(({ id }) => id))
+  const previousSessionsById = new Map(existingSessions.map((session) => [session.id, session]))
+  const updatedSessions = importedSessions.flatMap((session) => {
+    const previous = previousSessionsById.get(session.id)
+    const update = previous ? getSessionUpdate(previous, session) : null
+    return update ? [update] : []
+  })
+
+  const newSessions = importedSessions
+    .filter(({ id }) => !existingSessionIds.has(id))
+    .map((session) => ({
+      ...session,
+      trainees: session.trainees.map(({ account }) => account.user),
+      professor: session.professor?.user ?? null,
+    }))
+
+  if (newSessions.length > 0 || updatedSessions.length > 0) {
+    const organisms = await prismaClient.courseOrganism.findMany({
+      where: {
+        id: { in: [...new Set([...newSessions, ...updatedSessions].map(({ courseOrganismId }) => courseOrganismId))] },
+      },
+    })
+
+    const emailResults = await Promise.allSettled(
+      organisms.map(async (organism) => {
+        try {
+          await sendCourseSessionsCreatedEmail(
+            organism.contactEmail,
+            organism.name,
+            newSessions.filter(({ courseOrganismId }) => courseOrganismId === organism.id),
+            updatedSessions.filter(({ courseOrganismId }) => courseOrganismId === organism.id),
+          )
+        } catch (error) {
+          console.error('Error sending training sessions email:', { courseOrganismId: organism.id }, error)
+          throw error
+        }
+      }),
+    )
+    const failedEmail = emailResults.find(({ status }) => status === 'rejected')
+    if (failedEmail?.status === 'rejected') {
+      throw failedEmail.reason
+    }
+  }
 
   return { importedSessions: sessions.length, createdUsers: newUsers.count, createdAccounts: newAccounts.count }
 }

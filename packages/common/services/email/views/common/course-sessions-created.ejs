@@ -1,0 +1,71 @@
+<html>
+  <%- include('../partials/style'); %>
+  <body>
+    <div>
+      <p>Bonjour,</p>
+      <br />
+      <% if (sessions.length) { %>
+      <p>Vos nouvelles sessions de formation ont été créées. Voici leur récapitulatif :</p>
+      <% for (const session of sessions) { %>
+      <hr />
+      <h2><%= session.name %></h2>
+      <p><strong>Environnement :</strong> <%= session.environment %></p>
+      <p><strong>Dates :</strong> du <%= session.startDate %> au <%= session.endDate %></p>
+      <h3>Codes d'accès</h3>
+      <p><strong>Code stagiaires :</strong> <%= session.traineeCode %></p>
+      <p><strong>Code formateur :</strong> <%= session.professorCode %></p>
+      <% if (session.professor) { %>
+      <h3>Formateur</h3>
+      <p><%= session.professor.firstName %> <%= session.professor.lastName %> — <%= session.professor.email %></p>
+      <% } %>
+      <h3>Stagiaires intégrés (<%= session.trainees.length %>)</h3>
+      <% if (session.trainees.length) { %>
+      <ul>
+        <% for (const trainee of session.trainees) { %>
+        <li><%= trainee.firstName %> <%= trainee.lastName %> — <%= trainee.email %></li>
+        <% } %>
+      </ul>
+      <% } else { %>
+      <p>Aucun stagiaire intégré.</p>
+      <% } %>
+      <% } %>
+      <% } %>
+      <% if (updatedSessions.length) { %>
+      <hr />
+      <h2>Vos formations mises à jour</h2>
+      <% for (const session of updatedSessions) { %>
+      <hr />
+      <h3><%= session.name %></h3>
+      <p><strong>Environnement :</strong> <%= session.environment %></p>
+      <% for (const date of session.dates) { %>
+      <p><strong><%= date.label %> :</strong> avant : <%= date.before %> ; maintenant : <%= date.after %></p>
+      <% } %>
+      <% if (session.professor) { %>
+      <h4>Formateur</h4>
+      <p><strong>Avant :</strong> <% if (session.professor.before) { %><%= session.professor.before.firstName %> <%= session.professor.before.lastName %> — <%= session.professor.before.email %><% } else { %>Aucun formateur<% } %></p>
+      <p><strong>Maintenant :</strong> <% if (session.professor.after) { %><%= session.professor.after.firstName %> <%= session.professor.after.lastName %> — <%= session.professor.after.email %><% } else { %>Aucun formateur<% } %></p>
+      <% } %>
+      <% if (session.removedTrainees.length) { %>
+      <h4>Stagiaires supprimés (<%= session.removedTrainees.length %>)</h4>
+      <ul>
+        <% for (const trainee of session.removedTrainees) { %>
+        <li><%= trainee.firstName %> <%= trainee.lastName %> — <%= trainee.email %></li>
+        <% } %>
+      </ul>
+      <% } %>
+      <% if (session.addedTrainees.length) { %>
+      <h4>Stagiaires ajoutés (<%= session.addedTrainees.length %>)</h4>
+      <ul>
+        <% for (const trainee of session.addedTrainees) { %>
+        <li><%= trainee.firstName %> <%= trainee.lastName %> — <%= trainee.email %></li>
+        <% } %>
+      </ul>
+      <% } %>
+      <% } %>
+      <% } %>
+      <hr />
+      <br />
+      <%- include('./partials/signature'); %>
+    </div>
+  </body>
+</html>
