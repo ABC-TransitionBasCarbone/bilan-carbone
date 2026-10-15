@@ -129,6 +129,10 @@ Import users from the FTP server : `curl -X POST $NEXT_API_URL/cron/import-users
 
 Create training studies for users who have started or ended a formation : `curl -X POST $NEXT_API_URL/cron/assign-training-studies -H "Authorization: Bearer $CRON_SECRET"`
 
+Import training sessions from the FTP server: `curl -X POST $NEXT_API_URL/cron/import-training-sessions -H "Authorization: ******"`.
+After saving the sessions, each training organism receives a single email at its contact address summarizing only its newly created sessions, with dates, access codes, professor and trainees.
+Updating existing sessions does not send an email. Email failures fail the cron request but do not roll back the import; a subsequent import will not resend the summary for those sessions.
+
 ### Import Secten data
 
 Import Secten data by creating a new version or updating an existing version if the version name is already used :

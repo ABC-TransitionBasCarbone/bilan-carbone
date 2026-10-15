@@ -2,6 +2,7 @@ import { prismaClient } from '@/db/client.server'
 import { createUsersWithAccount } from '@/db/user'
 import { getRecords, type Worksheet } from '@/utils/excel.utils'
 import { Environment, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { sendCourseSessionsCreatedEmail } from '@abc-transitionbascarbone/common/services/email/email'
 import { AccessOptions, Client } from 'basic-ftp'
 import { randomInt } from 'crypto'
 import { getJsDateFromExcel } from 'excel-date-to-js'
@@ -287,7 +288,14 @@ export const importCourseSessionsFromFTP = async () => {
     throw new Error('Failed to generate unique session codes after 10 attempts')
   }
 
-  await prismaClient.$transaction(
+  const existingSessions = await prismaClient.courseSession.findMany({
+    where: {
+      OR: sessions.map(({ courseOrganismId, name, environment }) => ({ courseOrganismId, name, environment })),
+    },
+    select: { id: true },
+  })
+
+  const importedSessions = await prismaClient.$transaction(
     sessions.map((session) => {
       const professorId = getAccountId(accounts, session.professor!.email, session.environment)
       const traineeIds = session.trainees.map(({ email }) => getAccountId(accounts, email, session.environment))
@@ -299,6 +307,22 @@ export const importCourseSessionsFromFTP = async () => {
             name: session.name,
             environment: session.environment,
           },
+        },
+        select: {
+          id: true,
+          trainees: {
+            select: {
+              account: { select: { user: { select: { email: true, firstName: true, lastName: true } } } },
+            },
+          },
+          professor: { select: { user: { select: { email: true, firstName: true, lastName: true } } } },
+          courseOrganismId: true,
+          name: true,
+          environment: true,
+          startDate: true,
+          endDate: true,
+          traineeCode: true,
+          professorCode: true,
         },
         create: {
           courseOrganismId: session.courseOrganismId,
@@ -325,6 +349,41 @@ export const importCourseSessionsFromFTP = async () => {
       })
     }),
   )
+
+  const existingSessionIds = new Set(existingSessions.map(({ id }) => id))
+
+  const newSessions = importedSessions
+    .filter(({ id }) => !existingSessionIds.has(id))
+    .map((session) => ({
+      ...session,
+      trainees: session.trainees.map(({ account }) => account.user),
+      professor: session.professor?.user ?? null,
+    }))
+
+  if (newSessions.length > 0) {
+    const organisms = await prismaClient.courseOrganism.findMany({
+      where: { id: { in: [...new Set(newSessions.map(({ courseOrganismId }) => courseOrganismId))] } },
+    })
+
+    const emailResults = await Promise.allSettled(
+      organisms.map(async (organism) => {
+        try {
+          await sendCourseSessionsCreatedEmail(
+            organism.contactEmail,
+            organism.name,
+            newSessions.filter(({ courseOrganismId }) => courseOrganismId === organism.id),
+          )
+        } catch (error) {
+          console.error('Error sending training sessions email:', { courseOrganismId: organism.id }, error)
+          throw error
+        }
+      }),
+    )
+    const failedEmail = emailResults.find(({ status }) => status === 'rejected')
+    if (failedEmail?.status === 'rejected') {
+      throw failedEmail.reason
+    }
+  }
 
   return { importedSessions: sessions.length, createdUsers: newUsers.count, createdAccounts: newAccounts.count }
 }
