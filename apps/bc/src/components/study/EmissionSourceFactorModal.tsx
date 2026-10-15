@@ -67,7 +67,7 @@ const EmissionSourceFactorModal = ({
           defaultSubPost={defaultSubPost}
           selectEmissionFactor={selectEmissionFactor}
           studyId={studyId}
-          hasActiveLicence
+          canManageEmissionFactors={false}
         />
       ) : (
         <div>{t('loading')}</div>

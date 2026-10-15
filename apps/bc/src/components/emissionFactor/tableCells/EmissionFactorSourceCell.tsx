@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import { canEditEmissionFactor } from '@/services/permissions/emissionFactor'
 import { Import } from '@abc-transitionbascarbone/common/db/enums'
 import DeleteIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
@@ -18,7 +17,7 @@ interface Props {
   getValue: Getter<string>
   setTargetedEmission: (emissionFactorId: string) => void
   setAction: (action: 'edit' | 'delete' | undefined) => void
-  hasActiveLicence: boolean
+  canManageEmissionFactors: boolean
 }
 export const EmissionFactorSourceCell = ({
   fromModal,
@@ -27,19 +26,19 @@ export const EmissionFactorSourceCell = ({
   getValue,
   setTargetedEmission,
   setAction,
-  hasActiveLicence,
+  canManageEmissionFactors,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
 
   const importedFrom = useMemo(() => getValue<Import>(), [getValue])
   const canEdit = useMemo(
-    () => hasActiveLicence && !fromModal && isFromRightOrga,
-    [fromModal, hasActiveLicence, isFromRightOrga],
+    () => canManageEmissionFactors && !fromModal && isFromRightOrga,
+    [fromModal, canManageEmissionFactors, isFromRightOrga],
   )
 
   const editEmissionFactor = useCallback(
     async (emissionFactorId: string, action: 'edit' | 'delete') => {
-      if (!canEdit || !(await canEditEmissionFactor(emissionFactorId))) {
+      if (!canEdit) {
         return
       }
       setTargetedEmission(emissionFactorId)

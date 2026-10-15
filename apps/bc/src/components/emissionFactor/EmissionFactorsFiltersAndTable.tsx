@@ -26,7 +26,7 @@ interface Props {
   locationOptions: string[]
   defaultSubPost?: SubPost
   studyId?: string
-  hasActiveLicence: boolean
+  canManageEmissionFactors: boolean
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
 }
 
@@ -41,7 +41,7 @@ const EmissionFactorsFiltersAndTable = ({
   locationOptions,
   defaultSubPost,
   studyId,
-  hasActiveLicence,
+  canManageEmissionFactors,
   selectEmissionFactor,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
@@ -194,7 +194,7 @@ const EmissionFactorsFiltersAndTable = ({
         pagination={pagination}
         setPagination={setPagination}
         selectEmissionFactor={selectEmissionFactor}
-        hasActiveLicence={hasActiveLicence}
+        canManageEmissionFactors={canManageEmissionFactors}
         hasGHGPExport={hasGHGPExport}
       />
       <EditEmissionFactorModal

@@ -3,16 +3,7 @@ import { AccountWithUser } from '@/types/account.types'
 import type { EmissionFactor } from '@abc-transitionbascarbone/common/db'
 import { Import } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
-import * as emissionFactorModule from '../serverFunctions/emissionFactor'
-import { canEditEmissionFactor, canReadEmissionFactor } from './emissionFactor'
-
-// TODO : remove these mocks. Should not be mocked but tests fail if not
-jest.mock('./study.utils', () => ({ isAdminOnStudyOrga: jest.fn() }))
-jest.mock('../auth', () => ({ auth: jest.fn() }))
-jest.mock('../study', () => ({ hasSufficientLevel: jest.fn() }))
-
-jest.mock('../serverFunctions/emissionFactor', () => ({ isFromEmissionFactorOrganization: jest.fn() }))
-const mockIsFromEmissionFactorOrganization = emissionFactorModule.isFromEmissionFactorOrganization as jest.Mock
+import { canReadEmissionFactor } from './emissionFactor'
 
 describe('EmissionFactor permissions service', () => {
   describe('canReadEmissionFactor', () => {
@@ -41,20 +32,6 @@ describe('EmissionFactor permissions service', () => {
       } as EmissionFactor
 
       expect(canReadEmissionFactor(account, emissionFactor)).toBe(false)
-    })
-  })
-
-  describe('canEditEmissionFactor', () => {
-    it('User from same organization should be able to edit emission factor', async () => {
-      mockIsFromEmissionFactorOrganization.mockResolvedValue({ success: true, data: true })
-      const result = await canEditEmissionFactor('mocked-id')
-      expect(result).toBe(true)
-    })
-
-    it('User from other organization should not be able to edit emission factor', async () => {
-      mockIsFromEmissionFactorOrganization.mockResolvedValue({ success: true, data: false })
-      const result = await canEditEmissionFactor('mocked-id')
-      expect(result).toBe(false)
     })
   })
 })

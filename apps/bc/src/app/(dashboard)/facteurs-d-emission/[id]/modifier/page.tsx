@@ -1,10 +1,11 @@
 import withAuth from '@/components/hoc/withAuth'
 import EditEmissionFactorPage from '@/components/pages/EditEmissionFactor'
-import { getOrganizationVersionForRightsCheck } from '@/db/organization'
-import { canEditEmissionFactor } from '@/services/permissions/emissionFactor'
 import { hasAccessToEmissionFactors } from '@/services/permissions/environmentAdvanced'
-import { getDetailedEmissionFactor, getEmissionFactorLocations } from '@/services/serverFunctions/emissionFactor'
-import { hasActiveLicence } from '@/utils/organization'
+import {
+  canEditEmissionFactor,
+  getDetailedEmissionFactor,
+  getEmissionFactorLocations,
+} from '@/services/serverFunctions/emissionFactor'
 import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 import { UserSession } from 'next-auth'
 import { redirect } from 'next/navigation'
@@ -24,9 +25,7 @@ const EditEmissionFactor = async (props: Props) => {
   if (!emissionFactor || !hasAccessToEmissionFactors(props.user.environment, props.user.level)) {
     return <NotFound />
   }
-  const userOrganization = await getOrganizationVersionForRightsCheck(props.user.organizationVersionId || '')
-
-  if (!(await canEditEmissionFactor(params.id)) || !userOrganization || !hasActiveLicence(userOrganization)) {
+  if (!(await canEditEmissionFactor(params.id))) {
     redirect('/facteurs-d-emission')
   }
 

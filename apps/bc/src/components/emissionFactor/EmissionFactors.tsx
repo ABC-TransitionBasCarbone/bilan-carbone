@@ -12,7 +12,7 @@ import EmissionFactorsFiltersAndTable from './EmissionFactorsFiltersAndTable'
 interface Props {
   userOrganizationId?: string
   environment: BCEnvironment
-  hasActiveLicence: boolean
+  canManageEmissionFactors: boolean
 }
 
 type FilterInfos = {
@@ -21,7 +21,7 @@ type FilterInfos = {
   locationOptions: string[]
 }
 
-const EmissionFactors = ({ userOrganizationId, environment, hasActiveLicence }: Props) => {
+const EmissionFactors = ({ userOrganizationId, environment, canManageEmissionFactors }: Props) => {
   const t = useTranslations('emissionFactors')
 
   const [filterInfos, setFilterInfos] = useState<FilterInfos | null>(null)
@@ -96,7 +96,7 @@ const EmissionFactors = ({ userOrganizationId, environment, hasActiveLicence }: 
         importVersions={filterInfos.importVersions}
         initialImportVersions={filterInfos.initialImportVersions}
         locationOptions={filterInfos.locationOptions}
-        hasActiveLicence={hasActiveLicence}
+        canManageEmissionFactors={canManageEmissionFactors}
       />
     </Suspense>
   )

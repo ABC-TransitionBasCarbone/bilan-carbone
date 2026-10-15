@@ -16,7 +16,11 @@ import styles from './EmissionFactorButtons.module.css'
 
 const ImportEmissionFactorsModal = dynamic(() => import('./ImportEmissionFactorsModal'))
 
-const EmissionFactorButtons = () => {
+interface Props {
+  disabled: boolean
+}
+
+const EmissionFactorButtons = ({ disabled }: Props) => {
   const t = useTranslations('emissionFactors')
   const tCommon = useTranslations('common.action')
   const { showSuccessToast } = useToast()
@@ -49,6 +53,7 @@ const EmissionFactorButtons = () => {
     <>
       <Button
         data-testid="emission-factors-menu"
+        disabled={disabled}
         isLarge
         variant="outlined"
         endIcon={<ArrowDropDownIcon />}

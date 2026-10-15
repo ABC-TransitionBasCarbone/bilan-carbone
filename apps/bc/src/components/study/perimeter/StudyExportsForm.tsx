@@ -43,7 +43,7 @@ const StudyExportsForm = <T extends StudyExportsCommand>({
         name="exports"
         control={control}
         render={({ fieldState: { error } }) => (
-          <FormControl error={!!error} component="fieldset">
+          <FormControl error={!!error} component="fieldset" className="flex grow">
             <div className="flex">
               <FormLabel component="legend" className={classNames(styles.exportsLabel, 'grow')}>
                 <div className={classNames(formStyles.gapped, 'align-center')}>

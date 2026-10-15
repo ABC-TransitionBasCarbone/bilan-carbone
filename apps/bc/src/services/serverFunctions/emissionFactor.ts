@@ -162,6 +162,17 @@ export const isFromEmissionFactorOrganization = async (id: string) =>
     return emissionFactor.organizationId === session.user.organizationId
   })
 
+export const canEditEmissionFactor = async (id: string) => {
+  const session = await dbActualizedAuth()
+
+  if (!session || !(await canCreateEmissionFactor(session.user))) {
+    return false
+  }
+
+  const ownership = await isFromEmissionFactorOrganization(id)
+  return ownership.success && !!ownership.data
+}
+
 export const isEmissionFactorFromActiveOrganization = async (id: string) =>
   withServerResponse('isEmissionFactorFromActiveOrganization', async () => {
     const [session, emissionFactor] = await Promise.all([dbActualizedAuth(), getEmissionFactorById(id)])
@@ -222,27 +233,18 @@ export const createEmissionFactorCommand = async ({
 
 export const updateEmissionFactorCommand = async (command: UpdateEmissionFactorCommand) =>
   withServerResponse('updateEmissionFactorCommand', async () => {
-    if (!isFromEmissionFactorOrganization(command.id)) {
+    const ownership = await isFromEmissionFactorOrganization(command.id)
+    if (!ownership.success || !ownership.data) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const [session, local] = await Promise.all([auth(), getLocale()])
+    const [session, local] = await Promise.all([dbActualizedAuth(), getLocale()])
 
     if (!session) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!(await isEmissionFactorFromActiveOrganization(command.id))) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
-    if (
-      !canCreateEmissionFactor({
-        role: session.user.role,
-        userId: session.user.id,
-        organizationVersionId: session.user.organizationVersionId,
-      })
-    ) {
+    if (!(await canCreateEmissionFactor(session.user))) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -251,11 +253,17 @@ export const updateEmissionFactorCommand = async (command: UpdateEmissionFactorC
 
 export const deleteEmissionFactor = async (id: string) =>
   withServerResponse('deleteEmissionFactor', async () => {
-    if (!isFromEmissionFactorOrganization(id)) {
+    const ownership = await isFromEmissionFactorOrganization(id)
+    if (!ownership.success || !ownership.data) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!(await isEmissionFactorFromActiveOrganization(id))) {
+    const session = await dbActualizedAuth()
+    if (!session) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await canCreateEmissionFactor(session.user))) {
       throw new Error(NOT_AUTHORIZED)
     }
 
