@@ -4,6 +4,7 @@
     <div>
       <p>Bonjour,</p>
       <br />
+      <% if (sessions.length) { %>
       <p>Vos nouvelles sessions de formation ont été créées. Voici leur récapitulatif :</p>
       <% for (const session of sessions) { %>
       <hr />
@@ -26,6 +27,40 @@
       </ul>
       <% } else { %>
       <p>Aucun stagiaire intégré.</p>
+      <% } %>
+      <% } %>
+      <% } %>
+      <% if (updatedSessions.length) { %>
+      <hr />
+      <h2>Vos formations mises à jour</h2>
+      <% for (const session of updatedSessions) { %>
+      <hr />
+      <h3><%= session.name %></h3>
+      <p><strong>Environnement :</strong> <%= session.environment %></p>
+      <% for (const date of session.dates) { %>
+      <p><strong><%= date.label %> :</strong> avant : <%= date.before %> ; maintenant : <%= date.after %></p>
+      <% } %>
+      <% if (session.professor) { %>
+      <h4>Formateur</h4>
+      <p><strong>Avant :</strong> <% if (session.professor.before) { %><%= session.professor.before.firstName %> <%= session.professor.before.lastName %> — <%= session.professor.before.email %><% } else { %>Aucun formateur<% } %></p>
+      <p><strong>Maintenant :</strong> <% if (session.professor.after) { %><%= session.professor.after.firstName %> <%= session.professor.after.lastName %> — <%= session.professor.after.email %><% } else { %>Aucun formateur<% } %></p>
+      <% } %>
+      <% if (session.removedTrainees.length) { %>
+      <h4>Stagiaires supprimés (<%= session.removedTrainees.length %>)</h4>
+      <ul>
+        <% for (const trainee of session.removedTrainees) { %>
+        <li><%= trainee.firstName %> <%= trainee.lastName %> — <%= trainee.email %></li>
+        <% } %>
+      </ul>
+      <% } %>
+      <% if (session.addedTrainees.length) { %>
+      <h4>Stagiaires ajoutés (<%= session.addedTrainees.length %>)</h4>
+      <ul>
+        <% for (const trainee of session.addedTrainees) { %>
+        <li><%= trainee.firstName %> <%= trainee.lastName %> — <%= trainee.email %></li>
+        <% } %>
+      </ul>
+      <% } %>
       <% } %>
       <% } %>
       <hr />
