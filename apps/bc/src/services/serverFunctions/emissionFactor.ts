@@ -222,27 +222,18 @@ export const createEmissionFactorCommand = async ({
 
 export const updateEmissionFactorCommand = async (command: UpdateEmissionFactorCommand) =>
   withServerResponse('updateEmissionFactorCommand', async () => {
-    if (!isFromEmissionFactorOrganization(command.id)) {
+    const ownership = await isFromEmissionFactorOrganization(command.id)
+    if (!ownership.success || !ownership.data) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const [session, local] = await Promise.all([auth(), getLocale()])
+    const [session, local] = await Promise.all([dbActualizedAuth(), getLocale()])
 
     if (!session) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!(await isEmissionFactorFromActiveOrganization(command.id))) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
-    if (
-      !canCreateEmissionFactor({
-        role: session.user.role,
-        userId: session.user.id,
-        organizationVersionId: session.user.organizationVersionId,
-      })
-    ) {
+    if (!(await canCreateEmissionFactor(session.user))) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -251,11 +242,17 @@ export const updateEmissionFactorCommand = async (command: UpdateEmissionFactorC
 
 export const deleteEmissionFactor = async (id: string) =>
   withServerResponse('deleteEmissionFactor', async () => {
-    if (!isFromEmissionFactorOrganization(id)) {
+    const ownership = await isFromEmissionFactorOrganization(id)
+    if (!ownership.success || !ownership.data) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!(await isEmissionFactorFromActiveOrganization(id))) {
+    const session = await dbActualizedAuth()
+    if (!session) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await canCreateEmissionFactor(session.user))) {
       throw new Error(NOT_AUTHORIZED)
     }
 

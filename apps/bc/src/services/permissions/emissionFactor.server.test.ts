@@ -84,4 +84,13 @@ describe('canCreateEmissionFactor', () => {
 
     await expect(canCreateEmissionFactor(account)).resolves.toBe(false)
   })
+
+  it.each(Object.values(Level))('denies members with training level %s', async (level) => {
+    const account = getMockedAccount({ role: Role.DEFAULT })
+    mockGetUserById.mockResolvedValue({ level })
+    mockGetOrganizationVersionForRightsCheck.mockResolvedValue({ id: 'organization-version-id' })
+    mockHasActiveLicence.mockReturnValue(true)
+
+    await expect(canCreateEmissionFactor(account)).resolves.toBe(false)
+  })
 })

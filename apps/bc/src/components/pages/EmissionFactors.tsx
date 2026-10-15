@@ -1,6 +1,5 @@
-import { getOrganizationVersionForRightsCheck } from '@/db/organization'
+import { canCreateEmissionFactor } from '@/services/permissions/emissionFactor.server'
 import { BCEnvironment } from '@/types/environment'
-import { hasActiveLicence } from '@/utils/organization'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import { getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
@@ -18,8 +17,7 @@ const EmissionFactorsPage = async ({ userOrganizationId, environment, user }: Pr
   const tNav = await getTranslations('nav')
   const t = await getTranslations('emissionFactors')
 
-  const userOrganization = await getOrganizationVersionForRightsCheck(user.organizationVersionId || '')
-  const activeLicence = !!userOrganization && hasActiveLicence(userOrganization)
+  const canManageEmissionFactors = !!(await canCreateEmissionFactor(user))
 
   return (
     <>
@@ -27,13 +25,13 @@ const EmissionFactorsPage = async ({ userOrganizationId, environment, user }: Pr
       <Block
         title={t('title')}
         as="h1"
-        rightComponent={userOrganizationId && activeLicence ? <EmissionFactorButtons /> : undefined}
+        rightComponent={userOrganizationId ? <EmissionFactorButtons disabled={!canManageEmissionFactors} /> : undefined}
       >
         <Suspense fallback={t('loading')}>
           <EmissionFactors
             userOrganizationId={userOrganizationId}
             environment={environment}
-            hasActiveLicence={activeLicence}
+            canManageEmissionFactors={canManageEmissionFactors}
           />
         </Suspense>
       </Block>

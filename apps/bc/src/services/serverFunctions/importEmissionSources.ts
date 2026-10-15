@@ -41,7 +41,7 @@ import { Post } from '@abc-transitionbascarbone/common/utils/charts'
 import { buildCsv } from '@abc-transitionbascarbone/common/utils/csv'
 import xlsx from 'node-xlsx'
 import { canBeValidated, getCaracterisationsBySubPost, getEmissionSourceEmission } from '../emissionSource'
-import { getAuthenticatedAccount } from '../permissions/account.permissions'
+import { getAuthenticatedAccountWithOrga } from '../permissions/account.permissions'
 import { hasStudyBasicRights } from '../permissions/emissionSource'
 import { canReadStudy } from '../permissions/study'
 import { getStudyParentOrganizationId } from '../study.server'
@@ -99,7 +99,7 @@ export async function validateEmissionSourcesFromFile(
   file: File,
   studyId: string,
 ): Promise<ValidateEmissionSourcesResult> {
-  const account = await getAuthenticatedAccount()
+  const account = await getAuthenticatedAccountWithOrga()
 
   const study = await getStudyOrThrow(studyId, account)
   if (!(await hasStudyBasicRights(account, study))) {
@@ -171,7 +171,7 @@ export async function resolveEmissionSourcesFromFile(
   studyId: string,
   choices: FEChoices,
 ): Promise<ResolveEmissionSourcesResult> {
-  const account = await getAuthenticatedAccount()
+  const account = await getAuthenticatedAccountWithOrga()
 
   const study = await getStudyOrThrow(studyId, account)
   if (!(await hasStudyBasicRights(account, study))) {
@@ -229,7 +229,7 @@ export async function importEmissionSourcesFromFile(
   studyId: string,
   choices: FEChoices,
 ): Promise<ImportResult> {
-  const account = await getAuthenticatedAccount()
+  const account = await getAuthenticatedAccountWithOrga()
 
   const study = await getStudyOrThrow(studyId, account)
   if (!(await hasStudyBasicRights(account, study))) {
@@ -458,7 +458,7 @@ export async function getImportEmissionSourcesTemplate(
   post?: Post,
   siteId?: string,
 ): Promise<ArrayBuffer> {
-  const account = await getAuthenticatedAccount()
+  const account = await getAuthenticatedAccountWithOrga()
   const study = await getStudyOrThrow(studyId, account)
   if (!(await hasStudyBasicRights(account, study))) {
     throw new Error(NOT_AUTHORIZED)
@@ -701,7 +701,7 @@ async function buildAllEmissionSourcesRows(
 
 export const exportEmissionSourcesToCSV = async (studyId: string, post?: Post) =>
   withServerResponse('exportEmissionSourcesToCSV', async () => {
-    const account = await getAuthenticatedAccount()
+    const account = await getAuthenticatedAccountWithOrga()
     const study = await getStudyOrThrow(studyId, account)
     if (!(await canReadStudy(accountWithUserToUserSession(account), studyId))) {
       throw new Error(NOT_AUTHORIZED)
@@ -714,7 +714,7 @@ export const exportEmissionSourcesToCSV = async (studyId: string, post?: Post) =
 
 export const exportEmissionSourcesToExcel = async (studyId: string, post?: Post) =>
   withServerResponse('exportEmissionSourcesToExcel', async () => {
-    const account = await getAuthenticatedAccount()
+    const account = await getAuthenticatedAccountWithOrga()
     const study = await getStudyOrThrow(studyId, account)
     if (!(await canReadStudy(accountWithUserToUserSession(account), studyId))) {
       throw new Error(NOT_AUTHORIZED)

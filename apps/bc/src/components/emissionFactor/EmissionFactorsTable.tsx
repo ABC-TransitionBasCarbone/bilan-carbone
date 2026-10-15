@@ -47,7 +47,7 @@ interface Props {
   setTargetedEmission: (emissionFactorId: string) => void
   setAction: (action: 'edit' | 'delete' | undefined) => void
   selectEmissionFactor?: (emissionFactor: EmissionFactorWithMetaData) => void
-  hasActiveLicence: boolean
+  canManageEmissionFactors: boolean
   hasGHGPExport: boolean
 }
 export const EmissionFactorsTable = ({
@@ -60,7 +60,7 @@ export const EmissionFactorsTable = ({
   setTargetedEmission,
   setAction,
   selectEmissionFactor,
-  hasActiveLicence,
+  canManageEmissionFactors,
   hasGHGPExport,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
@@ -122,7 +122,7 @@ export const EmissionFactorsTable = ({
             getValue={getValue}
             setTargetedEmission={setTargetedEmission}
             setAction={setAction}
-            hasActiveLicence={hasActiveLicence}
+            canManageEmissionFactors={canManageEmissionFactors}
           />
         ),
       },
@@ -158,7 +158,7 @@ export const EmissionFactorsTable = ({
     userOrganizationId,
     setTargetedEmission,
     setAction,
-    hasActiveLicence,
+    canManageEmissionFactors,
     hasGHGPExport,
   ])
 

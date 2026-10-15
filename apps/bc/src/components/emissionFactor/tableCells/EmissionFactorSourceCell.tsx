@@ -18,7 +18,7 @@ interface Props {
   getValue: Getter<string>
   setTargetedEmission: (emissionFactorId: string) => void
   setAction: (action: 'edit' | 'delete' | undefined) => void
-  hasActiveLicence: boolean
+  canManageEmissionFactors: boolean
 }
 export const EmissionFactorSourceCell = ({
   fromModal,
@@ -27,14 +27,14 @@ export const EmissionFactorSourceCell = ({
   getValue,
   setTargetedEmission,
   setAction,
-  hasActiveLicence,
+  canManageEmissionFactors,
 }: Props) => {
   const t = useTranslations('emissionFactors.table')
 
   const importedFrom = useMemo(() => getValue<Import>(), [getValue])
   const canEdit = useMemo(
-    () => hasActiveLicence && !fromModal && isFromRightOrga,
-    [fromModal, hasActiveLicence, isFromRightOrga],
+    () => canManageEmissionFactors && !fromModal && isFromRightOrga,
+    [fromModal, canManageEmissionFactors, isFromRightOrga],
   )
 
   const editEmissionFactor = useCallback(

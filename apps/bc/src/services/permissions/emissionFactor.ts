@@ -1,7 +1,9 @@
 import type { AccountWithUser } from '@/types/account.types'
 import type { EmissionFactor } from '@abc-transitionbascarbone/common/db'
 import { Import } from '@abc-transitionbascarbone/common/db/enums'
+import { dbActualizedAuth } from '../auth'
 import { isFromEmissionFactorOrganization } from '../serverFunctions/emissionFactor'
+import { canCreateEmissionFactor } from './emissionFactor.server'
 
 export const canReadEmissionFactor = (
   account: AccountWithUser,
@@ -19,6 +21,17 @@ export const canReadEmissionFactor = (
 }
 
 export const canEditEmissionFactor = async (id: string) => {
+  const auth = await dbActualizedAuth()
+
+  if (!auth) {
+    return false
+  }
+  const canCreateEF = canCreateEmissionFactor(auth?.user)
+
+  if (!canCreateEF) {
+    return false
+  }
+
   const emissionFactorRequest = await isFromEmissionFactorOrganization(id)
   return emissionFactorRequest.success && !!emissionFactorRequest.data
 }

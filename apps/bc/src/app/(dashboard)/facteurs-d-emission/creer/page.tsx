@@ -1,9 +1,8 @@
 import withAuth from '@/components/hoc/withAuth'
 import NewEmissionFactorPage from '@/components/pages/NewEmissionFactor'
-import { getOrganizationVersionForRightsCheck } from '@/db/organization'
+import { canCreateEmissionFactor } from '@/services/permissions/emissionFactor.server'
 import { hasAccessToEmissionFactors } from '@/services/permissions/environmentAdvanced'
 import { getEmissionFactorLocations } from '@/services/serverFunctions/emissionFactor'
-import { hasActiveLicence } from '@/utils/organization'
 import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 import { UserSession } from 'next-auth'
 
@@ -16,8 +15,7 @@ const NewEmissionFactor = async ({ user }: Props) => {
     return <NotFound />
   }
 
-  const userOrganization = await getOrganizationVersionForRightsCheck(user.organizationVersionId || '')
-  if (!userOrganization || !hasActiveLicence(userOrganization)) {
+  if (!(await canCreateEmissionFactor(user))) {
     return <NotFound />
   }
 
