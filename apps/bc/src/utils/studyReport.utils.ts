@@ -165,6 +165,7 @@ export const mapStudyForReport = async (
   return {
     ...study,
     siret: study.organizationVersion.organization.siret,
+    siren: study.organizationVersion.organization.siret?.slice(0, 9) ?? '',
     level: tLevel(study.level),
     isInitialOrStandard: study.level === Level.Initial || study.level === Level.Standard,
     isStandardOrAdvanced: study.level === Level.Standard || study.level === Level.Advanced,
