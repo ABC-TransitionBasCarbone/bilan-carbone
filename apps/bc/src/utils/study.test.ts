@@ -6,6 +6,7 @@ import * as UserUtilsModule from '@/utils/user'
 import { EmissionFactorBase, Environment, Level, Role } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import {
+  getAllowedLevels,
   getBaseFilteredEmissionSources,
   getDuplicableEnvironments,
   getStudyDefaultLandingPath,
@@ -52,6 +53,25 @@ const emissionSources = [
 const userMock = getMockedAuthUser()
 
 describe('StudyUtils functions', () => {
+  describe('getAllowedLevels', () => {
+    it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
+      'allows every level without a training level in %s',
+      (environment) => {
+        expect(getAllowedLevels(null, environment)).toEqual(Object.values(Level))
+      },
+    )
+
+    it.each(Object.values(Environment).filter((environment) => !environment.startsWith('COURSE_')))(
+      'requires a training level in %s',
+      (environment) => {
+        expect(getAllowedLevels(null, environment)).toEqual([])
+        expect(getAllowedLevels(Level.Initial, environment)).toEqual([Level.Initial])
+        expect(getAllowedLevels(Level.Standard, environment)).toEqual([Level.Initial, Level.Standard])
+        expect(getAllowedLevels(Level.Advanced, environment)).toEqual([Level.Initial, Level.Standard, Level.Advanced])
+      },
+    )
+  })
+
   describe('getDuplicableEnvironments', () => {
     test('Should return Tilt and BC for BC environment', () => {
       const res = getDuplicableEnvironments(Environment.BC)
