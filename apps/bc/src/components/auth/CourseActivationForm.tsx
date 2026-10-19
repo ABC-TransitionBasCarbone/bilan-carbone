@@ -1,6 +1,6 @@
 'use client'
 
-import { activateEmail } from '@/services/serverFunctions/user'
+import { activateEmail, activateEmailForCourse } from '@/services/serverFunctions/user'
 import { EmailCommandValidation } from '@abc-transitionbascarbone/common/components/auth/user.command'
 import Form from '@abc-transitionbascarbone/common/components/base/Form'
 import LoadingButton from '@abc-transitionbascarbone/common/components/base/LoadingButton'
@@ -8,6 +8,7 @@ import { FormTextField } from '@abc-transitionbascarbone/common/components/form/
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import { getEnvVarClient } from '@abc-transitionbascarbone/common/utils/environmentClient'
+import { CourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Checkbox, FormControl, FormControlLabel, FormHelperText } from '@mui/material'
 import classNames from 'classnames'
@@ -20,10 +21,10 @@ import { z } from 'zod'
 import authStyles from './Auth.module.css'
 
 interface Props {
-  environment?: Environment
+  environment?: CourseEnvironment
 }
 
-const CourseActivationForm = ({ environment = Environment.BC }: Props) => {
+const CourseActivationForm = ({ environment = Environment.COURSE_BC }: Props) => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', environment)
   const t = useTranslations('activation')
   const [submitting, setSubmitting] = useState(false)
@@ -57,6 +58,14 @@ const CourseActivationForm = ({ environment = Environment.BC }: Props) => {
   const onSubmit = async (values: z.output<typeof validation>) => {
     setMessage('')
     setSubmitting(true)
+
+    const courseValidation = await activateEmailForCourse(values.email, values.sessionCode, environment)
+    if (!courseValidation.success) {
+      setSubmitting(false)
+      setSuccess(false)
+      setMessage(courseValidation.errorMessage)
+      return
+    }
 
     const activation = await activateEmail(values.email, environment)
 
