@@ -1,6 +1,5 @@
 # Import et activation des utilisateurs
 
-
 ```mermaid
 flowchart TD
     subgraph Import["1. Import FTP"]
