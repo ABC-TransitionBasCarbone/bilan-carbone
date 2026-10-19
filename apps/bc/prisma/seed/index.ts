@@ -167,24 +167,6 @@ const users = async () => {
     },
   })
 
-  await prisma.user.create({
-    data: {
-      email: 'pending@yopmail.com',
-      firstName: faker.person.firstName(),
-      lastName: faker.person.lastName(),
-      password: null,
-      level: Level.Initial,
-      accounts: {
-        create: {
-          organizationVersionId: unOnboardedOrganizationVersion.id,
-          role: Role.COLLABORATOR,
-          environment: Environment.BC,
-          status: UserStatus.PENDING_REQUEST,
-        },
-      },
-    },
-  })
-
   const clientLessOrganization = await prisma.organization.create({
     data: {
       name: faker.company.name(),
@@ -324,6 +306,24 @@ const users = async () => {
 
   const crOrganizationVersions = organizationVersions.filter((organization) => organization.isCR)
   const regularOrganizationVersions = organizationVersions.filter((organization) => !organization.isCR)
+
+  await prisma.user.create({
+    data: {
+      email: 'pending@yopmail.com',
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      password: null,
+      level: Level.Initial,
+      accounts: {
+        create: {
+          organizationVersionId: regularOrganizationVersions[0].id,
+          role: Role.COLLABORATOR,
+          environment: Environment.BC,
+          status: UserStatus.PENDING_REQUEST,
+        },
+      },
+    },
+  })
 
   const regularTiltOrganizationVersions = organizationVersionsTILT.filter((organization) => !organization.isCR)
   const crTiltOrganizationVersions = organizationVersionsTILT.filter((organization) => organization.isCR)
