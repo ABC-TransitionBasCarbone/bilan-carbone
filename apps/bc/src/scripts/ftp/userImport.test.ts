@@ -88,7 +88,7 @@ describe('processUsers', () => {
   })
 
   it.each([Environment.BC, Environment.TILT])(
-    'updates personal data for validated %s accounts without changing their organization, role or status',
+    'updates personal data for validated %s accounts without changing their organization, role, status or formation details',
     async (environment) => {
       jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue({
         id: 'account-id',
@@ -114,9 +114,6 @@ describe('processUsers', () => {
             siret: '12345678901234',
             environment,
             source: UserSource.TUNISIE,
-            formationName: 'Bilan Carbone® Maitrise',
-            formationStartDate: '2026-01-15',
-            formationEndDate: '2026-01-16',
           },
         ],
         new Date('2026-01-15T12:00:00.000Z'),
@@ -126,14 +123,14 @@ describe('processUsers', () => {
       expect(accountData).toEqual(
         expect.objectContaining({
           environment,
-          formationName: 'Bilan Carbone® Maitrise',
-          formationStartDate: '2026-01-15',
-          formationEndDate: '2026-01-16',
         }),
       )
       expect(accountData).not.toHaveProperty('role')
       expect(accountData).not.toHaveProperty('status')
       expect(accountData).not.toHaveProperty('organizationVersion')
+      expect(accountData).not.toHaveProperty('formationName')
+      expect(accountData).not.toHaveProperty('formationStartDate')
+      expect(accountData).not.toHaveProperty('formationEndDate')
       expect(userData).toEqual(
         expect.objectContaining({
           firstName: 'Updated',
@@ -290,7 +287,7 @@ describe('processUsers', () => {
   )
 
   it.each([Environment.BC, Environment.TILT])(
-    'links a new %s account to an active organization without changing its data',
+    'does not link a new %s account to an organization with active accounts',
     async (environment) => {
       jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue(null)
       jest.mocked(getRawOrganizationBySiret).mockResolvedValue({ id: 'target-organization-id' } as never)
@@ -308,13 +305,13 @@ describe('processUsers', () => {
       const importedUser = jest.mocked(createUsersWithAccount).mock.calls[0][0][0]
       expect(importedUser.account.role).toBe(Role.DEFAULT)
       expect(importedUser.account.status).toBe(UserStatus.IMPORTED)
-      expect(importedUser.account.organizationVersion).toEqual({ connect: { id: 'target-version-id' } })
+      expect(importedUser.account).not.toHaveProperty('organizationVersion')
       expect(createOrUpdateOrganization).not.toHaveBeenCalled()
     },
   )
 
   it.each([Environment.BC, Environment.TILT])(
-    'links an imported %s account to an active organization without changing its data or account access',
+    'does not link an imported %s account to an organization with active accounts',
     async (environment) => {
       jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue({
         id: 'account-id',
@@ -334,7 +331,7 @@ describe('processUsers', () => {
       )
 
       const [, accountData] = jest.mocked(updateAccount).mock.calls[0]
-      expect(accountData.organizationVersion).toEqual({ connect: { id: 'target-version-id' } })
+      expect(accountData).not.toHaveProperty('organizationVersion')
       expect(accountData).not.toHaveProperty('role')
       expect(accountData).not.toHaveProperty('status')
       expect(createOrUpdateOrganization).not.toHaveBeenCalled()
@@ -403,7 +400,6 @@ describe('processUsers', () => {
             status: UserStatus.IMPORTED,
             environment: Environment.BC,
             importedFileDate,
-            formationName: 'Bilan Carbone® Maitrise',
           }),
         }),
         expect.objectContaining({
@@ -416,11 +412,16 @@ describe('processUsers', () => {
             status: UserStatus.IMPORTED,
             environment: Environment.BC,
             importedFileDate,
-            formationName: 'Bilan Carbone® Découverte',
           }),
         }),
       ]),
     )
+    const importedAccounts = jest.mocked(createUsersWithAccount).mock.calls[0][0].map((user) => user.account)
+    importedAccounts.forEach((account) => {
+      expect(account).not.toHaveProperty('formationName')
+      expect(account).not.toHaveProperty('formationStartDate')
+      expect(account).not.toHaveProperty('formationEndDate')
+    })
 
     expect(consoleLogSpy).toHaveBeenCalledWith('2 users created')
     expect(consoleLogSpy).toHaveBeenCalledWith('2 accounts created')

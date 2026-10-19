@@ -35,19 +35,22 @@ describe('updateUserPasswordForEmail', () => {
   })
 
   it.each([
-    [Level.Initial, Role.ADMIN],
-    [Level.Advanced, Role.ADMIN],
-    [null, Role.GESTIONNAIRE],
-  ])('gives the first TILT member with level %s the role %s', async (level, role) => {
+    [Environment.BC, Level.Initial, Role.ADMIN],
+    [Environment.BC, Level.Advanced, Role.ADMIN],
+    [Environment.BC, null, Role.GESTIONNAIRE],
+    [Environment.TILT, Level.Initial, Role.ADMIN],
+    [Environment.TILT, Level.Advanced, Role.ADMIN],
+    [Environment.TILT, null, Role.GESTIONNAIRE],
+  ])('gives the first %s member with level %s the role %s', async (environment, level, role) => {
     mockTransaction.user.findUnique.mockResolvedValue({ id: 'user-id', level })
 
-    await updateUserPasswordForEmail('user@example.com', 'password', Environment.TILT)
+    await updateUserPasswordForEmail('user@example.com', 'password', environment)
 
     expect(mockTransaction.account.count).toHaveBeenCalledWith({
       where: { organizationVersionId: 'organization-version-id', status: UserStatus.ACTIVE },
     })
     expect(mockTransaction.account.update).toHaveBeenCalledWith({
-      where: { userId_environment: { userId: 'user-id', environment: Environment.TILT } },
+      where: { userId_environment: { userId: 'user-id', environment } },
       data: { activationRequestedAt: null, status: UserStatus.ACTIVE, role },
     })
     expect(mockTransaction.user.update).toHaveBeenCalledWith({
@@ -85,7 +88,6 @@ describe('updateUserPasswordForEmail', () => {
   it.each([
     [Environment.TILT, UserStatus.ACTIVE, 'organization-version-id'],
     [Environment.TILT, UserStatus.VALIDATED, null],
-    [Environment.BC, UserStatus.VALIDATED, 'organization-version-id'],
     [Environment.CUT, UserStatus.VALIDATED, 'organization-version-id'],
     [Environment.CLICKSON, UserStatus.VALIDATED, 'organization-version-id'],
     [Environment.MIP, UserStatus.VALIDATED, 'organization-version-id'],

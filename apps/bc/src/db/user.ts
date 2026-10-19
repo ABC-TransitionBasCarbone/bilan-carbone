@@ -100,8 +100,8 @@ export const updateUserPasswordForEmail = async (email: string, password: string
         throw new Error(`Account with email ${email} for environment ${env} not found or has a wrong status`)
       }
 
-      const isFirstTiltActivation =
-        env === Environment.TILT &&
+      const isFirstBCOrTiltActivation =
+        (env === Environment.BC || env === Environment.TILT) &&
         account.status === UserStatus.VALIDATED &&
         account.role === Role.DEFAULT &&
         account.organizationVersionId &&
@@ -134,7 +134,7 @@ export const updateUserPasswordForEmail = async (email: string, password: string
           data: {
             activationRequestedAt: null,
             status: UserStatus.ACTIVE,
-            ...(isFirstTiltActivation && { role: user.level ? Role.ADMIN : Role.GESTIONNAIRE }),
+            ...(isFirstBCOrTiltActivation && { role: user.level ? Role.ADMIN : Role.GESTIONNAIRE }),
           },
         }),
       ])

@@ -11,12 +11,8 @@ import { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment, Level, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 
 type Training = {
-  trainingTypeId: number
-  trainingOrganisation: string
   trainingName: string
-  sessionStartDate: string
-  sessionEndDate: string
-  expirationDate: string
+  sessionStartDate?: string
 }
 
 type UserImportRecord = {
@@ -34,9 +30,6 @@ type UserImportRecord = {
   trainings?: Training[] | string
   source?: string
   environment?: string
-  formationName?: string
-  formationStartDate?: string
-  formationEndDate?: string
 }
 
 type RawFTPRecord = Record<string, unknown>
@@ -69,9 +62,6 @@ const normalizeRecord = (raw: RawFTPRecord): UserImportRecord => {
     trainings: raw.trainings as Training[] | string | undefined,
     source: getString('source', 'User_Source'),
     environment: getString('environment', 'Environment'),
-    formationName: getString('formationName', 'Formation_Name'),
-    formationStartDate: getString('formationStartDate', 'Formation_Start_Date'),
-    formationEndDate: getString('formationEndDate', 'Formation_End_Date'),
   }
 }
 
@@ -100,27 +90,6 @@ const parseTrainings = (rawTrainings: UserImportRecord['trainings']): Training[]
     return JSON.parse(rawTrainings)
   } catch {
     return []
-  }
-}
-
-const getTrainingData = (trainings: Training[]) => {
-  if (trainings.length === 0) {
-    return undefined
-  }
-
-  const highestLevelTraining = trainings.reduce((previous, current) => {
-    const previousLevel = getTrainingLevel([previous])
-    const currentLevel = getTrainingLevel([current])
-    return currentLevel && (!previousLevel || currentLevel > previousLevel) ? current : previous
-  }, trainings[0])
-
-  return {
-    level: getTrainingLevel([highestLevelTraining]),
-    formationName: highestLevelTraining.trainingName,
-    formationStartDate: highestLevelTraining.sessionStartDate
-      ? new Date(highestLevelTraining.sessionStartDate)
-      : undefined,
-    formationEndDate: highestLevelTraining.sessionEndDate ? new Date(highestLevelTraining.sessionEndDate) : undefined,
   }
 }
 
@@ -178,7 +147,7 @@ const syncUserOrganization = async (input: OrganizationSyncInput): Promise<Organ
     existingOrganizationVersion &&
     ((await organizationVersionActiveAccountsCount(existingOrganizationVersion.id)) ?? 0) > 0
   ) {
-    return { organizationVersion: { connect: { id: existingOrganizationVersion.id } } }
+    return {}
   }
 
   return updateUserOrganization(input, organization)
@@ -195,9 +164,6 @@ const updateExistingAccount = async (
     {
       ...(user.account.organizationVersion && { organizationVersion: user.account.organizationVersion }),
       environment,
-      ...(user.account.formationName !== undefined && { formationName: user.account.formationName }),
-      ...(user.account.formationStartDate !== undefined && { formationStartDate: user.account.formationStartDate }),
-      ...(user.account.formationEndDate !== undefined && { formationEndDate: user.account.formationEndDate }),
     },
     {
       ...dbAccount.user,
@@ -219,22 +185,18 @@ const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
 
   const dbAccount = await getAccountByEmailAndEnvironment(email, environment)
 
-  const trainingData = getTrainingData(trainings)
   const sessionLevel = value.sessionCode
     ? value.sessionCode.includes('BCM2') || value.sessionCode.includes('BCM3')
       ? Level.Advanced
       : Level.Initial
     : undefined
-  const level = trainingData?.level ?? sessionLevel
+  const level = getTrainingLevel(trainings) ?? sessionLevel
 
   const account: Prisma.AccountCreateInput = {
     role: Role.DEFAULT,
     status: UserStatus.IMPORTED,
     importedFileDate,
     environment,
-    formationName: trainingData ? trainingData.formationName : value.formationName,
-    formationStartDate: trainingData ? trainingData.formationStartDate : value.formationStartDate,
-    formationEndDate: trainingData ? trainingData.formationEndDate : value.formationEndDate,
     user: {
       create: undefined,
       connectOrCreate: undefined,
