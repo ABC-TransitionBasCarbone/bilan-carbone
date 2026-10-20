@@ -160,7 +160,7 @@ const ExportCheckboxes = ({
         <div className="flex grow">
           <div className={styles.sectionTitle}>{t('title')}</div>
           {showControl && (
-            <FormLabel component="legend" className={classNames(styles.sectionTitle, 'grow justify-end align-end')}>
+            <FormLabel component="legend" className={classNames(styles.sectionTitle, 'grow pl1')}>
               <div className={classNames(formStyles.gapped, 'align-center')}>
                 <span className="inputLabel bold">{tNew('control')}</span>
                 <div className={formStyles.icon}>
