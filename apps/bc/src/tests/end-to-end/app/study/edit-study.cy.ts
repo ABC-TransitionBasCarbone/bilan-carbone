@@ -24,14 +24,12 @@ describe('Edit study', () => {
     cy.getByTestId('organization-sites-etp')
       .eq(1)
       .within(() => {
-        cy.get('input').clear()
-        cy.get('input').type('1')
+        cy.get('input').type('{selectall}1').should('have.value', '1')
       })
     cy.getByTestId('organization-sites-ca')
       .eq(1)
       .within(() => {
-        cy.get('input').clear()
-        cy.get('input').type('1')
+        cy.get('input').type('{selectall}1').should('have.value', '1')
       })
 
     cy.getByTestId('new-study-organization-button').should('not.be.disabled')
