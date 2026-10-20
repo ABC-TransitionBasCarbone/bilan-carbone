@@ -17,14 +17,22 @@ jest.mock('basic-ftp', () => ({
   Client: jest.fn(() => ({ access: jest.fn(), downloadTo: jest.fn(), close: jest.fn() })),
 }))
 
-jest.mock('@/db/client.server', () => ({
-  prismaClient: {
-    courseOrganism: { findMany: jest.fn() },
-    account: { findMany: jest.fn(), update: jest.fn() },
-    courseSession: { findMany: jest.fn(), upsert: jest.fn() },
-    $transaction: jest.fn((operations: Promise<unknown>[]) => Promise.all(operations)),
-  },
-}))
+jest.mock('@/db/client.server', () => {
+  const courseOrganism = { findMany: jest.fn() }
+  const account = { findMany: jest.fn(), update: jest.fn() }
+  const courseSession = { findMany: jest.fn(), upsert: jest.fn() }
+  const transaction = { account, courseSession }
+  return {
+    prismaClient: {
+      courseOrganism,
+      account,
+      courseSession,
+      $transaction: jest.fn((operation) =>
+        Array.isArray(operation) ? Promise.all(operation) : operation(transaction),
+      ),
+    },
+  }
+})
 
 jest.mock('@/db/user', () => ({ createUsersWithAccount: jest.fn() }))
 
@@ -480,11 +488,11 @@ describe('getCourseSessionsFromFTP', () => {
 
   it('does not send an email if saving the sessions fails', async () => {
     const error = new Error('Database unavailable')
-    jest.mocked(prismaClient.$transaction).mockResolvedValueOnce([]).mockRejectedValueOnce(error)
+    mockUpsertCourseSession.mockRejectedValueOnce(error)
 
     await expect(importCourseSessionsFromFTP()).rejects.toThrow(error)
 
-    expect(mockUpsertCourseSession).toHaveBeenCalledTimes(2)
+    expect(mockUpsertCourseSession).toHaveBeenCalledTimes(1)
     expect(mockSendCourseSessionsCreatedEmail).not.toHaveBeenCalled()
   })
 
