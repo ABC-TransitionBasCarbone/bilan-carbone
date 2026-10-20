@@ -20,7 +20,14 @@ import {
   getRawOrganizationBySiteCNC,
 } from '@/db/organization'
 import { addSite } from '@/db/site'
-import { addUser, getUserByEmail, organizationVersionActiveAccountsCount, updateAccount, validateUser } from '@/db/user'
+import {
+  addUser,
+  getUserByEmail,
+  organizationVersionActiveAccountsCount,
+  updateAccount,
+  updateUserPasswordForEmail,
+  validateUser,
+} from '@/db/user'
 import {
   NOT_ASSOCIATION_SIRET,
   ORGANIZATION_ACTIVATION_IN_PROGRESS,
@@ -111,6 +118,7 @@ const actualActivateEmail = jest.requireActual('./user').activateEmail as typeof
 const mockFindCourseSession = jest.mocked(prismaClient.courseSession.findFirst)
 const actualActivateEmailForCourse = jest.requireActual('./user')
   .activateEmailForCourse as typeof activateEmailForCourse
+const mockUpdateUserPasswordForEmail = updateUserPasswordForEmail as jest.Mock
 
 const testEmail = 'test@example.com'
 const testSiret = '12345678901234'
@@ -198,7 +206,12 @@ describe('signUpWithSiretOrCNC', () => {
     })
 
     it('accepts an email and session code associated with a course session', async () => {
-      const result = await actualActivateEmailForCourse(' TEST@EXAMPLE.COM ', ' 123456 ', Environment.COURSE_BC)
+      const result = await actualActivateEmailForCourse(
+        ' TEST@EXAMPLE.COM ',
+        ' 123456 ',
+        'Password-123',
+        Environment.COURSE_BC,
+      )
 
       expect(result.success).toBe(true)
       expect(mockGetUserByEmail).toHaveBeenCalledWith(testEmail)
@@ -218,17 +231,24 @@ describe('signUpWithSiretOrCNC', () => {
         },
         select: { id: true },
       })
+      expect(mockUpdateUserPasswordForEmail).toHaveBeenCalledWith(testEmail, 'Password-123', Environment.COURSE_BC)
     })
 
     it('rejects an email and session code that are not associated with a course session', async () => {
       mockFindCourseSession.mockResolvedValue(null)
 
-      const result = await actualActivateEmailForCourse(testEmail, 'invalid-code', Environment.COURSE_BC)
+      const result = await actualActivateEmailForCourse(
+        testEmail,
+        'invalid-code',
+        'Password-123',
+        Environment.COURSE_BC,
+      )
 
-      expect(result.success).toBe(false)
-      if (!result.success) {
-        expect(result.errorMessage).toBe(NOT_AUTHORIZED)
-      }
+      expect(result.success).toMatchObject({
+        success: false,
+        errorMessage: NOT_AUTHORIZED,
+      })
+      expect(mockUpdateUserPasswordForEmail).not.toHaveBeenCalled()
     })
   })
 

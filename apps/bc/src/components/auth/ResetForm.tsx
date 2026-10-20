@@ -42,7 +42,7 @@ const ResetForm = ({ user, token, environment = Environment.BC }: Props) => {
 
   const loginLink = getEnvRoute('login', environment)
 
-  const resetPassword = async (password: string, token: string) => {
+  const resetPassword = async (password: string) => {
     await callServerFunction(() => reset(password, token, environment), {
       getSuccessMessage: () => t('validated'),
       getErrorMessage: () => t('resetError'),
@@ -56,14 +56,7 @@ const ResetForm = ({ user, token, environment = Environment.BC }: Props) => {
     })
   }
 
-  return (
-    <ResetFormCommon
-      resetPassword={resetPassword}
-      token={token}
-      submitting={submitting}
-      setSubmitting={setSubmitting}
-    />
-  )
+  return <ResetFormCommon resetPassword={resetPassword} submitting={submitting} setSubmitting={setSubmitting} />
 }
 
 export default ResetForm

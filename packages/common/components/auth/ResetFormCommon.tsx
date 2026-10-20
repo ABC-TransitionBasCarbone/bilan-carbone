@@ -14,13 +14,12 @@ import authStyles from './Auth.module.css'
 import { ResetPasswordCommand, ResetPasswordCommandValidation } from './user.command'
 
 interface Props {
-  token: string
-  resetPassword: (password: string, token: string) => Promise<void>
+  resetPassword: (password: string) => Promise<void>
   submitting: boolean
   setSubmitting: (submitting: boolean) => void
 }
 
-const ResetFormCommon = ({ resetPassword, token, setSubmitting, submitting }: Props) => {
+const ResetFormCommon = ({ resetPassword, setSubmitting, submitting }: Props) => {
   const t = useTranslations('login.form')
   const [showPassword1, setShowPassword1] = useState(false)
   const [showPassword2, setShowPassword2] = useState(false)
@@ -48,7 +47,7 @@ const ResetFormCommon = ({ resetPassword, token, setSubmitting, submitting }: Pr
     setSubmitting(true)
 
     const { password } = getValues()
-    await resetPassword(password, token)
+    await resetPassword(password)
   }
 
   return (

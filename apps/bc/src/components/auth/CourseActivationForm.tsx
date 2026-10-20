@@ -1,20 +1,21 @@
 'use client'
 
-import { activateEmail, activateEmailForCourse } from '@/services/serverFunctions/user'
+import { activateEmailForCourse, checkCourseActivation } from '@/services/serverFunctions/user'
+import ResetFormCommon from '@abc-transitionbascarbone/common/components/auth/ResetFormCommon'
 import { EmailCommandValidation } from '@abc-transitionbascarbone/common/components/auth/user.command'
 import Form from '@abc-transitionbascarbone/common/components/base/Form'
 import LoadingButton from '@abc-transitionbascarbone/common/components/base/LoadingButton'
 import { FormTextField } from '@abc-transitionbascarbone/common/components/form/TextField'
+import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import { getEnvVarClient } from '@abc-transitionbascarbone/common/utils/environmentClient'
-import { CourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
+import { CourseEnvironment, getEnvRoute } from '@abc-transitionbascarbone/common/utils/environments'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Checkbox, FormControl, FormControlLabel, FormHelperText } from '@mui/material'
-import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -27,9 +28,12 @@ interface Props {
 const CourseActivationForm = ({ environment = Environment.COURSE_BC }: Props) => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', environment)
   const t = useTranslations('activation')
+  const tLogin = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
-  const [success, setSuccess] = useState(false)
+  const [activatedCredentials, setActivatedCredentials] = useState<{ email: string; sessionCode: string } | null>(null)
+  const { callServerFunction } = useServerFunction()
+  const router = useRouter()
 
   const searchParams = useSearchParams()
   const validation = EmailCommandValidation.extend({
@@ -59,25 +63,39 @@ const CourseActivationForm = ({ environment = Environment.COURSE_BC }: Props) =>
     setMessage('')
     setSubmitting(true)
 
-    const courseValidation = await activateEmailForCourse(values.email, values.sessionCode, environment)
-    if (!courseValidation.success) {
-      setSubmitting(false)
-      setSuccess(false)
+    const courseValidation = await checkCourseActivation(values.email, values.sessionCode, environment)
+    setSubmitting(false)
+
+    if (courseValidation.success) {
+      setActivatedCredentials({ email: values.email, sessionCode: values.sessionCode })
+    } else {
       setMessage(courseValidation.errorMessage)
+    }
+  }
+
+  const initPassword = async (password: string) => {
+    if (!activatedCredentials) {
       return
     }
 
-    const activation = await activateEmail(values.email, environment)
+    await callServerFunction(
+      () => activateEmailForCourse(activatedCredentials.email, activatedCredentials.sessionCode, password, environment),
+      {
+        getSuccessMessage: () => tLogin('validated'),
+        getErrorMessage: () => tLogin('resetError'),
+        onSuccess: () => {
+          setSubmitting(false)
+          router.push(getEnvRoute('login', environment))
+        },
+        onError: () => {
+          setSubmitting(false)
+        },
+      },
+    )
+  }
 
-    setSubmitting(false)
-
-    if (activation.success) {
-      setSuccess(true)
-      setMessage(activation.data)
-    } else {
-      setSuccess(false)
-      setMessage(activation.errorMessage)
-    }
+  if (activatedCredentials) {
+    return <ResetFormCommon resetPassword={initPassword} submitting={submitting} setSubmitting={setSubmitting} />
   }
 
   return (
@@ -128,7 +146,7 @@ const CourseActivationForm = ({ environment = Environment.COURSE_BC }: Props) =>
           {t('validate')}
         </LoadingButton>
         {message && (
-          <p className={classNames(!success ? 'error' : '')} data-testid="activation-form-message">
+          <p className="error" data-testid="activation-form-message">
             {customRich(
               t,
               message,

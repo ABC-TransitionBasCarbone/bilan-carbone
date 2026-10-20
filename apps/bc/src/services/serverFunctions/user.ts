@@ -46,6 +46,7 @@ import {
   updateUser,
   updateUserApplicationSettings,
   updateUserFeedbackDate,
+  updateUserPasswordForEmail,
   UserWithAccounts,
   validateUser,
 } from '@/db/user'
@@ -428,7 +429,7 @@ const isActivationAutorhizedCommon = async (
   }
 }
 
-export const activateEmailForCourse = async (email: string, sessionCode: string, environment: Environment) =>
+export const checkCourseActivation = async (email: string, sessionCode: string, environment: Environment) =>
   withServerResponse('activateEmailForCourse', async () => {
     if (!isCourseEnvironment(environment)) {
       throw Error(NOT_AUTHORIZED)
@@ -436,7 +437,6 @@ export const activateEmailForCourse = async (email: string, sessionCode: string,
     const { user, account } = await isActivationAutorhizedCommon(email.trim().toLowerCase(), environment)
     const activationCount = await organizationVersionActiveAccountsCount(account.organizationVersionId)
     if (activationCount) {
-      console.log('activationCount', activationCount)
       throw Error(NOT_AUTHORIZED)
     }
 
@@ -457,13 +457,28 @@ export const activateEmailForCourse = async (email: string, sessionCode: string,
       select: { id: true },
     })
 
-    console.log('here', courseSession, sessionCode, user.email, environment)
-
     if (!courseSession) {
       throw Error(NOT_AUTHORIZED)
     }
 
+    return { user, account }
+  })
+
+export const activateEmailForCourse = async (
+  email: string,
+  sessionCode: string,
+  password: string,
+  environment: Environment,
+) =>
+  withServerResponse('activateEmailForCourse', async () => {
+    const checkCourseActivationResponse = await checkCourseActivation(email, sessionCode, environment)
+    if (!checkCourseActivationResponse.success) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const { user, account } = checkCourseActivationResponse.data
     await validateUser(account.id)
+    await updateUserPasswordForEmail(user.email, password, environment)
   })
 
 export const activateEmail = async (email: string, userEnv: Environment, fromReset: boolean = false) =>
