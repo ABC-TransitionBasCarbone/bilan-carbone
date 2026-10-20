@@ -1,5 +1,9 @@
 .formTextField {
-  width: 200px;
+  width: 300px;
+}
+
+.noWrap {
+  white-space: nowrap;
 }
 
 .dates {

@@ -32,6 +32,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import { CircularProgress, Typography } from '@mui/material'
 import { getEvaluatedFormElement } from '@publicodes/forms'
+import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -197,7 +198,7 @@ const StudyRightsTiltSimplified = ({
                 name="postalCode"
                 data-testid="new-study-postal-code"
                 label={
-                  <span className="align-center text-center">
+                  <span className={classNames('align-center text-center', styles.noWrap)}>
                     {t('postalCode')}
                     <HelpIcon
                       className="ml-4 pointer"
@@ -206,7 +207,7 @@ const StudyRightsTiltSimplified = ({
                     />
                   </span>
                 }
-                className={styles.formTextField}
+                className={classNames(styles.formTextField)}
                 onBlur={onStudySiteUpdate}
               />
               {!!organizationVersion && (
