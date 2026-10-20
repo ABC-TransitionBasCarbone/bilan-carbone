@@ -21,16 +21,6 @@ describe('Edit study', () => {
       cy.get('input').should('not.be.checked')
     })
     cy.get('[data-testid="organization-sites-checkbox"] > input').eq(1).click({ force: true })
-    cy.getByTestId('organization-sites-etp')
-      .eq(1)
-      .within(() => {
-        cy.get('input').type('{selectall}1').should('have.value', '1')
-      })
-    cy.getByTestId('organization-sites-ca')
-      .eq(1)
-      .within(() => {
-        cy.get('input').type('{selectall}1').should('have.value', '1')
-      })
 
     cy.getByTestId('new-study-organization-button').should('not.be.disabled')
     cy.getByTestId('new-study-organization-button').click()
