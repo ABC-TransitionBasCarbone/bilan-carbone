@@ -68,6 +68,7 @@ import {
   UserStatus,
 } from '@abc-transitionbascarbone/common/db/enums'
 import {
+  sendAccountActivatedEmail,
   sendActivationEmail,
   sendActivationRequest,
   sendAddedActiveUserEmail,
@@ -454,14 +455,14 @@ export const checkCourseActivation = async (email: string, sessionCode: string, 
           },
         ],
       },
-      select: { id: true },
+      select: { id: true, professor: { select: { user: { select: { email: true } } } } },
     })
 
     if (!courseSession) {
       throw Error(NOT_AUTHORIZED)
     }
 
-    return { user, account }
+    return { user, account, isProfessor: courseSession.professor?.user.email === user.email }
   })
 
 export const activateEmailForCourse = async (
@@ -479,6 +480,7 @@ export const activateEmailForCourse = async (
     const { user, account } = checkCourseActivationResponse.data
     await validateUser(account.id)
     await updateUserPasswordForEmail(user.email, password, environment)
+    await sendAccountActivatedEmail(user.email, environment)
   })
 
 export const activateEmail = async (email: string, userEnv: Environment, fromReset: boolean = false) =>

@@ -147,6 +147,12 @@ export const sendActivationEmail = async (toEmail: string, token: string, fromRe
   )
 }
 
+export const sendAccountActivatedEmail = async (toEmail: string, env: Environment) =>
+  sendEmail(env, [toEmail], await tSubject('activation'), 'account-activated', {
+    t_accountActivated: await tBody('accountActivated.content'),
+    t_notYou: await tBody('accountActivated.notYou'),
+  })
+
 export const sendActivationRequest = async (
   toEmailList: string[],
   emailToActivate: string,

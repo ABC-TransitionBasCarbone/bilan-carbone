@@ -5,6 +5,7 @@
     }
   },
   "activation": {
-    "Not authorized": "Vous n'êtes pas enregistré pour une session, ou le code renseigné n'est pas le bon. Veuillez contactez votre organisme de formation."
+    "Not authorized": "Vous n'êtes pas enregistré pour une session, vous avez déjà activé votre compte ou le code renseigné n'est pas le bon. Veuillez contacter votre organisme de formation.",
+    "professorActivated": "Vous êtes sur le point d'activer un compte formateur. Un seul compte formateur ne peut être activé par session. Si vous pensez que c'est une erreur, veuillez annuler et contacter votre organisme de formation"
   }
 }

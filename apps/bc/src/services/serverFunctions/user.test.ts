@@ -36,7 +36,12 @@ import {
 } from '@/services/permissions/check'
 import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { mockedAccountId } from '@/tests/utils/models/user'
-import { sendActivationEmail, sendActivationRequest } from '@abc-transitionbascarbone/common/services/email/email'
+import type { Prisma } from '@abc-transitionbascarbone/common/db'
+import {
+  sendAccountActivatedEmail,
+  sendActivationEmail,
+  sendActivationRequest,
+} from '@abc-transitionbascarbone/common/services/email/email'
 import { EMAIL_SENT, NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { mockedOrganizationId } from '@abc-transitionbascarbone/common/services/tests/models/organization'
 import { mockedUserId } from '@abc-transitionbascarbone/common/services/tests/models/user'
@@ -44,7 +49,7 @@ import { DAY, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils'
 import jwt from 'jsonwebtoken'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
-import { activateEmail, activateEmailForCourse, signUpWithSiretOrCNC } from './user'
+import { activateEmail, activateEmailForCourse, checkCourseActivation, signUpWithSiretOrCNC } from './user'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../file', () => ({ download: jest.fn() }))
@@ -75,6 +80,7 @@ jest.mock('@/db/user')
 jest.mock('@/services/associationApi')
 jest.mock('@abc-transitionbascarbone/common/db/db')
 jest.mock('@abc-transitionbascarbone/common/services/email/email', () => ({
+  sendAccountActivatedEmail: jest.fn(),
   sendActivationEmail: jest.fn(),
   sendActivationRequest: jest.fn(),
 }))
@@ -111,11 +117,24 @@ const mockGetValidAssociationNameBySiret = getValidAssociationNameBySiret as jes
 const mockGetCompanyName = getCompanyName as jest.Mock
 const mockSendActivationEmail = sendActivationEmail as jest.Mock
 const mockSendActivationRequest = sendActivationRequest as jest.Mock
+const mockSendAccountActivatedEmail = sendAccountActivatedEmail as jest.Mock
 const mockGetOrganizationVersionForRightsCheck = getOrganizationVersionForRightsCheck as jest.Mock
 const mockOrganizationVersionActiveAccountsCount = organizationVersionActiveAccountsCount as jest.Mock
 const mockActivateEmail = activateEmail as jest.Mock
 const actualActivateEmail = jest.requireActual('./user').activateEmail as typeof activateEmail
-const mockFindCourseSession = jest.mocked(prismaClient.courseSession.findFirst)
+const courseActivationSessionSelect = {
+  id: true,
+  professor: { select: { user: { select: { email: true } } } },
+} satisfies Prisma.CourseSessionSelect
+type CourseActivationSession = Prisma.CourseSessionGetPayload<{ select: typeof courseActivationSessionSelect }>
+type CourseActivationSessionArgs = {
+  where: Prisma.CourseSessionWhereInput
+  select: typeof courseActivationSessionSelect
+}
+const mockFindCourseSession = prismaClient.courseSession.findFirst as unknown as jest.Mock<
+  Promise<CourseActivationSession | null>,
+  [CourseActivationSessionArgs]
+>
 const actualActivateEmailForCourse = jest.requireActual('./user')
   .activateEmailForCourse as typeof activateEmailForCourse
 const mockUpdateUserPasswordForEmail = updateUserPasswordForEmail as jest.Mock
@@ -123,6 +142,30 @@ const mockUpdateUserPasswordForEmail = updateUserPasswordForEmail as jest.Mock
 const testEmail = 'test@example.com'
 const testSiret = '12345678901234'
 const testCNC = 'CNC123'
+
+const createCourseActivationSession = (professorEmail: string): CourseActivationSession => ({
+  id: 'course-session-id',
+  professor: { user: { email: professorEmail } },
+})
+
+const mockCourseActivationDependencies = () => {
+  mockGetUserByEmail.mockResolvedValue({
+    id: mockedUserId,
+    email: testEmail,
+    accounts: [{ id: mockedAccountId, environment: Environment.COURSE_BC }],
+  })
+  mockGetAccountById.mockResolvedValue({
+    id: mockedAccountId,
+    organizationVersionId: mockedOrganizationVersionId,
+    status: UserStatus.IMPORTED,
+  })
+  mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+    id: mockedOrganizationVersionId,
+    activatedLicence: [],
+  })
+  mockOrganizationVersionActiveAccountsCount.mockResolvedValue(0)
+  mockFindCourseSession.mockResolvedValue(createCourseActivationSession('professor@example.com'))
+}
 
 describe('signUpWithSiretOrCNC', () => {
   beforeEach(() => {
@@ -172,37 +215,85 @@ describe('signUpWithSiretOrCNC', () => {
     })
   })
 
-  describe('activateEmailForCourse', () => {
+  describe('checkCourseActivation', () => {
     beforeEach(() => {
       jest.clearAllMocks()
-      mockGetUserByEmail.mockResolvedValue({
-        id: mockedUserId,
-        email: testEmail,
-        accounts: [{ id: mockedAccountId, environment: Environment.COURSE_BC }],
+      mockCourseActivationDependencies()
+    })
+
+    it('identifies a trainee using the trainee code', async () => {
+      const result = await checkCourseActivation(' TEST@EXAMPLE.COM ', ' 123456 ', Environment.COURSE_BC)
+
+      expect(result).toMatchObject({ success: true, data: { isProfessor: false } })
+      expect(mockGetUserByEmail).toHaveBeenCalledWith(testEmail)
+      expect(mockFindCourseSession).toHaveBeenCalledWith({
+        where: {
+          environment: Environment.COURSE_BC,
+          OR: [
+            {
+              traineeCode: '123456',
+              trainees: { some: { account: { user: { email: testEmail } } } },
+            },
+            {
+              professorCode: '123456',
+              professor: { user: { email: testEmail } },
+            },
+          ],
+        },
+        select: courseActivationSessionSelect,
       })
+    })
+
+    it('identifies a professor using the professor code', async () => {
+      mockFindCourseSession.mockResolvedValue(createCourseActivationSession(testEmail))
+
+      const result = await checkCourseActivation(testEmail, '654321', Environment.COURSE_BC)
+
+      expect(result).toMatchObject({ success: true, data: { isProfessor: true } })
+    })
+
+    it('rejects non-course environments', async () => {
+      const result = await checkCourseActivation(testEmail, '123456', Environment.BC)
+
+      expect(result).toMatchObject({ success: false, errorMessage: NOT_AUTHORIZED })
+      expect(mockGetUserByEmail).not.toHaveBeenCalled()
+    })
+
+    it('rejects an account that is already active', async () => {
       mockGetAccountById.mockResolvedValue({
         id: mockedAccountId,
         organizationVersionId: mockedOrganizationVersionId,
-        status: UserStatus.IMPORTED,
+        status: UserStatus.ACTIVE,
       })
-      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
-        id: mockedOrganizationVersionId,
-        activatedLicence: [],
-      })
-      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(0)
-      mockFindCourseSession.mockResolvedValue({
-        id: 'course-session-id',
-        name: 'Session',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        environment: Environment.COURSE_BC,
-        startDate: new Date(),
-        endDate: new Date(),
-        traineeCode: '123456',
-        professorCode: '654321',
-        courseOrganismId: 'course-organism-id',
-        professorId: mockedAccountId,
-      })
+
+      const result = await checkCourseActivation(testEmail, '123456', Environment.COURSE_BC)
+
+      expect(result).toMatchObject({ success: false, errorMessage: NOT_AUTHORIZED })
+      expect(mockFindCourseSession).not.toHaveBeenCalled()
+    })
+
+    it('rejects activation when the organization already has an active account', async () => {
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(1)
+
+      const result = await checkCourseActivation(testEmail, '123456', Environment.COURSE_BC)
+
+      expect(result).toMatchObject({ success: false, errorMessage: NOT_AUTHORIZED })
+      expect(mockFindCourseSession).not.toHaveBeenCalled()
+    })
+
+    it('rejects a code that does not match a course session', async () => {
+      mockFindCourseSession.mockResolvedValue(null)
+
+      const result = await checkCourseActivation(testEmail, 'invalid-code', Environment.COURSE_BC)
+
+      expect(result).toMatchObject({ success: false, errorMessage: NOT_AUTHORIZED })
+    })
+  })
+
+  describe('activateEmailForCourse', () => {
+    beforeEach(() => {
+      jest.clearAllMocks()
+      mockCourseActivationDependencies()
     })
 
     it('accepts an email and session code associated with a course session', async () => {
@@ -229,9 +320,10 @@ describe('signUpWithSiretOrCNC', () => {
             },
           ],
         },
-        select: { id: true },
+        select: { id: true, professor: { select: { user: { select: { email: true } } } } },
       })
       expect(mockUpdateUserPasswordForEmail).toHaveBeenCalledWith(testEmail, 'Password-123', Environment.COURSE_BC)
+      expect(mockSendAccountActivatedEmail).toHaveBeenCalledWith(testEmail, Environment.COURSE_BC)
     })
 
     it('rejects an email and session code that are not associated with a course session', async () => {
@@ -249,6 +341,7 @@ describe('signUpWithSiretOrCNC', () => {
         errorMessage: NOT_AUTHORIZED,
       })
       expect(mockUpdateUserPasswordForEmail).not.toHaveBeenCalled()
+      expect(mockSendAccountActivatedEmail).not.toHaveBeenCalled()
     })
   })
 

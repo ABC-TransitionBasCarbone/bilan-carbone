@@ -282,6 +282,10 @@
       "activateAccountFromReset": {
         "content": "Bienvenue sur le BC+ ! Vous avez fait une demande de réinitialisation de mot de passe mais votre compte n'est pas encore activé. Si vous souhaitez finaliser l'activation de celui-ci, veuillez cliquer sur"
       },
+      "accountActivated": {
+        "content": "Vous venez d'activer votre compte sur le BC+ pour les associations de formation.",
+        "notYou": "Si ce n'est pas vous, merci de nous prévenir à l'adresse support : "
+      },
       "activationRequest": {
         "content": "Vous avez une demande d'accès au compte BC+ de votre organisation de la part de {userToActivate} (mail: {emailToActivate}). Vous pouvez retrouver les demandes d'accès dans votre compte dans la page \"Mon organisation > Mon équipe\". En acceptant sa demande d'accès, vous lui définirez un rôle sur votre organisation. Il aura alors accès suivant son rôle aux informations et actions correspondantes de votre compte. Si vous refusez, il n'aura pas accès au compte de votre organisation."
       },

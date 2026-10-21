@@ -7,6 +7,7 @@ import Form from '@abc-transitionbascarbone/common/components/base/Form'
 import LoadingButton from '@abc-transitionbascarbone/common/components/base/LoadingButton'
 import { FormTextField } from '@abc-transitionbascarbone/common/components/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
+import Modal from '@abc-transitionbascarbone/common/components/modals/Modal'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import { getEnvVarClient } from '@abc-transitionbascarbone/common/utils/environmentClient'
@@ -28,10 +29,15 @@ interface Props {
 const CourseActivationForm = ({ environment = Environment.COURSE_BC }: Props) => {
   const contactMail = getEnvVarClient('SUPPORT_EMAIL', environment)
   const t = useTranslations('activation')
+  const tCommon = useTranslations('common')
   const tLogin = useTranslations('login.form')
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
-  const [activatedCredentials, setActivatedCredentials] = useState<{ email: string; sessionCode: string } | null>(null)
+  const [activatedCredentials, setActivatedCredentials] = useState<{
+    email: string
+    sessionCode: string
+  } | null>(null)
+  const [showProfessorMessage, setShowProfessorMessage] = useState(false)
   const { callServerFunction } = useServerFunction()
   const router = useRouter()
 
@@ -67,7 +73,13 @@ const CourseActivationForm = ({ environment = Environment.COURSE_BC }: Props) =>
     setSubmitting(false)
 
     if (courseValidation.success) {
-      setActivatedCredentials({ email: values.email, sessionCode: values.sessionCode })
+      setActivatedCredentials({
+        email: values.email,
+        sessionCode: values.sessionCode,
+      })
+      if (courseValidation.data.isProfessor) {
+        setShowProfessorMessage(true)
+      }
     } else {
       setMessage(courseValidation.errorMessage)
     }
@@ -94,7 +106,12 @@ const CourseActivationForm = ({ environment = Environment.COURSE_BC }: Props) =>
     )
   }
 
-  if (activatedCredentials) {
+  const goBackFromProfessorModal = () => {
+    setShowProfessorMessage(false)
+    setActivatedCredentials(null)
+  }
+
+  if (activatedCredentials && !showProfessorMessage) {
     return <ResetFormCommon resetPassword={initPassword} submitting={submitting} setSubmitting={setSubmitting} />
   }
 
@@ -157,6 +174,27 @@ const CourseActivationForm = ({ environment = Environment.COURSE_BC }: Props) =>
             )}
           </p>
         )}
+        <Modal
+          open={showProfessorMessage}
+          onClose={goBackFromProfessorModal}
+          label="professor-activation-modal"
+          actions={[
+            {
+              actionType: 'button',
+              children: tCommon('action.cancel'),
+              onClick: goBackFromProfessorModal,
+            },
+            {
+              actionType: 'button',
+              children: tCommon('action.confirm'),
+              onClick: () => setShowProfessorMessage(false),
+            },
+          ]}
+        >
+          <div>
+            <p>{t('professorActivated')}</p>
+          </div>
+        </Modal>
       </FormControl>
     </Form>
   )
