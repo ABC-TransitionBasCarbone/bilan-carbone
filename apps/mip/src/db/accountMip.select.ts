@@ -20,8 +20,6 @@ export const AccountMipWithUserSelect = {
       email: true,
       createdAt: true,
       updatedAt: true,
-      password: true,
-      resetToken: true,
       source: true,
     },
   },
