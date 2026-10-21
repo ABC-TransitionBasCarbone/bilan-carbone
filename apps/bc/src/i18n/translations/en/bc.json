@@ -288,7 +288,7 @@
     "explanation2": "Operation supported by the State as part of the 'Support Green Alternatives 2' initiative under France 2030, operated by the Banque des Territoires (Caisse des Dépôts)"
   },
   "activation": {
-    "description": "Enter the email address and session code provided by the training organization accompanying you.",
+    "description": "Please use the same email you used when joining the Association for Low Carbon Transition.",
     "email": "Email",
     "emailPlaceholder": "Email used during your training",
     "sessionCode": "Session code",

@@ -288,7 +288,7 @@
     "explanation2": "Opération soutenue par l'État dans le cadre du dispositif « Soutenir les alternatives vertes 2 » de France 2030, opéré par la Banque des territoires (Caisse des Dépôts)"
   },
   "activation": {
-    "description": "Indiquez l'adresse e-mail et le code de session que vous a transmis l'organisme de formation qui vous accompagne.",
+    "description": "Merci d'utiliser le même e-mail que vous avez utilisé lors de votre adhésion à l'Association pour la Transition Bas Carbone.",
     "email": "Email",
     "emailPlaceholder": "Email utilisée lors de votre formation",
     "sessionCode": "Code de session",

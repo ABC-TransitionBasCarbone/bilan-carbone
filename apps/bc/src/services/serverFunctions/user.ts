@@ -84,6 +84,7 @@ import { EMAIL_SENT, MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascar
 import { updateUserResetToken } from '@abc-transitionbascarbone/common/services/serverFunctions/user'
 import { AddMemberCommand } from '@abc-transitionbascarbone/common/services/serverFunctions/user.command'
 import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@abc-transitionbascarbone/common/utils'
+import { computePasswordValidation } from '@abc-transitionbascarbone/common/utils/auth'
 import { environmentsWithChecklist, isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/common/utils/user.server'
 import jwt from 'jsonwebtoken'
@@ -479,6 +480,11 @@ export const activateEmailForCourse = async (
 
     const { user, account } = checkCourseActivationResponse.data
     await validateUser(account.id)
+    const passwordValidation = computePasswordValidation(password)
+    if (!Object.values(passwordValidation).every((value) => value)) {
+      throw new Error('Password invalid')
+    }
+
     await updateUserPasswordForEmail(user.email, password, environment)
     await sendAccountActivatedEmail(user.email, environment)
   })
