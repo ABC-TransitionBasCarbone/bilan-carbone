@@ -12,6 +12,9 @@
       "question": "Question {current} sur {total}",
       "complete": "{percent}% Complété"
     },
+    "warning": {
+      "plancher": "Avertissement : {message}"
+    },
     "navigation": {
       "complete": "Terminer",
       "continue": "Continuer",

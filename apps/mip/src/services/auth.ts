@@ -1,8 +1,8 @@
 import { getAccountMipById } from '@/db/accountMip'
 import { getUserByEmailWithSensibleInformations } from '@/db/user'
 import { AccountMipWithUser } from '@/types/accountMip.types'
-import { RoleMip, UserStatus } from '@abc-transitionbascarbone/db-common/enums'
-import { DAY } from '@abc-transitionbascarbone/utils'
+import { RoleMip, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { DAY } from '@abc-transitionbascarbone/common/utils'
 import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession, NextAuthOptions, Session } from 'next-auth'
@@ -11,7 +11,7 @@ import Credentials from 'next-auth/providers/credentials'
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
-    maxAge: DAY * 7,
+    maxAge: DAY,
   },
   pages: {
     signIn: '/login',

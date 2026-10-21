@@ -1,0 +1,53 @@
+model CourseOrganism {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  name           String
+  contactEmail   String          @map("contact_email")
+  ftpPath        String          @map("ftp_path")
+
+  courseSessions CourseSession[]
+
+  @@unique([name])
+  @@map("course_organism")
+  @@schema("bilan_carbone")
+}
+
+model CourseSession {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  startDate DateTime @map("start_date")
+  endDate   DateTime @map("end_date")
+  name           String
+  environment    Environment
+  traineeCode    String          @map("trainee_code")
+  professorCode  String?         @map("professor_code")
+
+  courseOrganism   CourseOrganism @relation(fields: [courseOrganismId], references: [id], onDelete: Cascade)
+  courseOrganismId String         @map("course_organism_id")
+
+  professor   Account? @relation("CourseSessionProfessor", fields: [professorId], references: [id], onDelete: Cascade)
+  professorId String?         @map("professor_id")
+
+  trainees CourseSessionTrainee[]
+
+  @@unique([courseOrganismId, name, environment])
+  @@map("course_session")
+  @@schema("bilan_carbone")
+}
+
+model CourseSessionTrainee {
+  courseSessionId String @map("course_session_id")
+  courseSession CourseSession @relation(fields: [courseSessionId], references: [id], onDelete: Cascade)
+
+  accountId       String @map("account_id")
+  account       Account       @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@id([courseSessionId, accountId])
+  @@index([accountId])
+  @@map("course_session_trainee")
+  @@schema("bilan_carbone")
+}

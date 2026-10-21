@@ -1,0 +1,12 @@
+.formTextField {
+  width: 300px;
+}
+
+.noWrap {
+  white-space: nowrap;
+}
+
+.dates {
+  display: flex;
+  gap: 1rem;
+}

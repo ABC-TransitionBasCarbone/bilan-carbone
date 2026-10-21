@@ -1,7 +1,7 @@
 import type { TeamMember } from '@/db/accountMip'
 import { deleteMember, resendInvitation } from '@/services/serverFunctions/user'
 import { canEditMemberRole } from '@/utils/user'
-import PendingInvitationsCommon from '@abc-transitionbascarbone/components/src/team/PendingInvitationsCommon'
+import PendingInvitationsCommon from '@abc-transitionbascarbone/common/components/team/PendingInvitationsCommon'
 import { UserSession } from 'next-auth'
 
 interface Props {

@@ -17,6 +17,8 @@ Les environnements impactés sont : (Vérifier que la fonctionnalité fonctionne
 - [ ] CUT
 - [ ] CLICKSON
 - [ ] MIP
+- [ ] Course BC
+- [ ] Course TILT
 
 ## Information pour le déploiement sur staging
 - 

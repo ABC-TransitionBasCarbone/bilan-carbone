@@ -1,6 +1,6 @@
 import ResultsDashboard from '@/components/results/ResultsDashboard'
 import { getSurveyResults } from '@/services/serverFunctions/survey'
-import NotFound from '@abc-transitionbascarbone/components/src/pages/NotFound'
+import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 import styles from '../../../../components/pages/ResultsPage.module.css'
 
 export default async function ResultsPage({ params }: { params: Promise<{ id: string }> }) {

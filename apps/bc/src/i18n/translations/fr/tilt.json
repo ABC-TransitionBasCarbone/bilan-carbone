@@ -1,0 +1,233 @@
+{
+  "links": {
+    "sphereAssociativeUrl": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative"
+  },
+  "actuality": {
+    "title": "Les actualités du BC+ et Cap Carbone"
+  },
+  "role": {
+    "DEFAULT_description": "Un membre de l'organisation n'a aucun droit spécifique ni sur l'organisation, ni sur l'équipe, ni sur les Bilan Carbone® réalisés. Il est par défaut lecteur sur tous les Bilans Carbone® partagés avec l'équipe de son organisation. Il peut cependant créer et modifier des études simplifiées."
+  },
+  "login": {
+    "subtext": "Déclinaison pour la sphère associative <br></br> & <br></br> Cap Carbone",
+    "explanation": "Parce que les méthodes de transition bas carbone ont longtemps été pensées pour les entreprises, nous avons co-construit des déclinaisons spécifiques de nos outils, <b>avec et pour le monde associatif</b>. <br></br><br></br> L’<b>ABC</b> et le <b>Mouvement Tilt</b> sont deux associations qui unissent ici leurs expertises pour vous présenter deux outils : <b>Cap Carbone</b>, qui vous permet, <b>sans condition</b>, de réaliser une empreinte carbone simplifiée et accessible pour franchir le premier pas sans formation préalable, et le <b>Bilan Carbone®+ associatif</b>, qui vous permet d'appliquer la méthode Bilan Carbone® et sa déclinaison sectorielle pour la sphère associative. Cette seconde partie de l'outil est <b>accessible gratuitement pour l'ensemble des associations française formées à la méthode</b>. <br></br><br></br> Pour plus d'informations, <link><white><underline>cliquez ici</underline></white></link> !",
+    "form": {
+      "activate": "Créer mon compte"
+    }
+  },
+  "signup": {
+    "description": "Créez un compte sur Tilt en entrant votre email ainsi qu'un Siret",
+    "siret": "Siret",
+    "emailPlaceholder": "Votre email",
+    "siretPlaceholder": "Votre Siret",
+    "siretRequired": "Veuillez entrer un Siret",
+    "Not authorized": "Cet email est déjà inscrit avec un compte Tilt ou ce SIRET n'est pas valide. N'hésitez pas à consulter <link>la FAQ</link> ou à contacter <support>le support</support> si vous pensez qu'il s'agit d'une erreur.",
+    "Not association SIRET": "L'utilisation de cet outil est réservé aux associations. Veuillez utiliser la version classique du Bilan Carbone®+",
+    "validation": {
+      "siret": "Veuillez entrer un Siret"
+    }
+  },
+  "home": {
+    "navigation": {
+      "collaborators": {
+        "title": "Mon équipe",
+        "message": "Ajoutez ici des personnes qui pourront accéder à vos empreintes carbone et vous aider à répondre au questionnaire"
+      },
+      "footprints": {
+        "title": "Mes Empreintes",
+        "message": "Créer votre première empreinte ici. Vous pourrez ensuite consulter vos empreintes ou en créer de nouvelles à tout moment."
+      },
+      "sites": {
+        "title": "Mon Association",
+        "message": "Renseignez ici la liste des sites physiques de votre association."
+      }
+    },
+    "title": "Calculer votre empreinte carbone simplifiée avec Cap Carbone vous permettra de :",
+    "info": {
+      "0": "Faire une estimation des émissions de gaz à effet de serre de votre association en répondant à différentes questions",
+      "1": "Comprendre comment fonctionne cette estimation et les principes fondamentaux d'un bilan de gaz à effet de serre",
+      "2": "Identifier des priorités d'action en fonction de vos émissions, et commencer à construire une trajectoire de réduction"
+    }
+  },
+  "exports": {
+    "env_specific_export": "Bilan Carbone® - Sphère associative",
+    "exportFilename": "Bilan Carbone® - Sphère associative - {studyName}",
+    "exportFilenameSimplified": "Empreinte carbone simplifiée - Sphère associative - {studyName}",
+    "simplified": {
+      "disclaimerExcel1": "Attention, les résultats que vous obtenez ici sont uniquement issus d'un calcul d'empreinte carbone simplifié réalisé par Cap Carbone. Ils ne doivent en aucun cas être présentés ou utilisés comme des résultats Bilan Carbone®,",
+      "disclaimerExcel2": "car même si les résultats obtenus peuvent déjà vous permettre de comprendre comment réduire votre impact, votre démarche se limite à une estimation.",
+      "disclaimerExcel3": "En revanche, cette empreinte carbone simplifiée est bien le premier pas vers une démarche plus complète comme le Bilan Carbone® !",
+      "disclaimerExcel4": "Pour les années suivantes, vous pouvez soit renouveler votre mesure d'empreinte carbone simplifiée avec Cap Carbone, soit réaliser un Bilan Carbone®.",
+      "disclaimerExcel5": "Si vous souhaitez aller plus loin dans votre démarche, plus d'informations sont disponibles ici : https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
+      "metadata": {
+        "organization": "Organisation",
+        "site": "Site",
+        "startDate": "Date de début de l'étude",
+        "endDate": "Date de fin de l'étude"
+      }
+    }
+  },
+  "email": {
+    "subject": {
+      "newUser": "Vous avez été invité sur Tilt",
+      "addedActiveUser": "Vous avez été invité sur un nouvel environnement Tilt",
+      "activation": "Vous avez activé votre compte sur Tilt",
+      "activationRequest": "Demande d'accès à votre organisation Tilt"
+    }
+  },
+  "organization": {
+    "sites": {
+      "ca": "Budget ({unit})",
+      "etp": "Nombre de salariés",
+      "glossary": {
+        "etp": "Nombre de salariés",
+        "etpDescription": "Ces données sont utilisées pour calculer des intensités carbone (kgCO₂e/salarié).",
+        "ca": "Budget ({unit})",
+        "caDescription": "Ces données sont utilisées pour calculer des intensités carbone (kgCO₂e/{unit} CA). Attention, le budget est à renseigner en milliers d'euros (k€).",
+        "volunteer": "Nombre de bénévoles",
+        "volunteerDescription": "Le nombre de bénévoles renseigné ici servira simplement à calculer une intensité carbone par bénévole, en tCO₂e/bénévole. Vous pouvez y renseigner le nombre de bénévoles, le nombre de bénévoles actifs, compter ou non les membres du Conseil d'Administration ... Le plus important n'est pas le choix du mode de comptabilisation des bénévoles, mais l'utilisation de la même méthode pour vos futurs Bilans Carbone®, afin de pouvoir comparer l'évolution de vos émissions au regard des variations des activités de votre association."
+      },
+      "validation": {
+        "ca": "Budget ({unit})"
+      }
+    }
+  },
+  "study": {
+    "perimeter": {
+      "preset": "Type de public",
+      "preset_numerique": "Numérique"
+    },
+    "new": {
+      "postalCode": "Quel est le code postal de l'association ?",
+      "sites": "Quels sont les sites concernés par l'empreinte et leurs caractéristiques ?",
+      "structure": "De quel type de structure votre association se rapproche t'elle le plus ?",
+      "structureOther": "Précisez le type de structure",
+      "dates": "Sur quelle période porte votre empreinte carbone ?",
+      "numberOfTTEmployee": "Combien de jours sont télétravaillées par semaine pour vos salariés ?",
+      "numberOfTTVolunteer": "Combien de jours sont télétravaillées par semaine pour vos bénévoles ?",
+      "glossary": {
+        "postalCode": "Code postal de l'association",
+        "postalCodeGlossary": "CP du siège si plusieurs sites, 5 chiffres",
+        "structureInfo": "Type de structure de l'association",
+        "structureInfoGlossary": "Cette information pourra être utilisée par notre équipe afin d'adapter le questionnaire aux association qui utilisent l'outil."
+      }
+    },
+    "flow": {
+      "info": "Vous pouvez télécharger un exemple de cartographie des flux pour vous aider à construire la vôtre. Par la suite, si vous souhaitez soumettre votre propre cartographie des flux pour aider d'autres associations en leur fournissant une base de travail, merci de la soumettre à <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+    },
+    "dependencyMatrix": {
+      "info": "Vous pouvez télécharger un exemple de matrice de risque et de dépendance pour vous aider à construire la vôtre. Par la suite, si vous souhaitez soumettre votre propre cartographie des flux pour aider d'autres associations en leur fournissant une base de travail, merci de la soumettre à <mail>methodologie@abc-transitionbascarbone.fr</mail>"
+    },
+    "firstSimplifiedStudyMessage": "Il est temps de vous lancer ! Nous vous invitons à créer votre première Empreinte.",
+    "createFirstSimplifiedStudy": "Créer ma première Empreinte",
+    "createSimplified": "Créer une Empreinte",
+    "mySimplifiedStudies": "Cap Carbone - Mes Empreintes",
+    "seeSimplified": "Voir mon Empreinte",
+    "cannotCreateStudy": "Pour pouvoir faire des Bilans Carbone® il faut être formé à la méthode ! <link>En savoir plus</link>",
+    "canCreateFootPrint": "Vous pouvez cependant faire <link>une empreinte carbone</link> vous permettant d'effectuer une estimation de votre impact",
+    "navigation": {
+      "generalData": "Données générales",
+      "title": "Mon Empreinte"
+    },
+    "export": {
+      "export": "Exporter mes résultats"
+    },
+    "results": {
+      "reportName": "{studyName} - Bilan Carbone® - Sphère associative",
+      "feedback": {
+        "button": "Faites-nous vos retours ! ✨",
+        "title": "Faites-nous vos retours ! ✨"
+      },
+      "simplifiedFeedback": "Bravo ! Vous venez de réaliser l'empreinte carbone simplifiée de votre association. C'est une excellente initiation à la comptabilité carbone ! Il vous faut maintenant <b>agir en fonction de ces résultats</b>, car le premier objectif de toute démarche de comptabilité carbone doit-être la <b>réduction des émissions de GES</b>. Gardez en tête que la réduction des émissions ne doit pas forcément passer par la contraction de l'activité, notamment si celle-ci permet d'éviter des émissions chez d'autres acteurs ou présente une utilité sociale importante. Cela est particulièrement important dans le cas d'associations.<br></br><br></br> Nous vous invitons à refaire cette empreinte carbone simplifiée l'année prochaine pour vérifier que vous êtes sur la bonne trajectoire, ou, mieux encore, <b>à établir un véritable Bilan Carbone®</b> afin de gagner en précision dans l'estimation de vos émissions et établir un véritable plan de transition ! Pour commencer, rien de plus simple, il vous suffit de vous former à la méthode, ou de vous inscrire au parcours Tilt Envol du Mouvement Tilt. Plus d'informations <link>ici</link> ! <br></br><br></br> Si vous avez des retours sur l'outil, n'hésitez pas à nous les partager via le questionnaire de retours disponible en haut de cette page, ou par mail à l'adresse <support>support</support>.",
+      "resultsWord": "Rapport Bilan Carbone® - Sphère associative"
+    },
+    "structure": {
+      "'Structure sportive'": "Structure sportive",
+      "'Club de loisirs'": "Club de loisirs",
+      "'Éducation, formation et insertion professionnelle'": "Éducation, formation et insertion professionnelle",
+      "'Développement économique et local'": "Développement économique et local",
+      "'Développement international et humanitaire'": "Développement international et humanitaire",
+      "'Culture et patrimoine'": "Culture et patrimoine",
+      "'Association de voisinage'": "Association de voisinage",
+      "'Hôpital'": "Hôpital",
+      "'Maison de retraite'": "Maison de retraite",
+      "'Association d'aide à domicile'": "Association d'aide à domicile",
+      "'Accompagnement des personnes en situation de handicap'": "Accompagnement des personnes en situation de handicap",
+      "'Protection de l'enfance'": "Protection de l'enfance",
+      "'Autres structures sociales et solidaires'": "Autres structures sociales et solidaires",
+      "'Défense de l'environnement'": "Défense de l'environnement",
+      "'Autre'": "Autre"
+    }
+  },
+  "emissionFactors": {
+    "post": {
+      "seeTypeform": "Voir le questionnaire type",
+      "seeTypeformDescription": "Cet outil vous permet d'avoir un exemple de questionnaire type à envoyer à vos parties prenantes pour collecter des données sur leurs déplacements professionnels.",
+      "glossaryDescription": {
+        "postInfo": "Informations sur ce poste",
+        "close": "Fermer",
+        "informations": "informations sur ce poste",
+        "IntrantsBiensEtMatieresTilt": "Pour obtenir plus d'informations sur les différentes manières de prendre en compte des Intrants, veuillez vous référer à la <link>méthode associative</link>.",
+        "IntrantsBiensEtMatieresTiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#intrants-biens-et-matieres",
+        "Alimentation": "Pour obtenir plus d'informations sur la prise en compte de l'alimentation, pour les différentes parties prenantes des associations, veuillez vous référer à la <link>méthode associative</link>.",
+        "AlimentationLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/alimentation",
+        "IntrantsServices": "Pour obtenir plus d'informations sur les différentes manières de prendre en compte des Intrants, veuillez vous référer à la <link>méthode associative</link>.",
+        "IntrantsServicesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#intrants-services",
+        "EquipementsEtImmobilisations": "Pour obtenir plus d'informations sur la manière de prendre en compte les équipements et autres immobilisations, veuillez vous référer à la <link>méthode associative</link>.",
+        "EquipementsEtImmobilisationsLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/intrants-biens-et-services#equipements-et-immobilisations",
+        "ConstructionDesLocaux": "Pour obtenir plus d'informations sur la prise en compte des locaux des associations, veuillez vous référer à la <link>méthode associative</link>.",
+        "ConstructionDesLocauxLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#construction-des-locaux",
+        "Energies": "Pour obtenir plus d'informations sur la prise en compte des consommations énergétiques d'une organisation, veuillez vous référer au <link>Plan Carbone Général</link>.",
+        "EnergiesLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+        "DechetsDirectstilt": "Pour obtenir plus d'informations sur la prise en compte des déchets d'une organisation, veuillez vous référer au <link>Plan Carbone Général</link>.",
+        "DechetsDirectstiltLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+        "FroidEtClim": "Pour obtenir plus d'informations sur la prise en compte des climatisations et autres appareils consommateurs de fluides frigorigènes d'une organisation, veuillez vous référer au <link>Plan Carbone Général</link>.",
+        "FroidEtClimLink": "https://www.plancarbonegeneral.com/perimetre-collaborateurs/locaux/exploitation",
+        "Utilisation": "Pour obtenir plus d'informations sur la prise en compte de l'utilisation des produits distribués ou vendus et services rendus par les associations, veuillez vous référer à la <link>méthode associative</link>.",
+        "UtilisationLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/utilisation-et-fin-de-vie",
+        "FinDeVietilt": "Pour obtenir plus d'informations sur la prise en compte de la fin de vie des produits distribués ou vendus par les associations, veuillez vous référer à la <link>méthode associative</link>.",
+        "FinDeVietiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/utilisation-et-fin-de-vie",
+        "Teletravail": "Pour obtenir plus d'informations sur la prise en compte du télétravail, veuillez vous référer à la <link>méthode associative</link>.",
+        "TeletravailLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/teletravail",
+        "DeplacementsFabricationDesVehicules": "La fabrication des véhicules peut déjà , dans certains cas, être prise en compte au sein des facteurs d'émission utilisés pour comptabiliser les déplacements. Pour plus d'information sur sa prise en compte, veuillez vous référer à la <link>méthode associative</link>.",
+        "DeplacementsFabricationDesVehiculesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#fabrication-des-vehicules",
+        "DeplacementsDomicileTravailSalaries": "Pour obtenir plus d'informations sur le type de déplacements devant être inclus dans cette catégorie, veuillez vous référer à la <link>méthode associative</link>.",
+        "DeplacementsDomicileTravailSalariesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-entre-le-domicile-et-lassociation",
+        "DeplacementsDomicileTravailBenevoles": "Pour obtenir plus d'informations sur le type de déplacements devant être inclus dans cette catégorie, veuillez vous référer à la <link>méthode associative</link>.",
+        "DeplacementsDomicileTravailBenevolesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-entre-le-domicile-et-lassociation",
+        "DeplacementsDansLeCadreDUneMissionAssociativeSalaries": "Pour obtenir plus d'informations sur le type de déplacements devant être inclus dans cette catégorie, veuillez vous référer à la <link>méthode associative</link>.",
+        "DeplacementsDansLeCadreDUneMissionAssociativeSalariesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-dans-le-cadre-dune-mission-associative",
+        "DeplacementsDansLeCadreDUneMissionAssociativeBenevoles": "Pour obtenir plus d'informations sur le type de déplacements devant être inclus dans cette catégorie, veuillez vous référer à la <link>méthode associative</link>.",
+        "DeplacementsDansLeCadreDUneMissionAssociativeBenevolesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-dans-le-cadre-dune-mission-associative",
+        "DeplacementsDesBeneficiaires": "Pour obtenir plus d'informations sur le type de déplacements devant être inclus dans cette catégorie, veuillez vous référer à la <link>méthode associative</link>.",
+        "DeplacementsDesBeneficiairesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#deplacements-des-beneficiaires",
+        "TransportDeMarchandises": "Pour obtenir plus d'informations sur les différentes méthodes de prise en compte du fret, veuillez vous référer à la <link>méthode associative</link>.",
+        "TransportDeMarchandisesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#transport-de-marchandises",
+        "TransportFabricationDesVehicules": "La fabrication des véhicules peut déjà , dans certains cas, être prise en compte au sein des facteurs d'émission utilisés pour comptabiliser les déplacements. Pour plus d'information sur sa prise en compte, veuillez vous référer à la <link>méthode associative</link>.",
+        "TransportFabricationDesVehiculesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/deplacements#fabrication-des-vehicules",
+        "Agriculturetilt": "Pour obtenir plus d'informations sur la prise en compte des émissions liées aux activités agricoles, veuillez vous référez à la <link>méthode associative</link>.",
+        "AgriculturetiltLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "ActivitesIndustrielles": "Pour obtenir plus d'informations sur la prise en compte des émissions liées aux éventuelles activités industrielles, veuillez vous référez à la <link>méthode associative</link>.",
+        "ActivitesIndustriellesLink": "https://www.plancarbonegeneral.com/approches-sectorielles/sphere-associative/locaux-et-infrastructures#exploitation-des-locaux",
+        "DeplacementsDePersonneSimplified": "Pour collecter les données nécessaires à la complétion de ce poste, nous vous invitons à faire circuler un questionnaire au sein de votre association. En voici <exemplequestionnairetorefacto>un exemple</exemplequestionnairetorefacto>, à implémenter dans l'outil de sondage de votre choix.",
+        "AlimentationSimplified": "Pour collecter les données nécessaires à la complétion de ce poste, nous vous invitons à faire circuler un questionnaire au sein de votre association. En voici <exemplequestionnairetorefacto>un exemple</exemplequestionnairetorefacto>, à implémenter dans l'outil de sondage de votre choix.",
+        "ServiceEtNumeriqueSimplified": "Pour collecter les données nécessaires à la complétion de ce poste, nous vous invitons à faire circuler un questionnaire au sein de votre association. En voici <exemplequestionnairetorefacto>un exemple</exemplequestionnairetorefacto>, à implémenter dans l'outil de sondage de votre choix.",
+        "EquipementsEtImmobilisationsSimplified": "Pour collecter les données nécessaires à la complétion de ce poste, nous vous invitons à faire circuler un questionnaire au sein de votre association. En voici <exemplequestionnairetorefacto>un exemple</exemplequestionnairetorefacto>, à implémenter dans l'outil de sondage de votre choix."
+      }
+    }
+  },
+  "navigation": {
+    "footprints": "Mes empreintes",
+    "information": "Mon Association"
+  },
+  "betaBanner": {
+    "badge": "À lire avant de démarrer !",
+    "title": "Documents utiles pour le calcul d'une empreinte carbone simplifiée via Cap Carbone",
+    "description": "Vous êtes sur le point de créer une nouvelle empreinte simplifiée. Avant de commencer votre calcul et pouvoir répondre à l'ensemble des questions, nous vous conseillons de disposer des informations suivantes : <br></br>- La surface de vos locaux, parkings, etc (via plans, bails, etc)<br></br>- Le nombre de climatiseurs présents dans ceux-ci<br></br>- Le type de chauffage utilisé, les factures énergétiques (chauffage, électricité)<br></br>- Le poids de vos déchets pour une semaine classique, ou tout autre intervalle de temps<br></br>- Un inventaire de votre parc informatique<br></br>- Un inventaire de votre parc de véhicules <br></br>- Votre livre de comptes, parfois les dépenses sont également déclarées sur <compteassotilttorefacto>Lecompteasso</compteassotilttorefacto><br></br>- Des factures, bons de commandes, etc, permettant de retracer vos achats<br></br>- Un questionnaire complété par les salariés et bénévoles de votre association détaillant leurs habitudes en termes de déplacements, d'usages numériques et de télétravail. Nous vous proposons <exemplequestionnairetorefacto>quelques pistes</exemplequestionnairetorefacto> pour implémenter ce questionnaire dans l'outil de sondage de votre choix (typeforms, Googleforms, etc)<br></br><br></br>S'il vous manque une de ces informations, pas de panique ! Vous pouvez utiliser une estimation, ou utiliser les valeurs par défaut qui sont parfois proposées dans l'outil !"
+  },
+  "documentationUrlTilt": {
+    "tiltABCPage": "https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
+    "GuideEcoResponsableBureau": "https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQDSk3R5vX9eQYAsjwE3LWPoAY3Gyp9pEStVl1MBejc0E6Y?e=tJFSFc",
+    "LeCompteAsso": "https://lecompteasso.associations.gouv.fr/client/login"
+  }
+}

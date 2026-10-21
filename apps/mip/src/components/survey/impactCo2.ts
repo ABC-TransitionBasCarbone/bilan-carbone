@@ -1,4 +1,4 @@
-import { removeDiacritics } from '@abc-transitionbascarbone/utils/parsing'
+import { removeDiacritics } from '@abc-transitionbascarbone/common/utils/parsing'
 
 export type ImpactCo2DisplayMode = 'interstitial' | 'section'
 

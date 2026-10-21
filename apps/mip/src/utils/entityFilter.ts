@@ -1,6 +1,6 @@
-import { RawRules } from '@/publicodes/mip-engine'
-import { FILTER_RULE_KEY } from '@abc-transitionbascarbone/publicodes/form/utils'
-import { doesKeyExist } from '@abc-transitionbascarbone/utils/object'
+import { RawRules } from '@/lib/publicodes/mip-engine'
+import { FILTER_RULE_KEY } from '@abc-transitionbascarbone/common/publicodes/form/utils'
+import { doesKeyExist } from '@abc-transitionbascarbone/common/utils/object'
 import { Situation } from 'publicodes'
 
 export type EntityFilterDef = {
@@ -25,8 +25,8 @@ export const getEntityFilterDefsFromModel = (rules: RawRules): EntityFilterDef[]
   }
 
   return Object.entries(suggestions)
-    .filter(([, value]) => typeof value === 'number' && Number.isFinite(value))
-    .map(([name, value]) => ({ name, value: Number(value) }))
+    .filter((entry): entry is [string, number] => typeof entry[1] === 'number' && Number.isFinite(entry[1]))
+    .map(([name, value]) => ({ name, value }))
     .sort((a, b) => a.value - b.value)
 }
 

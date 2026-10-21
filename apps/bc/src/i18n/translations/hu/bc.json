@@ -1,0 +1,101 @@
+{
+  "links": {
+    "openCarbonPracticeUrl": "https://www.opencarbonpractice.com/rejoindre-la-communaute",
+    "methodologyUrl": "https://www.bilancarbone-methode.com/",
+    "contactFormUrl": "https://abc-transitionbascarbone.fr/contact-et-hotline",
+    "faqUrl": "https://association-pour-la-transition-1.gitbook.io/bc+",
+    "abcSiteUrl": "https://abc-transitionbascarbone.fr/association-pour-la-transition-bas-carbone/",
+    "formationUrl": "https://abc-transitionbascarbone.fr/agir/se-former-au-bilan-carbone/",
+    "actorsUrl": "https://abc-transitionbascarbone.fr/les-acteurs/annuaire-des-prestataires/",
+    "abcTiltLink": "https://abc-transitionbascarbone.fr/transition-association-abc-tilt/",
+    "licenseRenewalLink": "https://abc-transitionbascarbone.fr/agir/adherer-a-labc",
+    "snbcUrl": "https://www.ecologie.gouv.fr/politiques-publiques/strategie-nationale-bas-carbone-snbc",
+    "sbtiUrl": "https://sciencebasedtargets.org/net-zero"
+  },
+  "study": {
+    "transitionPlan": {
+      "conversionWarning": {
+        "moreExplanationSNBC": "A pályagörbéje referencia dátuma többé nem 1990 lesz, mint az SNBC esetében, hanem az ezen az eszközön nyilvántartott első tanulmányának dátuma, azaz {oldestStudyDate}."
+      }
+    },
+    "results": {
+      "difference": {
+        "otherGas1": "A GHG Protocol keretében csak a Kiotói Jegyzőkönyv részét képező ÜHG-k (CO₂, CH₄, N₂O, HFC, PFC, SF₆) kerülnek elszámolásra. Az egyéb ÜHG-khoz kapcsolódó kibocsátások (kondenzcsíkok, NF3, egyéb klímatizálási vagy folyamathoz kapcsolódó ÜHG-k) tehát a Bilan Carbone® keretében elszámolásra kerülnek, de a GHG Protocol keretében nem."
+      }
+    },
+    "pdf": {
+      "charts": {
+        "allEmissions": "Az összes mozi tevékenységéhez kapcsolódó kibocsátás, tCO₂e-ben",
+        "siteEmissions": "A(z) {site} mozi tevékenységéhez kapcsolódó kibocsátás, tCO₂e-ben"
+      }
+    },
+    "engagementActions": {
+      "phases": {
+        "AwarnessAndOutreach": "Tudatosítás és népszerűsítés",
+        "FeedbackAndCommunication": "Eredmények bemutatása és kommunikáció"
+      }
+    },
+    "cannotCreateStudy": "Bilan Carbone® készítéséhez el kell végezni a módszertani képzést! <link>Tudjon meg többet</link>",
+    "canCreateFootPrint": "Ha a képzése nem jelenik meg a fiókjában, küldje el az igazolását a <support>ügyfélszolgálatnak</support>. Ha az megfelelően fel van ismerve, és szeretne Bilan Carbone® értékeléseket létrehozni, kérje meg szervezete egyik adminisztrátorát, hogy módosítsa a szerepkörét munkatárssá vagy adminisztrátorrá. További információk a <faq>GYIK-ben</faq> érhetők el."
+  },
+  "emissionFactors": {
+    "table": {
+      "wasteModalContent": "A hulladék újrahasznosításához (vagy az átlagos élettartam végéhez, amennyiben az újrahasznosítást is magában foglalja) kapcsolódó FE-k 41 kgCO₂e/t értéket használnak a Base Empreinte® által nekik tulajdonított érték helyett. Ez az érték a fémek gyűjtésének, szállításának és tárolásának üzemeltetésének felel meg a Base Empreinte® szerint, és <b>ezáltal kizárja az anyag regenerálását</b>, amely az újrahasznosításhoz kapcsolódó kibocsátások túlnyomó részét teszi ki. Ezt a működést azért választották, hogy ne büntesse az újrahasznosítást, amelyet mindazonáltal figyelembe vesznek a Bilan Carbone® bemenő anyagai között (egy újrahasznosított anyagból származó bemenő anyag általában kevesebbet bocsát ki, mint egy új). A Bilan GES règlementaire keretében azonban a Base Empreinte® értéke kerül felhasználásra az exportban. Egy modál, amely elmagyarázza a Bilan Carbone® és a Bilan GES règlementaire közötti esetleges különbségeket, ennek az exportnak a bal felső részén lesz elérhető. További részletekért kérjük, tekintse meg a Bilan Carbone® módszer <link1>1. mellékletét</link1> vagy a Plan Carbone Général <link2>hulladékra vonatkozó oldalait</link2>.",
+      "wasteModalTitle": "Az újrahasznosítási FE-értékek különbsége",
+      "co2f": "CO₂f :",
+      "ch4f": "CH₄f :",
+      "ch4b": "CH₄b :",
+      "n2o": "N₂O :",
+      "co2b": "CO₂b :",
+      "sf6": "SF₆ :",
+      "displayFilters": "Szűrők megjelenítése",
+      "hideFilters": "Szűrők elrejtése"
+    },
+    "create": {
+      "co2f": "CO₂f (kgCO₂e-ben)",
+      "ch4f": "CH₄f (kgCO₂e-ben)",
+      "ch4b": "CH₄b (kgCO₂e-ben)",
+      "n2o": "N₂O (kgCO₂e-ben)",
+      "co2b": "CO₂b (kgCO₂e-ben)",
+      "sf6": "SF₆ (kgCO₂e-ben)"
+    },
+    "post": {
+      "Evenement": "Események",
+      "EvenementSimplified": "Események",
+      "EnergieSimplified": "Energia"
+    }
+  },
+  "exports": {
+    "bc": {
+      "emissions": "Kibocsátás (tCO₂e)",
+      "checkboxDisabled": "A Bilan Carbone® exportálás kötelező a BC+ használatakor."
+    }
+  },
+  "importFileModal": {
+    "emptyHeader": "A fájl nem tartalmazza a megfelelő fejléceket. Kérjük, használja az importsablont."
+  },
+  "activation": {
+    "Organization activation in progress": "Egy kolléga már folyamatban van a szervezet aktiválásával. Kérjük, hagyjon számára akár 24 órát az aktiválás befejezéséhez, mielőtt újra próbálkozna."
+  },
+  "ressources": {
+    "feedbackTitle": "Az Ön véleménye",
+    "feedbackLink": "Kérdőív kitöltése"
+  },
+  "profile": {
+    "feedbackLink": "Kérdőív kitöltése"
+  },
+  "feedback": {
+    "answer": "Ossza meg velünk visszajelzését! ✨"
+  },
+  "legalNotices": {
+    "fileStorage": {
+      "title": "Fájlok tárolása",
+      "details": "Scaleway - 8, rue de la Ville-l'Évêque, 75008 Paris, Franciaország"
+    }
+  },
+  "organization": {
+    "form": {
+      "siret": "SIRET"
+    }
+  }
+}

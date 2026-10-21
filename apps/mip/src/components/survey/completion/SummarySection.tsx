@@ -1,7 +1,7 @@
 'use client'
 
 import { CategoryWithActions } from '@/components/survey/completion/types'
-import { formatMassKilograms, getCategoryClassSuffix } from '@abc-transitionbascarbone/publicodes/form'
+import { formatMassKilograms, getCategoryClassSuffix } from '@abc-transitionbascarbone/common/publicodes/form'
 import { ExpandMore } from '@mui/icons-material'
 import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'

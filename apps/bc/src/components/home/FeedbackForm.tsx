@@ -1,0 +1,37 @@
+import { BCEnvironment } from '@/types/environment'
+import { appendForm } from '@/utils/form'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { useEffect } from 'react'
+
+const typeformId = process.env.NEXT_PUBLIC_FEEDBACK_TYPEFORM_ID
+const cutTypeformId = process.env.NEXT_PUBLIC_CUT_FEEDBACK_TYPEFORM_ID
+const tiltTypeformId = process.env.NEXT_PUBLIC_TILT_FEEDBACK_TYPEFORM_ID
+const clicksonTypeformId = process.env.NEXT_PUBLIC_CLICKSON_FEEDBACK_TYPEFORM_ID
+const formationBCTypeformId = process.env.NEXT_PUBLIC_COURSE_BC_FEEDBACK_TYPEFORM_ID
+const formationTILTTypeformId = process.env.NEXT_PUBLIC_COURSE_TILT_FEEDBACK_TYPEFORM_ID
+
+interface Props {
+  environment: BCEnvironment
+}
+const formPerEnvironmentTab: Record<BCEnvironment, string | undefined> = {
+  [Environment.BC]: typeformId,
+  [Environment.COURSE_BC]: formationBCTypeformId,
+  [Environment.COURSE_TILT]: formationTILTTypeformId,
+  [Environment.CUT]: cutTypeformId,
+  [Environment.TILT]: tiltTypeformId,
+  [Environment.CLICKSON]: clicksonTypeformId,
+}
+
+const FeedbackForm = ({ environment }: Props) => {
+  'use memo'
+
+  const formId = formPerEnvironmentTab[environment] || typeformId
+
+  useEffect(() => {
+    appendForm()
+  }, [])
+
+  return formId ? <div className="typeform" data-tf-live={formId} /> : <></>
+}
+
+export default FeedbackForm

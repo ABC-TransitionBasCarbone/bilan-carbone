@@ -1,6 +1,6 @@
 import { auth } from '@/services/auth'
-import type { ApiResponse } from '@abc-transitionbascarbone/utils/serverResponse'
-import { logServerFunctionCall } from '@abc-transitionbascarbone/utils/serverResponse'
+import type { ApiResponse } from '@abc-transitionbascarbone/common/utils/serverResponse'
+import { logServerFunctionCall } from '@abc-transitionbascarbone/common/utils/serverResponse'
 
 export const withServerResponse = async <T>(functionName: string, fn: () => Promise<T>): Promise<ApiResponse<T>> => {
   const session = await auth()
@@ -21,7 +21,7 @@ export const withServerResponse = async <T>(functionName: string, fn: () => Prom
       success: false,
       errorMessage: error.message,
       start,
-      duration: duration,
+      duration,
     })
 
     return { success: false, errorMessage: error.message }

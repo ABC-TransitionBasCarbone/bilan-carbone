@@ -1,13 +1,13 @@
 'use client'
 
 import TrajectoryChart from '@/components/results/TrajectoryChart'
-import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/utils/charts'
-import { formatNumber } from '@abc-transitionbascarbone/utils/number'
+import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/common/utils/charts'
+import { formatNumber } from '@abc-transitionbascarbone/common/utils/number'
 import {
   calculateSimpleLinearTrajectory,
   getSnbcDefaultReductionRates,
   ReductionRates,
-} from '@abc-transitionbascarbone/utils/trajectory'
+} from '@abc-transitionbascarbone/common/utils/trajectory'
 import { Typography } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import styles from '../SurveyCompletion.module.css'

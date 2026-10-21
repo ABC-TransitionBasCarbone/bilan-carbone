@@ -1,0 +1,52 @@
+import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
+import withStudyDetails, { StudyProps } from '@/components/hoc/withStudyDetails'
+import StudyPostsPageContainer from '@/components/pages/StudyPostsContainer'
+import { canReadStudyDetail } from '@/services/permissions/study'
+import { getAccountRoleOnStudy } from '@/utils/study'
+import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
+import { SubPost } from '@abc-transitionbascarbone/common/db/enums'
+import { Post } from '@abc-transitionbascarbone/common/utils/charts'
+
+interface Props {
+  params: Promise<{
+    post: string
+  }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+const StudyPost = async (props: Props & StudyProps & UserSessionProps) => {
+  const params = await props.params
+  const searchParams = await props.searchParams
+
+  const post = Object.keys(Post).find((key) => key === params.post)
+  if (!post) {
+    return <NotFound />
+  }
+
+  if (!(await canReadStudyDetail(props.user, props.study))) {
+    return <NotFound />
+  }
+
+  const userRole = getAccountRoleOnStudy(props.user, props.study)
+  if (!userRole) {
+    return <NotFound />
+  }
+
+  const subPostParam = searchParams['subPost']
+  const currentSubPost =
+    typeof subPostParam === 'string' && Object.values(SubPost).includes(subPostParam as SubPost)
+      ? (subPostParam as SubPost)
+      : undefined
+
+  return (
+    <StudyPostsPageContainer
+      post={post as Post}
+      study={props.study}
+      userRole={userRole}
+      user={props.user}
+      currentSubPost={currentSubPost}
+    />
+  )
+}
+
+export default withAuth(withStudyDetails(StudyPost))

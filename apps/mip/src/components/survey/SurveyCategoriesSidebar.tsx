@@ -1,9 +1,14 @@
 'use client'
 
-import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
-import { getSurveyCategoryKeysFromParsedRules } from '@/publicodes/mip-engine'
-import { formatMassKilograms, getCategoryClassSuffix } from '@abc-transitionbascarbone/publicodes/form'
-import { getPositiveNodeValue } from '@abc-transitionbascarbone/utils/number'
+import { useMipPublicodes } from '@/lib/publicodes/MipPublicodesProvider'
+import { getSurveyCategoryKeysFromParsedRules } from '@/lib/publicodes/mip-engine'
+import { hasRuleAnswer } from '@/lib/publicodes/mip-rules'
+import {
+  formatMassKilograms,
+  getCategoryClassSuffix,
+  getRuleCategoryKey,
+} from '@abc-transitionbascarbone/common/publicodes/form/utils'
+import { getPositiveNodeValue } from '@abc-transitionbascarbone/common/utils/number'
 import classNames from 'classnames'
 import { Situation } from 'publicodes'
 import { useMemo } from 'react'
@@ -12,6 +17,7 @@ import styles from './SurveyCategoriesSidebar.module.css'
 interface Props {
   activeCategoryKey: string | null
   situation: Situation<string>
+  relevantQuestions: string[]
 }
 
 interface CategoryItem {
@@ -20,8 +26,9 @@ interface CategoryItem {
   icones: string
   valueKg: number
   isActive: boolean
-  isAnswered: boolean
   toneClassName: string
+  completedQuestions: number
+  totalQuestions: number
 }
 
 interface SidebarItemProps {
@@ -29,26 +36,31 @@ interface SidebarItemProps {
 }
 
 const SidebarItem = ({ item }: SidebarItemProps) => {
+  const valueLabel = item.completedQuestions > 0 ? formatMassKilograms(item.valueKg) : ''
+
   return (
     <div
-      className={classNames(styles.categoryItem, 'justify-between', 'align-center', 'gapped-2', {
-        [item.toneClassName]: item.isAnswered,
+      className={classNames(styles.categoryItem, item.toneClassName, 'justify-between', 'align-center', 'gapped-2', {
         [styles.active]: item.isActive,
       })}
     >
+      <progress
+        className={styles.progress}
+        value={item.completedQuestions}
+        max={item.totalQuestions || 1}
+        aria-label={item.titre}
+      />
       <div className={classNames(styles.categoryLabel, 'align-center', 'gapped-2')}>
         <span>{item.icones}</span>
         <span className={styles.title}>{item.titre}</span>
       </div>
-      <span className={classNames(styles.value, { [styles.activeValue]: item.isActive })}>
-        {formatMassKilograms(item.valueKg)}
-      </span>
+      <span className={classNames(styles.value, { [styles.activeValue]: item.isActive })}>{valueLabel}</span>
     </div>
   )
 }
 
-const SurveyCategoriesSidebar = ({ activeCategoryKey, situation }: Props) => {
-  const { engine } = useMipPublicodes()
+const SurveyCategoriesSidebar = ({ activeCategoryKey, situation, relevantQuestions }: Props) => {
+  const { engine, meta } = useMipPublicodes()
   const previewEngine = useMemo(() => {
     const localEngine = engine.shallowCopy()
     localEngine.setSituation({ ...situation })
@@ -60,6 +72,10 @@ const SurveyCategoriesSidebar = ({ activeCategoryKey, situation }: Props) => {
 
   const categories: CategoryItem[] = categoryKeys.map((key) => {
     const raw = rules[key]?.rawNode as { titre?: string; icônes?: string } | undefined
+    const categoryQuestions = relevantQuestions.filter((name) => getRuleCategoryKey(name) === key)
+    const completedQuestions = categoryQuestions.filter((question) =>
+      hasRuleAnswer(question, situation, meta.mosaicChildrenWithParent),
+    ).length
     const result = (() => {
       try {
         return previewEngine.evaluate(key)
@@ -77,8 +93,9 @@ const SurveyCategoriesSidebar = ({ activeCategoryKey, situation }: Props) => {
       icones: raw?.icônes ?? '',
       valueKg,
       isActive,
-      isAnswered: valueKg > 0,
       toneClassName: styles[`category${categoryClassSuffix}`] ?? styles.categoryDt,
+      completedQuestions,
+      totalQuestions: categoryQuestions.length,
     }
   })
 

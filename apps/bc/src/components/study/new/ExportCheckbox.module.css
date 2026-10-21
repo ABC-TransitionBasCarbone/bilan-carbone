@@ -1,0 +1,42 @@
+.container {
+  height: 3.5rem;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.checkbox {
+  padding-left: 0 !important;
+}
+
+.field {
+  width: 15rem;
+  margin: 0 !important;
+}
+
+.sectionTitle {
+  margin: 1rem 0 0.5rem;
+  font-weight: bold;
+}
+
+.list {
+  list-style-position: inside;
+  list-style-type: initial;
+}
+
+.subList {
+  ul {
+    padding-left: 1rem;
+    list-style-position: inside;
+    list-style-type: circle;
+  }
+}
+
+.bcExport {
+  padding-right: 0.5rem;
+  color: var(--mui-palette-text-disabled);
+}
+
+.consolidatedLabel {
+  margin: 0 !important;
+}

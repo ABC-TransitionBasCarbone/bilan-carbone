@@ -37,10 +37,24 @@ describe('Survey completion', () => {
     cy.clearLocalStorage(`mip-publicodes-state-${surveyId}`)
 
     cy.visit(`/${surveyId}/survey`)
+    cy.getByTestId('survey-categories-sidebar')
+      .find('span')
+      .filter((_, element) => element.textContent?.endsWith(' kg') ?? false)
+      .each(($value) => {
+        cy.wrap($value).should('have.text', '0 kg')
+      })
+    cy.getByTestId('survey-categories-sidebar').find('progress').first().should('have.attr', 'value', '0')
+
+    cy.getByTestId('survey-next-button').click()
+    cy.getByTestId('survey-categories-sidebar').find('progress').first().should('have.attr', 'value', '1')
 
     completeSurveyFromCurrentPage()
 
     cy.url().should('include', `/${surveyId}/results`)
+    cy.window().then((window) => {
+      const state = JSON.parse(window.localStorage.getItem(`mip-publicodes-state-${surveyId}`) ?? '{}')
+      expect(state.situation).to.deep.equal({})
+    })
     cy.getByTestId('survey-completion-footprint-banner').should('be.visible')
 
     cy.reload()

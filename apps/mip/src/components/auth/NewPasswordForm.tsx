@@ -1,8 +1,8 @@
 'use client'
 
 import { resetPassword } from '@/services/serverFunctions/user'
-import NewPasswordFormCommon from '@abc-transitionbascarbone/components/src/auth/NewPasswordFormCommon'
-import { useServerFunction } from '@abc-transitionbascarbone/components/src/hooks/useServerFunction'
+import NewPasswordFormCommon from '@abc-transitionbascarbone/common/components/auth/NewPasswordFormCommon'
+import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 

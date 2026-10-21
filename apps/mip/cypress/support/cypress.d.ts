@@ -1,1 +1,1 @@
-import '../../../../packages/types/cypress-commands'
+import '../../../../packages/common/types/cypress-commands'

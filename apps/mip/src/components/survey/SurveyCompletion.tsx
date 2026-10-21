@@ -8,16 +8,20 @@ import TopCategoriesSection from '@/components/survey/completion/TopCategoriesSe
 import TransitionEncart from '@/components/survey/completion/TransitionEncart'
 import { ActionResult, CategoryResult } from '@/components/survey/completion/types'
 import { clearSurveyState, loadSurveyState } from '@/components/survey/surveyStateStorage'
-import { useMipPublicodes } from '@/publicodes/MipPublicodesProvider'
-import { getSurveyCategoryKeysFromRawRules, type RawRules } from '@/publicodes/mip-engine'
-import { normalizeSituation } from '@/utils/survey'
-import { getRuleCategoryKey } from '@abc-transitionbascarbone/publicodes/form'
-import { getPositiveNodeValue } from '@abc-transitionbascarbone/utils/number'
+import { useMipPublicodes } from '@/lib/publicodes/MipPublicodesProvider'
+import {
+  createMipEngineWithoutDefaults,
+  getSurveyCategoryKeysFromRawRules,
+  type RawRules,
+} from '@/lib/publicodes/mip-engine'
+import { normalizeSituation, type MipSimulationState } from '@/utils/survey'
+import { getRuleCategoryKey } from '@abc-transitionbascarbone/common/publicodes/form'
+import { safeEvaluate } from '@abc-transitionbascarbone/common/publicodes/utils'
+import { getPositiveNodeValue } from '@abc-transitionbascarbone/common/utils/number'
 import { Refresh } from '@mui/icons-material'
 import { Button, Container } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { Situation } from 'publicodes'
 import { useEffect, useMemo } from 'react'
 import styles from './SurveyCompletion.module.css'
 
@@ -28,56 +32,48 @@ type ModelRule = {
 }
 
 interface Props {
-  surveyId: string
   model: RawRules
   restoreFromStorage?: boolean
 }
 
-type StoredSurveyState = {
-  situation?: Situation<string>
-}
-
-const SurveyCompletion = ({ surveyId, model, restoreFromStorage = false }: Props) => {
+const SurveyCompletion = ({ model, restoreFromStorage = false }: Props) => {
   const t = useTranslations('survey.completion')
-  const { engine, situation, setSituation } = useMipPublicodes()
+  const { surveyId, simulation, updateSimulation } = useMipPublicodes()
+  const { situation } = simulation
   const router = useRouter()
 
   useEffect(() => {
     if (!restoreFromStorage) {
       return
     }
-    const savedSituation = normalizeSituation(loadSurveyState<StoredSurveyState>(surveyId)?.situation)
+    const savedSituation = normalizeSituation(loadSurveyState<MipSimulationState>(surveyId)?.situation)
     if (savedSituation) {
-      setSituation(savedSituation)
+      updateSimulation({ situation: savedSituation })
       return
     }
-  }, [restoreFromStorage, setSituation, surveyId])
+  }, [restoreFromStorage, updateSimulation, surveyId])
 
-  const totalEval = engine.evaluate('bilan')
-  const totalKgFromBilan = getPositiveNodeValue(totalEval.nodeValue)
+  const resultEngine = useMemo(() => createMipEngineWithoutDefaults(model).setSituation(situation), [model, situation])
+  const totalKgFromBilan = getPositiveNodeValue(safeEvaluate(resultEngine, 'bilan'))
   const categoryKeys = useMemo(() => getSurveyCategoryKeysFromRawRules(model), [model])
-
-  const evaluateCategoryValue = (ruleName: string): number => {
-    try {
-      return getPositiveNodeValue(engine.evaluate(ruleName).nodeValue)
-    } catch {
-      return 0
-    }
-  }
 
   const categories = useMemo<CategoryResult[]>(() => {
     return categoryKeys
       .map((key) => {
         const rule = model?.[key] as ModelRule | undefined
+        let valueKg = 0
+        try {
+          valueKg = getPositiveNodeValue(resultEngine.evaluate(key).nodeValue)
+        } catch {}
         return {
           key,
           titre: rule?.titre ?? key,
           icones: rule?.icônes ?? '',
-          valueKg: evaluateCategoryValue(key),
+          valueKg,
         }
       })
       .sort((a, b) => b.valueKg - a.valueKg)
-  }, [categoryKeys, engine, model, situation])
+  }, [categoryKeys, model, resultEngine])
 
   const totalKgFromCategories = categories.reduce((sum, category) => sum + category.valueKg, 0)
   const totalKg = totalKgFromBilan > 0 ? totalKgFromBilan : totalKgFromCategories
@@ -89,7 +85,7 @@ const SurveyCompletion = ({ surveyId, model, restoreFromStorage = false }: Props
     return actionKeys
       .flatMap((key) => {
         try {
-          const result = engine.evaluate(key)
+          const result = resultEngine.evaluate(key)
           const savingsKg = getPositiveNodeValue(result.nodeValue)
           const rule = model?.[key] as ModelRule | undefined
           return [
@@ -107,7 +103,7 @@ const SurveyCompletion = ({ surveyId, model, restoreFromStorage = false }: Props
       })
       .filter((action) => action.savingsKg > 0)
       .sort((a, b) => b.savingsKg - a.savingsKg)
-  }, [engine, model, situation])
+  }, [model, resultEngine])
 
   const actionsByCategoryMap = useMemo(() => {
     return actions.reduce<Record<string, ActionResult[]>>((acc, action) => {

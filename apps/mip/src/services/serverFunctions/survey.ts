@@ -2,7 +2,11 @@
 
 import { createResponse } from '@/db/campaign'
 import { getSurveyCampaignForCsvExport, getSurveyCampaignForResults } from '@/db/survey'
-import { createMipEngine, getSurveyCategoryKeysFromRawRules, RawRules } from '@/publicodes/mip-engine'
+import {
+  createMipEngineWithoutDefaults,
+  getSurveyCategoryKeysFromRawRules,
+  RawRules,
+} from '@/lib/publicodes/mip-engine'
 import { dbActualizedAuth } from '@/services/auth'
 import { EmissionCategory, EntityFilterResult, SurveyResults } from '@/types/results.types'
 import { getEntityFilterDefsFromModel as getEntityFilterDefsFromModelFromUtil } from '@/utils/entityFilter'
@@ -12,12 +16,12 @@ import {
   computeAggregatesForSituations,
   createEmptyCategories,
   getSurveyQuestionColumns,
-  parseStoredFormState,
+  parseMipSimulationState,
   resolveKeyStatsRules,
 } from '@/utils/survey'
 import { isAdmin } from '@/utils/user'
-import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/services/permissions/check'
-import { buildCsv, sanitizeFileName, serializeCsvValue } from '@abc-transitionbascarbone/utils/csv'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
+import { buildCsv, sanitizeFileName, serializeCsvValue } from '@abc-transitionbascarbone/common/utils/csv'
 import { Situation } from 'publicodes'
 
 export const getEntityFilterDefsFromModel = async (rules: RawRules) => getEntityFilterDefsFromModelFromUtil(rules)
@@ -82,10 +86,9 @@ export const getSurveyResults = async (campaignId: string): Promise<SurveyResult
     }
   }
 
-  const engine = createMipEngine(modelRules)
+  const engine = createMipEngineWithoutDefaults(modelRules)
   const situations: Situation<string>[] = responses.map((response) => {
-    const formState = parseStoredFormState(response.answers)
-    return formState.situation ?? {}
+    return parseMipSimulationState(response.answers).situation
   })
 
   const { averageFootprint, categories, keyStats } = computeAggregatesForSituations(
@@ -135,8 +138,7 @@ export const exportSurveyResponsesToCSV = async (campaignId: string) =>
     const questionColumns = getSurveyQuestionColumns(model)
 
     const rows = campaign.responses.map((response, index) => {
-      const parsedAnswers = parseStoredFormState(response.answers)
-      const situation = (parsedAnswers.situation ?? {}) as Record<string, unknown>
+      const situation = parseMipSimulationState(response.answers).situation as Record<string, unknown>
 
       return [
         String(index + 1),
