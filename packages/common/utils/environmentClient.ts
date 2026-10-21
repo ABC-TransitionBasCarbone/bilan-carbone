@@ -1,4 +1,5 @@
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { isAdvanced } from './environments'
 
 type ClientEnvKey = 'SUPPORT_EMAIL'
 
@@ -22,5 +23,4 @@ export const getEnvVarClient = (key: ClientEnvKey, environment: Environment = En
   return CLIENT_ENV_BY_ENV[environment]?.[key] ?? CLIENT_ENV_DEFAULT[key] ?? ''
 }
 
-export const hasTranslatedLinks = (environment: Environment) =>
-  environment === Environment.BC || environment === Environment.TILT
+export const hasTranslatedLinks = isAdvanced
