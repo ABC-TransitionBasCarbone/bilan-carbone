@@ -12,7 +12,7 @@ import {
   getAccountsFromUser,
   removeOtherAccountActivation,
 } from '@/db/account'
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { findCncByCncCode } from '@/db/cnc'
 import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
 import {
@@ -83,7 +83,7 @@ import { updateUserResetToken } from '@abc-transitionbascarbone/common/services/
 import { AddMemberCommand } from '@abc-transitionbascarbone/common/services/serverFunctions/user.command'
 import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@abc-transitionbascarbone/common/utils'
 import { environmentsWithChecklist } from '@abc-transitionbascarbone/common/utils/environments'
-import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/common/utils/user.server'
+import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/common/utils/userTokens'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'

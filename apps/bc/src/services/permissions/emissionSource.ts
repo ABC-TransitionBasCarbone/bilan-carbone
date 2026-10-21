@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { getEmissionFactorById } from '@/db/emissionFactors'
 import { FullStudy, getStudyById, getStudySites } from '@/db/study'
 import { AccountWithUser } from '@/types/account.types'

@@ -4,7 +4,6 @@ import TopLeftNavBar from '@/components/navbar/TopLeftNavBar'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { hasAccessToStudyComments, isClickson, isTilt } from '@/services/permissions/environment'
 import { hasAccessToMethodology, hasAccessToSettings } from '@/services/permissions/environmentAdvanced'
-import { hasAccessToFormation } from '@/services/permissions/formations'
 import { getUserActiveAccounts } from '@/services/serverFunctions/user'
 import { Environment, Role } from '@abc-transitionbascarbone/common/db/enums'
 import { Locale } from '@abc-transitionbascarbone/common/i18n/config'
@@ -35,21 +34,16 @@ interface Props {
   user: UserSession
   isFootprintsEnabled: boolean
   hasTrainedUsers: boolean
+  hasFormation: boolean
 }
 
-const Navbar = ({ user, isFootprintsEnabled, hasTrainedUsers }: Props) => {
+const Navbar = ({ user, isFootprintsEnabled, hasTrainedUsers, hasFormation }: Props) => {
   const t = useTranslations('navigation')
-  const [hasFormation, setHasFormation] = useState(false)
   const [hasMultipleAccounts, setHasMultipleAccounts] = useState(false)
   const locale = useLocale()
   const environment = getEnvironmentHandlingGenericEnvs(user.environment)
 
   useEffect(() => {
-    const getFormationAccess = async () => {
-      const hasAccess = await hasAccessToFormation(user)
-      setHasFormation(hasAccess)
-    }
-
     const hasMultipleAccounts = async () => {
       const userAccounts = await getUserActiveAccounts()
       if (userAccounts.success) {
@@ -58,7 +52,6 @@ const Navbar = ({ user, isFootprintsEnabled, hasTrainedUsers }: Props) => {
     }
 
     hasMultipleAccounts()
-    getFormationAccess()
   }, [user])
 
   const methodologyLink = useMemo(() => {

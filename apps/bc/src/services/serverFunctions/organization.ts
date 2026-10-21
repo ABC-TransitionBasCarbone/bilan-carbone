@@ -1,7 +1,7 @@
 'use server'
 
 import { getAccountOrganizationVersions } from '@/db/account'
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { getEmissionFactorWithoutQuality } from '@/db/emissionFactors'
 import {
   createOrganizationWithVersion,

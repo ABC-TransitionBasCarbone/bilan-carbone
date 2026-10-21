@@ -32,7 +32,7 @@ import { UserSession } from 'next-auth'
 import { cache } from 'react'
 import { getAccountOrganizationVersions } from './account'
 import { AccountWithUserSelect } from './account.select'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 import { getOrganizationVersionsByIds } from './organizationVersions'
 
 export type StudyTagFamilyWithTags = Omit<StudyTagFamily, 'createdAt' | 'updatedAt'> & {

@@ -1,4 +1,4 @@
-'use server'
+import 'server-only'
 
 import { getOrganizationVersionForRightsCheck } from '@/db/organization'
 import { hasActiveLicenceForFormation } from '@/utils/organization'

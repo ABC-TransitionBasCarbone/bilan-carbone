@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@abc-transitionbascarbone/common": "*",
+    "client-only": "0.0.1",
     "@base-ui-components/react": "^1.0.0-rc.0",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
@@ -51,6 +52,7 @@
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-hook-form": "^7.89.0",
+    "server-only": "^0.0.1",
     "uuid": "^14.0.2",
     "zod": "^4.6.5",
     "zustand": "^5.0.15"

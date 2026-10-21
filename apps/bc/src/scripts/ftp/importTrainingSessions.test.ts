@@ -1,4 +1,4 @@
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { createUsersWithAccount } from '@/db/user'
 import type { CourseSession } from '@abc-transitionbascarbone/common/db'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
@@ -17,7 +17,7 @@ jest.mock('basic-ftp', () => ({
   Client: jest.fn(() => ({ access: jest.fn(), downloadTo: jest.fn(), close: jest.fn() })),
 }))
 
-jest.mock('@/db/client.server', () => ({
+jest.mock('@/db/client', () => ({
   prismaClient: {
     courseOrganism: { findMany: jest.fn() },
     account: { findMany: jest.fn(), update: jest.fn() },

@@ -54,7 +54,7 @@ jest.mock('@/services/checklist', () => ({}))
 jest.mock('@/db/account')
 jest.mock('@/db/cnc')
 jest.mock('@/db/deactivableFeatures')
-jest.mock('@/db/client.server', () => ({
+jest.mock('@/db/client', () => ({
   prismaClient: {
     $transaction: jest.fn((callback) => callback({})),
   },
