@@ -124,7 +124,6 @@ const mockActivateEmail = activateEmail as jest.Mock
 const actualActivateEmail = jest.requireActual('./user').activateEmail as typeof activateEmail
 const courseActivationSessionSelect = {
   id: true,
-  professor: { select: { user: { select: { email: true } } } },
 } satisfies Prisma.CourseSessionSelect
 type CourseActivationSession = Prisma.CourseSessionGetPayload<{ select: typeof courseActivationSessionSelect }>
 type CourseActivationSessionArgs = {
@@ -143,10 +142,7 @@ const testEmail = 'test@example.com'
 const testSiret = '12345678901234'
 const testCNC = 'CNC123'
 
-const createCourseActivationSession = (professorEmail: string): CourseActivationSession => ({
-  id: 'course-session-id',
-  professor: { user: { email: professorEmail } },
-})
+const createCourseActivationSession = (): CourseActivationSession => ({ id: 'course-session-id' })
 
 const mockCourseActivationDependencies = () => {
   mockGetUserByEmail.mockResolvedValue({
@@ -164,7 +160,7 @@ const mockCourseActivationDependencies = () => {
     activatedLicence: [],
   })
   mockOrganizationVersionActiveAccountsCount.mockResolvedValue(0)
-  mockFindCourseSession.mockResolvedValue(createCourseActivationSession('professor@example.com'))
+  mockFindCourseSession.mockResolvedValue(createCourseActivationSession())
 }
 
 describe('signUpWithSiretOrCNC', () => {
@@ -224,7 +220,7 @@ describe('signUpWithSiretOrCNC', () => {
     it('identifies a trainee using the trainee code', async () => {
       const result = await checkCourseActivation(' TEST@EXAMPLE.COM ', ' 123456 ', Environment.COURSE_BC)
 
-      expect(result).toMatchObject({ success: true, data: { isProfessor: false } })
+      expect(result.success).toBe(true)
       expect(mockGetUserByEmail).toHaveBeenCalledWith(testEmail)
       expect(mockFindCourseSession).toHaveBeenCalledWith({
         where: {
@@ -244,12 +240,26 @@ describe('signUpWithSiretOrCNC', () => {
       })
     })
 
-    it('identifies a professor using the professor code', async () => {
-      mockFindCourseSession.mockResolvedValue(createCourseActivationSession(testEmail))
+    it('accepts a professor code', async () => {
+      const result = await checkCourseActivation(testEmail, ' 654321 ', Environment.COURSE_BC)
 
-      const result = await checkCourseActivation(testEmail, '654321', Environment.COURSE_BC)
-
-      expect(result).toMatchObject({ success: true, data: { isProfessor: true } })
+      expect(result.success).toBe(true)
+      expect(mockFindCourseSession).toHaveBeenCalledWith({
+        where: {
+          environment: Environment.COURSE_BC,
+          OR: [
+            {
+              traineeCode: '654321',
+              trainees: { some: { account: { user: { email: testEmail } } } },
+            },
+            {
+              professorCode: '654321',
+              professor: { user: { email: testEmail } },
+            },
+          ],
+        },
+        select: courseActivationSessionSelect,
+      })
     })
 
     it('rejects non-course environments', async () => {
@@ -320,7 +330,7 @@ describe('signUpWithSiretOrCNC', () => {
             },
           ],
         },
-        select: { id: true, professor: { select: { user: { select: { email: true } } } } },
+        select: courseActivationSessionSelect,
       })
       expect(mockUpdateUserPasswordForEmail).toHaveBeenCalledWith(testEmail, 'Password-123', Environment.COURSE_BC)
       expect(mockSendAccountActivatedEmail).toHaveBeenCalledWith(testEmail, Environment.COURSE_BC)

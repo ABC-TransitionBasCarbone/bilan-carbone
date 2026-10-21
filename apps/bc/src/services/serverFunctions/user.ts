@@ -455,14 +455,14 @@ export const checkCourseActivation = async (email: string, sessionCode: string, 
           },
         ],
       },
-      select: { id: true, professor: { select: { user: { select: { email: true } } } } },
+      select: { id: true },
     })
 
     if (!courseSession) {
       throw Error(NOT_AUTHORIZED)
     }
 
-    return { user, account, isProfessor: courseSession.professor?.user.email === user.email }
+    return { user, account }
   })
 
 export const activateEmailForCourse = async (
