@@ -357,7 +357,7 @@ describe('getCourseSessionsFromFTP', () => {
   })
 
   it('excludes existing sessions from the email', async () => {
-    mockFindCourseSessions.mockResolvedValueOnce([]).mockResolvedValueOnce([withParticipants(savedSessions[0])])
+    mockFindCourseSessions.mockResolvedValueOnce([withParticipants(savedSessions[0])])
 
     await importCourseSessionsFromFTP()
 
@@ -371,7 +371,7 @@ describe('getCourseSessionsFromFTP', () => {
   })
 
   it('does not send an email when all sessions already exist', async () => {
-    mockFindCourseSessions.mockResolvedValueOnce([]).mockResolvedValueOnce(savedSessions.map(withParticipants))
+    mockFindCourseSessions.mockResolvedValueOnce(savedSessions.map(withParticipants))
 
     await importCourseSessionsFromFTP()
 
@@ -421,7 +421,7 @@ describe('getCourseSessionsFromFTP', () => {
     before.endDate = new Date('2026-01-02')
     before.professor = { user: oldProfessor }
     before.trainees = [before.trainees[0], { account: { user: removedTrainee } }]
-    mockFindCourseSessions.mockResolvedValueOnce([]).mockResolvedValueOnce([before])
+    mockFindCourseSessions.mockResolvedValueOnce([before])
 
     await importCourseSessionsFromFTP()
 
@@ -462,7 +462,7 @@ describe('getCourseSessionsFromFTP', () => {
       } else {
         previous[0].trainees = []
       }
-      mockFindCourseSessions.mockResolvedValueOnce([]).mockResolvedValueOnce(previous)
+      mockFindCourseSessions.mockResolvedValueOnce(previous)
 
       await importCourseSessionsFromFTP()
 
@@ -479,7 +479,7 @@ describe('getCourseSessionsFromFTP', () => {
   it('ignores trainee order changes', async () => {
     const previous = savedSessions.map(withParticipants)
     previous[0].trainees.reverse()
-    mockFindCourseSessions.mockResolvedValueOnce([]).mockResolvedValueOnce(previous)
+    mockFindCourseSessions.mockResolvedValueOnce(previous)
 
     await importCourseSessionsFromFTP()
 
@@ -488,7 +488,7 @@ describe('getCourseSessionsFromFTP', () => {
 
   it('does not send an email if saving the sessions fails', async () => {
     const error = new Error('Database unavailable')
-    mockUpsertCourseSession.mockRejectedValueOnce(error)
+    mockUpsertCourseSession.mockReset().mockRejectedValueOnce(error)
 
     await expect(importCourseSessionsFromFTP()).rejects.toThrow(error)
 

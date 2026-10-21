@@ -244,7 +244,7 @@ describe('signUpWithSiretOrCNC', () => {
         Environment.COURSE_BC,
       )
 
-      expect(result.success).toMatchObject({
+      expect(result).toMatchObject({
         success: false,
         errorMessage: NOT_AUTHORIZED,
       })

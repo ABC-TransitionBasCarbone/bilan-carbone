@@ -327,6 +327,13 @@ export const importCourseSessionsFromFTP = async () => {
       ),
   )
 
+  const existingSessions = await prismaClient.courseSession.findMany({
+    where: {
+      OR: sessions.map(({ courseOrganismId, name, environment }) => ({ courseOrganismId, name, environment })),
+    },
+    select: sessionEmailSelect,
+  })
+
   const importedSessions = await prismaClient.$transaction(async (transaction) => {
     const importedSessionsPromises = []
     for (const session of sessions) {
@@ -391,13 +398,6 @@ export const importCourseSessionsFromFTP = async () => {
       )
     }
     return importedSessionsPromises
-  })
-
-  const existingSessions = await prismaClient.courseSession.findMany({
-    where: {
-      OR: sessions.map(({ courseOrganismId, name, environment }) => ({ courseOrganismId, name, environment })),
-    },
-    select: sessionEmailSelect,
   })
 
   const existingSessionIds = new Set(existingSessions.map(({ id }) => id))
