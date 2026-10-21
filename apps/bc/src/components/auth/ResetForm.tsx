@@ -37,7 +37,7 @@ const ResetForm = ({ user, token, environment = Environment.BC }: Props) => {
   const { callServerFunction } = useServerFunction()
 
   if (invalidResetLink) {
-    return <ResetLinkAlreadyUsed />
+    return <ResetLinkAlreadyUsed environment={environment} />
   }
 
   const loginLink = getEnvRoute('login', environment)
