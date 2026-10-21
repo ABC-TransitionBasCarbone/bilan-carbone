@@ -36,7 +36,7 @@ const ResetForm = ({ user, token }: Props) => {
   }, [token])
 
   if (invalidResetLink) {
-    return <ResetLinkAlreadyUsed />
+    return <ResetLinkAlreadyUsed environment={Environment.MIP} />
   }
 
   const loginLink = '/login'
