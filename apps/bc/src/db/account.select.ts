@@ -32,8 +32,6 @@ export const AccountWithUserSelect = {
       email: true,
       createdAt: true,
       updatedAt: true,
-      password: true,
-      resetToken: true,
       source: true,
       formationFormStartTime: true,
     },
