@@ -860,7 +860,7 @@ const getOrCreateUserAndSendStudyInvite = async (
     accountId = newAccountId
   } else {
     let account = (await getAccountByEmailAndEnvironment(email, organizationVersion.environment)) as AccountWithUser
-
+    let skipEmail = skipInviteEmail
     if (!account) {
       account = (await addAccount({
         user: { connect: { id: existingUser.id } },
@@ -875,9 +875,11 @@ const getOrCreateUserAndSendStudyInvite = async (
         role: Role.COLLABORATOR,
       })
       account = (await getAccountByEmailAndEnvironment(email, organizationVersion.environment)) as AccountWithUser
+    } else {
+      skipEmail = true
     }
 
-    if (!skipInviteEmail) {
+    if (!skipEmail) {
       await sendInvitation(
         email,
         study,

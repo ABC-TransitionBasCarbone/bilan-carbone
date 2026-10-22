@@ -366,6 +366,10 @@ export const resetPassword = async (email: string, userEnv: Environment | undefi
     const env = userEnv || Environment.BC
     const user = await getUserByEmail(email)
 
+    if (user?.accounts.find((a) => a.environment === env && a.status === UserStatus.SUSPENDED)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
     if (!user || user.accounts.every((a) => a.status !== UserStatus.ACTIVE)) {
       const activation = await activateEmail(email, env, true)
       if (activation.success) {
@@ -396,7 +400,13 @@ export const activateEmail = async (email: string, userEnv: Environment, fromRes
     const user = await getUserByEmail(email.toLowerCase())
     const account = await getAccountById(user?.accounts.find((a) => a.environment === env)?.id || '')
 
-    if (!user || !account || !account.organizationVersionId || account.status === UserStatus.ACTIVE) {
+    if (
+      !user ||
+      !account ||
+      !account.organizationVersionId ||
+      account.status === UserStatus.ACTIVE ||
+      account.status === UserStatus.SUSPENDED
+    ) {
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -629,6 +639,10 @@ export const signUpWithSiretOrCNC = async (email: string, siretOrCNC: string, en
       ([UserStatus.ACTIVE, UserStatus.PENDING_REQUEST, UserStatus.VALIDATED] as UserStatus[]).includes(
         alreadyCreatedAccount.status,
       )
+
+    if (alreadyCreatedAccount?.status === UserStatus.SUSPENDED) {
+      throw new Error(NOT_AUTHORIZED)
+    }
     if (isAccountAlreadyLinkedToOrga) {
       // Pour Tilt, on fait la même gestion que pour BC+ dans ce cas là
       if (environment === Environment.TILT && alreadyCreatedAccount.status !== UserStatus.ACTIVE) {

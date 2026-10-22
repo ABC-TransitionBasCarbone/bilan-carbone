@@ -96,8 +96,9 @@ export const handleAddingUser = async (creator: UserSession, newUser: AddMemberC
 
   const isMemberActiveInSomeEnv = memberExists?.accountsMip.some((a) => a.status === UserStatus.ACTIVE)
   const memberAccountMip = memberExists?.accountsMip[0]
+  const isAccountSuspended = memberAccountForEnv?.status === UserStatus.SUSPENDED
 
-  if (memberAccountMip?.role === RoleMip.SUPER_ADMIN || newUser.role === RoleMip.SUPER_ADMIN) {
+  if (memberAccountMip?.role === RoleMip.SUPER_ADMIN || newUser.role === RoleMip.SUPER_ADMIN || isAccountSuspended) {
     throw new Error(NOT_AUTHORIZED)
   }
 

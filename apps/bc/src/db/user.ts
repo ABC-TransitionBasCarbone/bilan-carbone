@@ -343,8 +343,9 @@ export const handleAddingUser = async (creator: UserSession, newUser: AddMemberC
 
   const isMemberActiveInSomeEnv = memberExists?.accounts.some((a) => a.status === UserStatus.ACTIVE)
   const memberAccountForEnv = memberExists?.accounts.find((a) => a.environment === environment)
+  const isAccountSuspended = memberAccountForEnv?.status === UserStatus.SUSPENDED
 
-  if (memberAccountForEnv?.role === Role.SUPER_ADMIN || newUser.role === Role.SUPER_ADMIN) {
+  if (memberAccountForEnv?.role === Role.SUPER_ADMIN || newUser.role === Role.SUPER_ADMIN || isAccountSuspended) {
     throw new Error(NOT_AUTHORIZED)
   }
 
