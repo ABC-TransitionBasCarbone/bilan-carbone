@@ -2292,7 +2292,7 @@
       "activity": "Dato de actividad",
       "value": "Valor del dato de actividad",
       "sign": "Valor únicamente positivo",
-      "source": "Fuente y fecha del dato recopilado",
+      "source": "Fuente / fecha de recopilación",
       "type": "Tipo",
       "depreciationPeriod": "Periodo de amortización",
       "hectare": "Hectárea",

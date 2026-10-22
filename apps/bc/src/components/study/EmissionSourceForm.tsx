@@ -345,10 +345,11 @@ const EmissionSourceForm = ({
         <TextField
           className="grow"
           disabled={!canEdit}
+          required
           data-testid="emission-source-source"
           defaultValue={emissionSource.source}
           onBlur={(event) => update('source', event.target.value || null)}
-          label={`${t('form.source')} *`}
+          label={t('form.source')}
         />
         {caracterisations.length > 0 && displayCaracterisation && (
           <FormControl className="grow">

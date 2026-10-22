@@ -2421,7 +2421,7 @@
       "activity": "Donnée d'activité",
       "value": "Valeur donnée d'activité",
       "sign": "Valeur uniquement positive",
-      "source": "Source et date de la donnée collectée",
+      "source": "Source / date de collecte",
       "type": "Type",
       "depreciationPeriod": "Durée d'amortissement",
       "hectare": "Hectare",
