@@ -306,6 +306,10 @@ describe('signUpWithSiretOrCNC', () => {
       mockCourseActivationDependencies()
     })
 
+    afterEach(() => {
+      jest.restoreAllMocks()
+    })
+
     it('accepts an email and session code associated with a course session', async () => {
       const result = await actualActivateEmailForCourse(
         ' TEST@EXAMPLE.COM ',
@@ -342,6 +346,38 @@ describe('signUpWithSiretOrCNC', () => {
       )
       expect(mockUpdateUserPasswordForEmail.mock.calls[0][3]).toBe(mockValidateUser.mock.calls[0][1])
       expect(mockSendAccountActivatedEmail).toHaveBeenCalledWith(testEmail, Environment.COURSE_BC)
+    })
+
+    it('succeeds and logs the error when the confirmation email cannot be sent', async () => {
+      const error = new Error('Email delivery failed')
+      mockSendAccountActivatedEmail.mockRejectedValueOnce(error)
+      const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
+
+      const result = await actualActivateEmailForCourse(testEmail, '123456', 'Password-123', Environment.COURSE_BC)
+
+      expect(result).toEqual({ success: true, data: undefined })
+      expect(mockValidateUser).toHaveBeenCalledWith(mockedAccountId, expect.anything())
+      expect(mockUpdateUserPasswordForEmail).toHaveBeenCalledWith(
+        testEmail,
+        'Password-123',
+        Environment.COURSE_BC,
+        expect.anything(),
+      )
+      expect(consoleError).toHaveBeenCalledWith('activateEmailForCourse: failed to send account activation email', {
+        userId: mockedUserId,
+        accountId: mockedAccountId,
+        environment: Environment.COURSE_BC,
+        error,
+      })
+    })
+
+    it('returns an error without sending an email when the activation transaction fails', async () => {
+      jest.spyOn(prismaClient, '$transaction').mockRejectedValueOnce(new Error('Activation failed'))
+
+      const result = await actualActivateEmailForCourse(testEmail, '123456', 'Password-123', Environment.COURSE_BC)
+
+      expect(result).toEqual({ success: false, errorMessage: 'Activation failed' })
+      expect(mockSendAccountActivatedEmail).not.toHaveBeenCalled()
     })
 
     it('rejects an email and session code that are not associated with a course session', async () => {

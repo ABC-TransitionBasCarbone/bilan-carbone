@@ -493,11 +493,24 @@ export const activateEmailForCourse = async (
         isolationLevel: 'Serializable',
       },
     )
-    await sendAccountActivatedEmail(user.email, environment)
+    try {
+      await sendAccountActivatedEmail(user.email, environment)
+    } catch (error) {
+      console.error('activateEmailForCourse: failed to send account activation email', {
+        userId: user.id,
+        accountId: account.id,
+        environment,
+        error,
+      })
+    }
   })
 
 export const activateEmail = async (email: string, userEnv: Environment, fromReset: boolean = false) =>
   withServerResponse('activateEmail', async () => {
+    if (isCourseEnvironment(userEnv)) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
     const { user, account } = await isActivationAutorhizedCommon(email, userEnv)
 
     if (
