@@ -225,13 +225,12 @@ describe('signUpWithSiretOrCNC', () => {
       expect(mockFindCourseSession).toHaveBeenCalledWith({
         where: {
           environment: Environment.COURSE_BC,
+          code: '123456',
           OR: [
             {
-              traineeCode: '123456',
               trainees: { some: { account: { user: { email: testEmail } } } },
             },
             {
-              professorCode: '123456',
               professor: { user: { email: testEmail } },
             },
           ],
@@ -247,13 +246,12 @@ describe('signUpWithSiretOrCNC', () => {
       expect(mockFindCourseSession).toHaveBeenCalledWith({
         where: {
           environment: Environment.COURSE_BC,
+          code: '654321',
           OR: [
             {
-              traineeCode: '654321',
               trainees: { some: { account: { user: { email: testEmail } } } },
             },
             {
-              professorCode: '654321',
               professor: { user: { email: testEmail } },
             },
           ],
@@ -323,13 +321,12 @@ describe('signUpWithSiretOrCNC', () => {
       expect(mockFindCourseSession).toHaveBeenCalledWith({
         where: {
           environment: Environment.COURSE_BC,
+          code: '123456',
           OR: [
             {
-              traineeCode: '123456',
               trainees: { some: { account: { user: { email: testEmail } } } },
             },
             {
-              professorCode: '123456',
               professor: { user: { email: testEmail } },
             },
           ],
