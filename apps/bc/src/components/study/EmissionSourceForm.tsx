@@ -343,12 +343,15 @@ const EmissionSourceForm = ({
           </>
         )}
         <TextField
+          id={`emission-source-source-${emissionSource.id}`}
           className="grow"
           disabled={!canEdit}
+          required
           data-testid="emission-source-source"
           defaultValue={emissionSource.source}
           onBlur={(event) => update('source', event.target.value || null)}
-          label={`${t('form.source')} *`}
+          label={t('form.source')}
+          slotProps={{ inputLabel: { shrink: true } }}
         />
         {caracterisations.length > 0 && displayCaracterisation && (
           <FormControl className="grow">
