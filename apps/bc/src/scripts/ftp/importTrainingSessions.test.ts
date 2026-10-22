@@ -17,14 +17,22 @@ jest.mock('basic-ftp', () => ({
   Client: jest.fn(() => ({ access: jest.fn(), downloadTo: jest.fn(), close: jest.fn() })),
 }))
 
-jest.mock('@/db/client.server', () => ({
-  prismaClient: {
-    courseOrganism: { findMany: jest.fn() },
-    account: { findMany: jest.fn(), update: jest.fn() },
-    courseSession: { findMany: jest.fn(), upsert: jest.fn() },
-    $transaction: jest.fn((operations: Promise<unknown>[]) => Promise.all(operations)),
-  },
-}))
+jest.mock('@/db/client.server', () => {
+  const courseOrganism = { findMany: jest.fn() }
+  const account = { findMany: jest.fn(), update: jest.fn() }
+  const courseSession = { findMany: jest.fn(), upsert: jest.fn() }
+  const transaction = { account, courseSession }
+  return {
+    prismaClient: {
+      courseOrganism,
+      account,
+      courseSession,
+      $transaction: jest.fn((operation) =>
+        Array.isArray(operation) ? Promise.all(operation) : operation(transaction),
+      ),
+    },
+  }
+})
 
 jest.mock('@/db/user', () => ({ createUsersWithAccount: jest.fn() }))
 
@@ -349,7 +357,7 @@ describe('getCourseSessionsFromFTP', () => {
   })
 
   it('excludes existing sessions from the email', async () => {
-    mockFindCourseSessions.mockResolvedValueOnce([]).mockResolvedValueOnce([withParticipants(savedSessions[0])])
+    mockFindCourseSessions.mockResolvedValueOnce([withParticipants(savedSessions[0])])
 
     await importCourseSessionsFromFTP()
 
@@ -363,7 +371,7 @@ describe('getCourseSessionsFromFTP', () => {
   })
 
   it('does not send an email when all sessions already exist', async () => {
-    mockFindCourseSessions.mockResolvedValueOnce([]).mockResolvedValueOnce(savedSessions.map(withParticipants))
+    mockFindCourseSessions.mockResolvedValueOnce(savedSessions.map(withParticipants))
 
     await importCourseSessionsFromFTP()
 
@@ -413,7 +421,7 @@ describe('getCourseSessionsFromFTP', () => {
     before.endDate = new Date('2026-01-02')
     before.professor = { user: oldProfessor }
     before.trainees = [before.trainees[0], { account: { user: removedTrainee } }]
-    mockFindCourseSessions.mockResolvedValueOnce([]).mockResolvedValueOnce([before])
+    mockFindCourseSessions.mockResolvedValueOnce([before])
 
     await importCourseSessionsFromFTP()
 
@@ -454,7 +462,7 @@ describe('getCourseSessionsFromFTP', () => {
       } else {
         previous[0].trainees = []
       }
-      mockFindCourseSessions.mockResolvedValueOnce([]).mockResolvedValueOnce(previous)
+      mockFindCourseSessions.mockResolvedValueOnce(previous)
 
       await importCourseSessionsFromFTP()
 
@@ -471,7 +479,7 @@ describe('getCourseSessionsFromFTP', () => {
   it('ignores trainee order changes', async () => {
     const previous = savedSessions.map(withParticipants)
     previous[0].trainees.reverse()
-    mockFindCourseSessions.mockResolvedValueOnce([]).mockResolvedValueOnce(previous)
+    mockFindCourseSessions.mockResolvedValueOnce(previous)
 
     await importCourseSessionsFromFTP()
 
@@ -480,11 +488,11 @@ describe('getCourseSessionsFromFTP', () => {
 
   it('does not send an email if saving the sessions fails', async () => {
     const error = new Error('Database unavailable')
-    jest.mocked(prismaClient.$transaction).mockResolvedValueOnce([]).mockRejectedValueOnce(error)
+    mockUpsertCourseSession.mockReset().mockRejectedValueOnce(error)
 
     await expect(importCourseSessionsFromFTP()).rejects.toThrow(error)
 
-    expect(mockUpsertCourseSession).toHaveBeenCalledTimes(2)
+    expect(mockUpsertCourseSession).toHaveBeenCalledTimes(1)
     expect(mockSendCourseSessionsCreatedEmail).not.toHaveBeenCalled()
   })
 

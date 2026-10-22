@@ -46,6 +46,7 @@ import {
   updateUser,
   updateUserApplicationSettings,
   updateUserFeedbackDate,
+  updateUserPasswordForEmail,
   UserWithAccounts,
   validateUser,
 } from '@/db/user'
@@ -67,6 +68,7 @@ import {
   UserStatus,
 } from '@abc-transitionbascarbone/common/db/enums'
 import {
+  sendAccountActivatedEmail,
   sendActivationEmail,
   sendActivationRequest,
   sendAddedActiveUserEmail,
@@ -82,7 +84,8 @@ import { EMAIL_SENT, MORE_THAN_ONE, NOT_AUTHORIZED } from '@abc-transitionbascar
 import { updateUserResetToken } from '@abc-transitionbascarbone/common/services/serverFunctions/user'
 import { AddMemberCommand } from '@abc-transitionbascarbone/common/services/serverFunctions/user.command'
 import { DAY, HOUR, MIN, TIME_IN_MS, YEAR } from '@abc-transitionbascarbone/common/utils'
-import { environmentsWithChecklist } from '@abc-transitionbascarbone/common/utils/environments'
+import { computePasswordValidation } from '@abc-transitionbascarbone/common/utils/auth'
+import { environmentsWithChecklist, isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/common/utils/user.server'
 import jwt from 'jsonwebtoken'
 import { UserSession } from 'next-auth'
@@ -397,27 +400,118 @@ export const resetPassword = async (email: string, userEnv: Environment | undefi
     }
   })
 
+const isActivationAutorhizedCommon = async (
+  email: string,
+  environment: Environment,
+): Promise<{
+  user: NonNullable<Awaited<ReturnType<typeof getUserByEmail>>>
+  account: NonNullable<Awaited<ReturnType<typeof getAccountById>>> & { organizationVersionId: string }
+}> => {
+  const user = await getUserByEmail(email.toLowerCase())
+  const account = await getAccountById(user?.accounts.find((a) => a.environment === environment)?.id || '')
+
+  if (
+    !user ||
+    !account ||
+    !account.organizationVersionId ||
+    account.status === UserStatus.ACTIVE ||
+    account.status === UserStatus.SUSPENDED
+  ) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  const accountOrgaVersion = await getOrganizationVersionForRightsCheck(account.organizationVersionId)
+  if (!accountOrgaVersion || (!accountOrgaVersion.activatedLicence && environment === Environment.BC)) {
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  return {
+    user,
+    account: { ...account, organizationVersionId: account.organizationVersionId },
+  }
+}
+
+export const checkCourseActivation = async (email: string, sessionCode: string, environment: Environment) =>
+  withServerResponse('activateEmailForCourse', async () => {
+    if (!isCourseEnvironment(environment)) {
+      throw Error(NOT_AUTHORIZED)
+    }
+    const { user, account } = await isActivationAutorhizedCommon(email.trim().toLowerCase(), environment)
+    const activationCount = await organizationVersionActiveAccountsCount(account.organizationVersionId)
+    if (activationCount) {
+      throw Error(NOT_AUTHORIZED)
+    }
+
+    const courseSession = await prismaClient.courseSession.findFirst({
+      where: {
+        environment,
+        OR: [
+          {
+            traineeCode: sessionCode.trim(),
+            trainees: { some: { account: { user: { email: user.email } } } },
+          },
+          {
+            professorCode: sessionCode.trim(),
+            professor: { user: { email: user.email } },
+          },
+        ],
+      },
+      select: { id: true },
+    })
+
+    if (!courseSession) {
+      throw Error(NOT_AUTHORIZED)
+    }
+
+    return { user, account }
+  })
+
+export const activateEmailForCourse = async (
+  email: string,
+  sessionCode: string,
+  password: string,
+  environment: Environment,
+) =>
+  withServerResponse('activateEmailForCourse', async () => {
+    const checkCourseActivationResponse = await checkCourseActivation(email, sessionCode, environment)
+    if (!checkCourseActivationResponse.success) {
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const { user, account } = checkCourseActivationResponse.data
+    const passwordValidation = computePasswordValidation(password)
+    if (!Object.values(passwordValidation).every((value) => value)) {
+      throw new Error('Password invalid')
+    }
+
+    await prismaClient.$transaction(
+      async (transaction) => {
+        await validateUser(account.id, transaction)
+        await updateUserPasswordForEmail(user.email, password, environment, transaction)
+      },
+      {
+        isolationLevel: 'Serializable',
+      },
+    )
+    try {
+      await sendAccountActivatedEmail(user.email, environment)
+    } catch (error) {
+      console.error('activateEmailForCourse: failed to send account activation email', {
+        userId: user.id,
+        accountId: account.id,
+        environment,
+        error,
+      })
+    }
+  })
+
 export const activateEmail = async (email: string, userEnv: Environment, fromReset: boolean = false) =>
   withServerResponse('activateEmail', async () => {
-    const env = userEnv
-
-    const user = await getUserByEmail(email.toLowerCase())
-    const account = await getAccountById(user?.accounts.find((a) => a.environment === env)?.id || '')
-
-    if (
-      !user ||
-      !account ||
-      !account.organizationVersionId ||
-      account.status === UserStatus.ACTIVE ||
-      account.status === UserStatus.SUSPENDED
-    ) {
+    if (isCourseEnvironment(userEnv)) {
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const accountOrgaVersion = await getOrganizationVersionForRightsCheck(account.organizationVersionId)
-    if (!accountOrgaVersion || (!accountOrgaVersion.activatedLicence && env === Environment.BC)) {
-      throw new Error(NOT_AUTHORIZED)
-    }
+    const { user, account } = await isActivationAutorhizedCommon(email, userEnv)
 
     if (
       (await organizationVersionActiveAccountsCount(account.organizationVersionId)) &&
@@ -459,7 +553,7 @@ export const activateEmail = async (email: string, userEnv: Environment, fromRes
           transaction,
         )
       })
-      await sendActivation(email, fromReset, env)
+      await sendActivation(email, fromReset, userEnv)
 
       return EMAIL_SENT
     }

@@ -291,6 +291,9 @@
     "description": "Please use the same email you used when joining the Association for Low Carbon Transition.",
     "email": "Email",
     "emailPlaceholder": "Email used during your training",
+    "sessionCode": "Session code",
+    "sessionCodePlaceholder": "Session code provided by your training organization",
+    "consent": "I understand that I am creating an account as part of my training, and that the training organization supporting me will be able to see what I do on my account.",
     "emailRequired": "Please enter an email",
     "validate": "Validate",
     "Not authorized": "You are not authorized. Please see <link>the FAQ</link> or <support>contact support</support> if you think this is an error.",
@@ -299,7 +302,9 @@
     "Organization activation in progress": "A colleague is already activating this organisation. Please allow them up to 24 hours to complete the activation before trying again.",
     "No recipient": "There has been an issue while sending the email. Please contact the <support>support</support>.",
     "validation": {
-      "email": "Please enter an email"
+      "email": "Please enter an email",
+      "sessionCode": "Please enter the session code",
+      "consent": "You must accept this condition to activate your account"
     }
   },
   "footer": {

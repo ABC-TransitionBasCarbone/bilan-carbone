@@ -327,26 +327,6 @@ export const importCourseSessionsFromFTP = async () => {
       ),
   )
 
-  let traineeCode = randomInt(99999999).toString()
-  let professorCode = randomInt(99999999).toString()
-
-  let existingCodes = [{}]
-  let count = 0
-  while (existingCodes.length > 0 && count < 10) {
-    traineeCode = randomInt(99999999).toString()
-    professorCode = randomInt(99999999).toString()
-
-    existingCodes = await prismaClient.courseSession.findMany({
-      where: { OR: [{ traineeCode }, { professorCode }] },
-    })
-
-    count++
-  }
-
-  if (count >= 10 && existingCodes.length > 0) {
-    throw new Error('Failed to generate unique session codes after 10 attempts')
-  }
-
   const existingSessions = await prismaClient.courseSession.findMany({
     where: {
       OR: sessions.map(({ courseOrganismId, name, environment }) => ({ courseOrganismId, name, environment })),
@@ -354,47 +334,71 @@ export const importCourseSessionsFromFTP = async () => {
     select: sessionEmailSelect,
   })
 
-  const importedSessions = await prismaClient.$transaction(
-    sessions.map((session) => {
+  const importedSessions = await prismaClient.$transaction(async (transaction) => {
+    const importedSessionsPromises = []
+    for (const session of sessions) {
       const professorId = session.professor
         ? getAccountId(accounts, session.professor.email, session.environment)
         : null
       const traineeIds = session.trainees.map(({ email }) => getAccountId(accounts, email, session.environment))
 
-      return prismaClient.courseSession.upsert({
-        where: {
-          courseOrganismId_name_environment: {
+      let traineeCode = randomInt(99999999).toString()
+      let professorCode = randomInt(99999999).toString()
+
+      let existingCodes = [{}]
+      let count = 0
+      while (existingCodes.length > 0 && count < 10) {
+        traineeCode = randomInt(99999999).toString()
+        professorCode = randomInt(99999999).toString()
+
+        existingCodes = await transaction.courseSession.findMany({
+          where: { OR: [{ traineeCode }, { professorCode }] },
+        })
+
+        count++
+      }
+
+      if (count >= 10 && existingCodes.length > 0) {
+        throw new Error('Failed to generate unique session codes after 10 attempts')
+      }
+
+      importedSessionsPromises.push(
+        await transaction.courseSession.upsert({
+          where: {
+            courseOrganismId_name_environment: {
+              courseOrganismId: session.courseOrganismId,
+              name: session.name,
+              environment: session.environment,
+            },
+          },
+          select: sessionEmailSelect,
+          create: {
             courseOrganismId: session.courseOrganismId,
             name: session.name,
             environment: session.environment,
+            startDate: session.startDate,
+            endDate: session.endDate,
+            traineeCode,
+            professorCode,
+            professorId,
+            trainees: {
+              create: traineeIds.map((accountId) => ({ account: { connect: { id: accountId } } })),
+            },
           },
-        },
-        select: sessionEmailSelect,
-        create: {
-          courseOrganismId: session.courseOrganismId,
-          name: session.name,
-          environment: session.environment,
-          startDate: session.startDate,
-          endDate: session.endDate,
-          traineeCode,
-          professorCode,
-          professorId,
-          trainees: {
-            create: traineeIds.map((accountId) => ({ account: { connect: { id: accountId } } })),
+          update: {
+            startDate: session.startDate,
+            endDate: session.endDate,
+            professorId,
+            trainees: {
+              deleteMany: {},
+              create: traineeIds.map((accountId) => ({ account: { connect: { id: accountId } } })),
+            },
           },
-        },
-        update: {
-          startDate: session.startDate,
-          endDate: session.endDate,
-          professorId,
-          trainees: {
-            deleteMany: {},
-            create: traineeIds.map((accountId) => ({ account: { connect: { id: accountId } } })),
-          },
-        },
-      })
-    }),
-  )
+        }),
+      )
+    }
+    return importedSessionsPromises
+  })
 
   const existingSessionIds = new Set(existingSessions.map(({ id }) => id))
   const previousSessionsById = new Map(existingSessions.map((session) => [session.id, session]))

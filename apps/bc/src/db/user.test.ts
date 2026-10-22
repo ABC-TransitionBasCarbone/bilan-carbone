@@ -1,3 +1,4 @@
+import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment, Level, Role, UserChecklist, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { prismaClient } from './client.server'
 import { updateUserPasswordForEmail } from './user'
@@ -58,6 +59,18 @@ describe('updateUserPasswordForEmail', () => {
       data: { resetToken: null, password: 'hashed-password' },
     })
     expect(prismaClient.$transaction).toHaveBeenCalledWith(expect.any(Function), { isolationLevel: 'Serializable' })
+  })
+
+  it('reuses a provided transaction', async () => {
+    await updateUserPasswordForEmail(
+      'user@example.com',
+      'password',
+      Environment.TILT,
+      mockTransaction as unknown as Prisma.TransactionClient,
+    )
+
+    expect(prismaClient.$transaction).not.toHaveBeenCalled()
+    expect(mockTransaction.user.update).toHaveBeenCalled()
   })
 
   it('preserves the role when joining an organization with active members', async () => {

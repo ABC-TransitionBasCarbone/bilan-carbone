@@ -1,0 +1,10 @@
+{
+  "login": {
+    "form": {
+      "emailPlaceholder": "Enter your email you use for your formation"
+    }
+  },
+  "activation": {
+    "Not authorized": "You're not registered for a session, you have already activated your account or the code provided is incorrect. Please contact your training organization."
+  }
+}

@@ -1,5 +1,16 @@
 {
   "login": {
     "welcome": "Bienvenue sur la plateforme formation du BC+ !"
+  },
+  "activation": {
+    "description": "Indiquez l'adresse e-mail et le code de session que vous a transmis l'organisme de formation qui vous accompagne.",
+    "sessionCode": "Code de session",
+    "sessionCodePlaceholder": "Code de session transmis par votre organisme de formation",
+    "consent": "Je comprends que je crée un compte dans le cadre de ma formation et que ce que je fais sur mon compte sera visible par l'organisme qui m'accompagne.",
+    "emailRequired": "Veuillez entrer un email",
+    "validation": {
+      "sessionCode": "Veuillez entrer le code de session",
+      "consent": "Vous devez accepter cette condition pour activer votre compte"
+    }
   }
 }

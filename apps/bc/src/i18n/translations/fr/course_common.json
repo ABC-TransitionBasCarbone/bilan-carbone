@@ -3,5 +3,8 @@
     "form": {
       "emailPlaceholder": "Votre email transmis à votre organisme de formation"
     }
+  },
+  "activation": {
+    "Not authorized": "Vous n'êtes pas enregistré pour une session, vous avez déjà activé votre compte ou le code renseigné n'est pas le bon. Veuillez contacter votre organisme de formation."
   }
 }
