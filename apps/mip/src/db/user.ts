@@ -56,7 +56,7 @@ export const updateUserPasswordForEmail = async (email: string, password: string
     },
   })
 
-  if (accountsMip.length > 0) {
+  if (accountsMip.length > 0 || accountsMip.some((a) => a.status === UserStatus.SUSPENDED)) {
     await prismaClient.accountMip.updateMany({
       where: { userId: user.id },
       data: { status: UserStatus.ACTIVE },
@@ -96,8 +96,9 @@ export const handleAddingUser = async (creator: UserSession, newUser: AddMemberC
 
   const isMemberActiveInSomeEnv = memberExists?.accountsMip.some((a) => a.status === UserStatus.ACTIVE)
   const memberAccountMip = memberExists?.accountsMip[0]
+  const isAccountSuspended = memberAccountMip?.status === UserStatus.SUSPENDED
 
-  if (memberAccountMip?.role === RoleMip.SUPER_ADMIN || newUser.role === RoleMip.SUPER_ADMIN) {
+  if (memberAccountMip?.role === RoleMip.SUPER_ADMIN || newUser.role === RoleMip.SUPER_ADMIN || isAccountSuspended) {
     throw new Error(NOT_AUTHORIZED)
   }
 

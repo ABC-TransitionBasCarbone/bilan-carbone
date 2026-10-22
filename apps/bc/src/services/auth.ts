@@ -213,7 +213,21 @@ export async function auth(
 ) {
   const session = await getServerSession(...args, authOptions)
 
-  return session?.sessionInvalid ? null : session
+  if (session?.sessionInvalid || !session) {
+    return null
+  }
+
+  const accounts = await getAccountsFromUser(session.user)
+  const isSuspendedForEnv =
+    session.user.environment &&
+    accounts.find((a) => a.environment === session.user.environment && a.status === UserStatus.SUSPENDED)
+  const hasActiveAccount = accounts.some((a) => a.status === UserStatus.ACTIVE)
+
+  if (isSuspendedForEnv || !hasActiveAccount) {
+    return null
+  }
+
+  return session
 }
 
 export async function dbActualizedAuth(

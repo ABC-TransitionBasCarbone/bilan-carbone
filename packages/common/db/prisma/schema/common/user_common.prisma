@@ -10,6 +10,7 @@ enum UserStatus {
   PENDING_REQUEST
   VALIDATED
   ACTIVE
+  SUSPENDED
 
   @@schema("common")
 }
