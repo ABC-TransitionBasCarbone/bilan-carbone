@@ -260,7 +260,11 @@ export const validateMember = async (email: string, role: Role) =>
     }
 
     const member = await getAccountByEmailAndOrganizationVersionId(email, session.user.organizationVersionId)
-    if (!member || !canAddMember(session.user, member, member.organizationVersionId)) {
+    if (
+      !member ||
+      !canAddMember(session.user, member, member.organizationVersionId) ||
+      member.status === UserStatus.SUSPENDED
+    ) {
       throw new Error(NOT_AUTHORIZED)
     }
 

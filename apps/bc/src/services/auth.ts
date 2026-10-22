@@ -213,7 +213,17 @@ export async function auth(
 ) {
   const session = await getServerSession(...args, authOptions)
 
-  return session?.sessionInvalid ? null : session
+  if (session?.sessionInvalid || !session) {
+    return null
+  }
+
+  const account = await getAccountById(session?.user.accountId)
+
+  if (account?.status === UserStatus.SUSPENDED) {
+    return null
+  }
+
+  return session
 }
 
 export async function dbActualizedAuth(

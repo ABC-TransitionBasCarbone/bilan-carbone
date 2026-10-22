@@ -875,7 +875,7 @@ const getOrCreateUserAndSendStudyInvite = async (
         role: Role.COLLABORATOR,
       })
       account = (await getAccountByEmailAndEnvironment(email, organizationVersion.environment)) as AccountWithUser
-    } else {
+    } else if (account.status === UserStatus.SUSPENDED) {
       skipEmail = true
     }
 
