@@ -217,9 +217,13 @@ export async function auth(
     return null
   }
 
-  const account = await getAccountById(session?.user.accountId)
+  const accounts = await getAccountsFromUser(session.user)
+  const isSuspendedForEnv =
+    session.user.environment &&
+    accounts.find((a) => a.environment === session.user.environment && a.status === UserStatus.SUSPENDED)
+  const hasActiveAccount = accounts.some((a) => a.status === UserStatus.ACTIVE)
 
-  if (account?.status === UserStatus.SUSPENDED) {
+  if (isSuspendedForEnv || !hasActiveAccount) {
     return null
   }
 
