@@ -484,10 +484,15 @@ export const activateEmailForCourse = async (
       throw new Error('Password invalid')
     }
 
-    await prismaClient.$transaction(async (transaction) => {
-      await validateUser(account.id, transaction)
-      await updateUserPasswordForEmail(user.email, password, environment, transaction)
-    })
+    await prismaClient.$transaction(
+      async (transaction) => {
+        await validateUser(account.id, transaction)
+        await updateUserPasswordForEmail(user.email, password, environment, transaction)
+      },
+      {
+        isolationLevel: 'Serializable',
+      },
+    )
     await sendAccountActivatedEmail(user.email, environment)
   })
 

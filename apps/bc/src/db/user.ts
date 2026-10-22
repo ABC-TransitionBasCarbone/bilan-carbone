@@ -154,7 +154,9 @@ export const updateUserPasswordForEmail = async (
 
   return transaction
     ? updatePassword(transaction, email, env, signedPassword)
-    : prismaClient.$transaction((transaction) => updatePassword(transaction, email, env, signedPassword))
+    : prismaClient.$transaction((transaction) => updatePassword(transaction, email, env, signedPassword), {
+        isolationLevel: 'Serializable',
+      })
 }
 
 export const deleteUserFromOrga = async (email: string, organizationVersionId: string | null) => {
