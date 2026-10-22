@@ -28,6 +28,8 @@ jobs:
         run: cp apps/bc/.env.dist packages/common/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
+        env:
+          CYPRESS_INSTALL_BINARY: 0
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
       - name: Generate prisma files
@@ -62,6 +64,8 @@ jobs:
         run: cp apps/bc/.env.dist packages/common/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
+        env:
+          CYPRESS_INSTALL_BINARY: 0
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: ${{ github.workspace }}
       - name: Linter
@@ -92,6 +96,8 @@ jobs:
         run: cp apps/bc/.env.dist packages/common/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
+        env:
+          CYPRESS_INSTALL_BINARY: 0
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: ${{ github.workspace }}
       - name: Build application
@@ -137,6 +143,8 @@ jobs:
         run: cp apps/bc/.env.dist packages/common/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
+        env:
+          CYPRESS_INSTALL_BINARY: 0
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
       - name: Prebuild application
@@ -168,6 +176,8 @@ jobs:
           cp apps/mip/.env.dist apps/bc/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
+        env:
+          CYPRESS_INSTALL_BINARY: 0
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
       - name: Launch unit tests
@@ -192,6 +202,8 @@ jobs:
         run: cp apps/bc/.env.dist packages/common/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
+        env:
+          CYPRESS_INSTALL_BINARY: 0
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
       - name: Prebuild application
@@ -218,6 +230,8 @@ jobs:
       - name: Copy .env to db
         run: cp .env.dist ../../packages/common/db/.env
       - name: Install dependencies
+        env:
+          CYPRESS_INSTALL_BINARY: 0
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: ${{ github.workspace }}
       - name: Prebuild application
@@ -434,6 +448,8 @@ jobs:
         run: cp apps/bc/.env.dist packages/common/db/.env
         working-directory: ${{ github.workspace }}
       - name: Install dependencies
+        env:
+          CYPRESS_INSTALL_BINARY: 0
         run: yarn install --immutable --immutable-cache --check-cache
         working-directory: .
       - name: Prebuild application
