@@ -479,13 +479,15 @@ export const activateEmailForCourse = async (
     }
 
     const { user, account } = checkCourseActivationResponse.data
-    await validateUser(account.id)
     const passwordValidation = computePasswordValidation(password)
     if (!Object.values(passwordValidation).every((value) => value)) {
       throw new Error('Password invalid')
     }
 
-    await updateUserPasswordForEmail(user.email, password, environment)
+    await prismaClient.$transaction(async (transaction) => {
+      await validateUser(account.id, transaction)
+      await updateUserPasswordForEmail(user.email, password, environment, transaction)
+    })
     await sendAccountActivatedEmail(user.email, environment)
   })
 

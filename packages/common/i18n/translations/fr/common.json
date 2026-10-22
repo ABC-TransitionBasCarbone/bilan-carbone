@@ -283,7 +283,7 @@
         "content": "Bienvenue sur le BC+ ! Vous avez fait une demande de réinitialisation de mot de passe mais votre compte n'est pas encore activé. Si vous souhaitez finaliser l'activation de celui-ci, veuillez cliquer sur"
       },
       "accountActivated": {
-        "content": "Vous venez d'activer votre compte sur le BC+ pour les associations de formation.",
+        "content": "Vous venez d'activer votre compte sur le BC+ de formation pour les associations.",
         "notYou": "Si ce n'est pas vous, merci de nous prévenir à l'adresse support : "
       },
       "activationRequest": {

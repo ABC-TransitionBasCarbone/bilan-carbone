@@ -332,7 +332,15 @@ describe('signUpWithSiretOrCNC', () => {
         },
         select: courseActivationSessionSelect,
       })
-      expect(mockUpdateUserPasswordForEmail).toHaveBeenCalledWith(testEmail, 'Password-123', Environment.COURSE_BC)
+      expect(prismaClient.$transaction).toHaveBeenCalledTimes(1)
+      expect(mockValidateUser).toHaveBeenCalledWith(mockedAccountId, expect.anything())
+      expect(mockUpdateUserPasswordForEmail).toHaveBeenCalledWith(
+        testEmail,
+        'Password-123',
+        Environment.COURSE_BC,
+        expect.anything(),
+      )
+      expect(mockUpdateUserPasswordForEmail.mock.calls[0][3]).toBe(mockValidateUser.mock.calls[0][1])
       expect(mockSendAccountActivatedEmail).toHaveBeenCalledWith(testEmail, Environment.COURSE_BC)
     })
 
