@@ -417,8 +417,6 @@ describe('signUpWithSiretOrCNC', () => {
       [Environment.CUT, undefined],
       [Environment.CLICKSON, undefined],
       [Environment.MIP, undefined],
-      [Environment.COURSE_BC, undefined],
-      [Environment.COURSE_TILT, undefined],
     ])('does not assign an organization role during %s email activation', async (environment, level) => {
       mockGetUserByEmail.mockResolvedValue({
         id: mockedUserId,
@@ -475,6 +473,21 @@ describe('signUpWithSiretOrCNC', () => {
         jwt.TokenExpiredError,
       )
     })
+
+    it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
+      'rejects standard email activation for %s without side effects',
+      async (environment) => {
+        const result = await actualActivateEmail(testEmail, environment)
+
+        expect(result).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+        expect(mockGetUserByEmail).not.toHaveBeenCalled()
+        expect(prismaClient.$transaction).not.toHaveBeenCalled()
+        expect(mockValidateUser).not.toHaveBeenCalled()
+        expect(mockUpdateAccount).not.toHaveBeenCalled()
+        expect(mockSendActivationEmail).not.toHaveBeenCalled()
+        expect(mockSendActivationRequest).not.toHaveBeenCalled()
+      },
+    )
 
     it('rejects activation when active organization members have no active approver', async () => {
       mockGetUserByEmail.mockResolvedValue({
