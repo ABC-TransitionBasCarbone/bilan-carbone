@@ -49,7 +49,6 @@ const sessionEmailSelect = {
   startDate: true,
   endDate: true,
   traineeCode: true,
-  professorCode: true,
 } satisfies Prisma.CourseSessionSelect
 
 type SavedCourseSession = Prisma.CourseSessionGetPayload<{ select: typeof sessionEmailSelect }>
@@ -379,7 +378,6 @@ export const importCourseSessionsFromFTP = async () => {
             startDate: session.startDate,
             endDate: session.endDate,
             traineeCode,
-            professorCode,
             professorId,
             trainees: {
               create: traineeIds.map((accountId) => ({ account: { connect: { id: accountId } } })),
