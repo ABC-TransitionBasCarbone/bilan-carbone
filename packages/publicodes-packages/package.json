@@ -35,10 +35,10 @@
         "test:tilt": "vitest run publicodes-tilt/test --reporter=tree"
     },
     "dependencies": {
-        "publicodes": "^1.10.1"
+        "publicodes": "^1.10.4"
     },
     "devDependencies": {
-        "@publicodes/tools": "^1.10.2",
-        "vitest": "^4.1.11"
+        "@publicodes/tools": "^1.10.6",
+        "vitest": "^5.0.5"
     }
 }

@@ -47,7 +47,7 @@
     "next": "16.3.8",
     "next-auth": "^4.24.15",
     "next-intl": "^4.14.8",
-    "publicodes": "^1.10.3",
+    "publicodes": "^1.10.4",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-hook-form": "^7.89.0",
