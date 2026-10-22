@@ -13,7 +13,7 @@ import { addOrganizationVersionMipIdToModelCampaign } from '@/db/campaign'
 import { createOrganizationWithVersionMip, getOrgNameByOrgVersionMipId } from '@/db/organization'
 import {
   addUser,
-  deleteAccountMipFromOrgaVersionMip,
+  deleteUserFromOrga,
   getUserByEmail,
   handleAddingUser,
   UserWithAccountsMip,
@@ -164,7 +164,7 @@ export const deleteMember = async (email: string) =>
     if (!canDeleteMember(session.user, accountMipToRemove as AccountMipWithUser)) {
       throw new Error(NOT_AUTHORIZED)
     }
-    await deleteAccountMipFromOrgaVersionMip(email, session.user.organizationVersionMipId)
+    await deleteUserFromOrga(email, session.user.organizationVersionMipId)
   })
 
 const sendActivation = async (email: string, user: User, organizationVersionMipId: string) => {

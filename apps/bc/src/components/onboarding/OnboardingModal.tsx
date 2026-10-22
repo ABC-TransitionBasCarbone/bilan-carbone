@@ -1,10 +1,9 @@
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { onboardOrganizationVersionCommand } from '@/services/serverFunctions/organization'
-import { changeUserRoleOnOnboarding } from '@/services/serverFunctions/user'
 import { OnboardingCommand, OnboardingCommandValidation } from '@/services/serverFunctions/user.command'
+import { getInitialAccountRole } from '@/utils/user'
 import Form from '@abc-transitionbascarbone/common/components/base/Form'
 import LoadingButton from '@abc-transitionbascarbone/common/components/base/LoadingButton'
-import { Role } from '@abc-transitionbascarbone/common/db/enums'
 import { Button } from '@abc-transitionbascarbone/common/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import CloseIcon from '@mui/icons-material/Close'
@@ -14,7 +13,7 @@ import { UserSession } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './Onboarding.module.css'
 import Step1 from './OnboardingStep1'
@@ -37,11 +36,7 @@ const OnboardingModal = ({ open, onClose, user, organizationVersion }: Props) =>
   const stepCount = 2
   const Step = activeStep === 1 ? Step1 : Step2
 
-  const newRole = useMemo(() => (user.level ? Role.ADMIN : Role.GESTIONNAIRE), [user])
-
-  useEffect(() => {
-    changeUserRoleOnOnboarding()
-  }, [])
+  const newRole = getInitialAccountRole(user.level, user.environment)
 
   const form = useForm<OnboardingCommand>({
     resolver: zodResolver(OnboardingCommandValidation),

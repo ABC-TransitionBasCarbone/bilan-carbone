@@ -1,8 +1,8 @@
 import { CutRoles } from '@/services/roles'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
-import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { Environment, Level, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
-import { findUserInfo, getEnvironmentRoles, getRoleToSetForUntrained, isAdmin } from './user'
+import { findUserInfo, getEnvironmentRoles, getInitialAccountRole, getRoleToSetForUntrained, isAdmin } from './user'
 
 describe('userUtils functions', () => {
   describe('isAdmin', () => {
@@ -93,6 +93,18 @@ describe('userUtils functions', () => {
     test('should return DEFAULT for other roles in BASE environment', () => {
       expect(getRoleToSetForUntrained(Role.COLLABORATOR, Environment.BC)).toBe(Role.DEFAULT)
       expect(getRoleToSetForUntrained(Role.DEFAULT, Environment.BC)).toBe(Role.DEFAULT)
+    })
+
+    describe('getInitialAccountRole', () => {
+      test.each([
+        [Level.Initial, Environment.BC, Role.ADMIN],
+        [null, Environment.BC, Role.GESTIONNAIRE],
+        [null, Environment.TILT, Role.GESTIONNAIRE],
+        [null, Environment.CUT, Role.ADMIN],
+        [null, Environment.CLICKSON, Role.ADMIN],
+      ])('returns %s for level %s in %s', (level, environment, role) => {
+        expect(getInitialAccountRole(level, environment)).toBe(role)
+      })
     })
   })
 })

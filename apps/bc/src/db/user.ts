@@ -1,7 +1,6 @@
 import { getDeactivableFeatureRestrictions } from '@/services/serverFunctions/deactivableFeatures'
 import { addUserChecklistItem, sendEmailToAddedUser } from '@/services/serverFunctions/user'
-import { AuthorizedInOrgaUserStatus } from '@/services/users'
-import { getRoleToSetForUntrained } from '@/utils/user'
+import { getInitialAccountRole, getRoleToSetForUntrained } from '@/utils/user'
 import { userSessionToDbUser } from '@/utils/userAccounts'
 import { Prisma } from '@abc-transitionbascarbone/common/db'
 import {
@@ -13,7 +12,7 @@ import {
 } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { AddMemberCommand } from '@abc-transitionbascarbone/common/services/serverFunctions/user.command'
-import { signPassword } from '@abc-transitionbascarbone/common/utils/auth'
+import { passwordSetupAllowedUserStatuses, signPassword } from '@abc-transitionbascarbone/common/utils/auth'
 import { environmentsWithChecklist } from '@abc-transitionbascarbone/common/utils/environments'
 import { UserSession } from 'next-auth'
 import { addAccount, getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
@@ -95,15 +94,15 @@ const updatePassword = async (
     where: {
       userId: user.id,
       environment: env,
-      status: { in: AuthorizedInOrgaUserStatus },
+      status: { in: passwordSetupAllowedUserStatuses },
     },
   })
   if (!account) {
     throw new Error(`Account with email ${email} for environment ${env} not found or has a wrong status`)
   }
 
-  const isFirstBCOrTiltActivation =
-    (env === Environment.BC || env === Environment.TILT) &&
+  const isFirstAccountActivation =
+    (env === Environment.BC || env === Environment.TILT || env === Environment.CUT || env === Environment.CLICKSON) &&
     account.status === UserStatus.VALIDATED &&
     account.role === Role.DEFAULT &&
     account.organizationVersionId &&
@@ -118,7 +117,7 @@ const updatePassword = async (
   const accounts = await transaction.account.findMany({
     where: {
       userId: user.id,
-      status: { in: AuthorizedInOrgaUserStatus },
+      status: { in: passwordSetupAllowedUserStatuses },
     },
   })
   await Promise.all([
@@ -136,7 +135,7 @@ const updatePassword = async (
       data: {
         activationRequestedAt: null,
         status: UserStatus.ACTIVE,
-        ...(isFirstBCOrTiltActivation && { role: user.level ? Role.ADMIN : Role.GESTIONNAIRE }),
+        ...(isFirstAccountActivation && { role: getInitialAccountRole(user.level, env) }),
       },
     }),
   ])

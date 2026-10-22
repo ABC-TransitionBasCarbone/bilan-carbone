@@ -53,7 +53,6 @@ import {
 import { processUsers } from '@/scripts/ftp/userImport'
 import { AccountWithUser } from '@/types/account.types'
 import { withServerResponse } from '@/utils/serverResponse'
-import { getRoleToSetForUntrained } from '@/utils/user'
 import { accountWithUserToUserSession, hasOrganizationVersion, userSessionToDbUser } from '@/utils/userAccounts'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Organization } from '@abc-transitionbascarbone/common/db'
@@ -636,17 +635,6 @@ export const getFormationFormStart = async (userId: string) =>
 
 export const startFormationForm = async (userId: string, date: Date) =>
   withServerResponse('startFormationForm', async () => startUserFormationForm(userId, date))
-
-export const changeUserRoleOnOnboarding = async () =>
-  withServerResponse('changeUserRoleOnOnboarding', async () => {
-    const session = await auth()
-    if (!session || !session.user) {
-      return
-    }
-
-    const newRole = session.user.level ? Role.ADMIN : getRoleToSetForUntrained(Role.ADMIN, session.user.environment)
-    await changeAccountRole(session.user.accountId, newRole)
-  })
 
 export const lowercaseUsersEmails = async () => {
   const users = await getUsers()
