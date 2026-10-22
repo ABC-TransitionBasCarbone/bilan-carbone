@@ -16,6 +16,7 @@ jest.mock('@/services/serverFunctions/user', () => ({}))
 jest.mock('@/services/serverFunctions/deactivableFeatures', () => ({}))
 jest.mock('@abc-transitionbascarbone/common/utils/auth', () => ({
   signPassword: jest.fn().mockResolvedValue('hashed-password'),
+  passwordSetupAllowedUserStatuses: [UserStatus.VALIDATED, UserStatus.ACTIVE],
 }))
 
 describe('updateUserPasswordForEmail', () => {
@@ -42,6 +43,8 @@ describe('updateUserPasswordForEmail', () => {
     [Environment.TILT, Level.Initial, Role.ADMIN],
     [Environment.TILT, Level.Advanced, Role.ADMIN],
     [Environment.TILT, null, Role.GESTIONNAIRE],
+    [Environment.CUT, Level.Initial, Role.ADMIN],
+    [Environment.CLICKSON, Level.Initial, Role.ADMIN],
   ])('gives the first %s member with level %s the role %s', async (environment, level, role) => {
     mockTransaction.user.findUnique.mockResolvedValue({ id: 'user-id', level })
 
@@ -81,6 +84,24 @@ describe('updateUserPasswordForEmail', () => {
     expect(mockTransaction.account.update.mock.calls[0][0].data).not.toHaveProperty('role')
   })
 
+  it.each([Environment.CUT, Environment.CLICKSON])(
+    'preserves the default %s role when the organization already has active members',
+    async (environment) => {
+      mockTransaction.account.findFirst.mockResolvedValue({
+        id: 'account-id',
+        environment,
+        status: UserStatus.VALIDATED,
+        role: Role.DEFAULT,
+        organizationVersionId: 'organization-version-id',
+      })
+      mockTransaction.account.count.mockResolvedValue(1)
+
+      await updateUserPasswordForEmail('user@example.com', 'password', environment)
+
+      expect(mockTransaction.account.update.mock.calls[0][0].data).not.toHaveProperty('role')
+    },
+  )
+
   it.each([Role.ADMIN, Role.GESTIONNAIRE, Role.COLLABORATOR])(
     'preserves an explicitly assigned %s role',
     async (role) => {
@@ -101,8 +122,8 @@ describe('updateUserPasswordForEmail', () => {
   it.each([
     [Environment.TILT, UserStatus.ACTIVE, 'organization-version-id'],
     [Environment.TILT, UserStatus.VALIDATED, null],
-    [Environment.CUT, UserStatus.VALIDATED, 'organization-version-id'],
-    [Environment.CLICKSON, UserStatus.VALIDATED, 'organization-version-id'],
+    [Environment.CUT, UserStatus.ACTIVE, 'organization-version-id'],
+    [Environment.CLICKSON, UserStatus.ACTIVE, 'organization-version-id'],
     [Environment.MIP, UserStatus.VALIDATED, 'organization-version-id'],
     [Environment.COURSE_BC, UserStatus.VALIDATED, 'organization-version-id'],
     [Environment.COURSE_TILT, UserStatus.VALIDATED, 'organization-version-id'],

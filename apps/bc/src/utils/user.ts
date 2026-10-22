@@ -1,7 +1,7 @@
 import { ClicksonRoles, CourseRoles, CutRoles } from '@/services/roles'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { findAccountSelect } from '@abc-transitionbascarbone/common/db/db/common.select'
-import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { Environment, Level, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { isSimplified } from '@abc-transitionbascarbone/common/utils/environments'
 import { UserSession } from 'next-auth'
 
@@ -36,6 +36,9 @@ export const getRoleToSetForUntrained = (role: Exclude<Role, 'SUPER_ADMIN'>, env
 
   return role === Role.ADMIN || role === Role.GESTIONNAIRE ? Role.GESTIONNAIRE : Role.DEFAULT
 }
+
+export const getInitialAccountRole = (level: Level | null, environment: Environment) =>
+  level ? Role.ADMIN : getRoleToSetForUntrained(Role.ADMIN, environment)
 
 export const canEditMemberRole = (account: Pick<UserSession, 'role'>) =>
   isAdmin(account.role) || account.role === Role.GESTIONNAIRE
