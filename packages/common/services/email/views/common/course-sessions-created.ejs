@@ -12,7 +12,7 @@
       <p><strong>Environnement :</strong> <%= session.environment %></p>
       <p><strong>Dates :</strong> du <%= session.startDate %> au <%= session.endDate %></p>
       <h3>Codes d'accès</h3>
-      <p><strong>Code stagiaires :</strong> <%= session.traineeCode %></p>
+      <p><strong>Code de session :</strong> <%= session.code %></p>
       <% if (session.professor) { %>
       <h3>Formateur</h3>
       <p><%= session.professor.firstName %> <%= session.professor.lastName %> — <%= session.professor.email %></p>

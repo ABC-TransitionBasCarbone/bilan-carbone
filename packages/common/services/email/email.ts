@@ -17,7 +17,7 @@ const tBody = async (keys: string, object?: Record<string, string | number | Dat
 
 type TrainingSessionSummary = Pick<
   CourseSession,
-  'name' | 'environment' | 'startDate' | 'endDate' | 'traineeCode'
+  'name' | 'environment' | 'startDate' | 'endDate' | 'code'
 > & {
   trainees: Pick<User, 'email' | 'firstName' | 'lastName'>[]
   professor: Pick<User, 'email' | 'firstName' | 'lastName'> | null

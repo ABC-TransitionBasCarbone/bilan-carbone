@@ -48,7 +48,7 @@ const sessionEmailSelect = {
   environment: true,
   startDate: true,
   endDate: true,
-  traineeCode: true,
+  code: true,
 } satisfies Prisma.CourseSessionSelect
 
 type SavedCourseSession = Prisma.CourseSessionGetPayload<{ select: typeof sessionEmailSelect }>
@@ -341,17 +341,15 @@ export const importCourseSessionsFromFTP = async () => {
         : null
       const traineeIds = session.trainees.map(({ email }) => getAccountId(accounts, email, session.environment))
 
-      let traineeCode = randomInt(99999999).toString()
-      let professorCode = randomInt(99999999).toString()
+      let code = randomInt(99999999).toString()
 
       let existingCodes = [{}]
       let count = 0
       while (existingCodes.length > 0 && count < 10) {
-        traineeCode = randomInt(99999999).toString()
-        professorCode = randomInt(99999999).toString()
+        code = randomInt(99999999).toString()
 
-        existingCodes = await transaction.courseSession.findMany({
-          where: { OR: [{ traineeCode }, { professorCode }] },
+        existingCodes = await prismaClient.courseSession.findMany({
+          where: { OR: [{ code }] },
         })
 
         count++
@@ -377,7 +375,7 @@ export const importCourseSessionsFromFTP = async () => {
             environment: session.environment,
             startDate: session.startDate,
             endDate: session.endDate,
-            traineeCode,
+            code,
             professorId,
             trainees: {
               create: traineeIds.map((accountId) => ({ account: { connect: { id: accountId } } })),
