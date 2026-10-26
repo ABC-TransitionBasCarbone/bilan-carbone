@@ -87,11 +87,11 @@ const TransitionPlanFilters = ({
         </InputLabel>
         <MultiSelectAll
           id="transition-plan-site-filter"
+          labelId="transition-plan-site-filter-label"
           values={selectedSiteIds}
           allValues={sites.map((s) => s.id)}
           setValues={onSiteFilterChange}
           getLabel={(id) => sites.find((s) => s.id === id)?.name ?? id}
-          label={tCommon('sites')}
         />
       </FormControl>
       <PostSubPostFilter

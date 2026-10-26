@@ -1,7 +1,7 @@
 import { subPostsByPost } from '@/services/posts'
 import { SubPost } from '@abc-transitionbascarbone/common/db/enums'
 import { Post } from '@abc-transitionbascarbone/common/utils/charts'
-import { Checkbox, FormControl, FormLabel, InputLabel, ListItemText, MenuItem, Select } from '@mui/material'
+import { Checkbox, FormControl, InputLabel, ListItemText, MenuItem, Select } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
@@ -66,9 +66,9 @@ export const PostSubPostFilter = ({
   return (
     <FormControl className={classNames(styles.formControl, className)}>
       {showSeparateLabel ? (
-        <FormLabel id={'subposts-selector-label'} component="legend">
+        <InputLabel id={'subposts-selector-label'} shrink>
           {label}
-        </FormLabel>
+        </InputLabel>
       ) : (
         <InputLabel id={'subposts-selector-label'} shrink={true}>
           {label}

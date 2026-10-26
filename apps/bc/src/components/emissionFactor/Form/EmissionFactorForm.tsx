@@ -12,7 +12,7 @@ import { FormSelect } from '@abc-transitionbascarbone/common/components/form/Sel
 import { FormTextField } from '@abc-transitionbascarbone/common/components/form/TextField'
 import GlossaryModal from '@abc-transitionbascarbone/common/components/modals/GlossaryModal'
 import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
-import { FormControlLabel, FormLabel, MenuItem, Switch } from '@mui/material'
+import { FormControlLabel, MenuItem, Switch } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -159,12 +159,13 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
               />
             </div>
             <div>
-              <FormLabel id="monetaryUnit-radio-group-label" component="legend" className="inputLabel align-center">
+              <div className="inputLabel align-center">
                 <span className="bold">{t('monetaryUnit')}</span>
-              </FormLabel>
+              </div>
               <FormControlLabel
                 control={
                   <Switch
+                    aria-label={t('monetaryUnit')}
                     checked={isMonetary}
                     name="isMonetary"
                     onChange={(event) => update('isMonetary', event.target.checked)}

@@ -62,11 +62,11 @@ const ScopeSelectors = ({
           </InputLabel>
           <MultiSelectAll
             id="scope-sites"
+            labelId="site-selector-label"
             values={siteIds}
             allValues={sites.map((s) => s.id)}
             setValues={onSiteIdsChange}
             getLabel={(id) => sites.find((s) => s.id === id)?.name || id}
-            label={tCommon('sites')}
           />
           {siteIdsError && <FormHelperText error>{siteIdsError}</FormHelperText>}
         </FormControl>

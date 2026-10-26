@@ -43,11 +43,11 @@ const ActionFilters = ({ search, setSearch, openAddModal, canEdit, owners, owner
             </InputLabel>
             <MultiSelectAll
               id="owner-filter"
+              labelId="owner-filter-label"
               values={ownerFilter}
               allValues={allValues}
               setValues={setOwnerFilter}
               getLabel={(v) => (v === NO_OWNER ? tTable('noOwner') : v)}
-              label={tTable('owner')}
             />
           </FormControl>
         )}
