@@ -65,7 +65,8 @@ const Base = <T extends EmissionFactorCommand>({ form }: Props<T>) => {
                 onChange={(e) => setValue('base', e.target.value as EmissionFactorBase)}
                 value={value}
                 data-testid="emission-factor-base"
-                label={`${t('base')} *`}
+                label={t('base')}
+                required
                 fullWidth
                 icon={
                   <GlossaryIconModal

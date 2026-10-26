@@ -1,10 +1,10 @@
 import { FormControl, FormHelperText } from '@mui/material'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
+import classNames from 'classnames'
 import { useCallback } from 'react'
 import { Control, Controller, FieldPath, FieldValues } from 'react-hook-form'
 import { CustomFormLabel } from './CustomFormLabel'
 import styles from './Form.module.css'
-import classNames from 'classnames'
 
 interface Props<T extends FieldValues> {
   name: FieldPath<T>
@@ -57,8 +57,19 @@ export const FormTextField = <T extends FieldValues>({
       name={name}
       control={control}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <FormControl fullWidth={textFieldProps.fullWidth} error={!!error || !!customError}  className={classNames("inputContainer", className)}>
-          {label && <CustomFormLabel label={label} icon={iconDiv} iconPosition={iconPosition} />}
+        <FormControl
+          fullWidth={textFieldProps.fullWidth}
+          error={!!error || !!customError}
+          className={classNames('inputContainer', className)}
+        >
+          {label && (
+            <CustomFormLabel
+              label={label}
+              icon={iconDiv}
+              iconPosition={iconPosition}
+              required={textFieldProps.required}
+            />
+          )}
           <TextField
             {...textFieldProps}
             error={!!error || !!customError}

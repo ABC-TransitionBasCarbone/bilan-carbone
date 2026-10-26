@@ -22,6 +22,7 @@ interface Props<T extends FieldValues> {
   iconPosition?: 'before' | 'after'
   helperText?: string
   translation: (slug: string) => string
+  required?: boolean
 }
 
 export const FormAutocomplete = <T extends FieldValues>({
@@ -32,6 +33,7 @@ export const FormAutocomplete = <T extends FieldValues>({
   iconPosition = 'before',
   translation,
   helperText,
+  required,
   ...autocompleteProps
 }: Props<T> & Omit<AutocompleteProps<string | Option, false, boolean, boolean>, 'renderInput'>) => {
   const iconDiv = icon ? <div className={styles.icon}>{icon}</div> : null
@@ -43,7 +45,10 @@ export const FormAutocomplete = <T extends FieldValues>({
         <FormControl error={!!error} className="inputContainer">
           {label ? (
             <IconLabel icon={iconDiv} iconPosition={iconPosition} className="mb-2">
-              <span className="inputLabel bold">{label}</span>
+              <span className="inputLabel bold">
+                {label}
+                {required && <span aria-hidden="true"> *</span>}
+              </span>
             </IconLabel>
           ) : null}
           <Autocomplete
@@ -54,6 +59,7 @@ export const FormAutocomplete = <T extends FieldValues>({
             renderInput={(params) => (
               <TextField
                 {...params}
+                required={required}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '& fieldset': { borderColor: 'var(--grayscale-300)', borderRadius: '0.75rem' },

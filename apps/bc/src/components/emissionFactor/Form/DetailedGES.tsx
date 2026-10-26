@@ -150,6 +150,7 @@ const DetailedGES = <T extends EmissionFactorCommand>({
                 {t('subPartsCount')}
               </FormLabel>
               <TextField
+                required
                 type="number"
                 value={partsCount < 0 ? '' : partsCount}
                 onChange={(e) => updateEmissionFactorPartsCount(e.target.value)}

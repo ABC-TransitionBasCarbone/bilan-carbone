@@ -19,7 +19,7 @@ const QualitySelect = ({
   const t = useTranslations('quality')
 
   return (
-    <FormControl error={error} className={formControlClassName}>
+    <FormControl error={error} required={props.required} className={formControlClassName}>
       <InputLabel id={`${props.id}-label}`}>{props.label}</InputLabel>
       <Select {...props} labelId={`${props.id}-label}`} withLabel={false} clearable={!props.disabled && clearable}>
         {Array.from({ length: 5 }).map((_, index) => (

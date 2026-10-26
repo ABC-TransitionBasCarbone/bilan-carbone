@@ -74,6 +74,7 @@ const NewEmissionSource = ({ study, subPost, caracterisations, studySiteId }: Pr
         <TextField
           data-testid="new-emission-source"
           disabled={saving}
+          required
           className={styles.input}
           onKeyDown={onKeyDown}
           value={value}

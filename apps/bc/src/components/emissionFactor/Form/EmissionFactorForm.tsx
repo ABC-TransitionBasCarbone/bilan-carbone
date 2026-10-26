@@ -92,8 +92,9 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         data-testid="emission-factor-name"
         control={control}
         name="name"
-        label={`${t('name')} *`}
+        label={t('name')}
         placeholder={t('namePlaceholder')}
+        required
       />
       <FormTextField
         control={control}
@@ -120,8 +121,9 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         data-testid="emission-factor-source"
         control={control}
         name="source"
-        label={`${t('source')} *`}
+        label={t('source')}
         placeholder={t('sourcePlaceholder')}
+        required
       />
       <div className="flex gapped">
         <div className="grow">
@@ -129,9 +131,10 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
             data-testid="emission-factor-unit"
             control={control}
             translation={t}
-            label={`${t('unit')} *`}
+            label={t('unit')}
             name="unit"
             fullWidth
+            required
           >
             <MenuItem value={BCUnit.CUSTOM}>{getUnitLabel(BCUnit.CUSTOM)}</MenuItem>
             {units

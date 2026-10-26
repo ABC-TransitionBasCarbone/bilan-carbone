@@ -155,7 +155,8 @@ const EmissionSourceFactor = ({
             debounce={200}
             value={value}
             onChange={setValue}
-            label={`${t('form.emissionFactor')} *`}
+            label={t('form.emissionFactor')}
+            required
             onClick={() => (isFromOldImport ? setOldFactorAction('fieldSearch') : setDisplay(true))}
           />
           {canEdit && (
