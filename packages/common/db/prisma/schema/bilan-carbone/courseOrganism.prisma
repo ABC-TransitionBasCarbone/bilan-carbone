@@ -23,8 +23,7 @@ model CourseSession {
   endDate   DateTime @map("end_date")
   name           String
   environment    Environment
-  traineeCode    String          @map("trainee_code")
-  professorCode  String?         @map("professor_code")
+  code    String @unique
 
   courseOrganism   CourseOrganism @relation(fields: [courseOrganismId], references: [id], onDelete: Cascade)
   courseOrganismId String         @map("course_organism_id")

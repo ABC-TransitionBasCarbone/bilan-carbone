@@ -445,13 +445,12 @@ export const checkCourseActivation = async (email: string, sessionCode: string, 
     const courseSession = await prismaClient.courseSession.findFirst({
       where: {
         environment,
+        code: sessionCode.trim(),
         OR: [
           {
-            traineeCode: sessionCode.trim(),
             trainees: { some: { account: { user: { email: user.email } } } },
           },
           {
-            professorCode: sessionCode.trim(),
             professor: { user: { email: user.email } },
           },
         ],
