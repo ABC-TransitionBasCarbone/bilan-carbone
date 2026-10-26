@@ -17,14 +17,18 @@ jest.mock('basic-ftp', () => ({
   Client: jest.fn(() => ({ access: jest.fn(), downloadTo: jest.fn(), close: jest.fn() })),
 }))
 
-jest.mock('@/db/client', () => ({
-  prismaClient: {
+jest.mock('@/db/client', () => {
+  const prismaClient = {
     courseOrganism: { findMany: jest.fn() },
     account: { findMany: jest.fn(), update: jest.fn() },
     courseSession: { findMany: jest.fn(), upsert: jest.fn() },
     $transaction: jest.fn(),
-  },
-}))
+  }
+  prismaClient.$transaction.mockImplementation((transaction) =>
+    typeof transaction === 'function' ? transaction(prismaClient) : Promise.all(transaction),
+  )
+  return { prismaClient }
+})
 
 jest.mock('@/db/user', () => ({ createUsersWithAccount: jest.fn() }))
 
