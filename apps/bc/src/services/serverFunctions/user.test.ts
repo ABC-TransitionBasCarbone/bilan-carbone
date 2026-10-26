@@ -10,7 +10,7 @@ import {
   getAccountsFromOrganizationForActivation,
   removeOtherAccountActivation,
 } from '@/db/account'
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { findCncByCncCode } from '@/db/cnc'
 import {
   createOrganizationWithVersion,
