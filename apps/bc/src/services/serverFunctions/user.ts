@@ -487,6 +487,7 @@ export const activateEmailForCourse = async (
       async (transaction) => {
         await validateUser(account.id, transaction)
         await updateUserPasswordForEmail(user.email, password, environment, transaction)
+        await updateAccount(account.id, { role: Role.ADMIN }, {}, transaction)
       },
       {
         isolationLevel: 'Serializable',
