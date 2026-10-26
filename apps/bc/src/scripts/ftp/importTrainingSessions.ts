@@ -348,7 +348,7 @@ export const importCourseSessionsFromFTP = async () => {
       while (existingCodes.length > 0 && count < 10) {
         code = randomInt(99999999).toString()
 
-        existingCodes = await prismaClient.courseSession.findMany({
+        existingCodes = await transaction.courseSession.findMany({
           where: { OR: [{ code }] },
         })
 
