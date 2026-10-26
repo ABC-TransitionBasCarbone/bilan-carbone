@@ -1,4 +1,7 @@
+import { UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import bcrypt from 'bcryptjs'
+
+export const passwordSetupAllowedUserStatuses: UserStatus[] = [UserStatus.VALIDATED, UserStatus.ACTIVE]
 
 export const signPassword = async (password: string) => {
   const salt = await bcrypt.genSalt(10)

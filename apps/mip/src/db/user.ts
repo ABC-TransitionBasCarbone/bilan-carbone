@@ -1,10 +1,10 @@
 import { sendEmailToAddedUser } from '@/services/serverFunctions/user'
 import { userSessionToDbUser } from '@/utils/userAccounts'
 import { Prisma } from '@abc-transitionbascarbone/common/db'
-import { RoleMip, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { Environment, RoleMip, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { AddMemberCommand } from '@abc-transitionbascarbone/common/services/serverFunctions/user.command'
-import { signPassword } from '@abc-transitionbascarbone/common/utils/auth'
+import { passwordSetupAllowedUserStatuses, signPassword } from '@abc-transitionbascarbone/common/utils/auth'
 import { UserSession } from 'next-auth'
 import { addAccountMip, getAccountMipByEmailAndOrganizationVersionMipId, updateAccountMip } from './accountMip'
 import { prismaClient } from './client.server'
@@ -31,39 +31,38 @@ export const getUserByEmailWithSensibleInformations = (email: string) =>
 
 export const updateUserPasswordForEmail = async (email: string, password: string) => {
   const signedPassword = await signPassword(password)
-  const user = await prismaClient.user.update({
-    where: { email },
-    data: { resetToken: null, password: signedPassword },
-  })
 
-  if (!user) {
-    throw new Error(`User with email ${email} not found`)
-  }
+  return prismaClient.$transaction(async (transaction) => {
+    const user = await transaction.user.findUnique({ where: { email } })
+    if (!user) {
+      throw new Error(`User with email ${email} not found`)
+    }
 
-  const accountMip = await prismaClient.accountMip.findFirst({
-    where: {
-      userId: user.id,
-    },
-  })
+    const accountMip = await transaction.accountMip.findUnique({
+      where: { userId_environment: { userId: user.id, environment: Environment.MIP } },
+    })
 
-  if (!accountMip) {
-    throw new Error(`Account with email ${email} not found`)
-  }
+    if (!accountMip) {
+      throw new Error(`Account with email ${email} not found`)
+    }
 
-  const accountsMip = await prismaClient.accountMip.findMany({
-    where: {
-      userId: user.id,
-    },
-  })
+    if (!passwordSetupAllowedUserStatuses.includes(accountMip.status)) {
+      throw new Error(`Account with email ${email} has a wrong status`)
+    }
 
-  if (accountsMip.length > 0 || accountsMip.some((a) => a.status === UserStatus.SUSPENDED)) {
-    await prismaClient.accountMip.updateMany({
-      where: { userId: user.id },
+    const activatedAccount = await transaction.accountMip.updateMany({
+      where: { id: accountMip.id, status: { in: passwordSetupAllowedUserStatuses } },
       data: { status: UserStatus.ACTIVE },
     })
-  }
+    if (activatedAccount.count !== 1) {
+      throw new Error(`Account with email ${email} has a wrong status`)
+    }
 
-  return user
+    return transaction.user.update({
+      where: { email },
+      data: { resetToken: null, password: signedPassword },
+    })
+  })
 }
 
 export const updateUserResetTokenForEmail = async (email: string, resetToken: string) =>
