@@ -7,6 +7,7 @@ import { ChangeStudyCinemaCommand } from '@/services/serverFunctions/study.comma
 import { mapCncToStudySite } from '@/utils/cnc'
 import { hasActiveLicence, isAdminOnOrga } from '@/utils/organization'
 import { getAllowedLevels, getUserRoleOnPublicStudy, hasSufficientLevel, StudyWithRoleFields } from '@/utils/study'
+import { getCourseAccess, withCourseAccess } from '@/utils/training'
 import { isAdmin } from '@/utils/user'
 import type {
   Cnc,
@@ -28,12 +29,14 @@ import {
 } from '@abc-transitionbascarbone/common/db/enums'
 import { Post } from '@abc-transitionbascarbone/common/utils/charts'
 import { getEnvVar } from '@abc-transitionbascarbone/common/utils/environment'
+import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import { UserSession } from 'next-auth'
 import { cache } from 'react'
 import { getAccountOrganizationVersions } from './account'
 import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client.server'
 import { getOrganizationVersionsByIds } from './organizationVersions'
+import { CourseAccountSelect } from './training.select'
 
 export type StudyTagFamilyWithTags = Omit<StudyTagFamily, 'createdAt' | 'updatedAt'> & {
   tags: Omit<StudyTag, 'familyId' | 'createdAt' | 'updatedAt'>[]
@@ -217,6 +220,7 @@ const fullStudyInclude = {
       createdAt: true,
       account: {
         select: {
+          ...CourseAccountSelect,
           id: true,
           organizationVersionId: true,
           organizationVersion: { select: { id: true, activatedLicence: true } },
@@ -337,10 +341,14 @@ const fullStudyInclude = {
   },
 } satisfies Prisma.StudyInclude
 
-type AllowedUserWithLevel = { account: { user: { level: Level | null }; organizationVersionId: string | null } }
+type AllowedUserWithLevel = {
+  account: { user: { level: Level | null }; organizationVersionId: string | null } & Prisma.AccountGetPayload<{
+    select: typeof CourseAccountSelect
+  }>
+}
 
 type NormalizedAllowedUser<T extends AllowedUserWithLevel> = Omit<T, 'account'> & {
-  account: T['account'] & {
+  account: Omit<T['account'], keyof Prisma.AccountGetPayload<{ select: typeof CourseAccountSelect }>> & {
     readerOnly: boolean
   }
 }
@@ -355,9 +363,16 @@ const normalizeAllowedUsers = async <T extends AllowedUserWithLevel>(
   return allowedUsers.map((allowedUser) => {
     const orgaVersion = organizationVersions.find((ov) => ov.id === allowedUser.account.organizationVersionId)
     const readerOnly =
-      !(orgaVersion && hasActiveLicence(orgaVersion)) ||
-      !hasSufficientLevel(allowedUser.account.user.level, studyLevel, orgaVersion.environment)
-    return { ...allowedUser, account: { ...allowedUser.account, readerOnly } }
+      !(
+        orgaVersion &&
+        hasActiveLicence(orgaVersion, {
+          courseAccess: isCourseEnvironment(orgaVersion.environment) ? getCourseAccess(allowedUser.account) : undefined,
+        })
+      ) || !hasSufficientLevel(allowedUser.account.user.level, studyLevel, orgaVersion.environment)
+    const courseAccount: T['account'] = allowedUser.account
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { professorCourseSessions, traineeCourseSessions, ...account } = courseAccount
+    return { ...allowedUser, account: { ...account, readerOnly } }
   })
 }
 
@@ -548,7 +563,14 @@ export const getStudyById = async (id: string, organizationVersionId: string | n
   if (!study) {
     return null
   }
-  return { ...study, allowedUsers: await normalizeAllowedUsers(study.allowedUsers, study.level) }
+  return {
+    ...study,
+    allowedUsers: await normalizeAllowedUsers(study.allowedUsers, study.level),
+    emissionSources: study.emissionSources.map((source) => ({
+      ...source,
+      lastEditor: withCourseAccess(source.lastEditor),
+    })),
+  }
 }
 
 type StudyForNavbar = StudyWithRoleFields & {
@@ -1300,6 +1322,7 @@ export const getMinimalStudyForRights = async (studyId: string) => {
               organizationVersionId: true,
               organizationVersion: { select: { id: true, activatedLicence: true } },
               user: { select: { email: true, level: true } },
+              ...CourseAccountSelect,
             },
           },
         },

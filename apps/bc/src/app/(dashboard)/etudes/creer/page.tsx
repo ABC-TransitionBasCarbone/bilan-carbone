@@ -35,7 +35,7 @@ const NewStudy = async ({ user, duplicateStudyId, isSimplified }: UserSessionPro
 
   if (organizationVersionId) {
     const organizationVersion = await getOrganizationVersionForRightsCheck(organizationVersionId)
-    if (!organizationVersion || !hasActiveLicence(organizationVersion)) {
+    if (!organizationVersion || !hasActiveLicence(organizationVersion, user)) {
       redirect('/')
     }
   }

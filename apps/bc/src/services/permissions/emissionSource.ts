@@ -2,9 +2,11 @@ import { getEmissionFactorById } from '@/db/emissionFactors'
 import { FullStudy, getStudyById, getStudySites } from '@/db/study'
 import { AccountWithUser } from '@/types/account.types'
 import { getAccountRoleOnStudy, hasDeprecationPeriod } from '@/utils/study'
+import { hasCourseAccess } from '@/utils/training'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import type { StudyEmissionSource } from '@abc-transitionbascarbone/common/db'
 import { Environment, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
+import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import { canBeValidated } from '../emissionSource'
 import { canReadStudy } from './study'
 import { isAdminOnStudyOrga } from './study.utils'
@@ -85,6 +87,12 @@ const canUpdateEmissionSourceBC = async (
   change: Partial<StudyEmissionSource>,
   study: FullStudy,
 ) => {
+  if (
+    isCourseEnvironment(account.environment) &&
+    !hasCourseAccess(accountWithUserToUserSession(account).courseAccess)
+  ) {
+    return false
+  }
   const canCreateEmissionSource = await canCreateEmissionSourceBC(account, emissionSource)
   if (!canCreateEmissionSource) {
     const contributor = study.contributors.find(

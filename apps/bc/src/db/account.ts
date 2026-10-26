@@ -7,6 +7,7 @@ import { UserSession } from 'next-auth'
 import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client.server'
 import { OrganizationVersionWithOrganizationSelect } from './organization.select'
+import { CourseAccountSelect } from './training.select'
 
 export const getAccountByEmailAndOrganizationVersionId = (email: string, organizationVersionId: string | null) => {
   return prismaClient.account.findFirst({
@@ -178,3 +179,18 @@ export const getAccountsByUserIdsAndEnvironment = (userIds: string[], environmen
       user: { select: { id: true } },
     },
   })
+
+export const getAccountListWithCourseInfoForAllTraineeNotDeactivated = async () => {
+  return prismaClient.account.findMany({
+    where: {
+      environment: { in: [Environment.COURSE_BC, Environment.COURSE_TILT] },
+      professorCourseSessions: { none: {} },
+      traineeCourseSessions: { some: {} },
+      role: { not: Role.DEFAULT },
+    },
+    select: { id: true, ...CourseAccountSelect },
+  })
+}
+export type NotDeactivatedTraineeAccountList = AsyncReturnType<
+  typeof getAccountListWithCourseInfoForAllTraineeNotDeactivated
+>

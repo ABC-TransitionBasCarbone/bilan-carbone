@@ -1,4 +1,7 @@
+import { CourseAccountSelect } from './training.select'
+
 export const AccountWithUserSelect = {
+  ...CourseAccountSelect,
   id: true,
   createdAt: true,
   updatedAt: true,

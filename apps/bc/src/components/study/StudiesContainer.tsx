@@ -88,7 +88,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
   const creationUrl = organizationVersionId ? `/organisations/${organizationVersionId}/etudes/creer` : '/etudes/creer'
   const creationUrlSimplified = `${creationUrl}?simplified=true`
 
-  const activeLicence = !!(organizationVersion && hasActiveLicence(organizationVersion))
+  const activeLicence = !!(organizationVersion && hasActiveLicence(organizationVersion, user))
 
   let displaySimplifiedStudies = false
   let hasStudies = studies.length > 0

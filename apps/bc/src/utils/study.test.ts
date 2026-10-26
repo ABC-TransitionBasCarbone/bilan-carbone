@@ -3,13 +3,15 @@ import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionS
 import { getMockedFullStudySite, mockedEmissionSourceEmissionFactor } from '@/tests/utils/models/study'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import * as UserUtilsModule from '@/utils/user'
-import { EmissionFactorBase, Environment, Level, Role } from '@abc-transitionbascarbone/common/db/enums'
+import { EmissionFactorBase, Environment, Level, Role, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import {
+  getAccountRoleOnStudy,
   getBaseFilteredEmissionSources,
   getDuplicableEnvironments,
   getStudyDefaultLandingPath,
   getUserRoleOnPublicStudy,
+  StudyWithRoleFields,
 } from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
@@ -52,6 +54,53 @@ const emissionSources = [
 const userMock = getMockedAuthUser()
 
 describe('StudyUtils functions', () => {
+  describe('course study roles', () => {
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-02-01'))
+    })
+    afterEach(() => {
+      jest.useRealTimers()
+    })
+    it.each([Environment.COURSE_BC, Environment.COURSE_TILT])('makes expired %s trainees readers', (environment) => {
+      const user = getMockedAuthUser({ environment, level: Level.Initial })
+      const study: StudyWithRoleFields = {
+        id: 'study',
+        level: Level.Initial,
+        isPublic: false,
+        simplified: false,
+        organizationVersion: { id: 'org', parentId: null, activatedLicence: [], parent: null, environment },
+        allowedUsers: [{ role: StudyRole.Validator, account: { id: user.accountId, user: { email: user.email } } }],
+      }
+      expect(
+        getAccountRoleOnStudy(
+          {
+            ...user,
+            courseAccess: {
+              isProfessor: false,
+              periods: [{ startDate: '2026-01-01', expiresAt: '2026-02-02' }],
+            },
+          },
+          study,
+        ),
+      ).toBe(StudyRole.Validator)
+      expect(
+        getAccountRoleOnStudy(
+          {
+            ...user,
+            courseAccess: {
+              isProfessor: false,
+              periods: [{ startDate: '2026-01-01', expiresAt: '2026-02-01' }],
+            },
+          },
+          study,
+        ),
+      ).toBe(StudyRole.Reader)
+      expect(getAccountRoleOnStudy({ ...user, courseAccess: { isProfessor: true, periods: [] } }, study)).toBe(
+        StudyRole.Validator,
+      )
+      expect(getAccountRoleOnStudy(user, { ...study, allowedUsers: [] })).toBeNull()
+    })
+  })
   describe('getDuplicableEnvironments', () => {
     test('Should return Tilt and BC for BC environment', () => {
       const res = getDuplicableEnvironments(Environment.BC)

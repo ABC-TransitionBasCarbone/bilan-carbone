@@ -16,7 +16,7 @@ import {
 } from '@/tests/utils/models/user'
 import * as organizationUtils from '@/utils/organization'
 import * as studyUtils from '@/utils/study'
-import { Environment, Level, Role, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
+import { Environment, Level, Role, StudyRole, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { mockedUserId } from '@abc-transitionbascarbone/common/services/tests/models/user'
 import { expect } from '@jest/globals'
 import * as authModule from '../auth'
@@ -24,6 +24,7 @@ import * as userModule from '../serverFunctions/user'
 import * as environmentAdvancedModule from './environmentAdvanced'
 import * as organizationModule from './organization'
 import {
+  canCreateAStudy,
   canCreateSpecificStudy,
   canDeleteStudy,
   canDuplicateStudy,
@@ -107,6 +108,88 @@ const mockedStudyToDelete = {
 const getStudyWithPublicStatus = (isPublic: boolean) => ({ ...mockedStudyToDelete, isPublic })
 
 describe('Study permissions service', () => {
+  describe('course study creation', () => {
+    const originalDays = process.env.TRAINING_ACCESS_DAYS
+    beforeEach(() => {
+      jest.clearAllMocks()
+      jest.useFakeTimers().setSystemTime(new Date('2026-02-01'))
+      process.env.TRAINING_ACCESS_DAYS = '10'
+    })
+    afterEach(() => {
+      jest.useRealTimers()
+      if (originalDays === undefined) {
+        delete process.env.TRAINING_ACCESS_DAYS
+      } else {
+        process.env.TRAINING_ACCESS_DAYS = originalDays
+      }
+    })
+
+    it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
+      'checks the training window for %s',
+      async (environment) => {
+        const user = { ...mockedSession, environment }
+        const account = {
+          ...getMockedDbAccount(),
+          environment,
+          role: Role.ADMIN,
+          status: UserStatus.ACTIVE,
+          professorCourseSessions: [],
+          traineeCourseSessions: [
+            { courseSession: { startDate: new Date('2026-01-01'), endDate: new Date('2026-02-01') } },
+          ],
+        }
+        mockGetAccountById.mockResolvedValue(account)
+        await expect(canCreateAStudy(user)).resolves.toBe(true)
+        mockGetAccountById.mockResolvedValue({
+          ...account,
+          traineeCourseSessions: [
+            { courseSession: { startDate: new Date('2026-01-01'), endDate: new Date('2026-01-10') } },
+          ],
+        })
+        await expect(canCreateAStudy(user)).resolves.toBe(false)
+        mockGetAccountById.mockResolvedValue({
+          ...account,
+          traineeCourseSessions: [
+            { courseSession: { startDate: new Date('2026-03-01'), endDate: new Date('2026-03-10') } },
+          ],
+        })
+        await expect(canCreateAStudy(user)).resolves.toBe(false)
+        mockGetAccountById.mockResolvedValue({ ...account, status: UserStatus.IMPORTED })
+        await expect(canCreateAStudy(user)).resolves.toBe(false)
+        mockGetAccountById.mockResolvedValue({ ...account, role: Role.DEFAULT })
+        await expect(canCreateAStudy(user)).resolves.toBe(false)
+        mockGetAccountById.mockResolvedValue({ ...account, organizationVersionId: null })
+        await expect(canCreateAStudy(user)).resolves.toBe(false)
+        mockGetAccountById.mockResolvedValue({
+          ...account,
+          traineeCourseSessions: [],
+          professorCourseSessions: [{ id: 'course' }],
+        })
+        await expect(canCreateAStudy(user)).resolves.toBe(true)
+      },
+    )
+
+    it('awaits the course creation check in server-side specific study creation', async () => {
+      mockGetAccountById.mockResolvedValue({
+        ...getMockedDbAccount(),
+        environment: Environment.COURSE_BC,
+        status: UserStatus.ACTIVE,
+        professorCourseSessions: [],
+        traineeCourseSessions: [],
+      })
+      mockIsInOrgaOrParentFromId.mockResolvedValue(true)
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({ id: mockedOrganizationVersionId })
+      mockHasActiveLicence.mockReturnValue(true)
+      mockHasSufficientLevel.mockReturnValue(true)
+      await expect(
+        canCreateSpecificStudy(
+          { ...mockedSession, environment: Environment.COURSE_BC },
+          initialStudy,
+          mockedOrganizationVersionId,
+        ),
+      ).resolves.toBe(false)
+    })
+  })
   describe('canCreateSpecificStudy', () => {
     beforeEach(() => {
       jest.clearAllMocks()

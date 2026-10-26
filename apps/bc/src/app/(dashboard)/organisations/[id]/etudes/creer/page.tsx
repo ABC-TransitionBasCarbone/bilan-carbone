@@ -34,7 +34,7 @@ const NewStudyInOrganization = async (props: Props & UserSessionProps & StudyCre
   )?.id
   if (organizationVersionId) {
     const organizationVersion = await getOrganizationVersionForRightsCheck(organizationVersionId)
-    if (!organizationVersion || !hasActiveLicence(organizationVersion)) {
+    if (!organizationVersion || !hasActiveLicence(organizationVersion, user)) {
       redirect('/')
     }
   }

@@ -1,11 +1,12 @@
+import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
 import { getMockedFullStudy, getMockedFullStudySite } from '@/tests/utils/models/study'
 import { getMockedDbAccount } from '@/tests/utils/models/user'
 import { AccountWithUser } from '@/types/account.types'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
-import { StudyRole } from '@abc-transitionbascarbone/common/db/enums'
+import { Environment, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import * as studyUtilsModule from '../../utils/study'
-import { hasStudyBasicRights } from './emissionSource'
+import { canUpdateEmissionSource, hasStudyBasicRights } from './emissionSource'
 import * as studyModule from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
@@ -23,6 +24,19 @@ const mockCanReadStudy = studyModule.canReadStudy as jest.Mock
 const mockGetAccountRoleOnStudy = studyUtilsModule.getAccountRoleOnStudy as jest.Mock
 
 describe('hasStudyBasicRights', () => {
+  it('blocks an expired course contributor from updating existing data', async () => {
+    const account = getMockedDbAccount({ environment: Environment.COURSE_BC }) as AccountWithUser
+    account.courseAccess = { isProfessor: false, periods: [{ startDate: '2000-01-01', expiresAt: '2000-02-01' }] }
+    const study = getMockedFullStudy()
+    const source = {
+      ...getMockedFullStudyEmissionSource(),
+      studyId: study.id,
+      studySiteId: 'site',
+      recycledPart: null,
+      lastEditorId: null,
+    }
+    await expect(canUpdateEmissionSource(account, source, { value: 123 }, study)).resolves.toBe(false)
+  })
   it('should return false if user cannot read study', async () => {
     const account = getMockedDbAccount() as AccountWithUser
     const site = getMockedFullStudySite({ id: 'study-site-1' })

@@ -2,7 +2,9 @@ import { OrganizationVersionWithParentLicence } from '@/db/organization'
 import { needsLicenceToUseApp } from '@/services/permissions/environment'
 import { isAdmin } from '@/utils/user'
 import { Environment, Role } from '@abc-transitionbascarbone/common/db/enums'
+import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import { UserSession } from 'next-auth'
+import { hasCourseAccess } from './training'
 
 export const isAdminOnOrga = (
   account: Pick<UserSession, 'role' | 'organizationVersionId'>,
@@ -84,7 +86,11 @@ export const hasActiveLicence = (
     Exclude<OrganizationVersionWithParentLicence, null>,
     'activatedLicence' | 'parent' | 'environment'
   >,
+  user?: Pick<UserSession, 'courseAccess'> & Partial<Pick<UserSession, 'role'>>,
 ) => {
+  if (isCourseEnvironment(organizationVersion.environment)) {
+    return !!user && hasCourseAccess(user.courseAccess)
+  }
   if (!needsLicenceToUseApp(organizationVersion.environment)) {
     return true
   }

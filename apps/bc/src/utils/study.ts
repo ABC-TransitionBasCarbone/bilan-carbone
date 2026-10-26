@@ -29,6 +29,7 @@ import { UserSession } from 'next-auth'
 import { unique } from './array'
 import { getEmissionSourcesTotalCo2 } from './emissionSources'
 import { hasActiveLicence, isInOrgaOrParent } from './organization'
+import { hasCourseAccess } from './training'
 
 export const getUserRoleOnPublicStudy = (
   user: Pick<UserSession, 'role' | 'level' | 'environment'>,
@@ -63,24 +64,31 @@ export type StudyWithRoleFields = {
 }
 
 export const getAccountRoleOnStudy = (user: UserSession, study: StudyWithRoleFields) => {
-  if (isTiltSimplified(study.organizationVersion.environment, study.simplified)) {
+  const canEditCourse = !isCourseEnvironment(user.environment) || hasCourseAccess(user.courseAccess)
+  if (isTiltSimplified(study.organizationVersion.environment, study.simplified) && canEditCourse) {
     return StudyRole.Editor
   }
   if (isAdminOnStudyOrga(user, study.organizationVersion)) {
-    return hasSufficientLevel(user.level, study.level, user.environment) && hasActiveLicence(study.organizationVersion)
+    return canEditCourse &&
+      hasSufficientLevel(user.level, study.level, user.environment) &&
+      hasActiveLicence(study.organizationVersion, user)
       ? StudyRole.Validator
       : StudyRole.Reader
   }
 
   const right = study.allowedUsers.find((right) => right.account.id === user.accountId)
   if (right) {
-    return hasSufficientLevel(user.level, study.level, user.environment) && hasActiveLicence(study.organizationVersion)
+    return canEditCourse &&
+      hasSufficientLevel(user.level, study.level, user.environment) &&
+      hasActiveLicence(study.organizationVersion, user)
       ? right.role
       : StudyRole.Reader
   }
 
   if (study.isPublic && isInOrgaOrParent(user.organizationVersionId, study.organizationVersion)) {
-    return hasActiveLicence(study.organizationVersion) ? getUserRoleOnPublicStudy(user, study.level) : StudyRole.Reader
+    return canEditCourse && hasActiveLicence(study.organizationVersion, user)
+      ? getUserRoleOnPublicStudy(user, study.level)
+      : StudyRole.Reader
   }
 
   return null
@@ -90,7 +98,8 @@ export const getDisplayedRoleOnStudy = (
   user: UserSession,
   study: StudyWithRoleFields & { contributors: { accountId: string }[] },
 ) => {
-  return study.contributors.some((contributor) => contributor.accountId === user.accountId)
+  return (!isCourseEnvironment(user.environment) || hasCourseAccess(user.courseAccess)) &&
+    study.contributors.some((contributor) => contributor.accountId === user.accountId)
     ? 'Contributor'
     : getAccountRoleOnStudy(user, study)
 }

@@ -1,6 +1,10 @@
 {
   "jobs": [
     {
+      "command": "0 3 * * * curl --silent --show-error --fail --output /dev/null -X POST $NEXT_API_URL/cron/deactivate-course-users -H \"Authorization: Bearer $CRON_SECRET\"",
+      "description": "Downgrade expired course trainees to members every day at 03:00 (scheduler timezone)"
+    },
+    {
       "command": "*/10 * * * * curl --silent --show-error --fail --output /dev/null -X POST $NEXT_API_URL/cron/import-users -H \"Authorization: Bearer $CRON_SECRET\"",
       "description": "Import users from FTP server every 10 minutes"
     },

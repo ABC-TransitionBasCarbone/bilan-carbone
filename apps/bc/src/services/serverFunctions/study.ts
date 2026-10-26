@@ -105,9 +105,11 @@ import {
   hasSufficientLevel,
 } from '@/utils/study'
 import { mapStudyForReport } from '@/utils/studyReport.utils'
+import { getCourseAccess } from '@/utils/training'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import { LocaleType } from '@abc-transitionbascarbone/common/i18n/config'
+import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import type { IsSuccess } from '@abc-transitionbascarbone/common/utils/serverResponse'
 
 import type {
@@ -930,7 +932,12 @@ export const newStudyRight = async (right: NewStudyRightCommand) =>
         studyWithRights.organizationVersion.environment,
       ) ||
       !userToChangeOrganizationVersion ||
-      !hasActiveLicence(userToChangeOrganizationVersion)
+      !hasActiveLicence(userToChangeOrganizationVersion, {
+        courseAccess:
+          existingAccountToChange && isCourseEnvironment(existingAccountToChange.environment)
+            ? getCourseAccess(existingAccountToChange)
+            : undefined,
+      })
     ) {
       right.role = StudyRole.Reader
     }
@@ -1049,7 +1056,12 @@ export const changeStudyRole = async (studyId: string, email: string, studyRole:
 
     if (
       !userToChangeOrganizationVersion ||
-      !hasActiveLicence(userToChangeOrganizationVersion) ||
+      !hasActiveLicence(userToChangeOrganizationVersion, {
+        courseAccess:
+          existingAccountToChange && isCourseEnvironment(existingAccountToChange.environment)
+            ? getCourseAccess(existingAccountToChange)
+            : undefined,
+      }) ||
       (!hasSufficientLevel(
         existingUserToChange.level,
         studyWithRights.level,

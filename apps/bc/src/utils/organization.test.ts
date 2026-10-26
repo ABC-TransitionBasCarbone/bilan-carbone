@@ -15,6 +15,46 @@ import {
 } from './organization'
 
 describe('organisation utils', () => {
+  describe('course licences', () => {
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-02-01'))
+    })
+    afterEach(() => {
+      jest.useRealTimers()
+    })
+    it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
+      'limits the %s licence bypass to trainees and professors',
+      (environment) => {
+        const organizationVersion = { environment, activatedLicence: [], parent: null }
+        expect(hasActiveLicence(organizationVersion)).toBe(false)
+        expect(
+          hasActiveLicence(organizationVersion, {
+            courseAccess: {
+              isProfessor: false,
+              periods: [{ startDate: '2026-01-01', expiresAt: '2026-02-02' }],
+            },
+          }),
+        ).toBe(true)
+        expect(
+          hasActiveLicence(organizationVersion, {
+            courseAccess: {
+              isProfessor: false,
+              periods: [{ startDate: '2026-01-01', expiresAt: '2026-02-01' }],
+            },
+          }),
+        ).toBe(false)
+        expect(
+          hasActiveLicence(organizationVersion, {
+            courseAccess: {
+              isProfessor: true,
+              periods: [{ startDate: '2026-03-01', expiresAt: '2026-04-01' }],
+            },
+          }),
+        ).toBe(true)
+        expect(hasActiveLicence(organizationVersion, { courseAccess: { isProfessor: true, periods: [] } })).toBe(true)
+      },
+    )
+  })
   describe('isAdminOnOrga', () => {
     it('should return true if user is admin and in organization', () => {
       const user = getMockedAuthUser({ role: Role.ADMIN })

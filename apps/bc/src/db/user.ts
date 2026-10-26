@@ -18,6 +18,7 @@ import { environmentsWithChecklist } from '@abc-transitionbascarbone/common/util
 import { UserSession } from 'next-auth'
 import { addAccount, getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
 import { prismaClient } from './client.server'
+import { CourseAccountSelect } from './training.select'
 
 export const getUserByEmailWithSensibleInformations = (email: string) =>
   prismaClient.user.findUnique({
@@ -228,7 +229,10 @@ export const getUserByIdWithAccounts = (id: string) =>
 export type UserWithAccounts = AsyncReturnType<typeof getUserByIdWithAccounts>
 
 export const getUserByEmail = (email: string) =>
-  prismaClient.user.findUnique({ where: { email }, include: { accounts: { include: { organizationVersion: true } } } })
+  prismaClient.user.findUnique({
+    where: { email },
+    include: { accounts: { include: { organizationVersion: true, ...CourseAccountSelect } } },
+  })
 
 export const updateUser = (userId: string, data: Partial<Prisma.UserCreateInput>) =>
   prismaClient.user.update({

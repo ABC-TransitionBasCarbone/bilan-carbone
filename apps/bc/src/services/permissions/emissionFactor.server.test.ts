@@ -7,6 +7,7 @@ import { expect } from '@jest/globals'
 import { canCreateEmissionFactor } from './emissionFactor.server'
 
 jest.mock('@/db/organization', () => ({ getOrganizationVersionForRightsCheck: jest.fn() }))
+jest.mock('@/db/account', () => ({ getAccountById: jest.fn() }))
 jest.mock('@/db/user', () => ({ getUserById: jest.fn() }))
 jest.mock('@/utils/organization', () => ({ hasActiveLicence: jest.fn() }))
 

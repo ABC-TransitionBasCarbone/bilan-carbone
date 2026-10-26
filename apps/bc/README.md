@@ -124,6 +124,7 @@ yarn tsx src/scripts/questions/deleteAnswersWithCleanup.ts -q "question-intern-i
 ```
 
 ### Scripts lancés par CRON
+The authenticated `POST /api/cron/deactivate-course-users` job runs daily at 03:00 in the scheduler's timezone. Remove trainee rights after the study ended. 
 
 Import users from the FTP server : `curl -X POST $NEXT_API_URL/cron/import-users -H "Authorization: Bearer $CRON_SECRET"`
 

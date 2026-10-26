@@ -12,6 +12,7 @@ import {
   hasSufficientLevel,
   StudyWithRoleFields,
 } from '@/utils/study'
+import { getCourseAccess, hasCourseAccess } from '@/utils/training'
 import type { Prisma, Study, User } from '@abc-transitionbascarbone/common/db'
 import {
   DeactivatableFeature,
@@ -94,11 +95,11 @@ export const canCreateAStudy = async (
   if (isCourseEnvironment(user.environment)) {
     const account = await getAccountById(user.accountId)
 
-    if (!account || account.status !== UserStatus.ACTIVE) {
+    if (!account || account.status !== UserStatus.ACTIVE || account.role === Role.DEFAULT) {
       return false
     }
 
-    return true
+    return !!account.organizationVersionId && hasCourseAccess(getCourseAccess(account))
   }
 
   if (simplified && !user.level && isTilt(user.environment)) {
@@ -135,12 +136,17 @@ const canCreateSpecificStudyCommon = async (
   }
 
   const organizationVersion = await getOrganizationVersionForRightsCheck(organizationVersionId)
-  if (!organizationVersion || !hasActiveLicence(organizationVersion)) {
+  if (
+    !organizationVersion ||
+    !hasActiveLicence(organizationVersion, {
+      courseAccess: isCourseEnvironment(dbAccount.environment) ? getCourseAccess(dbAccount) : undefined,
+    })
+  ) {
     return { allowed: false }
   }
 
   return {
-    allowed: canCreateAStudy(
+    allowed: await canCreateAStudy(
       {
         ...dbAccount,
         level: dbAccount.user.level,
@@ -213,7 +219,7 @@ const canEditStudy = async (user: UserSession, study: FullStudy) => {
     return false
   }
 
-  if (!hasActiveLicence(organizationVersion)) {
+  if (!hasActiveLicence(organizationVersion, user)) {
     return false
   }
 
@@ -276,7 +282,7 @@ const getRoleIfHasAccess = (user: UserSession, minimalStudy: MinimalStudyForRigh
   }
 
   return hasSufficientLevel(user.level, minimalStudy.level, user.environment) &&
-    hasActiveLicence(minimalStudy.organizationVersion)
+    hasActiveLicence(minimalStudy.organizationVersion, user)
     ? (overrideRole ?? StudyRole.Validator)
     : StudyRole.Reader
 }
@@ -326,6 +332,9 @@ export const canAddRightOnStudy = (
 }
 
 export const canAddContributorOnStudy = (user: UserSession, study: FullStudy) => {
+  if (isCourseEnvironment(user.environment) && !hasCourseAccess(user.courseAccess)) {
+    return false
+  }
   if (isAdminOnStudyOrga(user, study.organizationVersion)) {
     return true
   }
@@ -352,6 +361,9 @@ export const canDeleteStudy = async (studyId: string) => {
   }
 
   if (study.createdById === session.user.accountId) {
+    if (isCourseEnvironment(session.user.environment) && !hasCourseAccess(session.user.courseAccess)) {
+      return false
+    }
     return true
   }
 

@@ -184,7 +184,7 @@ export const isEmissionFactorFromActiveOrganization = async (id: string) =>
       emissionFactor.organizationId,
       session.user.environment,
     )
-    if (!organizationVersion || !hasActiveLicence(organizationVersion)) {
+    if (!organizationVersion || !hasActiveLicence(organizationVersion, session.user)) {
       return false
     }
     return true

@@ -1,3 +1,4 @@
+import type { CourseAccess } from '@/utils/training'
 import { OrganizationVersion, Account as PrismaAccount, User as PrismaUser } from '@abc-transitionbascarbone/common/db'
 import 'next-auth'
 import 'next-auth/jwt'
@@ -22,6 +23,7 @@ declare module 'next-auth' {
     organizationId: string | null
     environment: PrismaOrganizationVersion['environment']
     needsAccountSelection?: boolean
+    courseAccess?: CourseAccess
   }
 
   interface User extends DefaultUser {

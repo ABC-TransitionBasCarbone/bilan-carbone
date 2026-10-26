@@ -1,8 +1,11 @@
 import { getAccountById, getAccountsFromUser } from '@/db/account'
 import { getUserByEmailWithSensibleInformations } from '@/db/user'
 import { AccountWithUser } from '@/types/account.types'
+import { getCourseAccess, hasCourseAccess } from '@/utils/training'
+import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import { Environment, Level, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { DAY } from '@abc-transitionbascarbone/common/utils'
+import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession, NextAuthOptions, Session } from 'next-auth'
@@ -121,6 +124,14 @@ export const authOptions: NextAuthOptions = {
           role: token.role as Role,
           level: token.level as Level,
           needsAccountSelection: false,
+        }
+        if (isCourseEnvironment(session.user.environment)) {
+          const account = await getAccountById(session.user.accountId)
+          if (!account || account.status !== UserStatus.ACTIVE) {
+            return { sessionInvalid: true, expires: '' }
+          }
+          session.user.courseAccess = getCourseAccess(account)
+          session.user.role = hasCourseAccess(session.user.courseAccess) ? account.role : Role.DEFAULT
         }
       }
 
@@ -245,9 +256,7 @@ export async function dbActualizedAuth(
     ...session,
     user: {
       ...session.user,
-      role: account.role,
-      organizationVersionId: account.organizationVersionId,
-      level: account.user.level,
+      ...accountWithUserToUserSession(account),
     },
   }
 }
