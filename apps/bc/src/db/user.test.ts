@@ -1,6 +1,6 @@
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment, Level, Role, UserChecklist, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 import { createUsersWithAccount, updateUserPasswordForEmail } from './user'
 
 let mockBlockedEnvironments: Environment[] = []
@@ -11,7 +11,7 @@ const mockTransaction = {
   userCheckedStep: { upsert: jest.fn() },
 }
 
-jest.mock('./client.server', () => ({
+jest.mock('./client', () => ({
   prismaClient: {
     get user() {
       return mockTransaction.user
