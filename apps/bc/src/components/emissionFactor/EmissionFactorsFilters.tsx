@@ -10,6 +10,7 @@ import {
   Chip,
   FormControl,
   FormControlLabel,
+  FormLabel,
   InputLabel,
   ListItemText,
   MenuItem,
@@ -94,10 +95,13 @@ export const EmissionFactorsFilters = ({
       {displayFilters && (
         <>
           <FormControl>
+            <FormLabel component="label" htmlFor="emission-factor-search-input">
+              {t('search')}
+            </FormLabel>
             <DebouncedInput
               className={styles.searchInput}
+              id="emission-factor-search-input"
               debounce={500}
-              label={t('search')}
               value={filters.search}
               onChange={(newValue) => setFilters((prevFilters) => ({ ...prevFilters, search: newValue }))}
               placeholder={t('searchPlaceholder')}
@@ -106,6 +110,7 @@ export const EmissionFactorsFilters = ({
           </FormControl>
           <FormControl className={styles.multiSelector}>
             <Autocomplete
+              id="emissions-location-filter"
               multiple
               disableCloseOnSelect
               value={filters.locations}
@@ -135,7 +140,12 @@ export const EmissionFactorsFilters = ({
                 )
               }}
               renderInput={(params) => (
-                <TextField {...params} label={t('locationSearch')} placeholder={t('locationSearchPlaceholder')} />
+                <>
+                  <FormLabel component="label" htmlFor="emissions-location-filter">
+                    {t('locationSearch')}
+                  </FormLabel>
+                  <TextField {...params} placeholder={t('locationSearchPlaceholder')} />
+                </>
               )}
               slots={{ popper: Popper }}
               slotProps={{ popper: { style: { minWidth: 300 } } }}
@@ -156,6 +166,7 @@ export const EmissionFactorsFilters = ({
           </FormControl>
           <FormControl className={styles.multiSelector}>
             <Autocomplete
+              id="emissions-unit-filter"
               multiple
               disableCloseOnSelect
               value={filters.units}
@@ -186,7 +197,12 @@ export const EmissionFactorsFilters = ({
                 )
               }}
               renderInput={(params) => (
-                <TextField {...params} label={t('unitSearch')} placeholder={t('unitSearchPlaceholder')} />
+                <>
+                  <FormLabel component="label" htmlFor="emissions-unit-filter">
+                    {t('unitSearch')}
+                  </FormLabel>
+                  <TextField {...params} placeholder={t('unitSearchPlaceholder')} />
+                </>
               )}
               slots={{ popper: Popper }}
               slotProps={{ popper: { style: { minWidth: 300 } } }}
@@ -220,7 +236,9 @@ export const EmissionFactorsFilters = ({
             </FormControl>
           )}
           <FormControl className={styles.selector}>
-            <InputLabel id="emissions-sources-label">{t('sources')}</InputLabel>
+            <FormLabel component="label" htmlFor="emissions-sources-select" id="emissions-sources-label">
+              {t('sources')}
+            </FormLabel>
             <Select
               id="emissions-sources-select"
               labelId="emissions-sources-label"
