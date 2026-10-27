@@ -134,6 +134,8 @@ After saving the sessions, each training organism receives a single email at its
 The same email includes a "Vos formations mises à jour" section for changed dates or professor (before/after), and added or removed trainees. Unchanged sessions, including reordered trainees, do not trigger an email.
 Email failures fail the cron request but do not roll back the import; a subsequent unchanged import will not resend the summary.
 
+Update the active status of course session trainee organizations daily at 3 AM. Access remains active for `COURSE_SESSION_ACCESS_DAYS` after the session end date.
+
 ### Import Secten data
 
 Import Secten data by creating a new version or updating an existing version if the version name is already used :
