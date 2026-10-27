@@ -157,6 +157,7 @@ const EmissionSourceFactor = ({
             onChange={setValue}
             label={t('form.emissionFactor')}
             required
+            slotProps={{ inputLabel: { shrink: true } }}
             onClick={() => (isFromOldImport ? setOldFactorAction('fieldSearch') : setDisplay(true))}
           />
           {canEdit && (
