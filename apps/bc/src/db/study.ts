@@ -33,6 +33,7 @@ import { cache } from 'react'
 import { getAccountOrganizationVersions } from './account'
 import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client.server'
+import { OrganizationVersionCourseAccessSelect } from './organization.select'
 import { getOrganizationVersionsByIds } from './organizationVersions'
 
 export type StudyTagFamilyWithTags = Omit<StudyTagFamily, 'createdAt' | 'updatedAt'> & {
@@ -297,6 +298,7 @@ const fullStudyInclude = {
   exports: { select: { types: true, control: true } },
   organizationVersion: {
     select: {
+      ...OrganizationVersionCourseAccessSelect,
       id: true,
       isCR: true,
       parentId: true,
@@ -567,6 +569,7 @@ export const getStudyForNavbar = async (id: string): Promise<StudyForNavbar | nu
       isPublic: true,
       organizationVersion: {
         select: {
+          ...OrganizationVersionCourseAccessSelect,
           id: true,
           parentId: true,
           environment: true,
@@ -612,6 +615,7 @@ export const getStudiesForCards = async (ids: string[]) => {
       },
       organizationVersion: {
         select: {
+          ...OrganizationVersionCourseAccessSelect,
           id: true,
           parentId: true,
           environment: true,
@@ -1276,6 +1280,7 @@ export const getMinimalStudyForRights = async (studyId: string) => {
       resultsUnit: true,
       organizationVersion: {
         select: {
+          ...OrganizationVersionCourseAccessSelect,
           id: true,
           parentId: true,
           environment: true,

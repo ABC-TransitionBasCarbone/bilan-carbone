@@ -32,4 +32,5 @@ export const mockedOrganizationVersion = {
   organization: mockedOrganization,
   environment: Environment.BC,
   activatedLicence: [new Date().getFullYear()],
+  traineeCourseSessions: [],
 }

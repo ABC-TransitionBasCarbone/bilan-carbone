@@ -1,5 +1,5 @@
 import { getMockedAuthUser } from '@/tests/utils/models/user'
-import { Environment, Role } from '@abc-transitionbascarbone/common/db/enums'
+import { CourseSessionTraineeOrganizationStatus, Environment, Role } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import {
   canEditOrganizationVersion,
@@ -154,6 +154,37 @@ describe('organisation utils', () => {
   })
 
   describe('hasActiveLicence', () => {
+    it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
+      'requires an active course session for %s regardless of organization or parent licence',
+      (environment) => {
+        const organizationVersion = {
+          environment,
+          activatedLicence: [new Date().getFullYear()],
+          parent: { activatedLicence: [new Date().getFullYear()] },
+        }
+
+        expect(hasActiveLicence(organizationVersion)).toBe(false)
+        expect(hasActiveLicence({ ...organizationVersion, traineeCourseSessions: [] })).toBe(false)
+        expect(
+          hasActiveLicence({
+            ...organizationVersion,
+            traineeCourseSessions: [{ isActive: CourseSessionTraineeOrganizationStatus.INACTIVE }],
+          }),
+        ).toBe(false)
+        expect(
+          hasActiveLicence({
+            ...organizationVersion,
+            activatedLicence: [],
+            parent: null,
+            traineeCourseSessions: [
+              { isActive: CourseSessionTraineeOrganizationStatus.INACTIVE },
+              { isActive: CourseSessionTraineeOrganizationStatus.ACTIVE },
+            ],
+          }),
+        ).toBe(true)
+      },
+    )
+
     it('should return true if environment does not need licence', () => {
       expect(hasActiveLicence({ activatedLicence: [], parent: null, environment: Environment.CUT })).toBe(true)
       expect(hasActiveLicence({ activatedLicence: [], parent: null, environment: Environment.CLICKSON })).toBe(true)

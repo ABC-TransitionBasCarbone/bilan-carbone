@@ -45,7 +45,7 @@ model CourseSessionTraineeOrganization {
   organizationVersionId String              @map("organization_version_id")
   organizationVersion   OrganizationVersion @relation(fields: [organizationVersionId], references: [id], onDelete: Cascade)
 
-  isActive CourseSessionTraineeOrganizationStatus @default(INACTIVE) @map("is_active")
+  courseStatus CourseSessionTraineeOrganizationStatus @default(INACTIVE) @map("is_active")
 
   @@id([courseSessionId, organizationVersionId])
   @@index([organizationVersionId])

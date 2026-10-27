@@ -1,6 +1,19 @@
 import { Prisma } from '@abc-transitionbascarbone/common/db'
+import { CourseSessionTraineeOrganizationStatus, Environment } from '@abc-transitionbascarbone/common/db/enums'
+
+export const OrganizationVersionCourseAccessSelect = {
+  traineeCourseSessions: {
+    where: {
+      courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
+      organizationVersion: { environment: { in: [Environment.COURSE_BC, Environment.COURSE_TILT] } },
+    },
+    select: { courseStatus: true },
+    take: 1,
+  },
+} satisfies Prisma.OrganizationVersionSelect
 
 export const OrganizationVersionWithOrganizationSelect = {
+  ...OrganizationVersionCourseAccessSelect,
   id: true,
   createdAt: true,
   updatedAt: true,
