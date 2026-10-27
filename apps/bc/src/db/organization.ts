@@ -6,7 +6,7 @@ import type { Organization, OrganizationVersion, Site } from '@abc-transitionbas
 import { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment, EstablishmentType, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { prismaClient } from './client.server'
-import { OrganizationVersionWithOrganizationSelect } from './organization.select'
+import { OrganizationVersionCourseAccessSelect, OrganizationVersionWithOrganizationSelect } from './organization.select'
 import { deleteStudy } from './study'
 
 export type OrganizationVersionWithOrganization = OrganizationVersion & {
@@ -63,6 +63,7 @@ export const getOrganizationVersionForRightsCheck = (id: string | null) =>
     ? prismaClient.organizationVersion.findUnique({
         where: { id },
         select: {
+          ...OrganizationVersionCourseAccessSelect,
           id: true,
           environment: true,
           activatedLicence: true,

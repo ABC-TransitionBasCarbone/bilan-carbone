@@ -211,6 +211,7 @@ const mockMinimalStudy: MinimalStudyForRights = {
     parentId: null,
     environment: Environment.BC,
     activatedLicence: [2020],
+    traineeCourseSessions: [],
     parent: null,
     organization: { name: 'Org' },
   },
