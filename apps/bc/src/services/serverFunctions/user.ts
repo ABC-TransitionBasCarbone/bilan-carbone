@@ -448,7 +448,11 @@ export const checkCourseActivation = async (email: string, sessionCode: string, 
         code: sessionCode.trim(),
         OR: [
           {
-            trainees: { some: { account: { user: { email: user.email } } } },
+            traineeOrganizations: {
+              some: {
+                organizationVersion: { userAccounts: { some: { user: { email: user.email } } } },
+              },
+            },
           },
           {
             professor: { user: { email: user.email } },

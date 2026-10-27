@@ -55,7 +55,7 @@ jest.mock('node-xlsx', () => ({
 
 const mockFindCourseOrganisms = jest.mocked(prismaClient.courseOrganism.findMany)
 const mockFindAccounts = jest.mocked(prismaClient.account.findMany)
-const mockUpdateAccount = jest.mocked(prismaClient.account.update)
+const mockUpdateAccount = prismaClient.account.update as jest.Mock
 const mockFindCourseSessions = jest.mocked(prismaClient.courseSession.findMany)
 const mockUpsertCourseSession = jest.mocked(prismaClient.courseSession.upsert)
 const mockCreateUsersWithAccount = jest.mocked(createUsersWithAccount)
@@ -120,7 +120,9 @@ const withParticipants = (session: CourseSession) => {
   const importedSession = participants.find(({ name }) => name === session.name)!
   return {
     ...session,
-    trainees: importedSession.trainees.map((user) => ({ account: { user } })),
+    traineeOrganizations: importedSession.trainees.map((user) => ({
+      organizationVersion: { userAccounts: [{ user }] },
+    })),
     professor: importedSession.professor ? { user: importedSession.professor } : null,
   }
 }
@@ -153,7 +155,21 @@ describe('getCourseSessionsFromFTP', () => {
       newUsers: { count: 6 },
       newAccounts: { count: 6 },
     })
-    mockFindAccounts.mockResolvedValue([])
+    mockFindAccounts.mockResolvedValue(
+      [
+        ['test.abc2@abc-transitionbascarbone.fr', 'Test', 'ABC', 'COURSE_BC'],
+        ['test.abc@abc-transitionbascarbone.fr', 'Test', 'ABC', 'COURSE_BC'],
+        ['onboarding@yopmail.com', 'Onboarding', 'Yopmail', 'COURSE_BC'],
+        ['bc-admin-0@yopmail.com', 'Admin', 'BC', 'COURSE_TILT'],
+        ['test-formation@yopmail.com', 'Test', 'Formation', 'COURSE_TILT'],
+        ['bc-cr-admin-0@yopmail.com', 'Admin', 'CR', 'COURSE_TILT'],
+      ].map(([email, firstName, lastName, environment], index) => ({
+        id: `account-${index}`,
+        environment: environment as Environment,
+        organizationVersionId: `organization-${index}`,
+        user: { email, firstName, lastName },
+      })) as never,
+    )
     mockFindCourseSessions.mockReset().mockResolvedValue([])
     mockUpsertCourseSession
       .mockReset()
@@ -260,6 +276,10 @@ describe('getCourseSessionsFromFTP', () => {
         user: { email, firstName, lastName },
       })) as never,
     )
+    mockUpdateAccount.mockImplementation(async ({ where }: { where: { id: string } }) => ({
+      id: where.id,
+      organizationVersionId: `organization-${where.id}`,
+    }))
     mockFindCourseSessions.mockResolvedValue([])
 
     await importCourseSessionsFromFTP()
@@ -296,14 +316,20 @@ describe('getCourseSessionsFromFTP', () => {
           },
         },
         create: expect.objectContaining({
-          trainees: {
-            create: [{ account: { connect: { id: 'account-0' } } }, { account: { connect: { id: 'account-1' } } }],
+          traineeOrganizations: {
+            create: [
+              { organizationVersion: { connect: { id: 'organization-account-0' } } },
+              { organizationVersion: { connect: { id: 'organization-account-1' } } },
+            ],
           },
         }),
         update: expect.objectContaining({
-          trainees: {
+          traineeOrganizations: {
             deleteMany: {},
-            create: [{ account: { connect: { id: 'account-0' } } }, { account: { connect: { id: 'account-1' } } }],
+            create: [
+              { organizationVersion: { connect: { id: 'organization-account-0' } } },
+              { organizationVersion: { connect: { id: 'organization-account-1' } } },
+            ],
           },
         }),
       }),
@@ -418,7 +444,10 @@ describe('getCourseSessionsFromFTP', () => {
     before.startDate = new Date('2026-01-01')
     before.endDate = new Date('2026-01-02')
     before.professor = { user: oldProfessor }
-    before.trainees = [before.trainees[0], { account: { user: removedTrainee } }]
+    before.traineeOrganizations = [
+      before.traineeOrganizations[0],
+      { organizationVersion: { userAccounts: [{ user: removedTrainee }] } },
+    ]
     mockFindCourseSessions.mockResolvedValueOnce([before])
 
     await importCourseSessionsFromFTP()
@@ -458,7 +487,7 @@ describe('getCourseSessionsFromFTP', () => {
       } else if (field === 'professor') {
         previous[0].professor = null
       } else {
-        previous[0].trainees = []
+        previous[0].traineeOrganizations = []
       }
       mockFindCourseSessions.mockResolvedValueOnce(previous)
 
@@ -476,7 +505,7 @@ describe('getCourseSessionsFromFTP', () => {
 
   it('ignores trainee order changes', async () => {
     const previous = savedSessions.map(withParticipants)
-    previous[0].trainees.reverse()
+    previous[0].traineeOrganizations.reverse()
     mockFindCourseSessions.mockResolvedValueOnce(previous)
 
     await importCourseSessionsFromFTP()

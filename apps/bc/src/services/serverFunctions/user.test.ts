@@ -228,7 +228,11 @@ describe('signUpWithSiretOrCNC', () => {
           code: '123456',
           OR: [
             {
-              trainees: { some: { account: { user: { email: testEmail } } } },
+              traineeOrganizations: {
+                some: {
+                  organizationVersion: { userAccounts: { some: { user: { email: testEmail } } } },
+                },
+              },
             },
             {
               professor: { user: { email: testEmail } },
@@ -249,7 +253,11 @@ describe('signUpWithSiretOrCNC', () => {
           code: '654321',
           OR: [
             {
-              trainees: { some: { account: { user: { email: testEmail } } } },
+              traineeOrganizations: {
+                some: {
+                  organizationVersion: { userAccounts: { some: { user: { email: testEmail } } } },
+                },
+              },
             },
             {
               professor: { user: { email: testEmail } },
@@ -324,7 +332,11 @@ describe('signUpWithSiretOrCNC', () => {
           code: '123456',
           OR: [
             {
-              trainees: { some: { account: { user: { email: testEmail } } } },
+              traineeOrganizations: {
+                some: {
+                  organizationVersion: { userAccounts: { some: { user: { email: testEmail } } } },
+                },
+              },
             },
             {
               professor: { user: { email: testEmail } },
