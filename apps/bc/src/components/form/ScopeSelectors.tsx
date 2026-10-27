@@ -57,12 +57,11 @@ const ScopeSelectors = ({
     <div className={classNames('grid', 'gapped1', styles.scopeGrid)}>
       <div className="flex-col">
         <FormControl fullWidth disabled={sites.length === 0}>
-          <InputLabel id={'site-selector-label'} shrink={true}>
+          <InputLabel id="scope-sites-selector" shrink>
             {tCommon('sites')}
           </InputLabel>
           <MultiSelectAll
             id="scope-sites"
-            labelId="site-selector-label"
             values={siteIds}
             allValues={sites.map((s) => s.id)}
             setValues={onSiteIdsChange}

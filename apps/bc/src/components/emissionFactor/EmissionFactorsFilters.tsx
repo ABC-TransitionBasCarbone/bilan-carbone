@@ -224,10 +224,9 @@ export const EmissionFactorsFilters = ({
           </FormControl>
           {filters.base && (
             <FormControl className={styles.selector}>
-              <InputLabel id="emissions-base-label">{t('base')}</InputLabel>
+              <InputLabel id="emissions-base-selector">{t('base')}</InputLabel>
               <MultiSelectAll
                 id="emissions-base"
-                labelId="emissions-base-label"
                 values={filters.base}
                 allValues={Object.values(EmissionFactorBase)}
                 setValues={(values) => setFilters((prevFilters) => ({ ...prevFilters, base: values }))}

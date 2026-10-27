@@ -70,10 +70,9 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, 
         </FormControl>
 
         <FormControl className={'grow'}>
-          <InputLabel id="engagement-actions-steps-label">{tTable('steps')}</InputLabel>
+          <InputLabel id="engagement-actions-steps-selector">{tTable('steps')}</InputLabel>
           <MultiSelectAll
             id="engagement-actions-steps"
-            labelId="engagement-actions-steps-label"
             values={Array.from(new Set(filters.steps as string[]))}
             allValues={stepsValues}
             setValues={(values) =>
@@ -85,10 +84,9 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, 
         </FormControl>
 
         <FormControl className={'grow'}>
-          <InputLabel id="engagement-actions-targets-label">{tTable('target')}</InputLabel>
+          <InputLabel id="engagement-actions-targets-selector">{tTable('target')}</InputLabel>
           <MultiSelectAll
             id="engagement-actions-targets"
-            labelId="engagement-actions-targets-label"
             values={Array.from(new Set(filters.targets as string[]))}
             allValues={targetsValues}
             setValues={(values) => {
@@ -105,10 +103,9 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, 
         </FormControl>
 
         <FormControl className={'grow'}>
-          <InputLabel id="engagement-actions-phases-label">{tTable('phase')}</InputLabel>
+          <InputLabel id="engagement-actions-phases-selector">{tTable('phase')}</InputLabel>
           <MultiSelectAll
             id="engagement-actions-phases"
-            labelId="engagement-actions-phases-label"
             values={filters.phases as string[]}
             allValues={phasesValues}
             setValues={(values) => {

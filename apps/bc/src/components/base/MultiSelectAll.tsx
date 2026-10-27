@@ -4,7 +4,6 @@ import { useMemo } from 'react'
 
 interface Props<T> {
   id: string
-  labelId: string
   values: T[]
   allValues: T[]
   setValues: (allValues: T[]) => void
@@ -12,7 +11,7 @@ interface Props<T> {
   label?: string
 }
 
-const MultiSelectAll = <T extends string>({ id, labelId, values, allValues, setValues, getLabel, label }: Props<T>) => {
+const MultiSelectAll = <T extends string>({ id, values, allValues, setValues, getLabel, label }: Props<T>) => {
   const tCommon = useTranslations('common')
   const allSelected = useMemo<boolean>(
     () => values.filter((item) => item !== 'all').length === allValues.length,
@@ -59,7 +58,7 @@ const MultiSelectAll = <T extends string>({ id, labelId, values, allValues, setV
   return (
     <Select
       id={`${id}-selector`}
-      labelId={labelId}
+      labelId={`${id}-selector`}
       value={valuesWithAllHandled}
       onChange={onChange}
       renderValue={renderValue}
