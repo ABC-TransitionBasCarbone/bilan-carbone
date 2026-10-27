@@ -61,7 +61,6 @@ model Account {
   formationEndDate   DateTime? @map("formation_end_date")
 
   professorCourseSessions CourseSession[] @relation("CourseSessionProfessor")
-  traineeCourseSessions  CourseSessionTrainee[]
 
   @@unique([userId, environment])
   @@map("accounts")

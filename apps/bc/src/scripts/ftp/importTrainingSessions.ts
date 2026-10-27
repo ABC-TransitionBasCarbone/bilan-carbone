@@ -37,9 +37,11 @@ const COURSE_ENVIRONMENT_BY_WORKBOOK_VALUE: Record<string, Environment> = {
 
 const sessionEmailSelect = {
   id: true,
-  trainees: {
+  traineeOrganizations: {
     select: {
-      account: { select: { user: { select: { email: true, firstName: true, lastName: true } } } },
+      organizationVersion: {
+        select: { userAccounts: { select: { user: { select: { email: true, firstName: true, lastName: true } } } } },
+      },
     },
   },
   professor: { select: { user: { select: { email: true, firstName: true, lastName: true } } } },
@@ -53,6 +55,11 @@ const sessionEmailSelect = {
 
 type SavedCourseSession = Prisma.CourseSessionGetPayload<{ select: typeof sessionEmailSelect }>
 
+const getTrainees = (session: SavedCourseSession) =>
+  session.traineeOrganizations.flatMap(({ organizationVersion }) =>
+    organizationVersion.userAccounts.map(({ user }) => user),
+  )
+
 const getSessionUpdate = (before: SavedCourseSession, after: SavedCourseSession): TrainingSessionUpdate | null => {
   const dates: TrainingSessionUpdate['dates'] = []
   if (before.startDate.getTime() !== after.startDate.getTime()) {
@@ -61,8 +68,8 @@ const getSessionUpdate = (before: SavedCourseSession, after: SavedCourseSession)
   if (before.endDate.getTime() !== after.endDate.getTime()) {
     dates.push({ label: 'Date de fin', before: before.endDate, after: after.endDate })
   }
-  const previousTrainees = before.trainees.map(({ account }) => account.user)
-  const currentTrainees = after.trainees.map(({ account }) => account.user)
+  const previousTrainees = getTrainees(before)
+  const currentTrainees = getTrainees(after)
   const previousEmails = new Set(previousTrainees.map(({ email }) => email))
   const currentEmails = new Set(currentTrainees.map(({ email }) => email))
   const addedTrainees = currentTrainees.filter(({ email }) => !previousEmails.has(email))
@@ -265,6 +272,24 @@ const getAccountId = (
   )?.id
 }
 
+const getOrganizationVersionId = (
+  accounts: {
+    organizationVersionId: string | null
+    environment: Environment
+    user: { email: string }
+  }[],
+  email: string,
+  environment: Environment,
+) => {
+  const organizationVersionId = accounts.find(
+    ({ user, environment: accountEnvironment }) => user.email === email && accountEnvironment === environment,
+  )?.organizationVersionId
+  if (!organizationVersionId) {
+    throw new Error(`Missing organization version for trainee ${email}`)
+  }
+  return organizationVersionId
+}
+
 export const importCourseSessionsFromFTP = async () => {
   const sessions = await getCourseSessionsFromFTP()
   if (sessions.length === 0) {
@@ -308,7 +333,7 @@ export const importCourseSessionsFromFTP = async () => {
       user: { select: { email: true, firstName: true, lastName: true } },
     },
   })
-  await prismaClient.$transaction(
+  const createdOrganizationVersions = await prismaClient.$transaction(
     accounts
       .filter(({ organizationVersionId }) => !organizationVersionId)
       .map((account) =>
@@ -322,9 +347,17 @@ export const importCourseSessionsFromFTP = async () => {
               },
             },
           },
+          select: { id: true, organizationVersionId: true },
         }),
       ),
   )
+  const createdOrganizationVersionIds = new Map(
+    createdOrganizationVersions.map(({ id, organizationVersionId }) => [id, organizationVersionId]),
+  )
+  const accountsWithOrganizationVersions = accounts.map((account) => ({
+    ...account,
+    organizationVersionId: account.organizationVersionId ?? createdOrganizationVersionIds.get(account.id) ?? null,
+  }))
 
   const existingSessions = await prismaClient.courseSession.findMany({
     where: {
@@ -339,7 +372,9 @@ export const importCourseSessionsFromFTP = async () => {
       const professorId = session.professor
         ? getAccountId(accounts, session.professor.email, session.environment)
         : null
-      const traineeIds = session.trainees.map(({ email }) => getAccountId(accounts, email, session.environment))
+      const traineeOrganizationVersionIds = session.trainees.map(({ email }) =>
+        getOrganizationVersionId(accountsWithOrganizationVersions, email, session.environment),
+      )
 
       let code = randomInt(99999999).toString()
 
@@ -377,17 +412,21 @@ export const importCourseSessionsFromFTP = async () => {
             endDate: session.endDate,
             code,
             professorId,
-            trainees: {
-              create: traineeIds.map((accountId) => ({ account: { connect: { id: accountId } } })),
+            traineeOrganizations: {
+              create: traineeOrganizationVersionIds.map((id) => ({
+                organizationVersion: { connect: { id } },
+              })),
             },
           },
           update: {
             startDate: session.startDate,
             endDate: session.endDate,
             professorId,
-            trainees: {
+            traineeOrganizations: {
               deleteMany: {},
-              create: traineeIds.map((accountId) => ({ account: { connect: { id: accountId } } })),
+              create: traineeOrganizationVersionIds.map((id) => ({
+                organizationVersion: { connect: { id } },
+              })),
             },
           },
         }),
@@ -408,7 +447,7 @@ export const importCourseSessionsFromFTP = async () => {
     .filter(({ id }) => !existingSessionIds.has(id))
     .map((session) => ({
       ...session,
-      trainees: session.trainees.map(({ account }) => account.user),
+      trainees: getTrainees(session),
       professor: session.professor?.user ?? null,
     }))
 

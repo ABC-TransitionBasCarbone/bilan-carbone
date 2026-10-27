@@ -79,8 +79,9 @@ model OrganizationVersion {
   isCR             Boolean @default(false) @map("is_cr")
   activatedLicence Int[]   @default([]) @map("activated_licence")
 
-  userAccounts Account[]
-  studies      Study[]
+  userAccounts          Account[]
+  studies               Study[]
+  traineeCourseSessions CourseSessionTraineeOrganization[]
 
   onboarded   Boolean  @default(false)
   onboarderId String?  @map("onboarder_id")
