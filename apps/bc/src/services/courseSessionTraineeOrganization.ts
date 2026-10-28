@@ -18,12 +18,21 @@ export const updateCourseSessionTraineeOrganizationStatuses = async () => {
   endAccessDate.setUTCDate(now.getUTCDate() - accessDays)
 
   return prismaClient.$transaction(async (transaction) => {
+    await transaction.courseSessionTraineeOrganization.deleteMany({
+      where: {
+        courseSession: { endDate: { lte: now } },
+        organizationVersion: {
+          userAccounts: { none: { createdStudies: { some: {} } } },
+        },
+      },
+    })
+
     const activated = await transaction.courseSessionTraineeOrganization.updateMany({
       where: {
         courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE,
         courseSession: {
-          startDate: { gte: now },
-          endDate: { lt: endAccessDate },
+          startDate: { lte: now },
+          endDate: { gt: endAccessDate },
         },
       },
       data: { courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE },
@@ -32,7 +41,7 @@ export const updateCourseSessionTraineeOrganizationStatuses = async () => {
     const deactivated = await transaction.courseSessionTraineeOrganization.updateMany({
       where: {
         courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
-        OR: [{ courseSession: { startDate: { lt: now } } }, { courseSession: { endDate: { gte: endAccessDate } } }],
+        OR: [{ courseSession: { startDate: { gt: now } } }, { courseSession: { endDate: { lte: endAccessDate } } }],
       },
       data: { courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE },
     })

@@ -296,8 +296,10 @@ export const importCourseSessionsFromFTP = async () => {
     return { importedSessions: 0, createdUsers: 0, createdAccounts: 0 }
   }
 
+  const upcomingSessions = sessions.filter(({ endDate }) => endDate < new Date())
+
   const userAccountEntries = []
-  for (const session of sessions) {
+  for (const session of upcomingSessions) {
     for (const participant of session.trainees) {
       userAccountEntries.push({ ...participant, environment: session.environment })
     }
@@ -323,7 +325,7 @@ export const importCourseSessionsFromFTP = async () => {
 
   const accounts = await prismaClient.account.findMany({
     where: {
-      environment: { in: [...new Set(sessions.map(({ environment }) => environment))] },
+      environment: { in: [...new Set(upcomingSessions.map(({ environment }) => environment))] },
       user: { email: { in: userAccountEntries.map(({ email }) => email) } },
     },
     select: {
@@ -361,14 +363,14 @@ export const importCourseSessionsFromFTP = async () => {
 
   const existingSessions = await prismaClient.courseSession.findMany({
     where: {
-      OR: sessions.map(({ courseOrganismId, name, environment }) => ({ courseOrganismId, name, environment })),
+      OR: upcomingSessions.map(({ courseOrganismId, name, environment }) => ({ courseOrganismId, name, environment })),
     },
     select: sessionEmailSelect,
   })
 
   const importedSessions = await prismaClient.$transaction(async (transaction) => {
     const importedSessionsPromises = []
-    for (const session of sessions) {
+    for (const session of upcomingSessions) {
       const professorId = session.professor
         ? getAccountId(accounts, session.professor.email, session.environment)
         : null
@@ -479,5 +481,5 @@ export const importCourseSessionsFromFTP = async () => {
     }
   }
 
-  return { importedSessions: sessions.length, createdUsers: newUsers.count, createdAccounts: newAccounts.count }
+  return { importedSessions: upcomingSessions.length, createdUsers: newUsers.count, createdAccounts: newAccounts.count }
 }
