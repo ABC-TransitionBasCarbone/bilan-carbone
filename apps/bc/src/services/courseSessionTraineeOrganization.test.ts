@@ -59,7 +59,7 @@ describe('updateCourseSessionTraineeOrganizationStatuses', () => {
       where: {
         courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE,
         courseSession: {
-          startDate: { lt: new Date('2026-10-28T00:00:00.000Z') },
+          startDate: { lte: new Date('2026-10-27T00:00:00.000Z') },
           endDate: { gte: new Date('2026-10-20T00:00:00.000Z') },
         },
       },
@@ -69,7 +69,7 @@ describe('updateCourseSessionTraineeOrganizationStatuses', () => {
       where: {
         courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
         OR: [
-          { courseSession: { startDate: { gte: new Date('2026-10-28T00:00:00.000Z') } } },
+          { courseSession: { startDate: { gt: new Date('2026-10-27T00:00:00.000Z') } } },
           { courseSession: { endDate: { lt: new Date('2026-10-20T00:00:00.000Z') } } },
         ],
       },
@@ -97,7 +97,7 @@ describe('updateCourseSessionTraineeOrganizationStatuses', () => {
         expect.objectContaining({
           where: expect.objectContaining({
             courseSession: {
-              startDate: { lt: new Date('2026-03-02T00:00:00.000Z') },
+              startDate: { lte: new Date('2026-03-01T00:00:00.000Z') },
               endDate: { gte: new Date('2026-02-27T00:00:00.000Z') },
             },
           }),
@@ -108,7 +108,7 @@ describe('updateCourseSessionTraineeOrganizationStatuses', () => {
         expect.objectContaining({
           where: expect.objectContaining({
             OR: [
-              { courseSession: { startDate: { gte: new Date('2026-03-02T00:00:00.000Z') } } },
+              { courseSession: { startDate: { gt: new Date('2026-03-01T00:00:00.000Z') } } },
               { courseSession: { endDate: { lt: new Date('2026-02-27T00:00:00.000Z') } } },
             ],
           }),
@@ -127,7 +127,7 @@ describe('updateCourseSessionTraineeOrganizationStatuses', () => {
       expect.objectContaining({
         where: expect.objectContaining({
           courseSession: {
-            startDate: { lt: new Date('2026-10-28T00:00:00.000Z') },
+            startDate: { lte: new Date('2026-10-27T00:00:00.000Z') },
             endDate: { gte: new Date('2026-10-27T00:00:00.000Z') },
           },
         }),
