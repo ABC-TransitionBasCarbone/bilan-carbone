@@ -2,7 +2,7 @@ import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { getMockedAuthUser, getMockedDbAccount, mockedAccountId } from '@/tests/utils/models/user'
 import { AccountWithUser } from '@/types/account.types'
 import * as userUtils from '@/utils/user'
-import { Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import * as abcUserUtils from '@abc-transitionbascarbone/common/utils/user'
 import { expect } from '@jest/globals'
 import { canAddMember, canChangeRole, canDeleteMember, canEditSelfRole } from './user'
@@ -24,6 +24,20 @@ describe('User permission functions', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
+
+  it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
+    'rejects organization member mutations in %s',
+    (environment) => {
+      const { canEditMemberRole } = jest.requireActual<typeof userUtils>('@/utils/user')
+      mockCanEditMemberRole.mockImplementation(canEditMemberRole)
+      const user = getMockedAuthUser({ environment, role: Role.ADMIN })
+      const member = getMockedDbAccount({ environment, status: UserStatus.VALIDATED }) as AccountWithUser
+
+      expect(canAddMember(user, { role: Role.COLLABORATOR }, user.organizationVersionId)).toBe(false)
+      expect(canDeleteMember(user, member)).toBe(false)
+      expect(canChangeRole(user, member, Role.COLLABORATOR)).toBe(false)
+    },
+  )
 
   describe('canEditSelfRole', () => {
     it('returns false is role is Super Admin', () => {

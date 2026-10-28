@@ -64,8 +64,9 @@ export const getAccountByEmailAndEnvironment = (email: string, environment: Envi
 
 export type OrganizationWithSites = AsyncReturnType<typeof getAccountOrganizationVersions>[0]
 
-export const getAccountFromUserOrganization = (user: Pick<UserSession, 'role' | 'organizationVersionId'>) =>
-  prismaClient.account.findMany({ ...findUserInfo(user), orderBy: { user: { email: 'asc' } } })
+export const getAccountFromUserOrganization = (
+  user: Pick<UserSession, 'role' | 'organizationVersionId' | 'environment'>,
+) => prismaClient.account.findMany({ ...findUserInfo(user), orderBy: { user: { email: 'asc' } } })
 export type TeamMember = AsyncReturnType<typeof getAccountFromUserOrganization>[number]
 
 export const getAccountsFromOrganization = (

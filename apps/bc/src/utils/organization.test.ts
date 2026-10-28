@@ -168,7 +168,7 @@ describe('organisation utils', () => {
         expect(
           hasActiveLicence({
             ...organizationVersion,
-            traineeCourseSessions: [{ isActive: CourseSessionTraineeOrganizationStatus.INACTIVE }],
+            traineeCourseSessions: [{ courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE }],
           }),
         ).toBe(false)
         expect(
@@ -177,8 +177,8 @@ describe('organisation utils', () => {
             activatedLicence: [],
             parent: null,
             traineeCourseSessions: [
-              { isActive: CourseSessionTraineeOrganizationStatus.INACTIVE },
-              { isActive: CourseSessionTraineeOrganizationStatus.ACTIVE },
+              { courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE },
+              { courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE },
             ],
           }),
         ).toBe(true)

@@ -41,23 +41,23 @@ describe('updateCourseSessionTraineeOrganizationStatuses', () => {
 
     expect(mockUpdateMany).toHaveBeenNthCalledWith(1, {
       where: {
-        isActive: CourseSessionTraineeOrganizationStatus.INACTIVE,
+        courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE,
         courseSession: {
           startDate: { lte: now },
           endDate: { gt: new Date('2026-10-20T03:00:00.000Z') },
         },
       },
-      data: { isActive: CourseSessionTraineeOrganizationStatus.ACTIVE },
+      data: { courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE },
     })
     expect(mockUpdateMany).toHaveBeenNthCalledWith(2, {
       where: {
-        isActive: CourseSessionTraineeOrganizationStatus.ACTIVE,
+        courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
         OR: [
           { courseSession: { startDate: { gt: now } } },
           { courseSession: { endDate: { lte: new Date('2026-10-20T03:00:00.000Z') } } },
         ],
       },
-      data: { isActive: CourseSessionTraineeOrganizationStatus.INACTIVE },
+      data: { courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE },
     })
   })
 
