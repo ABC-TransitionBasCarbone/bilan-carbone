@@ -36,6 +36,16 @@ type CourseSession = {
   professor: CourseParticipant | null
 }
 
+type CourseSessionDeletion = {
+  courseOrganismId: string
+  name: string
+} & ({ type: 'session' } | { type: 'stagiaire' | 'formateur'; email: string })
+
+type CourseSessionImport = {
+  sessions: CourseSession[]
+  deletions: CourseSessionDeletion[]
+}
+
 const COURSE_ENVIRONMENT_BY_WORKBOOK_VALUE: Record<string, Environment> = {
   BC: Environment.COURSE_BC,
   TILT: Environment.COURSE_TILT,
@@ -154,8 +164,8 @@ const normalizeEmail = (value: unknown) => {
   return value.trim().toLowerCase()
 }
 
-const getParticipant = (record: Record<string, unknown>, emailField: string): CourseParticipant => ({
-  email: normalizeEmail(record[emailField]),
+const getParticipant = (record: Record<string, unknown>): CourseParticipant => ({
+  email: normalizeEmail(record.Email),
   firstName: getRequiredText(record, 'Prénom'),
   lastName: getRequiredText(record, 'Nom'),
 })
@@ -169,12 +179,33 @@ const getSession = (sessions: Map<string, CourseSession>, record: Record<string,
   return session
 }
 
-export const parseCourseSessionWorkbook = (data: Buffer, courseOrganismId: string): CourseSession[] => {
+export const parseCourseSessionWorkbook = (data: Buffer, courseOrganismId: string): CourseSessionImport => {
   const worksheets = xlsx.parse(data) as Worksheet[]
+  const deletions: CourseSessionDeletion[] = []
+  if (worksheets.some(({ name }) => name.trim() === 'A supprimer')) {
+    for (const record of getRecords(worksheets, 'A supprimer')) {
+      if (Object.values(record).every((value) => value == null || String(value).trim() === '')) {
+        continue
+      }
+      const type = getRequiredText(record, 'Type').toLowerCase()
+      const name = getRequiredText(record, 'Session')
+      if (type === 'session' || type === 'sessions') {
+        deletions.push({ courseOrganismId, name, type: 'session' })
+      } else if (type === 'stagiaire' || type === 'formateur') {
+        deletions.push({ courseOrganismId, name, type, email: normalizeEmail(record.Email) })
+      } else {
+        throw new Error(`Unsupported training deletion type: ${type}`)
+      }
+    }
+  }
+  const deletedSessionNames = new Set(deletions.filter(({ type }) => type === 'session').map(({ name }) => name))
 
   const sessions = new Map<string, CourseSession>()
   for (const record of getRecords(worksheets, 'Sessions')) {
     const name = getRequiredText(record, 'Nom de la session')
+    if (deletedSessionNames.has(name)) {
+      continue
+    }
     const environmentValue = getRequiredText(record, 'Environment').toUpperCase()
     const environment = COURSE_ENVIRONMENT_BY_WORKBOOK_VALUE[environmentValue]
     if (!environment) {
@@ -203,8 +234,19 @@ export const parseCourseSessionWorkbook = (data: Buffer, courseOrganismId: strin
   }
 
   for (const record of getRecords(worksheets, 'Stagiaires')) {
+    if (deletedSessionNames.has(getRequiredText(record, 'Nom de la session'))) {
+      continue
+    }
     const session = getSession(sessions, record)
-    const trainee = getParticipant(record, 'Stagiaires')
+    const trainee = getParticipant(record)
+    if (
+      deletions.some(
+        (deletion) =>
+          deletion.type === 'stagiaire' && deletion.name === session.name && deletion.email === trainee.email,
+      )
+    ) {
+      continue
+    }
     if (!session.trainees.some(({ email }) => email === trainee.email)) {
       session.trainees.push(trainee)
     }
@@ -212,8 +254,19 @@ export const parseCourseSessionWorkbook = (data: Buffer, courseOrganismId: strin
 
   const professorsBySession = new Map<string, Set<string>>()
   for (const record of getRecords(worksheets, 'Formateur')) {
+    if (deletedSessionNames.has(getRequiredText(record, 'Nom de la session'))) {
+      continue
+    }
     const session = getSession(sessions, record)
-    const professor = getParticipant(record, 'Formateur')
+    const professor = getParticipant(record)
+    if (
+      deletions.some(
+        (deletion) =>
+          deletion.type === 'formateur' && deletion.name === session.name && deletion.email === professor.email,
+      )
+    ) {
+      continue
+    }
     const professors = professorsBySession.get(session.name) ?? new Set<string>()
     professors.add(professor.email)
     professorsBySession.set(session.name, professors)
@@ -230,15 +283,15 @@ export const parseCourseSessionWorkbook = (data: Buffer, courseOrganismId: strin
     }
   }
 
-  return [...sessions.values()]
+  return { sessions: [...sessions.values()], deletions }
 }
 
-export const getCourseSessionsFromFTP = async (): Promise<CourseSession[]> => {
+export const getCourseSessionsFromFTP = async (): Promise<CourseSessionImport> => {
   let client: Client | undefined
   try {
     const organisms = await prismaClient.courseOrganism.findMany()
     if (organisms.length === 0) {
-      return []
+      return { sessions: [], deletions: [] }
     }
 
     client = await getFTPClient()
@@ -248,15 +301,17 @@ export const getCourseSessionsFromFTP = async (): Promise<CourseSession[]> => {
       throw new Error('FTP_TRAINING_SESSIONS_FILE_NAME is not configured')
     }
 
-    const courseSessions: CourseSession[] = []
+    const result: CourseSessionImport = { sessions: [], deletions: [] }
     for (const organism of organisms) {
       const fullPath = path.posix.join(folderPath, organism.ftpPath, fileName)
       const data = await downloadFileFromFTP(client, fullPath, fileName)
-      courseSessions.push(...parseCourseSessionWorkbook(data, organism.id))
+      const { sessions, deletions } = parseCourseSessionWorkbook(data, organism.id)
+      result.sessions.push(...sessions)
+      result.deletions.push(...deletions)
     }
 
     console.log('Training sessions file read successfully')
-    return courseSessions
+    return result
   } catch (error) {
     console.error('Error reading training sessions file:', error)
     throw error
@@ -284,8 +339,8 @@ const getOrganizationVersionId = (
 }
 
 export const importCourseSessionsFromFTP = async () => {
-  const sessions = await getCourseSessionsFromFTP()
-  if (sessions.length === 0) {
+  const { sessions, deletions } = await getCourseSessionsFromFTP()
+  if (sessions.length === 0 && deletions.length === 0) {
     return { importedSessions: 0, createdUsers: 0, createdAccounts: 0 }
   }
 
@@ -303,33 +358,39 @@ export const importCourseSessionsFromFTP = async () => {
     }
   }
 
-  const { newUsers, newAccounts } = await createUsersWithAccount(
-    userAccountEntries.map(({ email, firstName, lastName, environment }) => ({
-      email,
-      firstName,
-      lastName,
-      source: UserSource.CRON,
-      account: {
-        environment,
-        role: Role.DEFAULT,
-        status: UserStatus.IMPORTED,
-        user: { create: undefined, connectOrCreate: undefined, connect: undefined },
-      },
-    })),
-  )
+  const { newUsers, newAccounts } =
+    userAccountEntries.length > 0
+      ? await createUsersWithAccount(
+          userAccountEntries.map(({ email, firstName, lastName, environment }) => ({
+            email,
+            firstName,
+            lastName,
+            source: UserSource.CRON,
+            account: {
+              environment,
+              role: Role.DEFAULT,
+              status: UserStatus.IMPORTED,
+              user: { create: undefined, connectOrCreate: undefined, connect: undefined },
+            },
+          })),
+        )
+      : { newUsers: { count: 0 }, newAccounts: { count: 0 } }
 
-  const accounts = await prismaClient.account.findMany({
-    where: {
-      environment: { in: [...new Set(notFinishedSessions.map(({ environment }) => environment))] },
-      user: { email: { in: userAccountEntries.map(({ email }) => email) } },
-    },
-    select: {
-      id: true,
-      environment: true,
-      organizationVersionId: true,
-      user: { select: { email: true, firstName: true, lastName: true } },
-    },
-  })
+  const accounts =
+    userAccountEntries.length > 0
+      ? await prismaClient.account.findMany({
+          where: {
+            environment: { in: [...new Set(notFinishedSessions.map(({ environment }) => environment))] },
+            user: { email: { in: userAccountEntries.map(({ email }) => email) } },
+          },
+          select: {
+            id: true,
+            environment: true,
+            organizationVersionId: true,
+            user: { select: { email: true, firstName: true, lastName: true } },
+          },
+        })
+      : []
   const createdOrganizationVersions = await prismaClient.$transaction(
     accounts
       .filter(({ organizationVersionId }) => !organizationVersionId)
@@ -356,18 +417,43 @@ export const importCourseSessionsFromFTP = async () => {
     organizationVersionId: account.organizationVersionId ?? createdOrganizationVersionIds.get(account.id) ?? null,
   }))
 
+  const affectedSessionsSQLRequest = [
+    ...notFinishedSessions.map(({ courseOrganismId, name, environment }) => ({
+      courseOrganismId,
+      name,
+      environment,
+    })),
+    ...deletions.map(({ courseOrganismId, name }) => ({ courseOrganismId, name })),
+  ]
   const existingSessions = await prismaClient.courseSession.findMany({
     where: {
-      OR: notFinishedSessions.map(({ courseOrganismId, name, environment }) => ({
-        courseOrganismId,
-        name,
-        environment,
-      })),
+      OR: affectedSessionsSQLRequest,
     },
     select: sessionEmailSelect,
   })
 
   const importedSessions = await prismaClient.$transaction(async (transaction) => {
+    for (const deletion of deletions) {
+      const where = { courseOrganismId: deletion.courseOrganismId, name: deletion.name }
+      if (deletion.type === 'session') {
+        await transaction.courseSession.deleteMany({ where })
+      } else if (deletion.type === 'stagiaire') {
+        await transaction.courseSessionTraineeOrganization.deleteMany({
+          where: {
+            courseSession: where,
+            organizationVersion: { userAccounts: { some: { user: { email: deletion.email } } } },
+          },
+        })
+      } else {
+        await transaction.courseSession.updateMany({
+          where: {
+            ...where,
+            professorOrganization: { userAccounts: { some: { user: { email: deletion.email } } } },
+          },
+          data: { professorOrganizationVersionId: null },
+        })
+      }
+    }
     const importedSessionsPromises = []
     for (const session of notFinishedSessions) {
       const courseStatus =
@@ -441,7 +527,9 @@ export const importCourseSessionsFromFTP = async () => {
         }),
       )
     }
-    return importedSessionsPromises
+    return deletions.length > 0
+      ? transaction.courseSession.findMany({ where: { OR: affectedSessionsSQLRequest }, select: sessionEmailSelect })
+      : importedSessionsPromises
   })
 
   const existingSessionIds = new Set(existingSessions.map(({ id }) => id))

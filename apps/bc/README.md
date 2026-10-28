@@ -130,16 +130,7 @@ Import users from the FTP server : `curl -X POST $NEXT_API_URL/cron/import-users
 Create training studies for users who have started or ended a formation : `curl -X POST $NEXT_API_URL/cron/assign-training-studies -H "Authorization: Bearer $CRON_SECRET"`
 
 Import training sessions from the FTP server: `curl -X POST $NEXT_API_URL/cron/import-training-sessions -H "Authorization: ******"`.
-Imported start dates are normalized to 00:00:00.000 UTC and end dates to 23:59:59.999 UTC. Sessions remain importable throughout their final UTC day.
-After saving the sessions, each training organism receives a single email at its contact address summarizing its newly created sessions, with dates, access codes, professor and trainees.
-The same email includes a "Vos formations mises à jour" section for changed dates or professor (before/after), and added trainees. Unchanged sessions, including reordered trainees, do not trigger an email.
-Email failures fail the cron request but do not roll back the import; a subsequent unchanged import will not resend the summary.
-
-Update the active status of course session trainee organizations daily at 3 AM. Access remains active for `COURSE_SESSION_ACCESS_DAYS` after the session end date.
-At the session end date, trainee organizations whose accounts have not created any study are removed from the session, without deleting their accounts or organization. Other active sessions still grant access.
-The FTP import does not add trainees to ended sessions or replace their existing registrations.
-Sessions and trainees absent from the FTP file are preserved, as is the existing professor when none is provided. Existing trainee registrations keep their status; only new registrations are created.
-
+I
 ### Import Secten data
 
 Import Secten data by creating a new version or updating an existing version if the version name is already used :
