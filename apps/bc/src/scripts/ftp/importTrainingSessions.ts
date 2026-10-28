@@ -2,7 +2,13 @@ import { prismaClient } from '@/db/client.server'
 import { createUsersWithAccount } from '@/db/user'
 import { getRecords, type Worksheet } from '@/utils/excel.utils'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
-import { Environment, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import {
+  CourseSessionTraineeOrganizationStatus,
+  Environment,
+  Role,
+  UserSource,
+  UserStatus,
+} from '@abc-transitionbascarbone/common/db/enums'
 import {
   sendCourseSessionsCreatedEmail,
   type TrainingSessionUpdate,
@@ -364,6 +370,10 @@ export const importCourseSessionsFromFTP = async () => {
   const importedSessions = await prismaClient.$transaction(async (transaction) => {
     const importedSessionsPromises = []
     for (const session of notFinishedSessions) {
+      const courseStatus =
+        session.startDate <= today
+          ? CourseSessionTraineeOrganizationStatus.ACTIVE
+          : CourseSessionTraineeOrganizationStatus.INACTIVE
       const professorOrganizationVersionId = session.professor
         ? getOrganizationVersionId(accountsWithOrganizationVersions, session.professor.email, session.environment)
         : null
@@ -410,6 +420,7 @@ export const importCourseSessionsFromFTP = async () => {
             traineeOrganizations: {
               create: traineeOrganizationVersionIds.map((id) => ({
                 organizationVersion: { connect: { id } },
+                courseStatus,
               })),
             },
           },
@@ -419,7 +430,10 @@ export const importCourseSessionsFromFTP = async () => {
             ...(professorOrganizationVersionId && { professorOrganizationVersionId }),
             traineeOrganizations: {
               createMany: {
-                data: traineeOrganizationVersionIds.map((organizationVersionId) => ({ organizationVersionId })),
+                data: traineeOrganizationVersionIds.map((organizationVersionId) => ({
+                  organizationVersionId,
+                  courseStatus,
+                })),
                 skipDuplicates: true,
               },
             },

@@ -1,7 +1,7 @@
 import { prismaClient } from '@/db/client.server'
 import { createUsersWithAccount } from '@/db/user'
 import type { CourseSession } from '@abc-transitionbascarbone/common/db'
-import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { CourseSessionTraineeOrganizationStatus, Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { sendCourseSessionsCreatedEmail } from '@abc-transitionbascarbone/common/services/email/email'
 import { Client } from 'basic-ftp'
 import { getJsDateFromExcel } from 'excel-date-to-js'
@@ -285,7 +285,9 @@ describe('getCourseSessionsFromFTP', () => {
     expect(update).not.toHaveProperty('professorOrganizationVersionId')
     expect(update.traineeOrganizations).toEqual({
       createMany: {
-        data: [{ organizationVersionId: 'organization-0' }],
+        data: [
+          { organizationVersionId: 'organization-0', courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE },
+        ],
         skipDuplicates: true,
       },
     })
@@ -357,8 +359,14 @@ describe('getCourseSessionsFromFTP', () => {
           professorOrganizationVersionId: 'organization-account-2',
           traineeOrganizations: {
             create: [
-              { organizationVersion: { connect: { id: 'organization-account-0' } } },
-              { organizationVersion: { connect: { id: 'organization-account-1' } } },
+              {
+                organizationVersion: { connect: { id: 'organization-account-0' } },
+                courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE,
+              },
+              {
+                organizationVersion: { connect: { id: 'organization-account-1' } },
+                courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE,
+              },
             ],
           },
         }),
@@ -367,8 +375,14 @@ describe('getCourseSessionsFromFTP', () => {
           traineeOrganizations: {
             createMany: {
               data: [
-                { organizationVersionId: 'organization-account-0' },
-                { organizationVersionId: 'organization-account-1' },
+                {
+                  organizationVersionId: 'organization-account-0',
+                  courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE,
+                },
+                {
+                  organizationVersionId: 'organization-account-1',
+                  courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE,
+                },
               ],
               skipDuplicates: true,
             },
@@ -385,7 +399,41 @@ describe('getCourseSessionsFromFTP', () => {
 
     expect(mockUpsertCourseSession.mock.calls[0][0].update.traineeOrganizations).toEqual({
       createMany: {
-        data: [{ organizationVersionId: 'organization-0' }, { organizationVersionId: 'organization-1' }],
+        data: [
+          { organizationVersionId: 'organization-0', courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE },
+          { organizationVersionId: 'organization-1', courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE },
+        ],
+        skipDuplicates: true,
+      },
+    })
+  })
+
+  it.each([
+    ['2026-01-01T09:00:00.000Z', CourseSessionTraineeOrganizationStatus.INACTIVE],
+    [savedSessions[0].startDate.toISOString(), CourseSessionTraineeOrganizationStatus.ACTIVE],
+    [
+      new Date(savedSessions[0].startDate.getTime() + 9 * 60 * 60 * 1000).toISOString(),
+      CourseSessionTraineeOrganizationStatus.ACTIVE,
+    ],
+    [savedSessions[0].endDate.toISOString(), CourseSessionTraineeOrganizationStatus.ACTIVE],
+  ])('initializes only new registrations at %s with status %s', async (date, courseStatus) => {
+    jest.setSystemTime(new Date(date))
+
+    await importCourseSessionsFromFTP()
+
+    const { create, update } = mockUpsertCourseSession.mock.calls[0][0]
+    expect(create.traineeOrganizations).toEqual({
+      create: ['organization-0', 'organization-1'].map((id) => ({
+        organizationVersion: { connect: { id } },
+        courseStatus,
+      })),
+    })
+    expect(update.traineeOrganizations).toEqual({
+      createMany: {
+        data: ['organization-0', 'organization-1'].map((organizationVersionId) => ({
+          organizationVersionId,
+          courseStatus,
+        })),
         skipDuplicates: true,
       },
     })
