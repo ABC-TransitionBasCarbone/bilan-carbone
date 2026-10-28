@@ -130,6 +130,7 @@ Import users from the FTP server : `curl -X POST $NEXT_API_URL/cron/import-users
 Create training studies for users who have started or ended a formation : `curl -X POST $NEXT_API_URL/cron/assign-training-studies -H "Authorization: Bearer $CRON_SECRET"`
 
 Import training sessions from the FTP server: `curl -X POST $NEXT_API_URL/cron/import-training-sessions -H "Authorization: ******"`.
+Imported start and end dates are normalized to midnight UTC. Sessions remain importable throughout their final UTC day.
 After saving the sessions, each training organism receives a single email at its contact address summarizing its newly created sessions, with dates, access codes, professor and trainees.
 The same email includes a "Vos formations mises à jour" section for changed dates or professor (before/after), and added trainees. Unchanged sessions, including reordered trainees, do not trigger an email.
 Email failures fail the cron request but do not roll back the import; a subsequent unchanged import will not resend the summary.

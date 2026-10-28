@@ -47,7 +47,7 @@ describe('updateCourseSessionTraineeOrganizationStatuses', () => {
 
     expect(mockDeleteMany).toHaveBeenCalledWith({
       where: {
-        courseSession: { endDate: { lte: now } },
+        courseSession: { endDate: { lt: new Date('2026-10-27T00:00:00.000Z') } },
         organizationVersion: {
           userAccounts: { none: { createdStudies: { some: {} } } },
         },
@@ -59,8 +59,8 @@ describe('updateCourseSessionTraineeOrganizationStatuses', () => {
       where: {
         courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE,
         courseSession: {
-          startDate: { lte: now },
-          endDate: { gt: new Date('2026-10-20T03:00:00.000Z') },
+          startDate: { lt: new Date('2026-10-28T00:00:00.000Z') },
+          endDate: { gte: new Date('2026-10-20T00:00:00.000Z') },
         },
       },
       data: { courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE },
@@ -69,12 +69,70 @@ describe('updateCourseSessionTraineeOrganizationStatuses', () => {
       where: {
         courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
         OR: [
-          { courseSession: { startDate: { gt: now } } },
-          { courseSession: { endDate: { lte: new Date('2026-10-20T03:00:00.000Z') } } },
+          { courseSession: { startDate: { gte: new Date('2026-10-28T00:00:00.000Z') } } },
+          { courseSession: { endDate: { lt: new Date('2026-10-20T00:00:00.000Z') } } },
         ],
       },
       data: { courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE },
     })
+  })
+
+  it.each(['2026-03-01T00:00:00.000Z', '2026-03-01T23:59:59.999Z'])(
+    'uses the same UTC day boundaries at %s, including across month boundaries',
+    async (date) => {
+      jest.setSystemTime(new Date(date))
+      process.env.COURSE_SESSION_ACCESS_DAYS = '2'
+
+      await updateCourseSessionTraineeOrganizationStatuses()
+
+      expect(mockDeleteMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            courseSession: { endDate: { lt: new Date('2026-03-01T00:00:00.000Z') } },
+          }),
+        }),
+      )
+      expect(mockUpdateMany).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
+          where: expect.objectContaining({
+            courseSession: {
+              startDate: { lt: new Date('2026-03-02T00:00:00.000Z') },
+              endDate: { gte: new Date('2026-02-27T00:00:00.000Z') },
+            },
+          }),
+        }),
+      )
+      expect(mockUpdateMany).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({
+          where: expect.objectContaining({
+            OR: [
+              { courseSession: { startDate: { gte: new Date('2026-03-02T00:00:00.000Z') } } },
+              { courseSession: { endDate: { lt: new Date('2026-02-27T00:00:00.000Z') } } },
+            ],
+          }),
+        }),
+      )
+    },
+  )
+
+  it('keeps the whole final day accessible when the access duration is zero', async () => {
+    process.env.COURSE_SESSION_ACCESS_DAYS = '0'
+
+    await updateCourseSessionTraineeOrganizationStatuses()
+
+    expect(mockUpdateMany).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        where: expect.objectContaining({
+          courseSession: {
+            startDate: { lt: new Date('2026-10-28T00:00:00.000Z') },
+            endDate: { gte: new Date('2026-10-27T00:00:00.000Z') },
+          },
+        }),
+      }),
+    )
   })
 
   it('rejects an invalid access duration', async () => {

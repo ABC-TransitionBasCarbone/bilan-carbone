@@ -184,14 +184,11 @@ describe('getCourseSessionsFromFTP', () => {
   })
 
   it('does not add trainees or replace existing registrations after a session ends', async () => {
-    jest.setSystemTime(new Date(savedSessions[1].endDate.getTime() + 1))
+    jest.setSystemTime(new Date(savedSessions[1].endDate.getTime() + 24 * 60 * 60 * 1000))
 
     await importCourseSessionsFromFTP()
 
-    for (const [args] of mockUpsertCourseSession.mock.calls) {
-      expect(args.create.traineeOrganizations).toEqual({ create: [] })
-      expect(args.update).not.toHaveProperty('traineeOrganizations')
-    }
+    expect(mockUpsertCourseSession).not.toHaveBeenCalled()
   })
 
   it('reads and maps all three sheets from the organism FTP path', async () => {
@@ -649,6 +646,49 @@ describe('getCourseSessionsFromFTP', () => {
       expect.objectContaining({ name: 'Session Numéro 1', professor: null }),
       expect.objectContaining({ name: 'Session Numéro 2', professor: null }),
     ])
+  })
+
+  it.each([
+    [46277.75, 46377.5],
+    [new Date('2026-09-12T18:00:00.000Z'), new Date('2026-12-21T12:00:00.000Z')],
+    ['2026-09-12T18:00:00.000Z', '2026-12-21T12:00:00.000Z'],
+  ])('normalizes session dates to midnight UTC for %s and %s', (startDate, endDate) => {
+    jest.mocked(xlsx.parse).mockReturnValue([
+      {
+        name: 'Sessions',
+        data: [
+          ['Nom de la session', 'Date de début', 'Date de fin', 'Environment'],
+          ['Session', startDate, endDate, 'BC'],
+        ],
+      },
+      { name: 'Stagiaires', data: [] },
+      { name: 'Formateur', data: [] },
+    ])
+
+    const [session] = parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')
+    const expectedStart = typeof startDate === 'number' ? getJsDateFromExcel(startDate) : new Date(startDate)
+    const expectedEnd = typeof endDate === 'number' ? getJsDateFromExcel(endDate) : new Date(endDate)
+    expectedStart.setUTCHours(0, 0, 0, 0)
+    expectedEnd.setUTCHours(0, 0, 0, 0)
+
+    expect(session.startDate).toEqual(expectedStart)
+    expect(session.endDate).toEqual(expectedEnd)
+    if (startDate instanceof Date && endDate instanceof Date) {
+      expect(startDate.getUTCHours()).toBe(18)
+      expect(endDate.getUTCHours()).toBe(12)
+    }
+  })
+
+  it('imports sessions throughout their final UTC day', async () => {
+    jest.setSystemTime(new Date(savedSessions[1].endDate.getTime() + 23 * 60 * 60 * 1000))
+    mockUpsertCourseSession.mockReset().mockResolvedValueOnce(withParticipants(savedSessions[1]))
+
+    await expect(importCourseSessionsFromFTP()).resolves.toEqual({
+      importedSessions: 1,
+      createdUsers: 6,
+      createdAccounts: 6,
+    })
+    expect(mockUpsertCourseSession).toHaveBeenCalledTimes(1)
   })
 
   afterAll(() => {
