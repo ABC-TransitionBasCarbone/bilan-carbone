@@ -289,10 +289,10 @@ const EmissionSourceForm = ({
                 label={t('form.value')}
                 helperText={error}
                 error={!!error}
+                InputLabelProps={{ shrink: true }}
                 slotProps={{
                   htmlInput: { min: 0 },
                   input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-                  inputLabel: { shrink: !!selectedFactor || emissionSource.value !== null },
                 }}
               />
               {selectedFactor && (
