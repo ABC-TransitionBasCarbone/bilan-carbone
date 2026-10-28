@@ -69,7 +69,7 @@ const savedSessions: CourseSession[] = [
     startDate: getJsDateFromExcel(46277),
     endDate: getJsDateFromExcel(46377),
     code: '12345678',
-    professorId: 'account-2',
+    professorOrganizationVersionId: 'organization-2',
     createdAt: new Date('2026-10-15'),
     updatedAt: new Date('2026-10-15'),
   },
@@ -81,7 +81,7 @@ const savedSessions: CourseSession[] = [
     startDate: getJsDateFromExcel(46368),
     endDate: getJsDateFromExcel(46508),
     code: '23456789',
-    professorId: 'account-5',
+    professorOrganizationVersionId: 'organization-5',
     createdAt: new Date('2026-10-15'),
     updatedAt: new Date('2026-10-15'),
   },
@@ -123,7 +123,7 @@ const withParticipants = (session: CourseSession) => {
     traineeOrganizations: importedSession.trainees.map((user) => ({
       organizationVersion: { userAccounts: [{ user }] },
     })),
-    professor: importedSession.professor ? { user: importedSession.professor } : null,
+    professorOrganization: importedSession.professor ? { userAccounts: [{ user: importedSession.professor }] } : null,
   }
 }
 
@@ -244,7 +244,7 @@ describe('getCourseSessionsFromFTP', () => {
     })
     mockUpsertCourseSession
       .mockReset()
-      .mockResolvedValueOnce(withParticipants({ ...savedSessions[0], professorId: null }))
+      .mockResolvedValueOnce(withParticipants({ ...savedSessions[0], professorOrganizationVersionId: null }))
 
     await expect(importCourseSessionsFromFTP()).resolves.toEqual({
       importedSessions: 1,
@@ -258,8 +258,8 @@ describe('getCourseSessionsFromFTP', () => {
     ])
     expect(mockUpsertCourseSession).toHaveBeenCalledWith(
       expect.objectContaining({
-        create: expect.objectContaining({ professorId: null }),
-        update: expect.objectContaining({ professorId: null }),
+        create: expect.objectContaining({ professorOrganizationVersionId: null }),
+        update: expect.objectContaining({ professorOrganizationVersionId: null }),
       }),
     )
     expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalledWith(
@@ -270,7 +270,7 @@ describe('getCourseSessionsFromFTP', () => {
     )
   })
 
-  it('creates a personal organization for each account and links trainees to their sessions', async () => {
+  it('creates a personal organization for each account and links trainees and professors to their sessions', async () => {
     mockCreateUsersWithAccount.mockResolvedValue({
       newUsers: { count: 6 },
       newAccounts: { count: 6 },
@@ -332,6 +332,7 @@ describe('getCourseSessionsFromFTP', () => {
           },
         },
         create: expect.objectContaining({
+          professorOrganizationVersionId: 'organization-account-2',
           traineeOrganizations: {
             create: [
               { organizationVersion: { connect: { id: 'organization-account-0' } } },
@@ -340,6 +341,7 @@ describe('getCourseSessionsFromFTP', () => {
           },
         }),
         update: expect.objectContaining({
+          professorOrganizationVersionId: 'organization-account-2',
           traineeOrganizations: {
             deleteMany: {},
             create: [
@@ -459,7 +461,7 @@ describe('getCourseSessionsFromFTP', () => {
     const removedTrainee = { email: 'removed@example.org', firstName: 'Removed', lastName: 'Trainee' }
     before.startDate = new Date('2026-01-01')
     before.endDate = new Date('2026-01-02')
-    before.professor = { user: oldProfessor }
+    before.professorOrganization = { userAccounts: [{ user: oldProfessor }] }
     before.traineeOrganizations = [
       before.traineeOrganizations[0],
       { organizationVersion: { userAccounts: [{ user: removedTrainee }] } },
@@ -485,7 +487,7 @@ describe('getCourseSessionsFromFTP', () => {
           ],
           professor: {
             before: oldProfessor,
-            after: withParticipants(savedSessions[0]).professor?.user,
+            after: withParticipants(savedSessions[0]).professorOrganization?.userAccounts[0].user,
           },
           addedTrainees: [{ email: 'test.abc@abc-transitionbascarbone.fr', firstName: 'Test', lastName: 'ABC' }],
           removedTrainees: [removedTrainee],
@@ -501,7 +503,7 @@ describe('getCourseSessionsFromFTP', () => {
       if (field === 'startDate' || field === 'endDate') {
         previous[0][field] = new Date('2026-01-01')
       } else if (field === 'professor') {
-        previous[0].professor = null
+        previous[0].professorOrganization = null
       } else {
         previous[0].traineeOrganizations = []
       }

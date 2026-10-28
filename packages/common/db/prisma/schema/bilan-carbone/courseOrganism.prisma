@@ -28,8 +28,8 @@ model CourseSession {
   courseOrganism   CourseOrganism @relation(fields: [courseOrganismId], references: [id], onDelete: Cascade)
   courseOrganismId String         @map("course_organism_id")
 
-  professor   Account? @relation("CourseSessionProfessor", fields: [professorId], references: [id], onDelete: Cascade)
-  professorId String?  @map("professor_id")
+  professorOrganization          OrganizationVersion? @relation("CourseSessionProfessor", fields: [professorOrganizationVersionId], references: [id], onDelete: SetNull)
+  professorOrganizationVersionId String?              @map("professor_organization_version_id")
 
   traineeOrganizations CourseSessionTraineeOrganization[]
 

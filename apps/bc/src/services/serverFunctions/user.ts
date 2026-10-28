@@ -455,7 +455,7 @@ export const checkCourseActivation = async (email: string, sessionCode: string, 
             },
           },
           {
-            professor: { user: { email: user.email } },
+            professorOrganization: { userAccounts: { some: { user: { email: user.email } } } },
           },
         ],
       },

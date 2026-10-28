@@ -60,8 +60,6 @@ model Account {
   formationStartDate DateTime? @map("formation_start_date")
   formationEndDate   DateTime? @map("formation_end_date")
 
-  professorCourseSessions CourseSession[] @relation("CourseSessionProfessor")
-
   @@unique([userId, environment])
   @@map("accounts")
   @@schema("bilan_carbone")
