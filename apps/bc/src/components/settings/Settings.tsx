@@ -53,7 +53,7 @@ const Settings = ({ userSettings }: Props) => {
         <Form onSubmit={form.handleSubmit(onSubmit)}>
           <FormControl>
             <div className="align-center">
-              <FormLabel>{t('validatedEmissionSourcesOnly')}</FormLabel>
+              <FormLabel component="span">{t('validatedEmissionSourcesOnly')}</FormLabel>
               <HelpIcon className="ml-4" onClick={() => setGlossary('exports')} label={tGlossary('title')} />
             </div>
             <Controller
@@ -65,6 +65,7 @@ const Settings = ({ userSettings }: Props) => {
                     <Switch
                       {...field}
                       checked={!field.value}
+                      aria-label={t('validatedEmissionSourcesOnly')}
                       onChange={(event) => field.onChange(!event.target.checked)}
                     />
                   }

@@ -82,7 +82,7 @@ const TransitionPlanFilters = ({
   return (
     <div className="flex gapped1">
       <FormControl disabled={sites.length === 0} className={styles.siteFilter}>
-        <InputLabel id="transition-plan-site-filter-label" shrink>
+        <InputLabel id="transition-plan-site-filter-selector" shrink>
           {tCommon('sites')}
         </InputLabel>
         <MultiSelectAll
@@ -91,7 +91,6 @@ const TransitionPlanFilters = ({
           allValues={sites.map((s) => s.id)}
           setValues={onSiteFilterChange}
           getLabel={(id) => sites.find((s) => s.id === id)?.name ?? id}
-          label={tCommon('sites')}
         />
       </FormControl>
       <PostSubPostFilter

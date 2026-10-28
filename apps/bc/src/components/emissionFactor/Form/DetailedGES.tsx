@@ -5,7 +5,7 @@ import { EmissionFactorCommand, maxParts } from '@/services/serverFunctions/emis
 import { HelpIcon } from '@abc-transitionbascarbone/common/components'
 import { FormTextField } from '@abc-transitionbascarbone/common/components/form/TextField'
 import GlossaryModal from '@abc-transitionbascarbone/common/components/modals/GlossaryModal'
-import { FormControlLabel, FormLabel, Switch, TextField } from '@mui/material'
+import { FormControlLabel, Switch, TextField } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -112,13 +112,14 @@ const DetailedGES = <T extends EmissionFactorCommand>({
     <>
       <div className={classNames(styles.questions, 'flex')}>
         <div className={styles.selector}>
-          <FormLabel id="defailedGES-radio-group-label" component="legend" className="inputLabel align-center">
+          <div id="detailed-ges-label" className="inputLabel align-center">
             <span className="bold">{t('detailedGES')}</span>
             <HelpIcon className="ml-2" onClick={() => setGlossary('detailedGES')} label={tGlossary('title')} />
-          </FormLabel>
+          </div>
           <FormControlLabel
             control={
               <Switch
+                aria-labelledby="detailed-ges-label"
                 checked={detailedGES}
                 onChange={(event) => setDetailedGES(event.target.checked)}
                 data-testid="emission-factor-detailed-switch"
@@ -128,13 +129,14 @@ const DetailedGES = <T extends EmissionFactorCommand>({
           />
         </div>
         <div className={styles.selector}>
-          <FormLabel id="multiple-emssions-radio-group-label" component="legend" className="inputLabel align-center">
+          <div id="multiple-emissions-label" className="inputLabel align-center">
             <span className="bold">{t('multiple')}</span>
             <HelpIcon className="ml-2" onClick={() => setGlossary('multiple')} label={tGlossary('title')} />
-          </FormLabel>
+          </div>
           <FormControlLabel
             control={
               <Switch
+                aria-labelledby="multiple-emissions-label"
                 checked={hasParts}
                 onChange={(event) => setHasParts(event.target.checked)}
                 data-testid="emission-factor-multiple-switch"
@@ -145,21 +147,18 @@ const DetailedGES = <T extends EmissionFactorCommand>({
         </div>
         <div className={styles.input}>
           {hasParts && (
-            <>
-              <FormLabel id="sub-parts-count-label" component="legend" className="inputLabel align-center">
-                {t('subPartsCount')}
-              </FormLabel>
-              <TextField
-                type="number"
-                value={partsCount < 0 ? '' : partsCount}
-                onChange={(e) => updateEmissionFactorPartsCount(e.target.value)}
-                data-testid="emission-factor-parts-count"
-                slotProps={{
-                  htmlInput: { min: 1, max: maxParts },
-                  input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-                }}
-              />
-            </>
+            <TextField
+              required
+              type="number"
+              value={partsCount < 0 ? '' : partsCount}
+              onChange={(e) => updateEmissionFactorPartsCount(e.target.value)}
+              data-testid="emission-factor-parts-count"
+              label={t('subPartsCount')}
+              slotProps={{
+                htmlInput: { min: 1, max: maxParts },
+                input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
+              }}
+            />
           )}
         </div>
       </div>

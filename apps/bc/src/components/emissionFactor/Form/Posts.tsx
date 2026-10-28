@@ -140,7 +140,8 @@ const Posts = <T extends SubPostsCommand>({
           labelId="post-select-label"
           value={isAllPosts ? 'ALL_POSTS' : post || ''}
           onChange={handleSelectPost}
-          label={`${t('post')} *`}
+          label={t('post')}
+          required
           t={t}
           clearable
         >

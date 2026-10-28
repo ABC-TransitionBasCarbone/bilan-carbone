@@ -7,7 +7,7 @@ import { EngagementActionWithSites } from '@/services/serverFunctions/study'
 import { EngagementActionsFilters } from '@/types/filters'
 import { EngagementPhase } from '@abc-transitionbascarbone/common/db/enums'
 import { Button } from '@abc-transitionbascarbone/common/ui'
-import { FormControl, FormLabel } from '@mui/material'
+import { FormControl, InputLabel } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
 import { useTranslations } from 'next-intl'
@@ -59,12 +59,10 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, 
     <div className="flex-row gapped-2 justify-between align-end">
       <div className="align-center wrap gapped-2">
         <FormControl>
-          <FormLabel id="engagement-actions-filter-search" component="legend">
-            {t('search')}
-          </FormLabel>
           <DebouncedInput
             className={'grow'}
             debounce={500}
+            label={t('search')}
             value={filters.search}
             onChange={(newValue) => setFilters((prevFilters) => ({ ...prevFilters, search: newValue }))}
             placeholder={t('searchPlaceholder')}
@@ -72,9 +70,7 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, 
         </FormControl>
 
         <FormControl className={'grow'}>
-          <FormLabel id="engagement-actions-steps-selector" component="legend">
-            {tTable('steps')}
-          </FormLabel>
+          <InputLabel id="engagement-actions-steps-selector">{tTable('steps')}</InputLabel>
           <MultiSelectAll
             id="engagement-actions-steps"
             values={Array.from(new Set(filters.steps as string[]))}
@@ -83,13 +79,12 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, 
               setFilters((prevFilters) => ({ ...prevFilters, steps: values as EngagementActionSteps[] }))
             }
             getLabel={(step) => (enumStepsValues.includes(step as EngagementActionSteps) ? tSteps(step) : step)}
+            label={tTable('steps')}
           />
         </FormControl>
 
         <FormControl className={'grow'}>
-          <FormLabel id="engagement-actions-targets-selector" component="legend">
-            {tTable('target')}
-          </FormLabel>
+          <InputLabel id="engagement-actions-targets-selector">{tTable('target')}</InputLabel>
           <MultiSelectAll
             id="engagement-actions-targets"
             values={Array.from(new Set(filters.targets as string[]))}
@@ -103,13 +98,12 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, 
             getLabel={(target) =>
               enumTargetsValues.includes(target as EngagementActionTargets) ? tTargets(target) : target
             }
+            label={tTable('target')}
           />
         </FormControl>
 
         <FormControl className={'grow'}>
-          <FormLabel id="engagement-actions-phases-selector" component="legend">
-            {tTable('phase')}
-          </FormLabel>
+          <InputLabel id="engagement-actions-phases-selector">{tTable('phase')}</InputLabel>
           <MultiSelectAll
             id="engagement-actions-phases"
             values={filters.phases as string[]}
@@ -121,14 +115,13 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, 
               }))
             }}
             getLabel={(phase) => tPhases(phase)}
+            label={tTable('phase')}
           />
         </FormControl>
 
         <FormControl className={'grow'}>
-          <FormLabel id="engagement-actions-start-date-selector" component="legend">
-            {tCommonLabel('start')}
-          </FormLabel>
           <DatePicker
+            label={tCommonLabel('start')}
             value={filters.dateRange.startDate ? dayjs(filters.dateRange.startDate) : null}
             onChange={(date: Dayjs | null) =>
               setFilters((prevFilters) => ({
@@ -143,10 +136,8 @@ const EngagementActionsFiltersComponent = ({ filters, setFilters, openAddModal, 
         </FormControl>
 
         <FormControl className={'grow'}>
-          <FormLabel id="engagement-actions-end-date-selector" component="legend">
-            {tCommonLabel('end')}
-          </FormLabel>
           <DatePicker
+            label={tCommonLabel('end')}
             value={filters.dateRange.endDate ? dayjs(filters.dateRange.endDate) : null}
             onChange={(date: Dayjs | null) =>
               setFilters((prevFilters) => ({

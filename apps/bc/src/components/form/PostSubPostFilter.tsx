@@ -66,7 +66,7 @@ export const PostSubPostFilter = ({
   return (
     <FormControl className={classNames(styles.formControl, className)}>
       {showSeparateLabel ? (
-        <FormLabel id={'subposts-selector-label'} component="legend">
+        <FormLabel id={'subposts-selector-label'} component="label">
           {label}
         </FormLabel>
       ) : (

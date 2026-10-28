@@ -38,7 +38,7 @@ const ActionFilters = ({ search, setSearch, openAddModal, canEdit, owners, owner
         />
         {owners.length > 0 && (
           <FormControl className={styles.ownerFilter}>
-            <InputLabel id="owner-filter-label" shrink>
+            <InputLabel id="owner-filter-selector" shrink>
               {tTable('owner')}
             </InputLabel>
             <MultiSelectAll
@@ -47,7 +47,6 @@ const ActionFilters = ({ search, setSearch, openAddModal, canEdit, owners, owner
               allValues={allValues}
               setValues={setOwnerFilter}
               getLabel={(v) => (v === NO_OWNER ? tTable('noOwner') : v)}
-              label={tTable('owner')}
             />
           </FormControl>
         )}

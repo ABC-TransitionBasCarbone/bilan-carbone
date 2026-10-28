@@ -11,6 +11,7 @@ interface Props<T extends FieldValues> {
   icon?: React.ReactNode
   iconPosition?: 'before' | 'after'
   clearable?: boolean
+  required?: boolean
 }
 
 export const FormSelect = <T extends FieldValues>({
@@ -21,6 +22,7 @@ export const FormSelect = <T extends FieldValues>({
   iconPosition = 'before',
   translation,
   clearable,
+  required,
   ...selectProps
 }: Props<T> & SelectProps) => {
   const iconDiv = icon ? <div className={styles.icon}>{icon}</div> : null
@@ -39,6 +41,7 @@ export const FormSelect = <T extends FieldValues>({
             iconPosition={iconPosition}
             clearable={clearable}
             t={translation}
+            required={required}
             {...selectProps}
           />
           {error?.message && <FormHelperText className={styles.helper}>{error.message}</FormHelperText>}

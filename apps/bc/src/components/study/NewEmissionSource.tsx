@@ -5,7 +5,7 @@ import { useServerFunction } from '@abc-transitionbascarbone/common/components/h
 import { EmissionSourceCaracterisation, SubPost } from '@abc-transitionbascarbone/common/db'
 import { Button } from '@abc-transitionbascarbone/common/ui'
 import AddIcon from '@mui/icons-material/Add'
-import { FormLabel, TextField } from '@mui/material'
+import { TextField } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { KeyboardEvent, useCallback, useState } from 'react'
@@ -68,31 +68,30 @@ const NewEmissionSource = ({ study, subPost, caracterisations, studySiteId }: Pr
   )
 
   return (
-    <>
-      <FormLabel component="legend">{t('label')}</FormLabel>
-      <div className="flex">
-        <TextField
-          data-testid="new-emission-source"
-          disabled={saving}
-          className={styles.input}
-          onKeyDown={onKeyDown}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder={t('new')}
-        />
-        <div className="ml1">
-          <Button
-            className="h100"
-            data-testid="new-emission-source-add"
-            disabled={!value.trim() || saving}
-            onClick={() => createSource(value)}
-          >
-            <AddIcon />
-            {t('add')}
-          </Button>
-        </div>
+    <div className="flex">
+      <TextField
+        data-testid="new-emission-source"
+        disabled={saving}
+        required
+        className={styles.input}
+        onKeyDown={onKeyDown}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        label={t('label')}
+        placeholder={t('new')}
+      />
+      <div className="ml1">
+        <Button
+          className="h100"
+          data-testid="new-emission-source-add"
+          disabled={!value.trim() || saving}
+          onClick={() => createSource(value)}
+        >
+          <AddIcon />
+          {t('add')}
+        </Button>
       </div>
-    </>
+    </div>
   )
 }
 

@@ -10,7 +10,7 @@ import {
   EmissionSourceCaracterisation,
   Export,
 } from '@abc-transitionbascarbone/common/db/enums'
-import { Checkbox, FormControlLabel, FormLabel } from '@mui/material'
+import { Checkbox, FormControlLabel } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useCallback, useMemo, useState } from 'react'
@@ -160,14 +160,14 @@ const ExportCheckboxes = ({
         <div className="flex grow">
           <div className={styles.sectionTitle}>{t('title')}</div>
           {showControl && (
-            <FormLabel component="legend" className={classNames(styles.sectionTitle, 'grow pl1')}>
+            <div className={classNames(styles.sectionTitle, 'grow pl1')}>
               <div className={classNames(formStyles.gapped, 'align-center')}>
                 <span className="inputLabel bold">{tNew('control')}</span>
                 <div className={formStyles.icon}>
                   {<HelpIcon onClick={() => setGlossary('control')} label={tGlossary('title')} />}
                 </div>
               </div>
-            </FormLabel>
+            </div>
           )}
         </div>
         {Object.keys(Export)

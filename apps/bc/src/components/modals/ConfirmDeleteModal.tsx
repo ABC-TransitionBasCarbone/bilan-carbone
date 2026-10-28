@@ -77,6 +77,7 @@ const ConfirmDeleteModal = ({
           label={t('typeToConfirm', { name: requireNameMatch })}
           type="text"
           fullWidth
+          required
           variant="outlined"
           value={inputValue}
           onChange={(e) => {

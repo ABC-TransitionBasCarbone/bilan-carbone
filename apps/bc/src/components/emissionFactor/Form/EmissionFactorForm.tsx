@@ -12,7 +12,7 @@ import { FormSelect } from '@abc-transitionbascarbone/common/components/form/Sel
 import { FormTextField } from '@abc-transitionbascarbone/common/components/form/TextField'
 import GlossaryModal from '@abc-transitionbascarbone/common/components/modals/GlossaryModal'
 import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
-import { FormControlLabel, FormLabel, MenuItem, Switch } from '@mui/material'
+import { FormControlLabel, MenuItem, Switch } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -92,8 +92,9 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         data-testid="emission-factor-name"
         control={control}
         name="name"
-        label={`${t('name')} *`}
+        label={t('name')}
         placeholder={t('namePlaceholder')}
+        required
       />
       <FormTextField
         control={control}
@@ -120,8 +121,9 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
         data-testid="emission-factor-source"
         control={control}
         name="source"
-        label={`${t('source')} *`}
+        label={t('source')}
         placeholder={t('sourcePlaceholder')}
+        required
       />
       <div className="flex gapped">
         <div className="grow">
@@ -129,9 +131,10 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
             data-testid="emission-factor-unit"
             control={control}
             translation={t}
-            label={`${t('unit')} *`}
+            label={t('unit')}
             name="unit"
             fullWidth
+            required
           >
             <MenuItem value={BCUnit.CUSTOM}>{getUnitLabel(BCUnit.CUSTOM)}</MenuItem>
             {units
@@ -156,12 +159,13 @@ const EmissionFactorForm = <T extends EmissionFactorCommand>({
               />
             </div>
             <div>
-              <FormLabel id="monetaryUnit-radio-group-label" component="legend" className="inputLabel align-center">
+              <div className="inputLabel align-center">
                 <span className="bold">{t('monetaryUnit')}</span>
-              </FormLabel>
+              </div>
               <FormControlLabel
                 control={
                   <Switch
+                    aria-label={t('monetaryUnit')}
                     checked={isMonetary}
                     name="isMonetary"
                     onChange={(event) => update('isMonetary', event.target.checked)}

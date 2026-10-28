@@ -14,6 +14,7 @@ interface Props<T extends FieldValues> {
   ['data-testid']?: string
   clearable?: boolean
   fullWidth?: boolean
+  required?: boolean
 }
 
 export const FormDatePicker = <T extends FieldValues>({
@@ -23,6 +24,7 @@ export const FormDatePicker = <T extends FieldValues>({
   'data-testid': dataTestId,
   clearable = false,
   fullWidth = false,
+  required,
   ...datePickerProps
 }: Props<T> & DatePickerProps<true>) => {
   return (
@@ -34,6 +36,7 @@ export const FormDatePicker = <T extends FieldValues>({
           {label ? (
             <Typography fontWeight="bold" className="mb-2">
               {label}
+              {required && <span aria-hidden="true"> *</span>}
             </Typography>
           ) : null}
           <DatePicker
@@ -44,6 +47,7 @@ export const FormDatePicker = <T extends FieldValues>({
                 //@ts-expect-error: Missing in MUI Props
                 'data-testid': dataTestId,
                 className: styles.datePickerInput,
+                required,
               },
               field: { clearable },
             }}

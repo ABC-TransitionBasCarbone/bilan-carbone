@@ -2426,7 +2426,7 @@
       "activity": "Activity",
       "value": "Activity data value",
       "sign": "Positive value only",
-      "source": "Source and date of collected data",
+      "source": "Data source / collection date",
       "type": "Type",
       "depreciationPeriod": "Depreciation per",
       "hectare": "Hectare",

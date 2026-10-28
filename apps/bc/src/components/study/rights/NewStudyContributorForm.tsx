@@ -113,9 +113,10 @@ const NewStudyContributorForm = ({ study, accounts, defaultAccount, defaultSubPo
             data-testid="study-contributor-firstName"
             control={form.control}
             name="firstName"
-            label={`${t('firstName')} *`}
+            label={t('firstName')}
             trim
             disabled={!!defaultAccount}
+            required
           />
           <FormTextField
             data-testid="study-contributor-lastName"
@@ -131,9 +132,10 @@ const NewStudyContributorForm = ({ study, accounts, defaultAccount, defaultSubPo
         data-testid="study-contributor-email"
         control={form.control}
         name="email"
-        label={`${t('email')} *`}
+        label={t('email')}
         trim
         disabled={!!defaultAccount}
+        required
       />
       <MultiplePosts form={form} context="studyContributor" selectAll defaultSubPosts={defaultSubPosts} />
       <LoadingButton type="submit" loading={form.formState.isSubmitting} data-testid="study-contributor-create-button">
