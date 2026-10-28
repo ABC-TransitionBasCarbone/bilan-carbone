@@ -20,21 +20,21 @@ export const updateCourseSessionTraineeOrganizationStatuses = async () => {
   return prismaClient.$transaction(async (transaction) => {
     const activated = await transaction.courseSessionTraineeOrganization.updateMany({
       where: {
-        isActive: CourseSessionTraineeOrganizationStatus.INACTIVE,
+        courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE,
         courseSession: {
           startDate: { gte: now },
           endDate: { lt: endAccessDate },
         },
       },
-      data: { isActive: CourseSessionTraineeOrganizationStatus.ACTIVE },
+      data: { courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE },
     })
 
     const deactivated = await transaction.courseSessionTraineeOrganization.updateMany({
       where: {
-        isActive: CourseSessionTraineeOrganizationStatus.ACTIVE,
+        courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
         OR: [{ courseSession: { startDate: { lt: now } } }, { courseSession: { endDate: { gte: endAccessDate } } }],
       },
-      data: { isActive: CourseSessionTraineeOrganizationStatus.INACTIVE },
+      data: { courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE },
     })
 
     return { activated: activated.count, deactivated: deactivated.count }
