@@ -129,7 +129,7 @@ const getRequiredDate = (record: Record<string, unknown>, field: string) => {
     typeof value === 'number'
       ? getJsDateFromExcel(value)
       : value instanceof Date
-        ? value
+        ? new Date(value)
         : typeof value === 'string'
           ? new Date(value)
           : undefined
@@ -137,6 +137,7 @@ const getRequiredDate = (record: Record<string, unknown>, field: string) => {
   if (!date || Number.isNaN(date.getTime())) {
     throw new Error(`Invalid ${field} in training sessions file`)
   }
+  date.setUTCHours(0, 0, 0, 0)
   return date
 }
 
@@ -281,7 +282,9 @@ export const importCourseSessionsFromFTP = async () => {
     return { importedSessions: 0, createdUsers: 0, createdAccounts: 0 }
   }
 
-  const notFinishedSessions = sessions.filter(({ endDate }) => endDate > new Date())
+  const today = new Date()
+  today.setUTCHours(0, 0, 0, 0)
+  const notFinishedSessions = sessions.filter(({ endDate }) => endDate >= today)
 
   const userAccountEntries = []
   for (const session of notFinishedSessions) {

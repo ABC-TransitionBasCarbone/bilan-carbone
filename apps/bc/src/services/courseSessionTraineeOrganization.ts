@@ -13,14 +13,17 @@ const getCourseSessionAccessDays = () => {
 export const updateCourseSessionTraineeOrganizationStatuses = async () => {
   const accessDays = getCourseSessionAccessDays()
 
-  const now = new Date()
-  const endAccessDate = new Date()
-  endAccessDate.setUTCDate(now.getUTCDate() - accessDays)
+  const today = new Date()
+  today.setUTCHours(0, 0, 0, 0)
+  const tomorrow = new Date(today)
+  tomorrow.setUTCDate(today.getUTCDate() + 1)
+  const endAccessDate = new Date(today)
+  endAccessDate.setUTCDate(today.getUTCDate() - accessDays)
 
   return prismaClient.$transaction(async (transaction) => {
     await transaction.courseSessionTraineeOrganization.deleteMany({
       where: {
-        courseSession: { endDate: { lte: now } },
+        courseSession: { endDate: { lt: today } },
         organizationVersion: {
           userAccounts: { none: { createdStudies: { some: {} } } },
         },
@@ -31,8 +34,8 @@ export const updateCourseSessionTraineeOrganizationStatuses = async () => {
       where: {
         courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE,
         courseSession: {
-          startDate: { lte: now },
-          endDate: { gt: endAccessDate },
+          startDate: { lte: today },
+          endDate: { gte: endAccessDate },
         },
       },
       data: { courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE },
@@ -41,7 +44,7 @@ export const updateCourseSessionTraineeOrganizationStatuses = async () => {
     const deactivated = await transaction.courseSessionTraineeOrganization.updateMany({
       where: {
         courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
-        OR: [{ courseSession: { startDate: { gt: now } } }, { courseSession: { endDate: { lte: endAccessDate } } }],
+        OR: [{ courseSession: { startDate: { gt: today } } }, { courseSession: { endDate: { lt: endAccessDate } } }],
       },
       data: { courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE },
     })
