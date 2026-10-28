@@ -135,6 +135,8 @@ The same email includes a "Vos formations mises à jour" section for changed dat
 Email failures fail the cron request but do not roll back the import; a subsequent unchanged import will not resend the summary.
 
 Update the active status of course session trainee organizations daily at 3 AM. Access remains active for `COURSE_SESSION_ACCESS_DAYS` after the session end date.
+At the session end date, trainee organizations whose accounts have not created any study are removed from the session, without deleting their accounts or organization. Other active sessions still grant access.
+The FTP import does not add trainees to ended sessions or replace their existing registrations.
 
 ### Import Secten data
 

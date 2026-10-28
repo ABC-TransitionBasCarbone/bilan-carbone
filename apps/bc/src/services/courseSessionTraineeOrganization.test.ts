@@ -3,7 +3,7 @@ import { CourseSessionTraineeOrganizationStatus } from '@abc-transitionbascarbon
 import { updateCourseSessionTraineeOrganizationStatuses } from './courseSessionTraineeOrganization'
 
 jest.mock('@/db/client.server', () => {
-  const courseSessionTraineeOrganization = { updateMany: jest.fn() }
+  const courseSessionTraineeOrganization = { updateMany: jest.fn(), deleteMany: jest.fn() }
   const transaction = { courseSessionTraineeOrganization }
   return {
     prismaClient: {
@@ -14,6 +14,7 @@ jest.mock('@/db/client.server', () => {
 })
 
 const mockUpdateMany = jest.mocked(prismaClient.courseSessionTraineeOrganization.updateMany)
+const mockDeleteMany = jest.mocked(prismaClient.courseSessionTraineeOrganization.deleteMany)
 
 describe('updateCourseSessionTraineeOrganizationStatuses', () => {
   const previousAccessDays = process.env.COURSE_SESSION_ACCESS_DAYS
@@ -23,6 +24,7 @@ describe('updateCourseSessionTraineeOrganizationStatuses', () => {
     jest.useFakeTimers().setSystemTime(now)
     process.env.COURSE_SESSION_ACCESS_DAYS = '7'
     mockUpdateMany.mockReset().mockResolvedValue({ count: 2 } as never)
+    mockDeleteMany.mockReset().mockResolvedValue({ count: 1 })
   })
 
   afterEach(() => {
@@ -30,7 +32,11 @@ describe('updateCourseSessionTraineeOrganizationStatuses', () => {
   })
 
   afterAll(() => {
-    process.env.COURSE_SESSION_ACCESS_DAYS = previousAccessDays
+    if (previousAccessDays === undefined) {
+      delete process.env.COURSE_SESSION_ACCESS_DAYS
+    } else {
+      process.env.COURSE_SESSION_ACCESS_DAYS = previousAccessDays
+    }
   })
 
   it('activates started sessions within the access period and deactivates future or expired ones', async () => {
@@ -38,6 +44,16 @@ describe('updateCourseSessionTraineeOrganizationStatuses', () => {
       activated: 2,
       deactivated: 2,
     })
+
+    expect(mockDeleteMany).toHaveBeenCalledWith({
+      where: {
+        courseSession: { endDate: { lte: now } },
+        organizationVersion: {
+          userAccounts: { none: { createdStudies: { some: {} } } },
+        },
+      },
+    })
+    expect(mockDeleteMany.mock.invocationCallOrder[0]).toBeLessThan(mockUpdateMany.mock.invocationCallOrder[0])
 
     expect(mockUpdateMany).toHaveBeenNthCalledWith(1, {
       where: {
@@ -68,5 +84,6 @@ describe('updateCourseSessionTraineeOrganizationStatuses', () => {
       'COURSE_SESSION_ACCESS_DAYS must be a non-negative integer',
     )
     expect(mockUpdateMany).not.toHaveBeenCalled()
+    expect(mockDeleteMany).not.toHaveBeenCalled()
   })
 })

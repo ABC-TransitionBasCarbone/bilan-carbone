@@ -131,6 +131,7 @@ describe('getCourseSessionsFromFTP', () => {
   const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => undefined)
 
   beforeEach(() => {
+    jest.useFakeTimers({ doNotFake: ['nextTick', 'setImmediate'] }).setSystemTime(new Date('2026-01-01'))
     jest.clearAllMocks()
     process.env.FTP_HOST = 'host'
     process.env.FTP_USER = 'user'
@@ -176,6 +177,21 @@ describe('getCourseSessionsFromFTP', () => {
       .mockResolvedValueOnce(withParticipants(savedSessions[0]))
       .mockResolvedValueOnce(withParticipants(savedSessions[1]))
     mockSendCourseSessionsCreatedEmail.mockReset()
+  })
+
+  afterEach(() => {
+    jest.useRealTimers()
+  })
+
+  it('does not add trainees or replace existing registrations after a session ends', async () => {
+    jest.setSystemTime(new Date(savedSessions[1].endDate.getTime() + 1))
+
+    await importCourseSessionsFromFTP()
+
+    for (const [args] of mockUpsertCourseSession.mock.calls) {
+      expect(args.create.traineeOrganizations).toEqual({ create: [] })
+      expect(args.update).not.toHaveProperty('traineeOrganizations')
+    }
   })
 
   it('reads and maps all three sheets from the organism FTP path', async () => {
