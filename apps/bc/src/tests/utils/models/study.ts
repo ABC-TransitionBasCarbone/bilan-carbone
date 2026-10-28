@@ -214,6 +214,7 @@ const mockMinimalStudy: MinimalStudyForRights = {
     traineeCourseSessions: [],
     parent: null,
     organization: { name: 'Org' },
+    professorCourseSessions: [],
   },
   allowedUsers: [getMockedAllowedUser()],
   contributors: [],

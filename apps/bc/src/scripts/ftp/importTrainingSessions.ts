@@ -412,12 +412,12 @@ export const importCourseSessionsFromFTP = async () => {
           update: {
             startDate: session.startDate,
             endDate: session.endDate,
-            professorOrganizationVersionId,
+            ...(professorOrganizationVersionId && { professorOrganizationVersionId }),
             traineeOrganizations: {
-              deleteMany: {},
-              create: traineeOrganizationVersionIds.map((id) => ({
-                organizationVersion: { connect: { id } },
-              })),
+              createMany: {
+                data: traineeOrganizationVersionIds.map((organizationVersionId) => ({ organizationVersionId })),
+                skipDuplicates: true,
+              },
             },
           },
         }),

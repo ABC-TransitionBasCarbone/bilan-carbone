@@ -93,7 +93,7 @@ export const hasActiveLicence = (
     return (
       organizationVersion.traineeCourseSessions?.some(
         ({ courseStatus }) => courseStatus === CourseSessionTraineeOrganizationStatus.ACTIVE,
-      ) ?? (organizationVersion.professorCourseSessions?.length ?? 0) > 0
+      ) || (organizationVersion.professorCourseSessions?.length ?? 0) > 0
     )
   }
   if (!needsLicenceToUseApp(organizationVersion.environment)) {
