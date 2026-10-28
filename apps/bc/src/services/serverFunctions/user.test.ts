@@ -235,7 +235,7 @@ describe('signUpWithSiretOrCNC', () => {
               },
             },
             {
-              professor: { user: { email: testEmail } },
+              professorOrganization: { userAccounts: { some: { user: { email: testEmail } } } },
             },
           ],
         },
@@ -260,7 +260,7 @@ describe('signUpWithSiretOrCNC', () => {
               },
             },
             {
-              professor: { user: { email: testEmail } },
+              professorOrganization: { userAccounts: { some: { user: { email: testEmail } } } },
             },
           ],
         },
@@ -339,7 +339,7 @@ describe('signUpWithSiretOrCNC', () => {
               },
             },
             {
-              professor: { user: { email: testEmail } },
+              professorOrganization: { userAccounts: { some: { user: { email: testEmail } } } },
             },
           ],
         },

@@ -85,13 +85,15 @@ export const hasActiveLicence = (
     Exclude<OrganizationVersionWithParentLicence, null>,
     'activatedLicence' | 'parent' | 'environment'
   > &
-    Partial<Pick<NonNullable<OrganizationVersionWithParentLicence>, 'traineeCourseSessions'>>,
+    Partial<
+      Pick<NonNullable<OrganizationVersionWithParentLicence>, 'traineeCourseSessions' | 'professorCourseSessions'>
+    >,
 ) => {
   if (isCourseEnvironment(organizationVersion.environment)) {
     return (
       organizationVersion.traineeCourseSessions?.some(
         ({ courseStatus }) => courseStatus === CourseSessionTraineeOrganizationStatus.ACTIVE,
-      ) ?? false
+      ) ?? (organizationVersion.professorCourseSessions?.length ?? 0) > 0
     )
   }
   if (!needsLicenceToUseApp(organizationVersion.environment)) {

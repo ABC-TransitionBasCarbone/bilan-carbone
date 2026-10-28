@@ -44,7 +44,9 @@ const sessionEmailSelect = {
       },
     },
   },
-  professor: { select: { user: { select: { email: true, firstName: true, lastName: true } } } },
+  professorOrganization: {
+    select: { userAccounts: { select: { user: { select: { email: true, firstName: true, lastName: true } } } } },
+  },
   courseOrganismId: true,
   name: true,
   environment: true,
@@ -54,6 +56,8 @@ const sessionEmailSelect = {
 } satisfies Prisma.CourseSessionSelect
 
 type SavedCourseSession = Prisma.CourseSessionGetPayload<{ select: typeof sessionEmailSelect }>
+
+const getProfessor = (session: SavedCourseSession) => session.professorOrganization?.userAccounts[0]?.user ?? null
 
 const getTrainees = (session: SavedCourseSession) =>
   session.traineeOrganizations.flatMap(({ organizationVersion }) =>
@@ -74,10 +78,10 @@ const getSessionUpdate = (before: SavedCourseSession, after: SavedCourseSession)
   const currentEmails = new Set(currentTrainees.map(({ email }) => email))
   const addedTrainees = currentTrainees.filter(({ email }) => !previousEmails.has(email))
   const removedTrainees = previousTrainees.filter(({ email }) => !currentEmails.has(email))
+  const previousProfessor = getProfessor(before)
+  const currentProfessor = getProfessor(after)
   const professor =
-    before.professor?.user.email !== after.professor?.user.email
-      ? { before: before.professor?.user ?? null, after: after.professor?.user ?? null }
-      : null
+    previousProfessor?.email !== currentProfessor?.email ? { before: previousProfessor, after: currentProfessor } : null
   if (!dates.length && !professor && !addedTrainees.length && !removedTrainees.length) {
     return null
   }
@@ -253,25 +257,6 @@ export const getCourseSessionsFromFTP = async (): Promise<CourseSession[]> => {
   }
 }
 
-const getAccountId = (
-  accounts: {
-    id: string
-    organizationVersionId: string | null
-    environment: Environment
-    user: {
-      email: string
-      firstName: string
-      lastName: string
-    }
-  }[],
-  email: string,
-  environment: Environment,
-) => {
-  return accounts.find(
-    ({ user, environment: accEnvironment }) => user.email === email && accEnvironment === environment,
-  )?.id
-}
-
 const getOrganizationVersionId = (
   accounts: {
     organizationVersionId: string | null
@@ -285,7 +270,7 @@ const getOrganizationVersionId = (
     ({ user, environment: accountEnvironment }) => user.email === email && accountEnvironment === environment,
   )?.organizationVersionId
   if (!organizationVersionId) {
-    throw new Error(`Missing organization version for trainee ${email}`)
+    throw new Error(`Missing organization version for course participant ${email}`)
   }
   return organizationVersionId
 }
@@ -296,10 +281,10 @@ export const importCourseSessionsFromFTP = async () => {
     return { importedSessions: 0, createdUsers: 0, createdAccounts: 0 }
   }
 
-  const upcomingSessions = sessions.filter(({ endDate }) => endDate < new Date())
+  const notFinishedSessions = sessions.filter(({ endDate }) => endDate > new Date())
 
   const userAccountEntries = []
-  for (const session of upcomingSessions) {
+  for (const session of notFinishedSessions) {
     for (const participant of session.trainees) {
       userAccountEntries.push({ ...participant, environment: session.environment })
     }
@@ -325,7 +310,7 @@ export const importCourseSessionsFromFTP = async () => {
 
   const accounts = await prismaClient.account.findMany({
     where: {
-      environment: { in: [...new Set(upcomingSessions.map(({ environment }) => environment))] },
+      environment: { in: [...new Set(notFinishedSessions.map(({ environment }) => environment))] },
       user: { email: { in: userAccountEntries.map(({ email }) => email) } },
     },
     select: {
@@ -363,16 +348,20 @@ export const importCourseSessionsFromFTP = async () => {
 
   const existingSessions = await prismaClient.courseSession.findMany({
     where: {
-      OR: upcomingSessions.map(({ courseOrganismId, name, environment }) => ({ courseOrganismId, name, environment })),
+      OR: notFinishedSessions.map(({ courseOrganismId, name, environment }) => ({
+        courseOrganismId,
+        name,
+        environment,
+      })),
     },
     select: sessionEmailSelect,
   })
 
   const importedSessions = await prismaClient.$transaction(async (transaction) => {
     const importedSessionsPromises = []
-    for (const session of upcomingSessions) {
-      const professorId = session.professor
-        ? getAccountId(accounts, session.professor.email, session.environment)
+    for (const session of notFinishedSessions) {
+      const professorOrganizationVersionId = session.professor
+        ? getOrganizationVersionId(accountsWithOrganizationVersions, session.professor.email, session.environment)
         : null
       const traineeOrganizationVersionIds = session.trainees.map(({ email }) =>
         getOrganizationVersionId(accountsWithOrganizationVersions, email, session.environment),
@@ -413,7 +402,7 @@ export const importCourseSessionsFromFTP = async () => {
             startDate: session.startDate,
             endDate: session.endDate,
             code,
-            professorId,
+            professorOrganizationVersionId,
             traineeOrganizations: {
               create: traineeOrganizationVersionIds.map((id) => ({
                 organizationVersion: { connect: { id } },
@@ -423,7 +412,7 @@ export const importCourseSessionsFromFTP = async () => {
           update: {
             startDate: session.startDate,
             endDate: session.endDate,
-            professorId,
+            professorOrganizationVersionId,
             traineeOrganizations: {
               deleteMany: {},
               create: traineeOrganizationVersionIds.map((id) => ({
@@ -450,7 +439,7 @@ export const importCourseSessionsFromFTP = async () => {
     .map((session) => ({
       ...session,
       trainees: getTrainees(session),
-      professor: session.professor?.user ?? null,
+      professor: getProfessor(session),
     }))
 
   if (newSessions.length > 0 || updatedSessions.length > 0) {
@@ -481,5 +470,9 @@ export const importCourseSessionsFromFTP = async () => {
     }
   }
 
-  return { importedSessions: upcomingSessions.length, createdUsers: newUsers.count, createdAccounts: newAccounts.count }
+  return {
+    importedSessions: notFinishedSessions.length,
+    createdUsers: newUsers.count,
+    createdAccounts: newAccounts.count,
+  }
 }

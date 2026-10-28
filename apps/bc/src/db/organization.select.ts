@@ -10,6 +10,9 @@ export const OrganizationVersionCourseAccessSelect = {
     select: { courseStatus: true },
     take: 1,
   },
+  professorCourseSessions: {
+    take: 1,
+  },
 } satisfies Prisma.OrganizationVersionSelect
 
 export const OrganizationVersionWithOrganizationSelect = {
