@@ -1,5 +1,6 @@
 {
   "login": {
+    "welcome": "Welcome on the BC+ [TRAINING BC] !",
     "form": {
       "emailPlaceholder": "Enter your email you use for your formation"
     }
