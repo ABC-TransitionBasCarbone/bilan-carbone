@@ -67,7 +67,7 @@ const savedSessions: CourseSession[] = [
     name: 'Session Numéro 1',
     environment: Environment.COURSE_BC,
     startDate: getJsDateFromExcel(46277),
-    endDate: getJsDateFromExcel(46377),
+    endDate: new Date(getJsDateFromExcel(46377).setUTCHours(23, 59, 59, 999)),
     code: '12345678',
     professorOrganizationVersionId: 'organization-2',
     createdAt: new Date('2026-10-15'),
@@ -79,7 +79,7 @@ const savedSessions: CourseSession[] = [
     name: 'Session Numéro 2',
     environment: Environment.COURSE_TILT,
     startDate: getJsDateFromExcel(46368),
-    endDate: getJsDateFromExcel(46508),
+    endDate: new Date(getJsDateFromExcel(46508).setUTCHours(23, 59, 59, 999)),
     code: '23456789',
     professorOrganizationVersionId: 'organization-5',
     createdAt: new Date('2026-10-15'),
@@ -205,7 +205,7 @@ describe('getCourseSessionsFromFTP', () => {
         courseOrganismId: 'organism-1',
         name: 'Session Numéro 1',
         startDate: getJsDateFromExcel(46277),
-        endDate: getJsDateFromExcel(46377),
+        endDate: savedSessions[0].endDate,
         environment: 'COURSE_BC',
         trainees: [
           { email: 'test.abc2@abc-transitionbascarbone.fr', firstName: 'Test', lastName: 'ABC' },
@@ -217,7 +217,7 @@ describe('getCourseSessionsFromFTP', () => {
         courseOrganismId: 'organism-1',
         name: 'Session Numéro 2',
         startDate: getJsDateFromExcel(46368),
-        endDate: getJsDateFromExcel(46508),
+        endDate: savedSessions[1].endDate,
         environment: 'COURSE_TILT',
         trainees: [
           { email: 'bc-admin-0@yopmail.com', firstName: 'Admin', lastName: 'BC' },
@@ -652,7 +652,8 @@ describe('getCourseSessionsFromFTP', () => {
     [46277.75, 46377.5],
     [new Date('2026-09-12T18:00:00.000Z'), new Date('2026-12-21T12:00:00.000Z')],
     ['2026-09-12T18:00:00.000Z', '2026-12-21T12:00:00.000Z'],
-  ])('normalizes session dates to midnight UTC for %s and %s', (startDate, endDate) => {
+    ['2026-10-28T18:00:00.000Z', '2026-10-28T09:00:00.000Z'],
+  ])('normalizes session dates to the start and end of their UTC days for %s and %s', (startDate, endDate) => {
     jest.mocked(xlsx.parse).mockReturnValue([
       {
         name: 'Sessions',
@@ -669,7 +670,7 @@ describe('getCourseSessionsFromFTP', () => {
     const expectedStart = typeof startDate === 'number' ? getJsDateFromExcel(startDate) : new Date(startDate)
     const expectedEnd = typeof endDate === 'number' ? getJsDateFromExcel(endDate) : new Date(endDate)
     expectedStart.setUTCHours(0, 0, 0, 0)
-    expectedEnd.setUTCHours(0, 0, 0, 0)
+    expectedEnd.setUTCHours(23, 59, 59, 999)
 
     expect(session.startDate).toEqual(expectedStart)
     expect(session.endDate).toEqual(expectedEnd)
@@ -680,7 +681,7 @@ describe('getCourseSessionsFromFTP', () => {
   })
 
   it('imports sessions throughout their final UTC day', async () => {
-    jest.setSystemTime(new Date(savedSessions[1].endDate.getTime() + 23 * 60 * 60 * 1000))
+    jest.setSystemTime(savedSessions[1].endDate)
     mockUpsertCourseSession.mockReset().mockResolvedValueOnce(withParticipants(savedSessions[1]))
 
     await expect(importCourseSessionsFromFTP()).resolves.toEqual({

@@ -180,6 +180,7 @@ export const parseCourseSessionWorkbook = (data: Buffer, courseOrganismId: strin
 
     const startDate = getRequiredDate(record, 'Date de début')
     const endDate = getRequiredDate(record, 'Date de fin')
+    endDate.setUTCHours(23, 59, 59, 999)
     if (startDate > endDate) {
       throw new Error(`Invalid date range for training session: ${name}`)
     }
