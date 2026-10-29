@@ -70,6 +70,7 @@ const savedSessions: CourseSession[] = [
     id: 'session-1',
     courseOrganismId: 'organism-1',
     name: 'Session Numéro 1',
+    type: 'M1',
     environment: Environment.COURSE_BC,
     startDate: getJsDateFromExcel(46277),
     endDate: new Date(getJsDateFromExcel(46377).setUTCHours(23, 59, 59, 999)),
@@ -82,6 +83,7 @@ const savedSessions: CourseSession[] = [
     id: 'session-2',
     courseOrganismId: 'organism-1',
     name: 'Session Numéro 2',
+    type: null,
     environment: Environment.COURSE_TILT,
     startDate: getJsDateFromExcel(46368),
     endDate: new Date(getJsDateFromExcel(46508).setUTCHours(23, 59, 59, 999)),
@@ -213,6 +215,7 @@ describe('getCourseSessionsFromFTP', () => {
       {
         courseOrganismId: 'organism-1',
         name: 'Session Numéro 1',
+        type: 'M1',
         startDate: getJsDateFromExcel(46277),
         endDate: savedSessions[0].endDate,
         environment: 'COURSE_BC',
@@ -225,6 +228,7 @@ describe('getCourseSessionsFromFTP', () => {
       {
         courseOrganismId: 'organism-1',
         name: 'Session Numéro 2',
+        type: null,
         startDate: getJsDateFromExcel(46368),
         endDate: savedSessions[1].endDate,
         environment: 'COURSE_TILT',
@@ -735,6 +739,233 @@ describe('getCourseSessionsFromFTP', () => {
       expect.objectContaining({ name: 'Session Numéro 1', professor: null }),
       expect.objectContaining({ name: 'Session Numéro 2', professor: null }),
     ])
+  })
+
+  it.each([
+    [46277, 46278, 'Second'],
+    [46278, 46277, 'First'],
+    [undefined, 46277, 'Second'],
+    [46277, undefined, 'First'],
+    [undefined, undefined, 'Second'],
+    [46277, 46277, 'Second'],
+    ['2026-10-29T10:00:00Z', '2026-10-29T09:00:00Z', 'First'],
+  ])('selects one session per trainee and type using dates %s and %s', (firstDate, secondDate, winner) => {
+    jest.mocked(xlsx.parse).mockReturnValue([
+      {
+        name: 'Sessions',
+        data: [
+          ['Nom de la session', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
+          ['First', 46277, 46377, 'BC', ' m1 '],
+          ['Second', 46277, 46377, 'BC', 'M1'],
+          ['Other type', 46277, 46377, 'BC', 'M2'],
+        ],
+      },
+      {
+        name: 'Stagiaires',
+        data: [
+          ['Nom de la session', 'Email', 'Prénom', 'Nom', "Date d'ajout/modification de cette ligne"],
+          ['First', ' TRAINEE@EXAMPLE.ORG ', 'First', 'Trainee', firstDate],
+          ['Second', 'trainee@example.org', 'Second', 'Trainee', secondDate],
+          ['Other type', 'trainee@example.org', 'Other', 'Trainee'],
+        ],
+      },
+      { name: 'Formateur', data: [] },
+    ])
+
+    const { sessions } = parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')
+
+    expect(sessions.map(({ name, trainees }) => ({ name, emails: trainees.map(({ email }) => email) }))).toEqual([
+      { name: 'First', emails: winner === 'First' ? ['trainee@example.org'] : [] },
+      { name: 'Second', emails: winner === 'Second' ? ['trainee@example.org'] : [] },
+      { name: 'Other type', emails: ['trainee@example.org'] },
+    ])
+    expect(sessions.map(({ type }) => type)).toEqual(['M1', 'M1', 'M2'])
+  })
+
+  it.each([
+    [46278, 46277, 'M1'],
+    [46277, 46278, 'M2'],
+    [undefined, undefined, 'M2'],
+  ])('selects the most recent session definition, then the lowest row', (firstDate, secondDate, type) => {
+    jest.mocked(xlsx.parse).mockReturnValue([
+      {
+        name: 'Sessions',
+        data: [
+          [
+            'Nom de la session',
+            'Date de début',
+            'Date de fin',
+            'Environment',
+            'Type de formation',
+            "Date d'ajout/modification de cette ligne",
+          ],
+          ['Session', 46277, 46377, 'BC', 'M1', firstDate],
+          ['Session', 46277, 46377, 'BC', 'M2', secondDate],
+        ],
+      },
+      { name: 'Stagiaires', data: [] },
+      { name: 'Formateur', data: [] },
+    ])
+
+    expect(parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1').sessions).toEqual([
+      expect.objectContaining({ name: 'Session', type }),
+    ])
+  })
+
+  it('rejects invalid modification dates instead of using row order', () => {
+    jest.mocked(xlsx.parse).mockReturnValue([
+      workbook[0],
+      {
+        name: 'Stagiaires',
+        data: [
+          ['Nom de la session', 'Email', 'Prénom', 'Nom', "Date d'ajout/modification de cette ligne"],
+          ['Session Numéro 1', 'trainee@example.org', 'First', 'Trainee', 'invalid date'],
+        ],
+      },
+      { name: 'Formateur', data: [] },
+    ])
+
+    expect(() => parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')).toThrow(
+      "Invalid Date d'ajout/modification de cette ligne in training sessions file",
+    )
+  })
+
+  it('moves an existing trainee from a conflicting session, including one absent from Excel', async () => {
+    const current = savedSessions.map(withParticipants)
+    const previous = { ...current[0], id: 'old-session', name: 'Old session' }
+    const otherType = { ...previous, id: 'other-type', type: 'M2' }
+    const otherOrganism = { ...previous, id: 'other-organism', courseOrganismId: 'organism-2' }
+    const after = { ...previous, traineeOrganizations: [] }
+    mockFindCourseSessions
+      .mockResolvedValueOnce([previous, otherType, otherOrganism])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([...current, after, otherType, otherOrganism])
+    mockDeleteTrainees.mockResolvedValueOnce({ count: 2 })
+    mockCreateUsersWithAccount.mockResolvedValue({
+      newUsers: { count: 0 },
+      newAccounts: { count: 0 },
+    })
+
+    await expect(importCourseSessionsFromFTP()).resolves.toEqual({
+      importedSessions: 2,
+      modifiedSessions: 0,
+      createdUsers: 0,
+      createdAccounts: 0,
+      addedTrainees: 4,
+      addedProfessors: 2,
+      deletedSessions: 0,
+      deletedTrainees: 2,
+      deletedProfessors: 0,
+    })
+    expect(mockDeleteTrainees).toHaveBeenCalledTimes(1)
+    expect(mockDeleteTrainees).toHaveBeenCalledWith({
+      where: {
+        courseSessionId: 'old-session',
+        organizationVersion: {
+          userAccounts: {
+            some: {
+              user: {
+                email: { in: ['test.abc2@abc-transitionbascarbone.fr', 'test.abc@abc-transitionbascarbone.fr'] },
+              },
+            },
+          },
+        },
+      },
+    })
+    expect(mockUpsertCourseSession.mock.calls[0][0]).toEqual(
+      expect.objectContaining({
+        create: expect.objectContaining({ type: 'M1' }),
+        update: expect.objectContaining({ type: 'M1' }),
+      }),
+    )
+    expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalledWith(
+      'contact@example.org',
+      'Partner A',
+      expect.any(Array),
+      [
+        expect.objectContaining({
+          name: 'Old session',
+          removedTrainees: previous.traineeOrganizations.flatMap(({ organizationVersion }) =>
+            organizationVersion.userAccounts.map(({ user }) => user),
+          ),
+        }),
+      ],
+    )
+  })
+
+  it('removes the losing registration when both sessions are present in Excel', async () => {
+    jest.mocked(xlsx.parse).mockReturnValue([
+      {
+        name: 'Sessions',
+        data: [
+          ['Nom de la session', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
+          ['Session Numéro 1', 46277, 46377, 'BC', 'M1'],
+          ['Session Numéro 2', 46368, 46508, 'BC', 'M1'],
+        ],
+      },
+      {
+        name: 'Stagiaires',
+        data: [
+          ['Nom de la session', 'Email', 'Prénom', 'Nom'],
+          ['Session Numéro 1', 'test.abc2@abc-transitionbascarbone.fr', 'Test', 'ABC'],
+          ['Session Numéro 2', 'test.abc2@abc-transitionbascarbone.fr', 'Test', 'ABC'],
+        ],
+      },
+      { name: 'Formateur', data: [] },
+    ])
+    const first = withParticipants(savedSessions[0])
+    const second = withParticipants({ ...savedSessions[1], environment: Environment.COURSE_BC, type: 'M1' })
+    const before = { ...first, traineeOrganizations: second.traineeOrganizations }
+    mockFindCourseSessions
+      .mockResolvedValueOnce([before, { ...second, traineeOrganizations: [] }])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([first, second])
+    mockUpsertCourseSession.mockReset().mockResolvedValueOnce(first).mockResolvedValueOnce(second)
+    mockDeleteTrainees.mockResolvedValueOnce({ count: 1 })
+    mockCreateUsersWithAccount.mockResolvedValue({ newUsers: { count: 0 }, newAccounts: { count: 0 } })
+
+    await expect(importCourseSessionsFromFTP()).resolves.toEqual({
+      importedSessions: 0,
+      modifiedSessions: 0,
+      createdUsers: 0,
+      createdAccounts: 0,
+      addedTrainees: 1,
+      addedProfessors: 0,
+      deletedSessions: 0,
+      deletedTrainees: 1,
+      deletedProfessors: 0,
+    })
+    expect(mockDeleteTrainees).toHaveBeenCalledWith({
+      where: {
+        courseSessionId: first.id,
+        organizationVersion: {
+          userAccounts: { some: { user: { email: { in: ['test.abc2@abc-transitionbascarbone.fr'] } } } },
+        },
+      },
+    })
+    expect(mockUpsertCourseSession.mock.calls[0][0].update?.traineeOrganizations).toEqual({
+      createMany: { data: [], skipDuplicates: true },
+    })
+    expect(mockFindCourseSessions).toHaveBeenNthCalledWith(1, {
+      where: {
+        OR: expect.arrayContaining([
+          {
+            courseOrganismId: 'organism-1',
+            type: 'M1',
+            traineeOrganizations: {
+              some: {
+                organizationVersion: {
+                  userAccounts: { some: { user: { email: { in: ['test.abc2@abc-transitionbascarbone.fr'] } } } },
+                },
+              },
+            },
+          },
+        ]),
+      },
+      select: expect.any(Object),
+    })
   })
 
   it.each([
