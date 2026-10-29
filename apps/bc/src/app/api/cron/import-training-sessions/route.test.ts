@@ -52,7 +52,17 @@ describe('POST /api/cron/import-training-sessions', () => {
 
   it('returns 200 when import succeeds', async () => {
     jest.mocked(checkCronRequest).mockReturnValue(null)
-    const importResult = { importedSessions: 2, createdUsers: 1, createdAccounts: 3 }
+    const importResult = {
+      importedSessions: 2,
+      modifiedSessions: 1,
+      createdUsers: 1,
+      createdAccounts: 3,
+      addedTrainees: 2,
+      addedProfessors: 1,
+      deletedSessions: 0,
+      deletedTrainees: 0,
+      deletedProfessors: 0,
+    }
     jest.mocked(importCourseSessionsFromFTP).mockResolvedValue(importResult)
 
     const response = await POST(req)
