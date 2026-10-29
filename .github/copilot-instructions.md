@@ -2,8 +2,8 @@
 
 ## Règles
 
-Ne lance jamais une commande dans le terminal sans en demander l'approbation. Quand on approuve une commande, celle-ci et uniquement celle-ci est approuvée. 
-Ne lance jamais une commande git qui modifie l'état du dépôt (uniquement des commandes en lecture telles que git status, show etc...).
+Do not run commands in the terminal without approval. When we approve a command, only that command is approved.
+Do not run git commands that edit the repository state (only read-only commands like git status, show, etc. are allowed).
 
 ## Scope
 
