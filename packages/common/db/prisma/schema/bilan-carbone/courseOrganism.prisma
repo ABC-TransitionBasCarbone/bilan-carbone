@@ -22,6 +22,7 @@ model CourseSession {
   startDate   DateTime    @map("start_date")
   endDate     DateTime    @map("end_date")
   name        String
+  type        String?
   environment Environment
   code        String      @unique
 
