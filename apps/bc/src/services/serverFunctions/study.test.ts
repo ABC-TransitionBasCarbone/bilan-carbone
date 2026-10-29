@@ -1,5 +1,12 @@
 import * as studyUtilsModule from '@/utils/study'
-import { CourseSessionType, Environment, Import, StudyRole, SubPost } from '@abc-transitionbascarbone/common/db/enums'
+import {
+  CourseSessionType,
+  Environment,
+  Import,
+  StudyRole,
+  SubPost,
+  UserStatus,
+} from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { expect } from '@jest/globals'
 import { v4 as uuidv4 } from 'uuid'
@@ -26,6 +33,7 @@ import {
 import { getMockedDbActualizedAuth } from '../../tests/utils/models/user'
 import * as organizationUtilsModule from '../../utils/organization'
 import * as userUtilsModule from '../../utils/user'
+import { newStudyContributor } from './study'
 import type { CreateStudyCommand, DuplicateSiteCommand } from './study.command'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
@@ -82,6 +90,7 @@ jest.mock('../../services/permissions/study', () => ({
   hasEditionRights: jest.fn(),
   canCreateSpecificStudy: jest.fn(),
   canDuplicateStudy: jest.fn(),
+  canAddContributorOnStudy: jest.fn(),
   canChangeSites: jest.fn(),
   canChangeDates: jest.fn(),
   canChangePublicStatus: jest.fn(),
@@ -105,11 +114,13 @@ jest.mock('../../db/organization', () => ({
   isOrganizationVersionCR: jest.fn(),
 }))
 jest.mock('../../db/user', () => ({
+  updateAccount: jest.fn(),
   getUserByEmail: jest.fn(),
   getUserApplicationSettings: jest.fn(),
   getUserSourceById: jest.fn(),
 }))
 jest.mock('../../db/account', () => ({
+  addAccount: jest.fn(),
   getAccountByEmailAndOrganizationVersionId: jest.fn(),
   getAccountByEmailAndEnvironment: jest.fn(),
 }))
@@ -238,7 +249,9 @@ const mockUpdateStudyEmissionFactorVersion = studyDbModule.updateStudyEmissionFa
 const mockCreateContributorOnStudy = studyDbModule.createContributorOnStudy as jest.Mock
 const mockCreateEmissionSourceTags = studyDbModule.createEmissionSourceTags as jest.Mock
 const mockAddUserChecklistItem = userModule.addUserChecklistItem as jest.Mock
+const mockSendInvitation = userModule.sendInvitation as jest.Mock
 const mockGetOrganizationVersionById = organizationModule.getOrganizationVersionById as jest.Mock
+const mockAddAccount = accountModule.addAccount as jest.Mock
 const mockGetOrgSitesWithCNCByOrgVersionId = organizationModule.getOrgSitesWithCNCByOrgVersionId as jest.Mock
 const mockGetUserByEmail = userDbModule.getUserByEmail as jest.Mock
 const mockGetUserApplicationSettings = userDbModule.getUserApplicationSettings as jest.Mock
@@ -250,6 +263,7 @@ const mockGetAccountRoleOnStudy = studyUtilsModule.getAccountRoleOnStudy as jest
 const mockHasSufficientLevel = studyUtilsModule.hasSufficientLevel as jest.Mock
 const mockCanCreateSpecificStudy = studyPermissionsModule.canCreateSpecificStudy as jest.Mock
 const mockCanDuplicateStudy = studyPermissionsModule.canDuplicateStudy as jest.Mock
+const mockCanAddContributorOnStudy = studyPermissionsModule.canAddContributorOnStudy as jest.Mock
 const mockGetEmissionFactorsImportActiveVersion =
   emissionFactorsModule.getEmissionFactorsImportActiveVersion as jest.Mock
 const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
@@ -400,7 +414,7 @@ describe('study', () => {
     }
 
     const setupInvitationMocks = () => {
-      mockGetUserByEmail.mockResolvedValue({ id: 'existing-user-id' })
+      mockGetUserByEmail.mockResolvedValue({ id: 'existing-user-id', accounts: [] })
       mockGetUserSourceById.mockResolvedValue({ source: 'BC' })
       mockGetAccountByEmailAndEnvironment.mockResolvedValue({ id: 'account-by-email-env-id' })
     }
@@ -782,6 +796,51 @@ describe('study', () => {
         expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
         expect(mockCreateContributorOnStudy).toHaveBeenCalled()
         expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
+      })
+
+      it('should activate a new environment account for an already active study contributor', async () => {
+        const study = {
+          id: 'study-id',
+          organizationVersionId: 'target-organization-version-id',
+          organizationVersion: {
+            id: 'target-organization-version-id',
+            environment: Environment.TILT,
+            organization: { name: 'Target organization' },
+          },
+          allowedUsers: [],
+        }
+        const account = { id: 'new-environment-account-id', status: UserStatus.ACTIVE }
+        mockGetStudyById.mockResolvedValue(study)
+        mockGetOrganizationVersionById.mockResolvedValue(study.organizationVersion)
+        mockGetAccountByEmailAndOrganizationVersionId.mockResolvedValue(null)
+        mockGetUserByEmail.mockResolvedValue({
+          id: 'existing-user-id',
+          accounts: [{ environment: Environment.BC, status: UserStatus.ACTIVE }],
+        })
+        mockGetAccountByEmailAndEnvironment.mockResolvedValue(null)
+        mockAddAccount.mockResolvedValue(account)
+        mockCanAddContributorOnStudy.mockReturnValue(true)
+
+        const result = await newStudyContributor({
+          studyId: study.id,
+          email: 'contributor@example.com',
+          firstName: 'Contributor',
+          subPosts: { default: [SubPost.Achats] },
+        })
+
+        expect(result).toEqual({ success: true, data: undefined })
+        expect(mockAddAccount).toHaveBeenCalledWith(
+          expect.objectContaining({ environment: Environment.TILT, status: UserStatus.ACTIVE }),
+        )
+        expect(mockSendInvitation).toHaveBeenCalledWith(
+          expect.any(String),
+          study,
+          study.organizationVersion.organization,
+          expect.any(Object),
+          '',
+          Environment.TILT,
+          account,
+        )
       })
 
       it('should skip current user when inviting team members', async () => {
@@ -1194,7 +1253,7 @@ describe('study', () => {
 
     beforeEach(() => {
       jest.clearAllMocks()
-      ;(authModule.dbActualizedAuth as jest.Mock).mockResolvedValue(mockedSession)
+        ; (authModule.dbActualizedAuth as jest.Mock).mockResolvedValue(mockedSession)
       mockGetStudyById.mockResolvedValue(mockedStudy)
       mockCanChangeDates.mockResolvedValue(true)
       mockGetTransitionPlanByStudyId.mockResolvedValue(null)
