@@ -75,8 +75,6 @@ const handleSessionTab = (worksheets: Worksheet[], deletedSessionNames: Set<stri
       continue
     }
 
-    sessionTimestamps.set(name, timestamp)
-
     const typeValue = record['Type de formation'] ?? record['type de formation']
     if (typeValue != null && typeof typeValue !== 'string') {
       console.error(`Invalid Type de formation for training session: ${name}`)
@@ -92,6 +90,7 @@ const handleSessionTab = (worksheets: Worksheet[], deletedSessionNames: Set<stri
       continue
     }
 
+    sessionTimestamps.set(name, timestamp)
     sessions.set(name, {
       courseOrganismId,
       name,
