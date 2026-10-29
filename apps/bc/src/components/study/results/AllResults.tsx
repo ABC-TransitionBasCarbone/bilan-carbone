@@ -3,7 +3,7 @@
 import { EmissionFactorWithParts } from '@/db/emissionFactors'
 import type { FullStudy } from '@/db/study'
 import { useTransitionPlanFilters } from '@/hooks/useTransitionPlanFilters'
-import { download } from '@/services/fileDownloadClient'
+import { download } from '@/services/fileDownload'
 import {
   hasAccessToBcExport,
   hasAccessToDownloadStudyEmissionSourcesButton,
