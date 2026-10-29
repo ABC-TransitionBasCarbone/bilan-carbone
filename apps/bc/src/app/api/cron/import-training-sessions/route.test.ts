@@ -1,5 +1,5 @@
 import { checkCronRequest } from '@/app/api/cron/utils'
-import { importCourseSessionsFromFTP } from '@/scripts/ftp/importTrainingSessions'
+import { importCourseSessionsFromFTP } from '@/scripts/ftp/importTrainingSessions/importTrainingSessions'
 import { NextResponse, type NextRequest } from 'next/server'
 import { POST } from './route'
 
@@ -24,7 +24,7 @@ jest.mock('@/app/api/cron/utils', () => ({
   checkCronRequest: jest.fn(),
 }))
 
-jest.mock('@/scripts/ftp/importTrainingSessions', () => ({
+jest.mock('@/scripts/ftp/importTrainingSessions/importTrainingSessions', () => ({
   importCourseSessionsFromFTP: jest.fn(),
 }))
 
