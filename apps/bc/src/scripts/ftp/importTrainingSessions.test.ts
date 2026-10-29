@@ -103,7 +103,7 @@ const workbook = [
   {
     name: 'Stagiaires',
     data: [
-      ['Nom de la session ', 'Stagiaires', 'Prénom', 'Nom'],
+      ['Nom de la session ', 'Email', 'Prénom', 'Nom'],
       ['Session Numéro 1', 'test.abc2@abc-transitionbascarbone.fr', 'Test', 'ABC'],
       ['Session Numéro 2 ', 'bc-admin-0@yopmail.com', 'Admin', 'BC'],
       ['Session Numéro 1', 'test.abc@abc-transitionbascarbone.fr', 'Test', 'ABC'],
@@ -113,7 +113,7 @@ const workbook = [
   {
     name: 'Formateur',
     data: [
-      ['Nom de la session ', 'Formateur', 'Prénom', 'Nom'],
+      ['Nom de la session ', 'Email', 'Prénom', 'Nom'],
       ['Session Numéro 1', 'onboarding@yopmail.com', 'Onboarding', 'Yopmail'],
       ['Session Numéro 2 ', 'bc-cr-admin-0@yopmail.com', 'Admin', 'CR'],
     ],
@@ -181,6 +181,9 @@ describe('getCourseSessionsFromFTP', () => {
       .mockReset()
       .mockResolvedValueOnce(withParticipants(savedSessions[0]))
       .mockResolvedValueOnce(withParticipants(savedSessions[1]))
+    mockDeleteCourseSessions.mockResolvedValue({ count: 0 })
+    mockDeleteTrainees.mockResolvedValue({ count: 0 })
+    mockUpdateCourseSessions.mockResolvedValue({ count: 0 })
     mockSendCourseSessionsCreatedEmail.mockReset()
   })
 
@@ -251,8 +254,14 @@ describe('getCourseSessionsFromFTP', () => {
 
     await expect(importCourseSessionsFromFTP()).resolves.toEqual({
       importedSessions: 1,
+      modifiedSessions: 0,
       createdUsers: 2,
       createdAccounts: 2,
+      addedTrainees: 2,
+      addedProfessors: 0,
+      deletedSessions: 0,
+      deletedTrainees: 0,
+      deletedProfessors: 0,
     })
 
     expect(mockCreateUsersWithAccount).toHaveBeenCalledWith([
@@ -462,7 +471,17 @@ describe('getCourseSessionsFromFTP', () => {
   })
 
   it('sends a single email containing the saved codes and participants of all new sessions', async () => {
-    await importCourseSessionsFromFTP()
+    await expect(importCourseSessionsFromFTP()).resolves.toEqual({
+      importedSessions: 2,
+      modifiedSessions: 0,
+      createdUsers: 6,
+      createdAccounts: 6,
+      addedTrainees: 4,
+      addedProfessors: 2,
+      deletedSessions: 0,
+      deletedTrainees: 0,
+      deletedProfessors: 0,
+    })
 
     expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalledTimes(1)
     expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalledWith(
@@ -565,7 +584,17 @@ describe('getCourseSessionsFromFTP', () => {
       .mockResolvedValueOnce(withParticipants(savedSessions[1]))
     mockFindCourseSessions.mockResolvedValueOnce([before])
 
-    await importCourseSessionsFromFTP()
+    await expect(importCourseSessionsFromFTP()).resolves.toEqual({
+      importedSessions: 1,
+      modifiedSessions: 1,
+      createdUsers: 6,
+      createdAccounts: 6,
+      addedTrainees: 3,
+      addedProfessors: 2,
+      deletedSessions: 0,
+      deletedTrainees: 0,
+      deletedProfessors: 0,
+    })
 
     expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalledTimes(1)
     expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalledWith(
@@ -661,8 +690,14 @@ describe('getCourseSessionsFromFTP', () => {
 
     await expect(importCourseSessionsFromFTP()).resolves.toEqual({
       importedSessions: 0,
+      modifiedSessions: 0,
       createdUsers: 0,
       createdAccounts: 0,
+      addedTrainees: 0,
+      addedProfessors: 0,
+      deletedSessions: 0,
+      deletedTrainees: 0,
+      deletedProfessors: 0,
     })
     expect(mockSendCourseSessionsCreatedEmail).not.toHaveBeenCalled()
   })
@@ -742,8 +777,14 @@ describe('getCourseSessionsFromFTP', () => {
 
     await expect(importCourseSessionsFromFTP()).resolves.toEqual({
       importedSessions: 1,
+      modifiedSessions: 0,
       createdUsers: 6,
       createdAccounts: 6,
+      addedTrainees: 2,
+      addedProfessors: 1,
+      deletedSessions: 0,
+      deletedTrainees: 0,
+      deletedProfessors: 0,
     })
     expect(mockUpsertCourseSession).toHaveBeenCalledTimes(1)
   })
@@ -841,8 +882,20 @@ describe('getCourseSessionsFromFTP', () => {
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([after, previous[1]])
     mockUpsertCourseSession.mockReset().mockResolvedValueOnce(after).mockResolvedValueOnce(previous[1])
+    mockDeleteTrainees.mockResolvedValueOnce({ count: 1 })
+    mockUpdateCourseSessions.mockResolvedValueOnce({ count: 1 })
 
-    await importCourseSessionsFromFTP()
+    await expect(importCourseSessionsFromFTP()).resolves.toEqual({
+      importedSessions: 0,
+      modifiedSessions: 0,
+      createdUsers: 6,
+      createdAccounts: 6,
+      addedTrainees: 0,
+      addedProfessors: 0,
+      deletedSessions: 0,
+      deletedTrainees: 1,
+      deletedProfessors: 1,
+    })
 
     expect(mockDeleteTrainees).toHaveBeenCalledWith({
       where: {
@@ -894,6 +947,7 @@ describe('getCourseSessionsFromFTP', () => {
   })
 
   it('deletes sessions in both environments without recreating them or their participants', async () => {
+    mockDeleteCourseSessions.mockResolvedValueOnce({ count: 1 }).mockResolvedValueOnce({ count: 1 })
     jest.mocked(xlsx.parse).mockReturnValue([
       ...workbook,
       {
@@ -908,8 +962,14 @@ describe('getCourseSessionsFromFTP', () => {
 
     await expect(importCourseSessionsFromFTP()).resolves.toEqual({
       importedSessions: 0,
+      modifiedSessions: 0,
       createdUsers: 0,
       createdAccounts: 0,
+      addedTrainees: 0,
+      addedProfessors: 0,
+      deletedSessions: 2,
+      deletedTrainees: 0,
+      deletedProfessors: 0,
     })
 
     expect(mockDeleteCourseSessions.mock.calls).toEqual([
@@ -940,11 +1000,18 @@ describe('getCourseSessionsFromFTP', () => {
       .mockResolvedValueOnce([after])
       .mockResolvedValueOnce([after])
       .mockResolvedValueOnce([after])
+    mockDeleteTrainees.mockResolvedValueOnce({ count: 1 })
 
     await expect(importCourseSessionsFromFTP()).resolves.toEqual({
       importedSessions: 0,
+      modifiedSessions: 0,
       createdUsers: 0,
       createdAccounts: 0,
+      addedTrainees: 0,
+      addedProfessors: 0,
+      deletedSessions: 0,
+      deletedTrainees: 1,
+      deletedProfessors: 0,
     })
     await importCourseSessionsFromFTP()
 

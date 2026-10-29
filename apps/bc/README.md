@@ -131,6 +131,7 @@ Create training studies for users who have started or ended a formation : `curl 
 
 Import training sessions from the FTP server: `curl -X POST $NEXT_API_URL/cron/import-training-sessions -H "Authorization: ******"`.
 I
+
 ### Import Secten data
 
 Import Secten data by creating a new version or updating an existing version if the version name is already used :
