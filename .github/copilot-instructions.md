@@ -1,5 +1,10 @@
 # Copilot Instructions for bc and mip
 
+## Règles
+
+Do not run commands in the terminal without approval. When we approve a command, only that command is approved.
+Do not run git commands that edit the repository state (only read-only commands like git status, show, etc. are allowed).
+
 ## Scope
 
 Monorepo Next.js (Yarn workspaces + Turbo) for carbon accounting products:

@@ -26,7 +26,7 @@ enum UserChecklist {
 model Account {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
   userId    String   @map("user_id")
   user      User     @relation(fields: [userId], references: [id])
 
@@ -59,9 +59,6 @@ model Account {
   formationName      String?   @map("formation_name")
   formationStartDate DateTime? @map("formation_start_date")
   formationEndDate   DateTime? @map("formation_end_date")
-
-  professorCourseSessions CourseSession[] @relation("CourseSessionProfessor")
-  traineeCourseSessions  CourseSessionTrainee[]
 
   @@unique([userId, environment])
   @@map("accounts")

@@ -448,10 +448,14 @@ export const checkCourseActivation = async (email: string, sessionCode: string, 
         code: sessionCode.trim(),
         OR: [
           {
-            trainees: { some: { account: { user: { email: user.email } } } },
+            traineeOrganizations: {
+              some: {
+                organizationVersion: { userAccounts: { some: { user: { email: user.email } } } },
+              },
+            },
           },
           {
-            professor: { user: { email: user.email } },
+            professorOrganization: { userAccounts: { some: { user: { email: user.email } } } },
           },
         ],
       },
@@ -487,6 +491,7 @@ export const activateEmailForCourse = async (
       async (transaction) => {
         await validateUser(account.id, transaction)
         await updateUserPasswordForEmail(user.email, password, environment, transaction)
+        await updateAccount(account.id, { role: Role.ADMIN }, {}, transaction)
       },
       {
         isolationLevel: 'Serializable',

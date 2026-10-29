@@ -13,7 +13,15 @@ import {
   StudyWithRoleFields,
 } from '@/utils/study'
 import type { Prisma, Study, User } from '@abc-transitionbascarbone/common/db'
-import { DeactivatableFeature, Environment, Level, Role, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
+import {
+  DeactivatableFeature,
+  Environment,
+  Level,
+  Role,
+  StudyRole,
+  UserStatus,
+} from '@abc-transitionbascarbone/common/db/enums'
+import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
@@ -80,9 +88,19 @@ export const filterAllowedStudies = async (user: UserSession, studies: Study[]) 
 }
 
 export const canCreateAStudy = async (
-  user: Pick<UserSession, 'level' | 'role' | 'organizationVersionId' | 'environment'>,
+  user: Pick<UserSession, 'level' | 'role' | 'organizationVersionId' | 'environment' | 'accountId'>,
   simplified: boolean = false,
 ) => {
+  if (isCourseEnvironment(user.environment)) {
+    const account = await getAccountById(user.accountId)
+
+    if (!account || account.status !== UserStatus.ACTIVE) {
+      return false
+    }
+
+    return true
+  }
+
   if (simplified && !user.level && isTilt(user.environment)) {
     const isTiltSimplifiedActive = await isTiltSimplifiedFeatureActive(user.environment)
     if (!isTiltSimplifiedActive) {
@@ -124,10 +142,9 @@ const canCreateSpecificStudyCommon = async (
   return {
     allowed: canCreateAStudy(
       {
+        ...dbAccount,
         level: dbAccount.user.level,
-        organizationVersionId: dbAccount.organizationVersionId,
-        role: dbAccount.role,
-        environment: dbAccount.environment,
+        accountId: dbAccount.id,
       },
       simplified,
     ),

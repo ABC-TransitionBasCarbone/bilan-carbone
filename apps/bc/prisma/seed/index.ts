@@ -5,6 +5,7 @@ import { getAllowedLevels } from '@/utils/study'
 import type { Account, User } from '@abc-transitionbascarbone/common/db'
 import { PrismaClient } from '@abc-transitionbascarbone/common/db'
 import {
+  CourseSessionTraineeOrganizationStatus,
   EmissionFactorBase,
   EmissionFactorStatus,
   Environment,
@@ -1096,6 +1097,29 @@ const users = async () => {
     if (!courseOrganizationVersionId || !courseDefaultWithAccount?.accounts[0]) {
       throw new Error('Course test accounts must belong to an organization version')
     }
+
+    await prisma.courseSession.create({
+      data: {
+        name: `Course test session ${courseEnv}`,
+        environment: courseEnv,
+        code: `course-test-${i}`,
+        startDate: faker.date.past(),
+        endDate: faker.date.future(),
+        courseOrganism: {
+          create: {
+            name: `Course test organism ${courseEnv}`,
+            contactEmail: 'course-organism@example.org',
+            ftpPath: `course-test-${i}`,
+          },
+        },
+        traineeOrganizations: {
+          create: {
+            organizationVersionId: courseOrganizationVersionId,
+            courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
+          },
+        },
+      },
+    })
 
     await prisma.account.update({
       where: { id: courseDefaultWithAccount.accounts[0].account.id },

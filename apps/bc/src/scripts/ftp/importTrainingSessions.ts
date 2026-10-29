@@ -2,7 +2,13 @@ import { prismaClient } from '@/db/client.server'
 import { createUsersWithAccount } from '@/db/user'
 import { getRecords, type Worksheet } from '@/utils/excel.utils'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
-import { Environment, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import {
+  CourseSessionTraineeOrganizationStatus,
+  Environment,
+  Role,
+  UserSource,
+  UserStatus,
+} from '@abc-transitionbascarbone/common/db/enums'
 import {
   sendCourseSessionsCreatedEmail,
   type TrainingSessionUpdate,
@@ -37,12 +43,16 @@ const COURSE_ENVIRONMENT_BY_WORKBOOK_VALUE: Record<string, Environment> = {
 
 const sessionEmailSelect = {
   id: true,
-  trainees: {
+  traineeOrganizations: {
     select: {
-      account: { select: { user: { select: { email: true, firstName: true, lastName: true } } } },
+      organizationVersion: {
+        select: { userAccounts: { select: { user: { select: { email: true, firstName: true, lastName: true } } } } },
+      },
     },
   },
-  professor: { select: { user: { select: { email: true, firstName: true, lastName: true } } } },
+  professorOrganization: {
+    select: { userAccounts: { select: { user: { select: { email: true, firstName: true, lastName: true } } } } },
+  },
   courseOrganismId: true,
   name: true,
   environment: true,
@@ -53,6 +63,13 @@ const sessionEmailSelect = {
 
 type SavedCourseSession = Prisma.CourseSessionGetPayload<{ select: typeof sessionEmailSelect }>
 
+const getProfessor = (session: SavedCourseSession) => session.professorOrganization?.userAccounts[0]?.user ?? null
+
+const getTrainees = (session: SavedCourseSession) =>
+  session.traineeOrganizations.flatMap(({ organizationVersion }) =>
+    organizationVersion.userAccounts.map(({ user }) => user),
+  )
+
 const getSessionUpdate = (before: SavedCourseSession, after: SavedCourseSession): TrainingSessionUpdate | null => {
   const dates: TrainingSessionUpdate['dates'] = []
   if (before.startDate.getTime() !== after.startDate.getTime()) {
@@ -61,16 +78,16 @@ const getSessionUpdate = (before: SavedCourseSession, after: SavedCourseSession)
   if (before.endDate.getTime() !== after.endDate.getTime()) {
     dates.push({ label: 'Date de fin', before: before.endDate, after: after.endDate })
   }
-  const previousTrainees = before.trainees.map(({ account }) => account.user)
-  const currentTrainees = after.trainees.map(({ account }) => account.user)
+  const previousTrainees = getTrainees(before)
+  const currentTrainees = getTrainees(after)
   const previousEmails = new Set(previousTrainees.map(({ email }) => email))
   const currentEmails = new Set(currentTrainees.map(({ email }) => email))
   const addedTrainees = currentTrainees.filter(({ email }) => !previousEmails.has(email))
   const removedTrainees = previousTrainees.filter(({ email }) => !currentEmails.has(email))
+  const previousProfessor = getProfessor(before)
+  const currentProfessor = getProfessor(after)
   const professor =
-    before.professor?.user.email !== after.professor?.user.email
-      ? { before: before.professor?.user ?? null, after: after.professor?.user ?? null }
-      : null
+    previousProfessor?.email !== currentProfessor?.email ? { before: previousProfessor, after: currentProfessor } : null
   if (!dates.length && !professor && !addedTrainees.length && !removedTrainees.length) {
     return null
   }
@@ -118,7 +135,7 @@ const getRequiredDate = (record: Record<string, unknown>, field: string) => {
     typeof value === 'number'
       ? getJsDateFromExcel(value)
       : value instanceof Date
-        ? value
+        ? new Date(value)
         : typeof value === 'string'
           ? new Date(value)
           : undefined
@@ -126,6 +143,7 @@ const getRequiredDate = (record: Record<string, unknown>, field: string) => {
   if (!date || Number.isNaN(date.getTime())) {
     throw new Error(`Invalid ${field} in training sessions file`)
   }
+  date.setUTCHours(0, 0, 0, 0)
   return date
 }
 
@@ -168,6 +186,7 @@ export const parseCourseSessionWorkbook = (data: Buffer, courseOrganismId: strin
 
     const startDate = getRequiredDate(record, 'Date de début')
     const endDate = getRequiredDate(record, 'Date de fin')
+    endDate.setUTCHours(23, 59, 59, 999)
     if (startDate > endDate) {
       throw new Error(`Invalid date range for training session: ${name}`)
     }
@@ -246,23 +265,22 @@ export const getCourseSessionsFromFTP = async (): Promise<CourseSession[]> => {
   }
 }
 
-const getAccountId = (
+const getOrganizationVersionId = (
   accounts: {
-    id: string
     organizationVersionId: string | null
     environment: Environment
-    user: {
-      email: string
-      firstName: string
-      lastName: string
-    }
+    user: { email: string }
   }[],
   email: string,
   environment: Environment,
 ) => {
-  return accounts.find(
-    ({ user, environment: accEnvironment }) => user.email === email && accEnvironment === environment,
-  )?.id
+  const organizationVersionId = accounts.find(
+    ({ user, environment: accountEnvironment }) => user.email === email && accountEnvironment === environment,
+  )?.organizationVersionId
+  if (!organizationVersionId) {
+    throw new Error(`Missing organization version for course participant ${email}`)
+  }
+  return organizationVersionId
 }
 
 export const importCourseSessionsFromFTP = async () => {
@@ -271,8 +289,12 @@ export const importCourseSessionsFromFTP = async () => {
     return { importedSessions: 0, createdUsers: 0, createdAccounts: 0 }
   }
 
+  const today = new Date()
+  today.setUTCHours(0, 0, 0, 0)
+  const notFinishedSessions = sessions.filter(({ endDate }) => endDate >= today)
+
   const userAccountEntries = []
-  for (const session of sessions) {
+  for (const session of notFinishedSessions) {
     for (const participant of session.trainees) {
       userAccountEntries.push({ ...participant, environment: session.environment })
     }
@@ -298,7 +320,7 @@ export const importCourseSessionsFromFTP = async () => {
 
   const accounts = await prismaClient.account.findMany({
     where: {
-      environment: { in: [...new Set(sessions.map(({ environment }) => environment))] },
+      environment: { in: [...new Set(notFinishedSessions.map(({ environment }) => environment))] },
       user: { email: { in: userAccountEntries.map(({ email }) => email) } },
     },
     select: {
@@ -308,7 +330,7 @@ export const importCourseSessionsFromFTP = async () => {
       user: { select: { email: true, firstName: true, lastName: true } },
     },
   })
-  await prismaClient.$transaction(
+  const createdOrganizationVersions = await prismaClient.$transaction(
     accounts
       .filter(({ organizationVersionId }) => !organizationVersionId)
       .map((account) =>
@@ -322,24 +344,42 @@ export const importCourseSessionsFromFTP = async () => {
               },
             },
           },
+          select: { id: true, organizationVersionId: true },
         }),
       ),
   )
+  const createdOrganizationVersionIds = new Map(
+    createdOrganizationVersions.map(({ id, organizationVersionId }) => [id, organizationVersionId]),
+  )
+  const accountsWithOrganizationVersions = accounts.map((account) => ({
+    ...account,
+    organizationVersionId: account.organizationVersionId ?? createdOrganizationVersionIds.get(account.id) ?? null,
+  }))
 
   const existingSessions = await prismaClient.courseSession.findMany({
     where: {
-      OR: sessions.map(({ courseOrganismId, name, environment }) => ({ courseOrganismId, name, environment })),
+      OR: notFinishedSessions.map(({ courseOrganismId, name, environment }) => ({
+        courseOrganismId,
+        name,
+        environment,
+      })),
     },
     select: sessionEmailSelect,
   })
 
   const importedSessions = await prismaClient.$transaction(async (transaction) => {
     const importedSessionsPromises = []
-    for (const session of sessions) {
-      const professorId = session.professor
-        ? getAccountId(accounts, session.professor.email, session.environment)
+    for (const session of notFinishedSessions) {
+      const courseStatus =
+        session.startDate <= today
+          ? CourseSessionTraineeOrganizationStatus.ACTIVE
+          : CourseSessionTraineeOrganizationStatus.INACTIVE
+      const professorOrganizationVersionId = session.professor
+        ? getOrganizationVersionId(accountsWithOrganizationVersions, session.professor.email, session.environment)
         : null
-      const traineeIds = session.trainees.map(({ email }) => getAccountId(accounts, email, session.environment))
+      const traineeOrganizationVersionIds = session.trainees.map(({ email }) =>
+        getOrganizationVersionId(accountsWithOrganizationVersions, email, session.environment),
+      )
 
       let code = randomInt(99999999).toString()
 
@@ -376,18 +416,26 @@ export const importCourseSessionsFromFTP = async () => {
             startDate: session.startDate,
             endDate: session.endDate,
             code,
-            professorId,
-            trainees: {
-              create: traineeIds.map((accountId) => ({ account: { connect: { id: accountId } } })),
+            professorOrganizationVersionId,
+            traineeOrganizations: {
+              create: traineeOrganizationVersionIds.map((id) => ({
+                organizationVersion: { connect: { id } },
+                courseStatus,
+              })),
             },
           },
           update: {
             startDate: session.startDate,
             endDate: session.endDate,
-            professorId,
-            trainees: {
-              deleteMany: {},
-              create: traineeIds.map((accountId) => ({ account: { connect: { id: accountId } } })),
+            ...(professorOrganizationVersionId && { professorOrganizationVersionId }),
+            traineeOrganizations: {
+              createMany: {
+                data: traineeOrganizationVersionIds.map((organizationVersionId) => ({
+                  organizationVersionId,
+                  courseStatus,
+                })),
+                skipDuplicates: true,
+              },
             },
           },
         }),
@@ -408,8 +456,8 @@ export const importCourseSessionsFromFTP = async () => {
     .filter(({ id }) => !existingSessionIds.has(id))
     .map((session) => ({
       ...session,
-      trainees: session.trainees.map(({ account }) => account.user),
-      professor: session.professor?.user ?? null,
+      trainees: getTrainees(session),
+      professor: getProfessor(session),
     }))
 
   if (newSessions.length > 0 || updatedSessions.length > 0) {
@@ -440,5 +488,9 @@ export const importCourseSessionsFromFTP = async () => {
     }
   }
 
-  return { importedSessions: sessions.length, createdUsers: newUsers.count, createdAccounts: newAccounts.count }
+  return {
+    importedSessions: notFinishedSessions.length,
+    createdUsers: newUsers.count,
+    createdAccounts: newAccounts.count,
+  }
 }
