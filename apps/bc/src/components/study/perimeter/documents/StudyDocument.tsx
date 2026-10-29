@@ -4,7 +4,7 @@ import GlossaryIconModal from '@/components/modals/GlossaryIconModal'
 import type { FullStudy } from '@/db/study'
 import { DEFAULT_SAMPLE_TITLE, SAMPLE_TITLES } from '@/services/documents'
 import { allowedFlowFileTypes, maxAllowedFileSize, MB } from '@/services/file'
-import { downloadFromUrl } from '@/services/fileDownloadClient'
+import { downloadFromUrl } from '@/services/fileDownload'
 import {
   hasAccessToDependencyMatrixExample as hasAccessToDependencyMatrixSample,
   hasAccessToStudyFlowExample,
