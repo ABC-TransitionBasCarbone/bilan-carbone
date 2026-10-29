@@ -341,7 +341,17 @@ const getOrganizationVersionId = (
 export const importCourseSessionsFromFTP = async () => {
   const { sessions, deletions } = await getCourseSessionsFromFTP()
   if (sessions.length === 0 && deletions.length === 0) {
-    return { importedSessions: 0, createdUsers: 0, createdAccounts: 0 }
+    return {
+      importedSessions: 0,
+      modifiedSessions: 0,
+      createdUsers: 0,
+      createdAccounts: 0,
+      addedTrainees: 0,
+      addedProfessors: 0,
+      deletedSessions: 0,
+      deletedTrainees: 0,
+      deletedProfessors: 0,
+    }
   }
 
   const today = new Date()
@@ -425,6 +435,7 @@ export const importCourseSessionsFromFTP = async () => {
     })),
     ...deletions.map(({ courseOrganismId, name }) => ({ courseOrganismId, name })),
   ]
+  const deletedCounts = { deletedSessions: 0, deletedTrainees: 0, deletedProfessors: 0 }
   const existingSessions = await prismaClient.courseSession.findMany({
     where: {
       OR: affectedSessionsSQLRequest,
@@ -436,22 +447,26 @@ export const importCourseSessionsFromFTP = async () => {
     for (const deletion of deletions) {
       const where = { courseOrganismId: deletion.courseOrganismId, name: deletion.name }
       if (deletion.type === 'session') {
-        await transaction.courseSession.deleteMany({ where })
+        deletedCounts.deletedSessions += (await transaction.courseSession.deleteMany({ where })).count
       } else if (deletion.type === 'stagiaire') {
-        await transaction.courseSessionTraineeOrganization.deleteMany({
-          where: {
-            courseSession: where,
-            organizationVersion: { userAccounts: { some: { user: { email: deletion.email } } } },
-          },
-        })
+        deletedCounts.deletedTrainees += (
+          await transaction.courseSessionTraineeOrganization.deleteMany({
+            where: {
+              courseSession: where,
+              organizationVersion: { userAccounts: { some: { user: { email: deletion.email } } } },
+            },
+          })
+        ).count
       } else {
-        await transaction.courseSession.updateMany({
-          where: {
-            ...where,
-            professorOrganization: { userAccounts: { some: { user: { email: deletion.email } } } },
-          },
-          data: { professorOrganizationVersionId: null },
-        })
+        deletedCounts.deletedProfessors += (
+          await transaction.courseSession.updateMany({
+            where: {
+              ...where,
+              professorOrganization: { userAccounts: { some: { user: { email: deletion.email } } } },
+            },
+            data: { professorOrganizationVersionId: null },
+          })
+        ).count
       }
     }
     const importedSessionsPromises = []
@@ -576,9 +591,22 @@ export const importCourseSessionsFromFTP = async () => {
     }
   }
 
+  const addedTrainees =
+    newSessions.reduce((count, { trainees }) => count + trainees.length, 0) +
+    updatedSessions.reduce((count, { addedTrainees }) => count + addedTrainees.length, 0)
+  const addedProfessors =
+    newSessions.filter(({ professor }) => professor !== null).length +
+    updatedSessions.filter(({ professor }) => professor?.after !== null && professor?.after !== undefined).length
+
+  const modifiedSessions = updatedSessions.filter(({ dates }) => dates.length > 0).length
+
   return {
-    importedSessions: notFinishedSessions.length,
+    importedSessions: newSessions.length,
+    modifiedSessions,
     createdUsers: newUsers.count,
     createdAccounts: newAccounts.count,
+    addedTrainees,
+    addedProfessors,
+    ...deletedCounts,
   }
 }
