@@ -7,11 +7,8 @@ import { Client } from 'basic-ftp'
 import { getJsDateFromExcel } from 'excel-date-to-js'
 import fs from 'fs'
 import xlsx from 'node-xlsx'
-import {
-  getCourseSessionsFromFTP,
-  importCourseSessionsFromFTP,
-  parseCourseSessionWorkbook,
-} from './importTrainingSessions'
+import { getCourseSessionsFromFTP, importCourseSessionsFromFTP } from './importTrainingSessions'
+import { parseCourseSessionWorkbook } from './importTrainingSessionsParsing'
 
 jest.mock('basic-ftp', () => ({
   Client: jest.fn(() => ({ access: jest.fn(), downloadTo: jest.fn(), close: jest.fn() })),
@@ -458,7 +455,7 @@ describe('getCourseSessionsFromFTP', () => {
     })
   })
 
-  it('rejects a professor who is also a trainee', () => {
+  it('allows a professor who is also a trainee', () => {
     const [sessions, trainees, professors] = workbook
     jest.mocked(xlsx.parse).mockReturnValue([
       sessions,
@@ -469,8 +466,15 @@ describe('getCourseSessionsFromFTP', () => {
       professors,
     ])
 
-    expect(() => parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')).toThrow(
-      'Professor is also a trainee in training session Session Numéro 1',
+    const { sessions: parsedSessions } = parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')
+
+    expect(parsedSessions[0]).toEqual(
+      expect.objectContaining({
+        trainees: expect.arrayContaining([
+          { email: 'onboarding@yopmail.com', firstName: 'Onboarding', lastName: 'Yopmail' },
+        ]),
+        professor: { email: 'onboarding@yopmail.com', firstName: 'Onboarding', lastName: 'Yopmail' },
+      }),
     )
   })
 
@@ -671,13 +675,23 @@ describe('getCourseSessionsFromFTP', () => {
     expect(mockSendCourseSessionsCreatedEmail).not.toHaveBeenCalled()
   })
 
-  it('reports email failures after saving the sessions', async () => {
+  it('logs email failures after saving the sessions without failing the import', async () => {
     const error = new Error('SMTP unavailable')
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined)
     mockSendCourseSessionsCreatedEmail.mockRejectedValueOnce(error)
 
     try {
-      await expect(importCourseSessionsFromFTP()).rejects.toThrow(error)
+      await expect(importCourseSessionsFromFTP()).resolves.toEqual({
+        importedSessions: 2,
+        modifiedSessions: 0,
+        createdUsers: 6,
+        createdAccounts: 6,
+        addedTrainees: 4,
+        addedProfessors: 2,
+        deletedSessions: 0,
+        deletedTrainees: 0,
+        deletedProfessors: 0,
+      })
       expect(mockUpsertCourseSession).toHaveBeenCalledTimes(2)
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         'Error sending training sessions email:',
@@ -706,7 +720,7 @@ describe('getCourseSessionsFromFTP', () => {
     expect(mockSendCourseSessionsCreatedEmail).not.toHaveBeenCalled()
   })
 
-  it('rejects more than one professor for a session', () => {
+  it('uses the last listed professor when a session has more than one', () => {
     const [sessions, trainees, professors] = workbook
     jest.mocked(xlsx.parse).mockReturnValue([
       sessions,
@@ -717,9 +731,13 @@ describe('getCourseSessionsFromFTP', () => {
       },
     ])
 
-    expect(() => parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')).toThrow(
-      'Training session Session Numéro 1 must have exactly one professor',
-    )
+    const { sessions: parsedSessions } = parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')
+
+    expect(parsedSessions[0].professor).toEqual({
+      email: 'other@example.org',
+      firstName: 'Other',
+      lastName: 'Example',
+    })
   })
 
   it('parses sessions without a professor', () => {
@@ -1070,19 +1088,21 @@ describe('getCourseSessionsFromFTP', () => {
 
   it.each([
     [['Autre', 'Session Numéro 1', 'trainee@example.org'], 'Unsupported training deletion type: autre'],
-    [['Stagiaire', 'Session Numéro 1'], 'Missing email in training sessions file'],
-    [['Formateur', 'Session Numéro 1'], 'Missing email in training sessions file'],
+    [['Stagiaire', 'Session Numéro 1'], 'Missing Email in training sessions file'],
+    [['Formateur', 'Session Numéro 1'], 'Missing Email in training sessions file'],
     [['Session'], 'Missing Session in training sessions file'],
     [['', 'Session Numéro 1'], 'Missing Type in training sessions file'],
-  ])('rejects invalid deletion row %j before any database mutation', async (row, message) => {
+  ])('logs and ignores invalid deletion row %j while importing valid sessions', async (row, message) => {
     jest
       .mocked(xlsx.parse)
       .mockReturnValue([...workbook, { name: 'A supprimer', data: [['Type', 'Session', 'Email'], row] }])
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined)
     try {
-      await expect(importCourseSessionsFromFTP()).rejects.toThrow(message)
-      expect(mockCreateUsersWithAccount).not.toHaveBeenCalled()
-      expect(prismaClient.$transaction).not.toHaveBeenCalled()
+      await expect(importCourseSessionsFromFTP()).resolves.toEqual(expect.objectContaining({ importedSessions: 2 }))
+      expect(consoleErrorSpy).toHaveBeenCalledWith(message)
+      expect(mockCreateUsersWithAccount).toHaveBeenCalled()
+      expect(prismaClient.$transaction).toHaveBeenCalled()
+      expect(mockUpsertCourseSession).toHaveBeenCalledTimes(2)
     } finally {
       consoleErrorSpy.mockRestore()
     }
