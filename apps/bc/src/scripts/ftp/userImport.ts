@@ -205,7 +205,7 @@ const processUser = async (value: UserImportRecord, importedFileDate: Date) => {
   }
 
   const organizationUpdates =
-    dbAccount && dbAccount.status !== UserStatus.IMPORTED
+    dbAccount?.organizationVersionId && dbAccount.status !== UserStatus.IMPORTED
       ? {}
       : await syncUserOrganization({
           companyNumber,

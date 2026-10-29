@@ -172,6 +172,65 @@ describe('processUsers', () => {
   )
 
   it.each([
+    [Environment.BC, UserStatus.ACTIVE, null],
+    [Environment.BC, UserStatus.ACTIVE, { id: 'target-organization-id' }],
+    [Environment.BC, UserStatus.VALIDATED, null],
+    [Environment.BC, UserStatus.VALIDATED, { id: 'target-organization-id' }],
+    [Environment.TILT, UserStatus.ACTIVE, null],
+    [Environment.TILT, UserStatus.ACTIVE, { id: 'target-organization-id' }],
+    [Environment.TILT, UserStatus.VALIDATED, null],
+    [Environment.TILT, UserStatus.VALIDATED, { id: 'target-organization-id' }],
+  ])(
+    'links an organization-less %s %s account to an organization without active accounts (%j)',
+    async (environment, status, organization) => {
+      jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue({
+        id: 'account-id',
+        status,
+        role: Role.DEFAULT,
+        organizationVersionId: null,
+        user: { id: 'user-id', email: 'invited@example.com' },
+      } as Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>)
+      jest.mocked(getRawOrganizationBySiret).mockResolvedValue(organization as never)
+      jest.mocked(getOrganizationVersionByOrganizationIdAndEnvironment).mockResolvedValue({
+        id: 'target-version-id',
+      } as never)
+      jest.mocked(organizationVersionActiveAccountsCount).mockResolvedValue(0)
+      jest.mocked(createOrUpdateOrganization).mockResolvedValue({ id: 'target-organization-id' } as never)
+
+      const importedFileDate = new Date('2026-01-15T12:00:00.000Z')
+      await processUsers(
+        [
+          {
+            userEmail: 'invited@example.com',
+            siret: '12345678901234',
+            companyName: 'FTP Company',
+            membershipYear: '2026',
+            purchasedProducts: 'adhesion_conseil',
+            sessionCode: 'BCM2',
+            environment,
+          },
+        ],
+        importedFileDate,
+      )
+
+      expect(getRawOrganizationBySiret).toHaveBeenCalledWith('12345678901234')
+      expect(createOrUpdateOrganization).toHaveBeenCalledWith(
+        expect.objectContaining({ wordpressId: '12345678901234', name: 'FTP Company' }),
+        true,
+        [2026],
+        importedFileDate,
+        environment,
+      )
+      expect(updateAccount).toHaveBeenCalledWith(
+        'account-id',
+        { environment, organizationVersion: { connect: { id: 'target-version-id' } } },
+        expect.objectContaining({ level: Level.Advanced }),
+      )
+      expect(createUsersWithAccount).not.toHaveBeenCalled()
+    },
+  )
+
+  it.each([
     Environment.CUT,
     Environment.CLICKSON,
     Environment.MIP,
@@ -220,6 +279,7 @@ describe('processUsers', () => {
         id: 'account-id',
         status: UserStatus.ACTIVE,
         role: Role.COLLABORATOR,
+        organizationVersionId: 'old-version-id',
         organizationVersion: { id: 'old-version-id', organizationId: 'old-organization-id' },
         user: {
           id: 'user-id',
@@ -310,13 +370,21 @@ describe('processUsers', () => {
     },
   )
 
-  it.each([Environment.BC, Environment.TILT])(
-    'does not link an imported %s account to an organization with active accounts',
-    async (environment) => {
+  it.each([
+    [Environment.BC, UserStatus.IMPORTED],
+    [Environment.BC, UserStatus.ACTIVE],
+    [Environment.BC, UserStatus.VALIDATED],
+    [Environment.TILT, UserStatus.IMPORTED],
+    [Environment.TILT, UserStatus.ACTIVE],
+    [Environment.TILT, UserStatus.VALIDATED],
+  ])(
+    'does not link an organization-less %s %s account to an organization with active accounts',
+    async (environment, status) => {
       jest.mocked(getAccountByEmailAndEnvironment).mockResolvedValue({
         id: 'account-id',
-        status: UserStatus.IMPORTED,
+        status,
         role: Role.DEFAULT,
+        organizationVersionId: null,
         user: { id: 'user-id', email: 'imported@example.com' },
       } as Awaited<ReturnType<typeof getAccountByEmailAndEnvironment>>)
       jest.mocked(getRawOrganizationBySiret).mockResolvedValue({ id: 'target-organization-id' } as never)
@@ -331,6 +399,8 @@ describe('processUsers', () => {
       )
 
       const [, accountData] = jest.mocked(updateAccount).mock.calls[0]
+      expect(getRawOrganizationBySiret).toHaveBeenCalledWith('12345678901234')
+      expect(organizationVersionActiveAccountsCount).toHaveBeenCalledWith('target-version-id')
       expect(accountData).not.toHaveProperty('organizationVersion')
       expect(accountData).not.toHaveProperty('role')
       expect(accountData).not.toHaveProperty('status')
