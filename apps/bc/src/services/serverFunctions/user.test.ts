@@ -10,7 +10,7 @@ import {
   getAccountsFromOrganizationForActivation,
   removeOtherAccountActivation,
 } from '@/db/account'
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { findCncByCncCode } from '@/db/cnc'
 import {
   createOrganizationWithVersion,
@@ -67,7 +67,7 @@ jest.mock('@/services/checklist', () => ({}))
 jest.mock('@/db/account')
 jest.mock('@/db/cnc')
 jest.mock('@/db/deactivableFeatures')
-jest.mock('@/db/client.server', () => ({
+jest.mock('@/db/client', () => ({
   prismaClient: {
     $transaction: jest.fn((callback) => callback({})),
     courseSession: { findFirst: jest.fn() },

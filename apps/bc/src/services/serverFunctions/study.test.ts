@@ -1,5 +1,5 @@
 import * as studyUtilsModule from '@/utils/study'
-import { Environment, Import, StudyRole, SubPost } from '@abc-transitionbascarbone/common/db/enums'
+import { Environment, Import, StudyRole, SubPost, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import { v4 as uuidv4 } from 'uuid'
 import * as accountModule from '../../db/account'
@@ -67,7 +67,7 @@ const mockTransaction = {
     updateMany: jest.fn(),
   },
 }
-jest.mock('../../db/client.server', () => ({
+jest.mock('../../db/client', () => ({
   prismaClient: {
     $transaction: jest.fn((callback) => callback(mockTransaction)),
   },
@@ -76,6 +76,7 @@ jest.mock('../../services/permissions/study', () => ({
   hasEditionRights: jest.fn(),
   canCreateSpecificStudy: jest.fn(),
   canDuplicateStudy: jest.fn(),
+  canAddContributorOnStudy: jest.fn(),
   canChangeSites: jest.fn(),
   canChangeDates: jest.fn(),
   canAddRightOnStudy: jest.fn(),
@@ -95,11 +96,13 @@ jest.mock('../../db/organization', () => ({
   isOrganizationVersionCR: jest.fn(),
 }))
 jest.mock('../../db/user', () => ({
+  updateAccount: jest.fn(),
   getUserByEmail: jest.fn(),
   getUserApplicationSettings: jest.fn(),
   getUserSourceById: jest.fn(),
 }))
 jest.mock('../../db/account', () => ({
+  addAccount: jest.fn(),
   getAccountByEmailAndOrganizationVersionId: jest.fn(),
   getAccountByEmailAndEnvironment: jest.fn(),
 }))
@@ -192,7 +195,8 @@ jest.mock('../../services/serverFunctions/transitionPlan', () => ({
   getLinkedAndExternalStudies: jest.fn(),
 }))
 
-const { duplicateStudyCommand, duplicateSiteAndEmissionSources, changeStudyDates } = jest.requireActual('./study')
+const { duplicateStudyCommand, duplicateSiteAndEmissionSources, changeStudyDates, newStudyContributor } =
+  jest.requireActual('./study')
 
 const mockedSessionValidator = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.validator })
 const mockedSession = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.currentUser })
@@ -213,6 +217,7 @@ const mockGetMinimalStudyForRights = studyDbModule.getMinimalStudyForRights as j
 const mockAddUserChecklistItem = userModule.addUserChecklistItem as jest.Mock
 const mockSendInvitation = userModule.sendInvitation as jest.Mock
 const mockGetOrganizationVersionById = organizationModule.getOrganizationVersionById as jest.Mock
+const mockAddAccount = accountModule.addAccount as jest.Mock
 const mockGetOrgSitesWithCNCByOrgVersionId = organizationModule.getOrgSitesWithCNCByOrgVersionId as jest.Mock
 const mockGetUserByEmail = userDbModule.getUserByEmail as jest.Mock
 const mockGetUserApplicationSettings = userDbModule.getUserApplicationSettings as jest.Mock
@@ -225,6 +230,7 @@ const mockHasSufficientLevel = studyUtilsModule.hasSufficientLevel as jest.Mock
 const mockCanCreateSpecificStudy = studyPermissionsModule.canCreateSpecificStudy as jest.Mock
 const mockCanDuplicateStudy = studyPermissionsModule.canDuplicateStudy as jest.Mock
 const mockCanAddRightOnStudy = studyPermissionsModule.canAddRightOnStudy as jest.Mock
+const mockCanAddContributorOnStudy = studyPermissionsModule.canAddContributorOnStudy as jest.Mock
 const mockGetEmissionFactorsImportActiveVersion =
   emissionFactorsModule.getEmissionFactorsImportActiveVersion as jest.Mock
 const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
@@ -290,7 +296,7 @@ describe('study', () => {
     }
 
     const setupInvitationMocks = () => {
-      mockGetUserByEmail.mockResolvedValue({ id: 'existing-user-id' })
+      mockGetUserByEmail.mockResolvedValue({ id: 'existing-user-id', accounts: [] })
       mockGetUserSourceById.mockResolvedValue({ source: 'BC' })
       mockGetAccountByEmailAndEnvironment.mockResolvedValue({ id: 'account-by-email-env-id' })
     }
@@ -529,6 +535,51 @@ describe('study', () => {
         expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
         expect(mockCreateContributorOnStudy).toHaveBeenCalled()
         expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
+      })
+
+      it('should activate a new environment account for an already active study contributor', async () => {
+        const study = {
+          id: 'study-id',
+          organizationVersionId: 'target-organization-version-id',
+          organizationVersion: {
+            id: 'target-organization-version-id',
+            environment: Environment.TILT,
+            organization: { name: 'Target organization' },
+          },
+          allowedUsers: [],
+        }
+        const account = { id: 'new-environment-account-id', status: UserStatus.ACTIVE }
+        mockGetStudyById.mockResolvedValue(study)
+        mockGetOrganizationVersionById.mockResolvedValue(study.organizationVersion)
+        mockGetAccountByEmailAndOrganizationVersionId.mockResolvedValue(null)
+        mockGetUserByEmail.mockResolvedValue({
+          id: 'existing-user-id',
+          accounts: [{ environment: Environment.BC, status: UserStatus.ACTIVE }],
+        })
+        mockGetAccountByEmailAndEnvironment.mockResolvedValue(null)
+        mockAddAccount.mockResolvedValue(account)
+        mockCanAddContributorOnStudy.mockReturnValue(true)
+
+        const result = await newStudyContributor({
+          studyId: study.id,
+          email: 'contributor@example.com',
+          firstName: 'Contributor',
+          subPosts: { default: [SubPost.Achats] },
+        })
+
+        expect(result).toEqual({ success: true, data: undefined })
+        expect(mockAddAccount).toHaveBeenCalledWith(
+          expect.objectContaining({ environment: Environment.TILT, status: UserStatus.ACTIVE }),
+        )
+        expect(mockSendInvitation).toHaveBeenCalledWith(
+          expect.any(String),
+          study,
+          study.organizationVersion.organization,
+          expect.any(Object),
+          '',
+          Environment.TILT,
+          account,
+        )
       })
 
       it('should skip current user when inviting team members', async () => {

@@ -1,4 +1,4 @@
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { createUsersWithAccount } from '@/db/user'
 import type { CourseSession } from '@abc-transitionbascarbone/common/db'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
@@ -17,21 +17,17 @@ jest.mock('basic-ftp', () => ({
   Client: jest.fn(() => ({ access: jest.fn(), downloadTo: jest.fn(), close: jest.fn() })),
 }))
 
-jest.mock('@/db/client.server', () => {
-  const courseOrganism = { findMany: jest.fn() }
-  const account = { findMany: jest.fn(), update: jest.fn() }
-  const courseSession = { findMany: jest.fn(), upsert: jest.fn() }
-  const transaction = { account, courseSession }
-  return {
-    prismaClient: {
-      courseOrganism,
-      account,
-      courseSession,
-      $transaction: jest.fn((operation) =>
-        Array.isArray(operation) ? Promise.all(operation) : operation(transaction),
-      ),
-    },
+jest.mock('@/db/client', () => {
+  const prismaClient = {
+    courseOrganism: { findMany: jest.fn() },
+    account: { findMany: jest.fn(), update: jest.fn() },
+    courseSession: { findMany: jest.fn(), upsert: jest.fn() },
+    $transaction: jest.fn(),
   }
+  prismaClient.$transaction.mockImplementation((transaction) =>
+    typeof transaction === 'function' ? transaction(prismaClient) : Promise.all(transaction),
+  )
+  return { prismaClient }
 })
 
 jest.mock('@/db/user', () => ({ createUsersWithAccount: jest.fn() }))

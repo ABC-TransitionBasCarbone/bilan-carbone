@@ -2,7 +2,7 @@ import { getAccountById } from '@/db/account'
 import { deleteEmissionFactorAndDependencies, getEmissionFactorById, updateEmissionFactor } from '@/db/emissionFactors'
 import { getLocale } from '@/i18n/locale'
 import { auth, dbActualizedAuth } from '@/services/auth'
-import { canCreateEmissionFactor } from '@/services/permissions/emissionFactor.server'
+import { canCreateEmissionFactor } from '@/services/permissions/emissionFactorAccess'
 import { getMockedAccount, getMockedDbActualizedAuth } from '@/tests/utils/models/user'
 import { Import, Unit } from '@abc-transitionbascarbone/common/db/enums'
 import { Locale } from '@abc-transitionbascarbone/common/i18n/config'
@@ -11,7 +11,7 @@ import { canEditEmissionFactor, deleteEmissionFactor, updateEmissionFactorComman
 import { UpdateEmissionFactorCommand } from './emissionFactor.command'
 
 jest.mock('@/db/account', () => ({ getAccountById: jest.fn() }))
-jest.mock('@/db/client.server', () => ({ prismaClient: {} }))
+jest.mock('@/db/client', () => ({ prismaClient: {} }))
 jest.mock('@/db/emissionFactors', () => ({
   getEmissionFactorById: jest.fn(),
   deleteEmissionFactorAndDependencies: jest.fn(),
@@ -20,9 +20,9 @@ jest.mock('@/db/emissionFactors', () => ({
 jest.mock('@/db/organization', () => ({}))
 jest.mock('@/i18n/locale', () => ({ getLocale: jest.fn() }))
 jest.mock('@/services/auth', () => ({ auth: jest.fn(), dbActualizedAuth: jest.fn() }))
-jest.mock('@/services/permissions/emissionFactor.server', () => ({ canCreateEmissionFactor: jest.fn() }))
+jest.mock('@/services/permissions/emissionFactorAccess', () => ({ canCreateEmissionFactor: jest.fn() }))
 jest.mock('@/services/permissions/study', () => ({}))
-jest.mock('@/services/study.server', () => ({}))
+jest.mock('@/services/studyAccess', () => ({}))
 jest.mock('@abc-transitionbascarbone/common/utils/serverResponse', () => ({
   logServerFunctionCall: jest.fn(),
 }))

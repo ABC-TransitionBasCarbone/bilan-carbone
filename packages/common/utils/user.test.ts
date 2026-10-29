@@ -1,7 +1,7 @@
 import { Environment, Role, RoleMip } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import { canBeUntrainedRole } from './user'
-import { generateResetToken } from './user.server'
+import { generateResetToken } from './userTokens'
 
 describe('commonuserUtils functions', () => {
   describe('generateResetToken', () => {

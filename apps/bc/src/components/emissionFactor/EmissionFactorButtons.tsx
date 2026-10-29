@@ -1,6 +1,6 @@
 'use client'
 
-import { download } from '@/services/file'
+import { download } from '@/services/fileDownload'
 import { exportManualEmissionFactorsToFile } from '@/services/serverFunctions/importEmissionFactors'
 import { Button, useToast } from '@abc-transitionbascarbone/common/ui'
 import AddIcon from '@mui/icons-material/Add'

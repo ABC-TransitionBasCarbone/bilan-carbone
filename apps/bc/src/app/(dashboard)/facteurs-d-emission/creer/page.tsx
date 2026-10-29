@@ -1,6 +1,6 @@
 import withAuth from '@/components/hoc/withAuth'
 import NewEmissionFactorPage from '@/components/pages/NewEmissionFactor'
-import { canCreateEmissionFactor } from '@/services/permissions/emissionFactor.server'
+import { canCreateEmissionFactor } from '@/services/permissions/emissionFactorAccess'
 import { hasAccessToEmissionFactors } from '@/services/permissions/environmentAdvanced'
 import { getEmissionFactorLocations } from '@/services/serverFunctions/emissionFactor'
 import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'

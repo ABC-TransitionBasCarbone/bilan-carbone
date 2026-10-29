@@ -10,7 +10,7 @@ import {
   getAccountsFromOrganization,
   getAccountsUserLevel,
 } from '@/db/account'
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { findCncByCncCode, updateNumberOfProgrammedFilms } from '@/db/cnc'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
@@ -859,6 +859,7 @@ const getOrCreateUserAndSendStudyInvite = async (
 
     accountId = newAccountId
   } else {
+    const hasActiveAccount = existingUser.accounts.some((account) => account.status === UserStatus.ACTIVE)
     let account = (await getAccountByEmailAndEnvironment(email, organizationVersion.environment)) as AccountWithUser
     let skipEmail = skipInviteEmail
     if (!account) {
@@ -866,17 +867,20 @@ const getOrCreateUserAndSendStudyInvite = async (
         user: { connect: { id: existingUser.id } },
         role: Role.COLLABORATOR,
         environment: organizationVersion.environment,
-        status: UserStatus.VALIDATED,
+        status: hasActiveAccount ? UserStatus.ACTIVE : UserStatus.VALIDATED,
       })) as AccountWithUser
     } else if (account.status === UserStatus.IMPORTED) {
       await updateAccount(account.id, {
         organizationVersion: { disconnect: true },
-        status: UserStatus.VALIDATED,
+        status: hasActiveAccount ? UserStatus.ACTIVE : UserStatus.VALIDATED,
         role: Role.COLLABORATOR,
       })
       account = (await getAccountByEmailAndEnvironment(email, organizationVersion.environment)) as AccountWithUser
     } else if (account.status === UserStatus.SUSPENDED) {
       skipEmail = true
+    } else if (hasActiveAccount && account.status !== UserStatus.ACTIVE) {
+      await updateAccount(account.id, { status: UserStatus.ACTIVE })
+      account = { ...account, status: UserStatus.ACTIVE }
     }
 
     if (!skipEmail) {
