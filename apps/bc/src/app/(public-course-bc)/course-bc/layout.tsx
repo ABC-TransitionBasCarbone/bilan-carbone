@@ -1,4 +1,4 @@
-import PublicFormation from '@/components/pages/PublicFormation'
+import Public from '@/components/pages/Public'
 import DynamicTheme from '@/environments/core/providers/DynamicTheme'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
@@ -21,9 +21,9 @@ const PublicLayout = async ({ children }: Props) => {
   return (
     <DynamicTheme environment={Environment.COURSE_BC}>
       <main className="h100">
-        <PublicFormation question={question} environment={Environment.COURSE_BC}>
+        <Public question={question} environment={Environment.COURSE_BC}>
           {children}
-        </PublicFormation>
+        </Public>
       </main>
     </DynamicTheme>
   )

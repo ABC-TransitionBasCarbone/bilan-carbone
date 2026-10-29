@@ -1,7 +1,4 @@
 {
-  "login": {
-    "welcome": "Bienvenue sur la plateforme formation du BC+ !"
-  },
   "activation": {
     "description": "Indiquez l'adresse e-mail et le code de session que vous a transmis l'organisme de formation qui vous accompagne.",
     "sessionCode": "Code de session",

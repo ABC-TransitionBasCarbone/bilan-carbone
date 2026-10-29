@@ -16,8 +16,9 @@ import styles from './Public.module.css'
 interface Props {
   children: ReactNode
   question: ReactNode
+  environment?: Environment
 }
-const PublicTiltPage = ({ children, question }: Props) => {
+const PublicTiltPage = ({ children, question, environment = Environment.TILT }: Props) => {
   const t = useTranslations()
   const tLocale = useTranslations('locale')
   const tDocumentation = useTranslations('documentationUrlTilt')
@@ -25,8 +26,8 @@ const PublicTiltPage = ({ children, question }: Props) => {
 
   useEffect(() => {
     getLocale().then(setLocale)
-    switchEnvironment(Environment.TILT)
-  }, [])
+    switchEnvironment(environment)
+  }, [environment])
 
   const languages = [{ name: tLocale('fr'), code: 'FR', target: Locale.FR }]
 
@@ -53,7 +54,7 @@ const PublicTiltPage = ({ children, question }: Props) => {
                 </Link>
               ),
             },
-            Environment.TILT,
+            environment,
           )}
         </p>
         <div className="flex-cc gapped1 w100 p1">

@@ -1,5 +1,6 @@
 {
   "login": {
+    "welcome": "Bienvenue sur le Bilan Carbone® + [ESPACE FORMATION]",
     "form": {
       "emailPlaceholder": "Votre email transmis à votre organisme de formation"
     }
