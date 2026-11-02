@@ -1,5 +1,5 @@
 import { checkCronRequest } from '@/app/api/cron/utils'
-import { importCourseSessionsFromFTP } from '@/scripts/ftp/importTrainingSessions'
+import { importCourseSessionsFromFTP } from '@/scripts/ftp/importTrainingSessions/importTrainingSessions'
 import { NextResponse, type NextRequest } from 'next/server'
 import { POST } from './route'
 
@@ -24,7 +24,7 @@ jest.mock('@/app/api/cron/utils', () => ({
   checkCronRequest: jest.fn(),
 }))
 
-jest.mock('@/scripts/ftp/importTrainingSessions', () => ({
+jest.mock('@/scripts/ftp/importTrainingSessions/importTrainingSessions', () => ({
   importCourseSessionsFromFTP: jest.fn(),
 }))
 
@@ -52,7 +52,17 @@ describe('POST /api/cron/import-training-sessions', () => {
 
   it('returns 200 when import succeeds', async () => {
     jest.mocked(checkCronRequest).mockReturnValue(null)
-    const importResult = { importedSessions: 2, createdUsers: 1, createdAccounts: 3 }
+    const importResult = {
+      importedSessions: 2,
+      modifiedSessions: 1,
+      createdUsers: 1,
+      createdAccounts: 3,
+      addedTrainees: 2,
+      addedProfessors: 1,
+      deletedSessions: 0,
+      deletedTrainees: 0,
+      deletedProfessors: 0,
+    }
     jest.mocked(importCourseSessionsFromFTP).mockResolvedValue(importResult)
 
     const response = await POST(req)
