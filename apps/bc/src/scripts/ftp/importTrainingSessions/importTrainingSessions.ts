@@ -155,35 +155,35 @@ export const importCourseSessionsFromFTP = async () => {
   const { newUsers, newAccounts } =
     userAccountInSession.length > 0
       ? await createUsersWithAccount(
-        userAccountInSession.map(({ email, firstName, lastName, environment }) => ({
-          email,
-          firstName,
-          lastName,
-          source: UserSource.CRON,
-          account: {
-            environment,
-            role: Role.DEFAULT,
-            status: UserStatus.IMPORTED,
-            user: { create: undefined, connectOrCreate: undefined, connect: undefined },
-          },
-        })),
-      )
+          userAccountInSession.map(({ email, firstName, lastName, environment }) => ({
+            email,
+            firstName,
+            lastName,
+            source: UserSource.CRON,
+            account: {
+              environment,
+              role: Role.DEFAULT,
+              status: UserStatus.IMPORTED,
+              user: { create: undefined, connectOrCreate: undefined, connect: undefined },
+            },
+          })),
+        )
       : { newUsers: { count: 0 }, newAccounts: { count: 0 } }
 
   const accounts =
     userAccountInSession.length > 0
       ? await prismaClient.account.findMany({
-        where: {
-          environment: { in: [...new Set(notFinishedSessions.map(({ environment }) => environment))] },
-          user: { email: { in: userAccountInSession.map(({ email }) => email) } },
-        },
-        select: {
-          id: true,
-          environment: true,
-          organizationVersionId: true,
-          user: { select: { email: true, firstName: true, lastName: true } },
-        },
-      })
+          where: {
+            environment: { in: [...new Set(notFinishedSessions.map(({ environment }) => environment))] },
+            user: { email: { in: userAccountInSession.map(({ email }) => email) } },
+          },
+          select: {
+            id: true,
+            environment: true,
+            organizationVersionId: true,
+            user: { select: { email: true, firstName: true, lastName: true } },
+          },
+        })
       : []
   const createdOrganizationVersions = await prismaClient.$transaction(
     accounts
@@ -216,18 +216,18 @@ export const importCourseSessionsFromFTP = async () => {
       { courseOrganismId, type, name, environment },
       ...(trainees.length > 0
         ? [
-          {
-            courseOrganismId,
-            type,
-            traineeOrganizations: {
-              some: {
-                organizationVersion: {
-                  userAccounts: { some: { user: { email: { in: trainees.map(({ email }) => email) } } } },
+            {
+              courseOrganismId,
+              type,
+              traineeOrganizations: {
+                some: {
+                  organizationVersion: {
+                    userAccounts: { some: { user: { email: { in: trainees.map(({ email }) => email) } } } },
+                  },
                 },
               },
             },
-          },
-        ]
+          ]
         : []),
     ]),
     ...deletions.map(({ courseOrganismId, name }) => ({ courseOrganismId, name })),
@@ -375,11 +375,11 @@ export const importCourseSessionsFromFTP = async () => {
     }
     return deletions.length > 0 || conflictingRegistrations.length > 0
       ? transaction.courseSession.findMany({
-        where: {
-          OR: [...affectedSessionsSQLRequest, { id: { in: existingSessions.map(({ id }) => id) } }],
-        },
-        select: sessionsSelect,
-      })
+          where: {
+            OR: [...affectedSessionsSQLRequest, { id: { in: existingSessions.map(({ id }) => id) } }],
+          },
+          select: sessionsSelect,
+        })
       : importedSessionsPromises
   })
 
