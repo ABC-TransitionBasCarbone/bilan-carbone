@@ -4,6 +4,7 @@ import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { hasAccountToValidateInOrganization } from '@/db/user'
 import { hasQualitylessEmissionFactors } from '@/services/serverFunctions/organization'
 import { canEditMemberRole } from '@/utils/user'
+import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import { UserSession } from 'next-auth'
 import StudiesContainer from '../study/StudiesContainer'
 import EmissionFactorsWarning from './EmissionFactorsWarning'
@@ -15,7 +16,7 @@ interface Props {
 }
 
 const UserView = async ({ account }: Props) => {
-  const sessions = await getProfessorCourseSessions(account)
+  const sessions = isCourseEnvironment(account.environment) ? await getProfessorCourseSessions(account) : []
 
   const [organizationVersions, hasUserToValidate, emissionFactorWarning] = await Promise.all([
     getAccountOrganizationVersions(account.accountId),
