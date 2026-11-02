@@ -11,6 +11,10 @@
     {
       "command": "0 1 * * * curl --silent --show-error --fail --output /dev/null -X POST $NEXT_API_URL/cron/assign-training-studies -H \"Authorization: Bearer $CRON_SECRET\"",
       "description": "Create training studies for users who started or ended a formation"
+    },
+    {
+      "command": "0 3 * * * curl --silent --show-error --fail --output /dev/null -X POST $NEXT_API_URL/cron/update-course-session-trainee-organizations -H \"Authorization: Bearer $CRON_SECRET\"",
+      "description": "Update active status for course session trainee organizations"
     }
   ]
 }

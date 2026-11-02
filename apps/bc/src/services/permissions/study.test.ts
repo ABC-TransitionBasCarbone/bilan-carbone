@@ -11,6 +11,7 @@ import {
 import {
   getMockedDbAccount,
   getMockedDbActualizedAuth,
+  getMockedDbUser,
   mockedAccountId,
   mockedSession,
 } from '@/tests/utils/models/user'
@@ -24,6 +25,8 @@ import * as userModule from '../serverFunctions/user'
 import * as environmentAdvancedModule from './environmentAdvanced'
 import * as organizationModule from './organization'
 import {
+  canAddContributorOnStudy,
+  canAddRightOnStudy,
   canCreateSpecificStudy,
   canDeleteStudy,
   canDuplicateStudy,
@@ -90,6 +93,24 @@ const mockGetUserRoleOnPublicStudy = studyUtils.getUserRoleOnPublicStudy as jest
 const advancedStudy = getMockedStudyCreateInput({ level: Level.Advanced })
 const standardStudy = getMockedStudyCreateInput({ level: Level.Standard })
 const initialStudy = getMockedStudyCreateInput({ level: Level.Initial })
+
+describe('course study invitations', () => {
+  it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
+    'preserves contributor and study-role invitations in %s',
+    (environment) => {
+      const user = { ...mockedSession, environment, role: Role.ADMIN }
+      const study = getMockedFullStudy()
+      mockIsAdminOnOrga.mockReturnValue(true)
+      mockHasSufficientLevel.mockReturnValue(true)
+      mockHasActiveLicence.mockReturnValue(true)
+
+      expect(canAddContributorOnStudy(user, study)).toBe(true)
+      for (const role of Object.values(StudyRole)) {
+        expect(canAddRightOnStudy(user, study, getMockedDbUser({ id: 'other-user' }), role)).toBe(true)
+      }
+    },
+  )
+})
 
 const mockedStudyToDelete = {
   id: mockedStudyId,

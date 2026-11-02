@@ -84,16 +84,25 @@ for (let i = 0; i < courseEnvironments.length; i++) {
       cy.getByTestId('emission-source-course source').should('not.exist')
     })
 
-    it('gives course administrators access to team role editing', () => {
+    it('keeps the team read-only for course administrators', () => {
       cy.loginForEnv(env)
       cy.visit('/equipe')
-      cy.getByTestId('team-table-row').first().find('input').should('exist')
+      cy.getByTestId('team-table-row').should('exist')
+      cy.getByTestId('team-table-row').find('input').should('not.exist')
+      cy.getByTestId('delete-member-button').should('not.exist')
+      cy.getByTestId('add-member-link').should('not.exist')
+
+      cy.visit('/equipe/ajouter')
+      cy.getByTestId('not-found-page').should('be.visible')
     })
 
     it('does not give course default members access to team role editing', () => {
-      cy.loginForEnv(env, 'COURSE_BC-env-default-0@yopmail.com', 'password-0')
+      cy.loginForEnv(env, `${env.toLowerCase()}-env-default-0@yopmail.com`, 'password-0')
       cy.visit('/equipe')
-      cy.getByTestId('team-table-row').first().find('input').should('not.exist')
+      cy.getByTestId('team-table-row').should('exist')
+      cy.getByTestId('team-table-row').find('input').should('not.exist')
+      cy.getByTestId('delete-member-button').should('not.exist')
+      cy.getByTestId('add-member-link').should('not.exist')
     })
 
     it('allows a course administrator to edit an organization', () => {

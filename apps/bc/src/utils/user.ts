@@ -2,12 +2,12 @@ import { ClicksonRoles, CourseRoles, CutRoles } from '@/services/roles'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { findAccountSelect } from '@abc-transitionbascarbone/common/db/db/common.select'
 import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
-import { isSimplified } from '@abc-transitionbascarbone/common/utils/environments'
+import { isCourseEnvironment, isSimplified } from '@abc-transitionbascarbone/common/utils/environments'
 import { UserSession } from 'next-auth'
 
 export const isAdmin = (userRole: Role) => userRole === Role.ADMIN || userRole === Role.SUPER_ADMIN
 
-export const findUserInfo = (user: Pick<UserSession, 'role' | 'organizationVersionId'>) =>
+export const findUserInfo = (user: Pick<UserSession, 'role' | 'organizationVersionId' | 'environment'>) =>
   ({
     select: findAccountSelect({ formationName: true }),
     where: canEditMemberRole(user)
@@ -37,5 +37,5 @@ export const getRoleToSetForUntrained = (role: Exclude<Role, 'SUPER_ADMIN'>, env
   return role === Role.ADMIN || role === Role.GESTIONNAIRE ? Role.GESTIONNAIRE : Role.DEFAULT
 }
 
-export const canEditMemberRole = (account: Pick<UserSession, 'role'>) =>
-  isAdmin(account.role) || account.role === Role.GESTIONNAIRE
+export const canEditMemberRole = (account: Pick<UserSession, 'role' | 'environment'>) =>
+  !isCourseEnvironment(account.environment) && (isAdmin(account.role) || account.role === Role.GESTIONNAIRE)
