@@ -1253,7 +1253,7 @@ describe('study', () => {
 
     beforeEach(() => {
       jest.clearAllMocks()
-        ; (authModule.dbActualizedAuth as jest.Mock).mockResolvedValue(mockedSession)
+      ;(authModule.dbActualizedAuth as jest.Mock).mockResolvedValue(mockedSession)
       mockGetStudyById.mockResolvedValue(mockedStudy)
       mockCanChangeDates.mockResolvedValue(true)
       mockGetTransitionPlanByStudyId.mockResolvedValue(null)

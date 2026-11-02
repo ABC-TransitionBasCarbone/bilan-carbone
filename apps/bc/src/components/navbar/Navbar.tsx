@@ -4,7 +4,6 @@ import TopLeftNavBar from '@/components/navbar/TopLeftNavBar'
 import DynamicComponent from '@/environments/core/utils/DynamicComponent'
 import { hasAccessToStudyComments, isClickson, isTilt } from '@/services/permissions/environment'
 import { hasAccessToMethodology, hasAccessToSettings } from '@/services/permissions/environmentAdvanced'
-import { getUserActiveAccounts } from '@/services/serverFunctions/user'
 import { Environment, Role } from '@abc-transitionbascarbone/common/db/enums'
 import { Locale } from '@abc-transitionbascarbone/common/i18n/config'
 import { signOutEnv } from '@abc-transitionbascarbone/common/services/auth/auth.utils'
@@ -24,7 +23,7 @@ import { UserSession } from 'next-auth'
 import { useLocale, useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Logo } from '../base/Logo'
 import NavbarComments from './NavbarComments'
 
@@ -35,24 +34,13 @@ interface Props {
   isFootprintsEnabled: boolean
   hasTrainedUsers: boolean
   hasFormation: boolean
+  hasMultipleAccounts: boolean
 }
 
-const Navbar = ({ user, isFootprintsEnabled, hasTrainedUsers, hasFormation }: Props) => {
+const Navbar = ({ user, isFootprintsEnabled, hasTrainedUsers, hasFormation, hasMultipleAccounts }: Props) => {
   const t = useTranslations('navigation')
-  const [hasMultipleAccounts, setHasMultipleAccounts] = useState(false)
   const locale = useLocale()
   const environment = getEnvironmentHandlingGenericEnvs(user.environment)
-
-  useEffect(() => {
-    const hasMultipleAccounts = async () => {
-      const userAccounts = await getUserActiveAccounts()
-      if (userAccounts.success) {
-        setHasMultipleAccounts((userAccounts && userAccounts.data.length > 1) || false)
-      }
-    }
-
-    hasMultipleAccounts()
-  }, [user])
 
   const methodologyLink = useMemo(() => {
     switch (environment) {
