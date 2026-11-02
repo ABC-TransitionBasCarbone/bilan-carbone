@@ -537,7 +537,7 @@ describe('study', () => {
         expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
       })
 
-      it('should activate a new environment account for an already active study contributor', async () => {
+      it('should keep a new environment account validated for an already active study contributor', async () => {
         const study = {
           id: 'study-id',
           organizationVersionId: 'target-organization-version-id',
@@ -548,7 +548,7 @@ describe('study', () => {
           },
           allowedUsers: [],
         }
-        const account = { id: 'new-environment-account-id', status: UserStatus.ACTIVE }
+        const account = { id: 'new-environment-account-id', status: UserStatus.VALIDATED }
         mockGetStudyById.mockResolvedValue(study)
         mockGetOrganizationVersionById.mockResolvedValue(study.organizationVersion)
         mockGetAccountByEmailAndOrganizationVersionId.mockResolvedValue(null)
@@ -569,7 +569,7 @@ describe('study', () => {
 
         expect(result).toEqual({ success: true, data: undefined })
         expect(mockAddAccount).toHaveBeenCalledWith(
-          expect.objectContaining({ environment: Environment.TILT, status: UserStatus.ACTIVE }),
+          expect.objectContaining({ environment: Environment.TILT, status: UserStatus.VALIDATED }),
         )
         expect(mockSendInvitation).toHaveBeenCalledWith(
           expect.any(String),
