@@ -1,5 +1,6 @@
 'use client'
 
+import { sortAlphabetically } from '@/services/utils'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import { Button } from '@abc-transitionbascarbone/common/ui'
 import classNames from 'classnames'
@@ -17,6 +18,18 @@ const HomeCards = ({ items, type, canCreateOrga }: Props) => {
   const [showAll, setShowAll] = useState(false)
   const [hiddenRows, setHiddenRows] = useState(false)
   const gridRef = useRef<HTMLUListElement>(null)
+  const sortedItems = [...items].sort((a, b) => {
+    if (type === 'clients') {
+      return sortAlphabetically(a.name, b.name)
+    }
+    if (!a.startDate) {
+      return b.startDate ? 1 : sortAlphabetically(a.name, b.name)
+    }
+    if (!b.startDate) {
+      return -1
+    }
+    return b.startDate.getTime() - a.startDate.getTime() || sortAlphabetically(a.name, b.name)
+  })
 
   useEffect(() => {
     const checkHiddenRows = () => {
@@ -53,7 +66,7 @@ const HomeCards = ({ items, type, canCreateOrga }: Props) => {
         ref={gridRef}
         className={classNames(styles.grid, 'mb1', { [styles.hideSubRows]: !showAll })}
       >
-        {items.map((item) => (
+        {sortedItems.map((item) => (
           <HomeCard key={item.id} item={item} type={type} />
         ))}
       </ul>
