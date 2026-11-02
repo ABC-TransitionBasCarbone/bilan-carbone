@@ -1,3 +1,4 @@
+import { ProfessorCourseSession } from '@/db/courseSession'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { canCreateOrganization } from '@/services/permissions/organization'
 import Box from '@abc-transitionbascarbone/common/components/base/Box'
@@ -7,19 +8,39 @@ import AddIcon from '@mui/icons-material/Add'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
-import CRClients from '../organization/CRClients'
-import styles from './CRClientsList.module.css'
+import HomeCards from './HomeCards'
+import styles from './HomeCardsList.module.css'
 
-interface Props {
-  organizationVersions: OrganizationVersionWithOrganization[]
-  account: UserSession
-}
-const CRClientsList = async ({ organizationVersions, account }: Props) => {
+type Props =
+  | {
+      type: 'clients'
+      organizationVersions: OrganizationVersionWithOrganization[]
+      account: UserSession
+    }
+  | {
+      type: 'sessions'
+      sessions: ProfessorCourseSession[]
+    }
+
+const HomeCardsList = async (props: Props) => {
+  if (props.type === 'sessions') {
+    return <HomeCards type="sessions" items={props.sessions} />
+  }
+
+  const { organizationVersions, account } = props
   const t = await getTranslations('organization')
   const canCreateOrga = await canCreateOrganization(account)
 
   return organizationVersions.length ? (
-    <CRClients organizationVersions={organizationVersions} canCreateOrga={canCreateOrga} />
+    <HomeCards
+      type="clients"
+      items={organizationVersions.map(({ id, organization }) => ({
+        id,
+        name: organization.name,
+        href: `/organisations/${id}`,
+      }))}
+      canCreateOrga={canCreateOrga}
+    />
   ) : (
     <div className="justify-center text-center">
       <Box className={classNames(styles.firstClientCard, 'flex-col align-center')}>
@@ -39,4 +60,4 @@ const CRClientsList = async ({ organizationVersions, account }: Props) => {
   )
 }
 
-export default CRClientsList
+export default HomeCardsList

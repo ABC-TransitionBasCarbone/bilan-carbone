@@ -1,4 +1,7 @@
 {
+  "courseSessions": {
+    "title": "Mes sessions de formation"
+  },
   "login": {
     "welcome": "Bienvenue sur le Bilan Carbone® + [ESPACE FORMATION]",
     "form": {
