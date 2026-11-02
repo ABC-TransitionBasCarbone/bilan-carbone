@@ -57,11 +57,7 @@ const HomeCardsFilters = ({ type, items, setVisibleItems }: Props) => {
 
   return (
     <div className="flex wrap gapped1 mb1">
-      <TextField
-        label={t(type === 'clients' ? 'homeCards.searchClients' : 'homeCards.searchSessions')}
-        value={search}
-        onChange={(event) => setSearch(event.target.value)}
-      />
+      <TextField label={t('homeCards.search')} value={search} onChange={(event) => setSearch(event.target.value)} />
       {type === 'sessions' && (
         <>
           <DatePicker
