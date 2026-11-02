@@ -1,6 +1,5 @@
 'use client'
 
-import { sortAlphabetically } from '@/services/utils'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import { Button } from '@abc-transitionbascarbone/common/ui'
 import classNames from 'classnames'
@@ -8,6 +7,7 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState } from 'react'
 import HomeCard, { HomeCardItem } from './HomeCard'
 import styles from './HomeCards.module.css'
+import HomeCardsFilters from './HomeCardsFilters'
 
 type Props = {
   items: HomeCardItem[]
@@ -17,19 +17,8 @@ const HomeCards = ({ items, type, canCreateOrga }: Props) => {
   const t = useTranslations()
   const [showAll, setShowAll] = useState(false)
   const [hiddenRows, setHiddenRows] = useState(false)
+  const [visibleItems, setVisibleItems] = useState(items)
   const gridRef = useRef<HTMLUListElement>(null)
-  const sortedItems = [...items].sort((a, b) => {
-    if (type === 'clients') {
-      return sortAlphabetically(a.name, b.name)
-    }
-    if (!a.startDate) {
-      return b.startDate ? 1 : sortAlphabetically(a.name, b.name)
-    }
-    if (!b.startDate) {
-      return -1
-    }
-    return b.startDate.getTime() - a.startDate.getTime() || sortAlphabetically(a.name, b.name)
-  })
 
   useEffect(() => {
     const checkHiddenRows = () => {
@@ -42,7 +31,7 @@ const HomeCards = ({ items, type, canCreateOrga }: Props) => {
     checkHiddenRows()
     window.addEventListener('resize', checkHiddenRows)
     return () => window.removeEventListener('resize', checkHiddenRows)
-  }, [items])
+  }, [visibleItems])
 
   return (
     <Block
@@ -61,12 +50,14 @@ const HomeCards = ({ items, type, canCreateOrga }: Props) => {
           : []
       }
     >
+      <HomeCardsFilters type={type} items={items} setVisibleItems={setVisibleItems} />
+      {!visibleItems.length && <p role="status">{t('homeCards.noResults')}</p>}
       <ul
         id="home-cards-grid"
         ref={gridRef}
         className={classNames(styles.grid, 'mb1', { [styles.hideSubRows]: !showAll })}
       >
-        {sortedItems.map((item) => (
+        {visibleItems.map((item) => (
           <HomeCard key={item.id} item={item} type={type} />
         ))}
       </ul>
