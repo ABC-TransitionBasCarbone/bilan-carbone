@@ -1,4 +1,4 @@
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { CourseSessionTraineeOrganizationStatus } from '@abc-transitionbascarbone/common/db/enums'
 
 const getCourseSessionAccessDays = () => {

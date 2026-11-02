@@ -460,15 +460,15 @@ export const getAllowedStudyIdByAccount = async (account: UserSession) => {
         { allowedUsers: { some: { accountId: account.id, role: { notIn: [StudyRole.Reader] } } } },
         ...(isAllowedOnPublicStudies
           ? [
-            {
-              AND: [
-                { organizationVersionId: { in: organizationVersionIds } },
-                ...(isAdmin(account.role)
-                  ? []
-                  : [{ isPublic: true, level: { in: getAllowedLevels(account.level, account.environment) } }]),
-              ],
-            },
-          ]
+              {
+                AND: [
+                  { organizationVersionId: { in: organizationVersionIds } },
+                  ...(isAdmin(account.role)
+                    ? []
+                    : [{ isPublic: true, level: { in: getAllowedLevels(account.level, account.environment) } }]),
+                ],
+              },
+            ]
           : []),
       ],
     },
@@ -511,18 +511,18 @@ export const getAllowedStudiesByUserAndOrganization = async (
       ...(isAdminOnOrga(user, organizationVersion)
         ? {}
         : {
-          OR: [
-            { allowedUsers: { some: { accountId: user.accountId } } },
-            { contributors: { some: { accountId: user.accountId } } },
-            { isPublic: true, organizationVersionId: user.organizationVersionId as string },
-            {
-              isPublic: true,
-              organizationVersionId: {
-                in: childOrganizations.map((organizationVersion) => organizationVersion.id),
+            OR: [
+              { allowedUsers: { some: { accountId: user.accountId } } },
+              { contributors: { some: { accountId: user.accountId } } },
+              { isPublic: true, organizationVersionId: user.organizationVersionId as string },
+              {
+                isPublic: true,
+                organizationVersionId: {
+                  in: childOrganizations.map((organizationVersion) => organizationVersion.id),
+                },
               },
-            },
-          ],
-        }),
+            ],
+          }),
     },
   })
   return filterAllowedStudies(user, studies)
