@@ -20,7 +20,12 @@ const HomeCardsFilters = ({ type, items, setVisibleItems }: Props) => {
   const [search, setSearch] = useState('')
   const [startDate, setStartDate] = useState<Dayjs | null>(null)
   const [endDate, setEndDate] = useState<Dayjs | null>(null)
-  const invalidDateRange = !!(startDate?.isValid() && endDate?.isValid() && startDate.isAfter(endDate, 'day'))
+
+  const invalidStartDate = !!startDate && !startDate.isValid()
+  const invalidEndDate = !!endDate && !endDate.isValid()
+  const invalidDateRange = startDate?.isAfter(endDate, 'day')
+  const invalidDateFilter = invalidStartDate || invalidEndDate || invalidDateRange
+
   useEffect(() => {
     const normalizedSearch = normalizeStringForSearch(search)
 
@@ -32,7 +37,7 @@ const HomeCardsFilters = ({ type, items, setVisibleItems }: Props) => {
         if (type === 'clients') {
           return true
         }
-        if (invalidDateRange || (startDate && !startDate.isValid()) || (endDate && !endDate.isValid())) {
+        if (invalidDateFilter || (startDate && !startDate.isValid()) || (endDate && !endDate.isValid())) {
           return false
         }
         return (
@@ -53,7 +58,7 @@ const HomeCardsFilters = ({ type, items, setVisibleItems }: Props) => {
         return b.startDate.getTime() - a.startDate.getTime() || sortAlphabetically(a.name, b.name)
       })
     setVisibleItems(visibleItems)
-  }, [items, type, search, startDate, endDate, invalidDateRange, setVisibleItems])
+  }, [items, type, search, startDate, endDate, invalidDateFilter, setVisibleItems])
 
   return (
     <div className="flex wrap gapped1 mb1">
@@ -68,11 +73,11 @@ const HomeCardsFilters = ({ type, items, setVisibleItems }: Props) => {
             slotProps={{
               field: { clearable: true },
               textField: {
-                error: !!(startDate && !startDate.isValid()) || invalidDateRange,
+                error: !!(startDate && !startDate.isValid()) || invalidDateFilter,
                 helperText:
                   startDate && !startDate.isValid()
                     ? t('homeCards.invalidDate')
-                    : invalidDateRange
+                    : invalidDateFilter
                       ? t('homeCards.invalidDateRange')
                       : undefined,
               },
@@ -86,11 +91,11 @@ const HomeCardsFilters = ({ type, items, setVisibleItems }: Props) => {
             slotProps={{
               field: { clearable: true },
               textField: {
-                error: !!(endDate && !endDate.isValid()) || invalidDateRange,
+                error: !!(endDate && !endDate.isValid()) || invalidDateFilter,
                 helperText:
                   endDate && !endDate.isValid()
                     ? t('homeCards.invalidDate')
-                    : invalidDateRange
+                    : invalidDateFilter
                       ? t('homeCards.invalidDateRange')
                       : undefined,
               },
