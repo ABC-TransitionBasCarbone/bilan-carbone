@@ -2348,7 +2348,7 @@
       "activity": "Dato di attività",
       "value": "Valore del dato di attività",
       "sign": "Valore solo positivo",
-      "source": "Fonte e data del dato raccolto",
+      "source": "Fonte / data di raccolta",
       "type": "Tipo",
       "depreciationPeriod": "Periodo di ammortamento",
       "hectare": "Ettaro",

@@ -25,7 +25,9 @@ export const Select = ({
 }: Props & SelectProps) => {
   return (
     <>
-      {label && withLabel && <CustomFormLabel label={label} icon={icon} iconPosition={iconPosition} />}
+      {label && withLabel && (
+        <CustomFormLabel label={label} icon={icon} iconPosition={iconPosition} required={selectProps.required} />
+      )}
       <MUISelect
         {...selectProps}
         labelId={`${name}-select-label}`}

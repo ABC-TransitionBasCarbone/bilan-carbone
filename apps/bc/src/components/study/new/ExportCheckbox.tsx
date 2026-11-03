@@ -124,6 +124,7 @@ const ExportCheckbox = ({
           <FormControl fullWidth>
             <Select
               size="small"
+              aria-label={t('control')}
               value={values.controlMode}
               onChange={(event) => handleControlModeChange(event.target.value as ControlMode)}
               disabled={disabled}

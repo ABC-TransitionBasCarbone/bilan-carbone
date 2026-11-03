@@ -1,6 +1,6 @@
 import { OTHER_TAG_ID } from '@/constants/tag.constants'
 import { StudyTagFamilyWithTags } from '@/db/study'
-import { Checkbox, FormControl, FormControlLabel, FormLabel, InputLabel, Menu, MenuItem, Select } from '@mui/material'
+import { Checkbox, FormControl, FormControlLabel, InputLabel, Menu, MenuItem, Select } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
@@ -137,9 +137,9 @@ export const TagFilter = ({
     <>
       <FormControl className={classNames(styles.formControl, className)}>
         {showSeparateLabel ? (
-          <FormLabel id="tag-filter-label" component="legend">
+          <InputLabel id="tag-filter-label" shrink>
             {tCommon('tags')}
-          </FormLabel>
+          </InputLabel>
         ) : (
           <InputLabel id="tag-filter-label" shrink>
             {tCommon('tags')}

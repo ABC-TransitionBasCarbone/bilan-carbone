@@ -1,7 +1,8 @@
 import { OrganizationVersionWithParentLicence } from '@/db/organization'
 import { needsLicenceToUseApp } from '@/services/permissions/environment'
 import { isAdmin } from '@/utils/user'
-import { Environment, Role } from '@abc-transitionbascarbone/common/db/enums'
+import { CourseSessionTraineeOrganizationStatus, Environment, Role } from '@abc-transitionbascarbone/common/db/enums'
+import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import { UserSession } from 'next-auth'
 
 export const isAdminOnOrga = (
@@ -83,8 +84,18 @@ export const hasActiveLicence = (
   organizationVersion: Pick<
     Exclude<OrganizationVersionWithParentLicence, null>,
     'activatedLicence' | 'parent' | 'environment'
-  >,
+  > &
+    Partial<
+      Pick<NonNullable<OrganizationVersionWithParentLicence>, 'traineeCourseSessions' | 'professorCourseSessions'>
+    >,
 ) => {
+  if (isCourseEnvironment(organizationVersion.environment)) {
+    return (
+      organizationVersion.traineeCourseSessions?.some(
+        ({ courseStatus }) => courseStatus === CourseSessionTraineeOrganizationStatus.ACTIVE,
+      ) || (organizationVersion.professorCourseSessions?.length ?? 0) > 0
+    )
+  }
   if (!needsLicenceToUseApp(organizationVersion.environment)) {
     return true
   }

@@ -2,9 +2,31 @@ import { CutRoles } from '@/services/roles'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import { Environment, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
-import { findUserInfo, getEnvironmentRoles, getRoleToSetForUntrained, isAdmin } from './user'
+import { canEditMemberRole, findUserInfo, getEnvironmentRoles, getRoleToSetForUntrained, isAdmin } from './user'
 
 describe('userUtils functions', () => {
+  describe('canEditMemberRole', () => {
+    it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
+      'makes the organization team read-only in %s for every role',
+      (environment) => {
+        Object.values(Role).forEach((role) => {
+          expect(canEditMemberRole({ role, environment })).toBe(false)
+        })
+      },
+    )
+
+    it.each([Environment.BC, Environment.TILT, Environment.CUT, Environment.CLICKSON])(
+      'preserves team management permissions in %s',
+      (environment) => {
+        Object.values(Role).forEach((role) => {
+          expect(canEditMemberRole({ role, environment })).toBe(
+            role === Role.ADMIN || role === Role.SUPER_ADMIN || role === Role.GESTIONNAIRE,
+          )
+        })
+      },
+    )
+  })
+
   describe('isAdmin', () => {
     test('should return true for ADMIN roles', () => {
       expect(isAdmin(Role.ADMIN)).toBe(true)

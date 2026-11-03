@@ -1,0 +1,13 @@
+<html>
+  <%- include('../partials/style'); %>
+  <body>
+    <div>
+      <p><%= t_hello %></p>
+      <br />
+      <p><%= t_accountActivated %></p>
+      <p><%= t_notYou %> <a href="mailto:<%= support %>"><%= support %></a>.</p>
+      <br />
+      <%- include('./partials/signature'); %>
+    </div>
+  </body>
+</html>

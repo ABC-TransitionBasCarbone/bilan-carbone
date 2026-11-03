@@ -93,11 +93,11 @@ const DeactivableFeature = ({ restrictions }: Props) => {
           {(values as typeof criterias).map((value) => (
             <div key={value} className="ml2">
               <FormControl className="flex-row align-center" sx={{ gap: 1 }}>
-                <FormLabel>{tFactor(value)}</FormLabel>
+                <FormLabel component="span">{tFactor(value)}</FormLabel>
                 <FormControlLabel
                   control={
                     <Switch
-                      aria-label={t(isCriteriaActive(criterias, value).toString())}
+                      aria-label={tFactor(value)}
                       checked={isCriteriaActive(criterias, value)}
                       onChange={(event) => updateDeactivatedFeatureRestrictions(value, event.target.checked)}
                     />

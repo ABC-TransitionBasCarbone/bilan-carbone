@@ -43,7 +43,10 @@ import { canAddMember, canChangeRole, canDeleteMember } from '../permissions/use
 export const resetPassword = async (email: string) =>
   withServerResponse('resetPassword', async () => {
     const user = await getUserByEmail(email)
-    if (!user) {
+    if (
+      !user ||
+      user?.accountsMip.find((a) => a.environment === Environment.MIP && a.status === UserStatus.SUSPENDED)
+    ) {
       throw new Error(`No user found with email ${email}`)
     } else {
       if (user) {

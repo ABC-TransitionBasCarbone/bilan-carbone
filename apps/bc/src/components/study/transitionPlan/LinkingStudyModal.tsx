@@ -190,17 +190,19 @@ const LinkingStudyModal = ({
               <FormTextField
                 control={control}
                 name="name"
-                label={`${t('name')} *`}
+                label={t('name')}
                 placeholder={t('namePlaceholder')}
                 data-testid="link-external-study-name"
+                required
               />
               <div className="flex-col grow">
-                <span className="inputLabel bold mb-2">{`${t('date')} *`}</span>
+                <span className="inputLabel bold mb-2">{t('date')}</span>
                 <div className="flex grow relative">
                   <FormDatePicker
                     control={control}
                     className="grow"
                     name="date"
+                    required
                     views={['year']}
                     maxDate={dayjs(previousYear)}
                     fullWidth
@@ -209,11 +211,12 @@ const LinkingStudyModal = ({
                 </div>
               </div>
               <div className="flex-col grow">
-                <span className="inputLabel bold mb-2">{`${t('totalCo2')} *`}</span>
+                <span className="inputLabel bold mb-2">{t('totalCo2')}</span>
                 <div className="flex grow relative">
                   <FormTextField
                     control={control}
                     name="totalCo2Value"
+                    required
                     type="number"
                     className="grow"
                     placeholder={t('totalCo2Placeholder')}

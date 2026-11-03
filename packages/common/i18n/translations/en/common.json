@@ -282,6 +282,10 @@
       "activateAccountFromReset": {
         "content": "Welcome to BC+! You have requested a password reset but your account is not yet activated. If you wish to finalise its activation, please click on"
       },
+      "accountActivated": {
+        "content": "You have just activated your account on BC+ for training organisations.",
+        "notYou": "If this wasn't you, please contact support: "
+      },
       "activationRequest": {
         "content": "You have an access request to your organisation's BC+ account from {userToActivate} (email: {emailToActivate}). You can find access requests in your account on the page \"My organisation > My team\". By accepting the access request, you will assign a role to this user within your organisation. They will then have access to the corresponding information and actions based on their role. If you decline, they will not have access to your organisation's account."
       },

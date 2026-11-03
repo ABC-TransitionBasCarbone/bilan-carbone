@@ -53,9 +53,10 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, errors, sites, tagFami
       <FormTextField
         control={control}
         name="title"
-        label={`${t('title')} *`}
+        label={t('title')}
         placeholder={t('titlePlaceholder')}
         data-testid="add-action-title"
+        required
       />
       <ActionStepsList control={control} errors={errors} />
       <FormTextField
@@ -70,9 +71,10 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, errors, sites, tagFami
         data-testid="emission-factor-unit"
         control={control}
         translation={t}
-        label={`${t('potentialDeduction')} *`}
+        label={t('potentialDeduction')}
         name="potentialDeduction"
         fullWidth
+        required
       >
         {Object.values(ActionPotentialDeduction).map((potential) => (
           <MenuItem key={potential} value={potential} disabled={potential === ActionPotentialDeduction.EmissionSources}>
@@ -85,30 +87,33 @@ const ActionModalStep1 = ({ studyUnit, control, setValue, errors, sites, tagFami
         {potentialDeduction === ActionPotentialDeduction.Quantity && (
           <div className={styles.reductionValue}>
             <FormTextField
-              label={`${t('reductionValue')} *`}
+              label={t('reductionValue')}
               type="number"
               control={control}
               name="reductionValue"
               endAdornment={<div className="unit">{tUnit(studyUnit)}</div>}
               data-testid="add-action-reductionValue"
+              required
             />
           </div>
         )}
         <div className={classNames('flex gapped1 w100', styles.reductionYearContainer)}>
           <FormDatePicker
-            label={`${t('reductionStartYear')} *`}
+            label={t('reductionStartYear')}
             control={control}
             className={styles.reductionYear}
             name="reductionStartYear"
+            required
             views={['year']}
             minDate={dayjs()}
             data-testid="add-action-reductionStartYear"
           />
           <FormDatePicker
-            label={`${t('reductionEndYear')} *`}
+            label={t('reductionEndYear')}
             control={control}
             className={styles.reductionYear}
             name="reductionEndYear"
+            required
             views={['year']}
             minDate={dayjs(reductionStartYear)}
             data-testid="add-action-reductionEndYear"

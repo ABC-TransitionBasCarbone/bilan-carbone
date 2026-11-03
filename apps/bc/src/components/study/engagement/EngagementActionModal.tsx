@@ -157,28 +157,31 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
           <FormTextField
             control={control}
             name="name"
-            label={`${t('name')} *`}
+            label={t('name')}
             placeholder={t('namePlaceholder')}
             data-testid="add-action-name"
+            required
           />
           <FormTextField
             control={control}
             name="description"
-            label={`${t('description')} *`}
+            label={t('description')}
             placeholder={t('descriptionPlaceholder')}
             data-testid="add-action-description"
             multiline
             minRows={2}
+            required
           />
-          <FormDatePicker control={control} name="date" label={`${t('date')} *`} />
+          <FormDatePicker control={control} name="date" label={t('date')} required />
           <FormSelect
             control={control}
             translation={t}
             name="targets"
-            label={`${t('target')} *`}
+            label={t('target')}
             data-testid="engagement-action-targets"
             fullWidth
             multiple
+            required
             renderValue={() => {
               return targets
                 .map((value) =>
@@ -218,8 +221,9 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
                 : steps || ''
             }
             name="steps"
-            label={`${t('steps')} *`}
+            label={t('steps')}
             freeSolo
+            required
             onInputChange={(_, value) => {
               setValue('steps', value || '')
             }}
@@ -229,8 +233,9 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
             control={control}
             translation={t}
             name="phase"
-            label={`${t('phase')} *`}
+            label={t('phase')}
             fullWidth
+            required
           >
             {Object.values(EngagementPhase).map((phase) => (
               <MenuItem key={phase} value={phase}>
@@ -242,11 +247,12 @@ const EngagementActionModal = ({ action, open, onClose, study }: Props) => {
             control={control}
             translation={t}
             name={'sites'}
-            label={`${t('sites')} *`}
+            label={t('sites')}
             data-testid={`engagement-action-sites`}
             fullWidth
             multiple
             value={sites}
+            required
           >
             {study.sites.length > 1 && <MenuItem value={'all'}>{t('allSites')}</MenuItem>}
             {study.sites.map((site) => (

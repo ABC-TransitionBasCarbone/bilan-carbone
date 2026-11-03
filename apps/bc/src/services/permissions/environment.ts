@@ -5,6 +5,7 @@ import {
   advancedEnvironments,
   getEnvironmentHandlingGenericEnvs,
   isAdvanced,
+  isCourseEnvironment,
   isSimplified,
 } from '@abc-transitionbascarbone/common/utils/environments'
 const { BC, CUT, TILT, COURSE_TILT, CLICKSON } = Environment
@@ -26,6 +27,8 @@ export const getLocalesForEnv = (environment: Environment) => {
       return [Locale.EN, Locale.FR]
   }
 }
+
+export const hasAccountActivation = (environment: Environment) => isBC(environment) || isCourseEnvironment(environment)
 
 export const hasAccessToDownloadStudyEmissionSourcesButton = isAdvanced
 

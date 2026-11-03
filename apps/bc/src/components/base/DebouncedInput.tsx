@@ -43,6 +43,7 @@ const DebouncedInput = ({
       {...props}
       size={size}
       slotProps={{
+        ...props.slotProps,
         input: {
           ...props.slotProps?.input,
           className: styles.textFieldInput,

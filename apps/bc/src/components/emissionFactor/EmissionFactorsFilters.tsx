@@ -11,6 +11,7 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  InputLabel,
   ListItemText,
   MenuItem,
   Popper,
@@ -94,11 +95,12 @@ export const EmissionFactorsFilters = ({
       {displayFilters && (
         <>
           <FormControl>
-            <FormLabel id="emission-factors-filter-search" component="legend">
+            <FormLabel component="label" htmlFor="emission-factor-search-input">
               {t('search')}
             </FormLabel>
             <DebouncedInput
               className={styles.searchInput}
+              id="emission-factor-search-input"
               debounce={500}
               value={filters.search}
               onChange={(newValue) => setFilters((prevFilters) => ({ ...prevFilters, search: newValue }))}
@@ -107,11 +109,8 @@ export const EmissionFactorsFilters = ({
             />
           </FormControl>
           <FormControl className={styles.multiSelector}>
-            <FormLabel id="emission-factors-filter-location" component="legend">
-              {t('locationSearch')}
-            </FormLabel>
-
             <Autocomplete
+              id="emissions-location-filter"
               multiple
               disableCloseOnSelect
               value={filters.locations}
@@ -140,7 +139,14 @@ export const EmissionFactorsFilters = ({
                   </MenuItem>
                 )
               }}
-              renderInput={(params) => <TextField {...params} placeholder={t('locationSearchPlaceholder')} />}
+              renderInput={(params) => (
+                <>
+                  <FormLabel component="label" htmlFor="emissions-location-filter">
+                    {t('locationSearch')}
+                  </FormLabel>
+                  <TextField {...params} placeholder={t('locationSearchPlaceholder')} />
+                </>
+              )}
               slots={{ popper: Popper }}
               slotProps={{ popper: { style: { minWidth: 300 } } }}
               renderValue={(selected, getItemProps) => {
@@ -159,11 +165,8 @@ export const EmissionFactorsFilters = ({
             />
           </FormControl>
           <FormControl className={styles.multiSelector}>
-            <FormLabel id="emissions-unit-selector" component="legend">
-              {t('unitSearch')}
-            </FormLabel>
-
             <Autocomplete
+              id="emissions-unit-filter"
               multiple
               disableCloseOnSelect
               value={filters.units}
@@ -193,7 +196,14 @@ export const EmissionFactorsFilters = ({
                   </MenuItem>
                 )
               }}
-              renderInput={(params) => <TextField {...params} placeholder={t('unitSearchPlaceholder')} />}
+              renderInput={(params) => (
+                <>
+                  <FormLabel component="label" htmlFor="emissions-unit-filter">
+                    {t('unitSearch')}
+                  </FormLabel>
+                  <TextField {...params} placeholder={t('unitSearchPlaceholder')} />
+                </>
+              )}
               slots={{ popper: Popper }}
               slotProps={{ popper: { style: { minWidth: 300 } } }}
               renderValue={(selected, getItemProps) => {
@@ -214,9 +224,7 @@ export const EmissionFactorsFilters = ({
           </FormControl>
           {filters.base && (
             <FormControl className={styles.selector}>
-              <FormLabel id="emissions-unit-selector" component="legend">
-                {t('base')}
-              </FormLabel>
+              <InputLabel id="emissions-base-selector">{t('base')}</InputLabel>
               <MultiSelectAll
                 id="emissions-base"
                 values={filters.base}
@@ -227,12 +235,12 @@ export const EmissionFactorsFilters = ({
             </FormControl>
           )}
           <FormControl className={styles.selector}>
-            <FormLabel id="emissions-sources-selector" component="legend">
+            <FormLabel component="label" htmlFor="emissions-sources-select" id="emissions-sources-label">
               {t('sources')}
             </FormLabel>
             <Select
-              id="emissions-sources-selector"
-              labelId="emissions-sources-selector"
+              id="emissions-sources-select"
+              labelId="emissions-sources-label"
               value={filters.sources}
               onChange={({ target: { value } }) =>
                 setFilters((prevFilters) => ({ ...prevFilters, sources: value as string[] }))
@@ -262,13 +270,12 @@ export const EmissionFactorsFilters = ({
             className={styles.selector}
           />
           <FormControl className={styles.selector}>
-            <FormLabel id="archived-emissions-factors-radio-group-label" component="legend">
-              {t('displayArchived')}
-            </FormLabel>
+            <div id="archived-emissions-factors-label">{t('displayArchived')}</div>
             <FormControlLabel
               control={
                 <Switch
                   checked={filters.archived}
+                  aria-labelledby="archived-emissions-factors-label"
                   data-testid="archived-emissions-factors-switch"
                   onChange={(event) =>
                     setFilters((prevFilters) => ({ ...prevFilters, archived: event.target.checked }))

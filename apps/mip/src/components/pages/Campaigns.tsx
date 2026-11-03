@@ -118,6 +118,7 @@ const CampaignsPage = ({ campaigns, modelCampaign, accountMipId }: Props) => {
                   size="small"
                   placeholder={t('namePlaceholder')}
                   fullWidth
+                  required
                   error={!!error}
                   helperText={error?.message}
                   slotProps={{

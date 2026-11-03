@@ -1,5 +1,5 @@
 import { checkCronRequest } from '@/app/api/cron/utils'
-import { importCourseSessionsFromFTP } from '@/scripts/ftp/importTrainingSessions'
+import { importCourseSessionsFromFTP } from '@/scripts/ftp/importTrainingSessions/importTrainingSessions'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export const POST = async (req: NextRequest): Promise<NextResponse> => {

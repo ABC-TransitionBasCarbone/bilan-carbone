@@ -58,6 +58,7 @@ export type StudyWithRoleFields = {
     environment: Environment
     activatedLicence: number[]
     parent: { activatedLicence: number[] } | null
+    traineeCourseSessions?: NonNullable<FullStudy['organizationVersion']>['traineeCourseSessions']
   }
   allowedUsers: { role: StudyRole; account: { id: string; user: { email: string } } }[]
 }

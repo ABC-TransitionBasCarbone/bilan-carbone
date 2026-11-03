@@ -18,6 +18,7 @@ export function TextQuestionInput({ question, value, onChange, error }: TextQues
         fullWidth
         multiline
         rows={4}
+        required={question.required}
         placeholder={question.placeholder}
         value={value || ''}
         onChange={(e) => onChange(e.target.value)}

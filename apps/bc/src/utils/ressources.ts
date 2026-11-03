@@ -110,6 +110,7 @@ export const getEnvironnementRessources = async (env: Environment, t: Translatio
         },
       ]
     }
+    case Environment.COURSE_TILT:
     case Environment.TILT: {
       return [
         {

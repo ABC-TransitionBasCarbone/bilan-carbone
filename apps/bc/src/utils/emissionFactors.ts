@@ -128,6 +128,7 @@ const tiltEmissionFactorSubPostsMapping: Partial<Record<SubPost, SubPost[]>> = {
 
 const getEmissionFactorSubPostMap = (subPost: SubPost, env: Environment): SubPost[] => {
   switch (env) {
+    case Environment.COURSE_TILT:
     case Environment.TILT:
       return [subPost, ...(tiltEmissionFactorSubPostsMapping[subPost] || [convertTiltSubPostToBCSubPost(subPost)])]
     default:

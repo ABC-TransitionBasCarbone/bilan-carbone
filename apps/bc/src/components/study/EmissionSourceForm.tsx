@@ -251,10 +251,11 @@ const EmissionSourceForm = ({
             <TextField
               className="grow"
               disabled={!canEdit}
+              required
               type="number"
               defaultValue={emissionSource.hectare}
               onBlur={(event) => update('hectare', Number(event.target.value))}
-              label={`${t('form.hectare')} *`}
+              label={t('form.hectare')}
               slotProps={{
                 inputLabel: { shrink: true },
                 input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
@@ -263,10 +264,11 @@ const EmissionSourceForm = ({
             <TextField
               className="grow"
               disabled={!canEdit}
+              required
               type="number"
               defaultValue={emissionSource.duration}
               onBlur={(event) => update('duration', Number(event.target.value))}
-              label={`${t('form.duration')} *`}
+              label={t('form.duration')}
               slotProps={{
                 inputLabel: { shrink: true },
                 input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
@@ -279,17 +281,18 @@ const EmissionSourceForm = ({
               <TextField
                 className="grow"
                 disabled={!canEdit}
+                required
                 type="number"
                 data-testid="emission-source-value-da"
                 defaultValue={emissionSource.value}
                 onBlur={(event) => handleUpdate(event)}
-                label={`${t('form.value')} *`}
+                label={t('form.value')}
                 helperText={error}
                 error={!!error}
+                InputLabelProps={{ shrink: true }}
                 slotProps={{
                   htmlInput: { min: 0 },
                   input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
-                  inputLabel: { shrink: !!selectedFactor || emissionSource.value !== null },
                 }}
               />
               {selectedFactor && (
@@ -305,10 +308,11 @@ const EmissionSourceForm = ({
                 <TextField
                   className="grow"
                   disabled={!canEdit}
+                  required
                   type="number"
                   defaultValue={emissionSource.depreciationPeriod}
                   onBlur={(event) => update('depreciationPeriod', Number(event.target.value))}
-                  label={`${t('form.depreciationPeriod')} *`}
+                  label={t('form.depreciationPeriod')}
                   slotProps={{
                     inputLabel: { shrink: true },
                     input: { onWheel: (event) => (event.target as HTMLInputElement).blur() },
@@ -320,12 +324,13 @@ const EmissionSourceForm = ({
             {hasGHGPExport && withDeprecationPeriod && (
               <FormControl className="grow">
                 <DatePicker
-                  label={`${t('form.constructionYear')} *`}
+                  label={t('form.constructionYear')}
                   disabled={!canEdit}
                   slotProps={{
                     textField: {
                       error: !!error,
                       className: styles.datePickerInput,
+                      required: true,
                     },
                   }}
                   maxDate={dayjs(new Date())}
@@ -343,16 +348,19 @@ const EmissionSourceForm = ({
           </>
         )}
         <TextField
+          id={`emission-source-source-${emissionSource.id}`}
           className="grow"
           disabled={!canEdit}
+          required
           data-testid="emission-source-source"
           defaultValue={emissionSource.source}
           onBlur={(event) => update('source', event.target.value || null)}
-          label={`${t('form.source')} *`}
+          label={t('form.source')}
+          slotProps={{ inputLabel: { shrink: true } }}
         />
         {caracterisations.length > 0 && displayCaracterisation && (
-          <FormControl className="grow">
-            <InputLabel id="emission-source-caracterisation-label">{`${t('form.caracterisation')} *`}</InputLabel>
+          <FormControl className="grow" required>
+            <InputLabel id="emission-source-caracterisation-label">{t('form.caracterisation')}</InputLabel>
             <Select
               disabled={
                 !canEdit || (caracterisations.length === 1 && !!emissionSource.caracterisation) || isContributor
@@ -363,8 +371,9 @@ const EmissionSourceForm = ({
                 update('caracterisation', event.target.value === '' ? null : (event.target.value as string))
               }
               labelId="emission-source-caracterisation-label"
-              label={`${t('form.caracterisation')} *`}
+              label={t('form.caracterisation')}
               withLabel={false}
+              required
               clearable={!!canEdit && caracterisations.length > 1 && !isContributor}
             >
               {caracterisations.map((categorisation) => (

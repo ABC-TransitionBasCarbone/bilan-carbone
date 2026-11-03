@@ -17,7 +17,7 @@ const tBody = async (keys: string, object?: Record<string, string | number | Dat
 
 type TrainingSessionSummary = Pick<
   CourseSession,
-  'name' | 'environment' | 'startDate' | 'endDate' | 'traineeCode' | 'professorCode'
+  'name' | 'environment' | 'startDate' | 'endDate' | 'code'
 > & {
   trainees: Pick<User, 'email' | 'firstName' | 'lastName'>[]
   professor: Pick<User, 'email' | 'firstName' | 'lastName'> | null
@@ -146,6 +146,12 @@ export const sendActivationEmail = async (toEmail: string, token: string, fromRe
     },
   )
 }
+
+export const sendAccountActivatedEmail = async (toEmail: string, env: Environment) =>
+  sendEmail(env, [toEmail], await tSubject('activation'), 'account-activated', {
+    t_accountActivated: await tBody('accountActivated.content'),
+    t_notYou: await tBody('accountActivated.notYou'),
+  })
 
 export const sendActivationRequest = async (
   toEmailList: string[],

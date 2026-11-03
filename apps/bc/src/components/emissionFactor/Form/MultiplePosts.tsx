@@ -134,7 +134,8 @@ const MultiplePosts = <T extends SubPostsCommand>({ form, context, selectAll = f
                 name={'post'}
                 onChange={handleSelectPost}
                 data-testid="emission-factor-post"
-                label={Object.keys(selectedPosts).length ? t('posts') : `${t('posts')} *`}
+                label={t('posts')}
+                required={Object.keys(selectedPosts).length === 0}
                 fullWidth
                 icon={<HelpIcon onClick={() => setGlossary(`post_${context}`)} label={tGlossary('title')} />}
                 iconPosition="after"

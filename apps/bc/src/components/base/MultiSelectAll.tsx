@@ -64,7 +64,7 @@ const MultiSelectAll = <T extends string>({ id, values, allValues, setValues, ge
       renderValue={renderValue}
       multiple
       displayEmpty
-      label={label ?? undefined}
+      label={label}
     >
       {allValues.length > 1 && (
         <MenuItem key={`${id}-item-all`} value="all">

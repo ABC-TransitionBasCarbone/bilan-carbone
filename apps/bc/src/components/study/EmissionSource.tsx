@@ -35,7 +35,7 @@ import { formatDateFr } from '@abc-transitionbascarbone/common/utils'
 import { STUDY_UNIT_VALUES } from '@abc-transitionbascarbone/common/utils/charts'
 import { formatNumber } from '@abc-transitionbascarbone/common/utils/number'
 import SavedIcon from '@mui/icons-material/CloudUpload'
-import { Alert, CircularProgress, FormLabel, TextField } from '@mui/material'
+import { Alert, CircularProgress, TextField } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -229,18 +229,16 @@ const EmissionSource = ({
                 {emissionSource.name}
               </p>
             ) : (
-              <>
-                {!emissionSource.name && <FormLabel component="legend">{t('label')}</FormLabel>}
-                <TextField
-                  disabled={!canEdit}
-                  defaultValue={emissionSource.name}
-                  data-testid="emission-source-name"
-                  onBlur={(event) => update('name', event.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  placeholder={t('addPlaceholder')}
-                  className="grow"
-                />
-              </>
+              <TextField
+                disabled={!canEdit}
+                defaultValue={emissionSource.name}
+                data-testid="emission-source-name"
+                onBlur={(event) => update('name', event.target.value)}
+                onClick={(e) => e.stopPropagation()}
+                label={t('label')}
+                placeholder={t('addPlaceholder')}
+                className="grow"
+              />
             )}
           </div>
           <div className="grow align-center gapped">
