@@ -81,6 +81,11 @@ export const mockedDdStudy = {
 
 export const mockedFullStudy = {
   ...mockedDdStudy,
+  createdBy: {
+    environment: Environment.BC,
+    user: { firstName: 'Test', lastName: 'Student' },
+    organizationVersion: null,
+  },
   emissionSources: [],
   contributors: [],
   allowedUsers: [],
@@ -206,6 +211,8 @@ export const getMockedAllowedUser = (user?: DeepPartial<MinimalStudyForRights['a
 
 const mockMinimalStudy: MinimalStudyForRights = {
   id: 'study-1',
+  courseSessionType: null,
+  createdBy: mockedFullStudy.createdBy,
   name: 'Study 1',
   organizationVersion: {
     id: 'org-1',
@@ -361,6 +368,7 @@ export const getMockedDuplicateStudyCommand = (overrides = {}) => ({
 
 export const getMockeFullStudy = (overrides = {}): FullStudy => ({
   id: TEST_IDS.sourceStudy,
+  createdBy: mockedFullStudy.createdBy,
   courseSessionType: null,
   name: 'Source Study',
   simplified: false,

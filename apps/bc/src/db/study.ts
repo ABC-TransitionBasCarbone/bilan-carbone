@@ -35,6 +35,7 @@ import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client.server'
 import { OrganizationVersionCourseAccessSelect } from './organization.select'
 import { getOrganizationVersionsByIds } from './organizationVersions'
+import { StudyCourseAccessSelect } from './study.select'
 
 export type StudyTagFamilyWithTags = Omit<StudyTagFamily, 'createdAt' | 'updatedAt'> & {
   tags: Omit<StudyTag, 'familyId' | 'createdAt' | 'updatedAt'>[]
@@ -94,6 +95,7 @@ export const createStudy = async (
 }
 
 const fullStudyInclude = {
+  createdBy: StudyCourseAccessSelect.createdBy,
   emissionSources: {
     select: {
       id: true,
@@ -562,6 +564,7 @@ export const getStudyForNavbar = async (id: string): Promise<StudyForNavbar | nu
   return prismaClient.study.findUnique({
     where: { id },
     select: {
+      ...StudyCourseAccessSelect,
       id: true,
       name: true,
       simplified: true,
@@ -599,6 +602,7 @@ export const getStudiesForCards = async (ids: string[]) => {
   const studies = await prismaClient.study.findMany({
     where: { id: { in: ids } },
     select: {
+      ...StudyCourseAccessSelect,
       id: true,
       name: true,
       simplified: true,
@@ -652,6 +656,14 @@ type StudiesForCardsMap = AsyncReturnType<typeof getStudiesForCards>
 
 export type StudyCardItem = StudiesForCardsMap[string] & {
   validatedSources: { total: number; validated: number }
+}
+
+export const getStudyCards = async (ids: string[]): Promise<StudyCardItem[]> => {
+  const [cards, validatedSources] = await Promise.all([
+    getStudiesForCards(ids),
+    getStudiesValidatedEmissionsSources(ids),
+  ])
+  return ids.filter((id) => id in cards).map((id) => ({ ...cards[id], validatedSources: validatedSources[id] }))
 }
 
 export const getStudyByIds = async (ids: string[]) => {
@@ -902,6 +914,7 @@ export const getStudiesSitesFromIds = async (siteIds: string[]) =>
     include: {
       study: {
         select: {
+          ...StudyCourseAccessSelect,
           id: true,
           name: true,
           isPublic: true,
@@ -912,7 +925,11 @@ export const getStudiesSitesFromIds = async (siteIds: string[]) =>
           simplified: true,
           organizationVersion: {
             select: {
+              ...OrganizationVersionCourseAccessSelect,
               id: true,
+              environment: true,
+              activatedLicence: true,
+              parent: { select: { activatedLicence: true } },
               isCR: true,
               parentId: true,
               organization: {
@@ -1270,6 +1287,7 @@ export const getMinimalStudyForRights = async (studyId: string) => {
   const studyFromDB = await prismaClient.study.findFirst({
     where: { id: studyId },
     select: {
+      ...StudyCourseAccessSelect,
       id: true,
       level: true,
       isPublic: true,

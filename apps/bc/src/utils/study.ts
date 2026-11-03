@@ -1,4 +1,5 @@
 import { type FullStudy } from '@/db/study'
+import type { StudyCourseAccess } from '@/db/study.select'
 import { mappedTiltSituationToCustomDataFields } from '@/services/customDataToSituation'
 import { getEmissionResults } from '@/services/emissionSource'
 import { hasAccessToStudyHomePage } from '@/services/permissions/environment'
@@ -47,7 +48,7 @@ export const getUserRoleOnPublicStudy = (
     : StudyRole.Reader
 }
 
-export type StudyWithRoleFields = {
+export type StudyWithRoleFields = Partial<StudyCourseAccess> & {
   id: string
   level: Level
   isPublic: boolean
@@ -63,17 +64,50 @@ export type StudyWithRoleFields = {
   allowedUsers: { role: StudyRole; account: { id: string; user: { email: string } } }[]
 }
 
+export const isProfessorOnStudy = (
+  user: Pick<UserSession, 'environment' | 'organizationVersionId'>,
+  study: Partial<StudyCourseAccess> & { organizationVersion: { environment: Environment } },
+) => {
+  if (
+    !isCourseEnvironment(user.environment) ||
+    !user.organizationVersionId ||
+    !study.courseSessionType ||
+    study.organizationVersion.environment !== user.environment ||
+    study.createdBy?.environment !== user.environment
+  ) {
+    return false
+  }
+
+  return (
+    study.createdBy.organizationVersion?.traineeCourseSessions.some(
+      ({ courseSession }) =>
+        courseSession.type === study.courseSessionType &&
+        courseSession.environment === user.environment &&
+        courseSession.professorOrganizationVersionId === user.organizationVersionId,
+    ) ?? false
+  )
+}
+
 export const getAccountRoleOnStudy = (user: UserSession, study: StudyWithRoleFields) => {
-  if (isTiltSimplified(study.organizationVersion.environment, study.simplified)) {
+  const isAdminOnOrganization = isAdminOnStudyOrga(user, study.organizationVersion)
+  const right = study.allowedUsers.find((right) => right.account.id === user.accountId)
+  if (!isAdminOnOrganization && !right && isProfessorOnStudy(user, study)) {
+    return StudyRole.Reader
+  }
+
+  if (
+    isTiltSimplified(study.organizationVersion.environment, study.simplified) &&
+    user.organizationVersionId === study.organizationVersion.id
+  ) {
     return StudyRole.Editor
   }
-  if (isAdminOnStudyOrga(user, study.organizationVersion)) {
+
+  if (isAdminOnOrganization) {
     return hasSufficientLevel(user.level, study.level, user.environment) && hasActiveLicence(study.organizationVersion)
       ? StudyRole.Validator
       : StudyRole.Reader
   }
 
-  const right = study.allowedUsers.find((right) => right.account.id === user.accountId)
   if (right) {
     return hasSufficientLevel(user.level, study.level, user.environment) && hasActiveLicence(study.organizationVersion)
       ? right.role
@@ -91,9 +125,11 @@ export const getDisplayedRoleOnStudy = (
   user: UserSession,
   study: StudyWithRoleFields & { contributors: { accountId: string }[] },
 ) => {
-  return study.contributors.some((contributor) => contributor.accountId === user.accountId)
+  const roleOnStudy = getAccountRoleOnStudy(user, study)
+
+  return study.contributors.some((contributor) => contributor.accountId === user.accountId) && !roleOnStudy
     ? 'Contributor'
-    : getAccountRoleOnStudy(user, study)
+    : roleOnStudy
 }
 
 export const getAllowedRolesFromDefaultRole = (role: StudyRole) => {

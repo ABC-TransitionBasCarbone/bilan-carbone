@@ -1,6 +1,14 @@
 {
   "courseSessions": {
-    "title": "Mes sessions de formation"
+    "title": "Mes sessions de formation",
+    "session": "Session de formation",
+    "studies": "Les études des stagiaires",
+    "empty": "Aucune étude pour les stagiaires de cette session pour le moment.",
+    "types": {
+      "INITIAL": "Initial",
+      "PROFESSIONNEL": "Professionnel",
+      "MAITRISE": "Maîtrise"
+    }
   },
   "login": {
     "welcome": "Bienvenue sur le Bilan Carbone® + [ESPACE FORMATION]",

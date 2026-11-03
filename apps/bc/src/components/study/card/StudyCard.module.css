@@ -2,6 +2,11 @@
   gap: 1rem;
 }
 
+.student {
+  gap: 0.5rem;
+  color: var(--primary-800);
+}
+
 .validated {
   color: var(--warning);
 

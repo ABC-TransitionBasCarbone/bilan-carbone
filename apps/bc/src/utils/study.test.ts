@@ -1,15 +1,28 @@
 import * as situationServerModule from '@/services/serverFunctions/situation'
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
-import { getMockedFullStudySite, mockedEmissionSourceEmissionFactor } from '@/tests/utils/models/study'
+import {
+  getMockedFullStudy,
+  getMockedFullStudySite,
+  mockedEmissionSourceEmissionFactor,
+} from '@/tests/utils/models/study'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import * as UserUtilsModule from '@/utils/user'
-import { EmissionFactorBase, Environment, Level, Role } from '@abc-transitionbascarbone/common/db/enums'
+import {
+  CourseSessionType,
+  EmissionFactorBase,
+  Environment,
+  Level,
+  Role,
+  StudyRole,
+} from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import {
+  getAccountRoleOnStudy,
   getBaseFilteredEmissionSources,
   getDuplicableEnvironments,
   getStudyDefaultLandingPath,
   getUserRoleOnPublicStudy,
+  isProfessorOnStudy,
 } from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
@@ -50,6 +63,108 @@ const emissionSources = [
 ]
 
 const userMock = getMockedAuthUser()
+
+describe('professor study permissions', () => {
+  const professor = { ...userMock, environment: Environment.COURSE_BC, organizationVersionId: 'professor-org' }
+  const study = getMockedFullStudy({
+    courseSessionType: CourseSessionType.INITIAL,
+    isPublic: false,
+    allowedUsers: [],
+    organizationVersion: {
+      ...getMockedFullStudy().organizationVersion,
+      environment: Environment.COURSE_BC,
+    },
+    createdBy: {
+      environment: Environment.COURSE_BC,
+      user: { firstName: 'Camille', lastName: 'Martin' },
+      organizationVersion: {
+        traineeCourseSessions: [
+          {
+            courseSession: {
+              type: CourseSessionType.INITIAL,
+              environment: Environment.COURSE_BC,
+              professorOrganizationVersionId: professor.organizationVersionId,
+            },
+          },
+        ],
+      },
+    },
+  })
+
+  it('grants only Reader to the current session professor', () => {
+    expect(isProfessorOnStudy(professor, study)).toBe(true)
+    expect(getAccountRoleOnStudy(professor, study)).toBe(StudyRole.Reader)
+  })
+
+  it('does not grant access to another professor or an account without an organization', () => {
+    expect(isProfessorOnStudy({ ...professor, organizationVersionId: 'other' }, study)).toBe(false)
+    expect(isProfessorOnStudy({ ...professor, organizationVersionId: null }, study)).toBe(false)
+  })
+
+  it('does not expose other training types or untyped studies', () => {
+    expect(isProfessorOnStudy(professor, { ...study, courseSessionType: CourseSessionType.PROFESSIONNEL })).toBe(false)
+    expect(isProfessorOnStudy(professor, { ...study, courseSessionType: null })).toBe(false)
+  })
+
+  it.each([Environment.BC, Environment.TILT, Environment.CUT, Environment.CLICKSON, Environment.MIP])(
+    'does not grant professor access outside training environments: %s',
+    (environment) => {
+      expect(isProfessorOnStudy({ ...professor, environment }, study)).toBe(false)
+    },
+  )
+
+  it('requires matching environments on the study, creator and session', () => {
+    expect(isProfessorOnStudy({ ...professor, environment: Environment.COURSE_TILT }, study)).toBe(false)
+    expect(
+      isProfessorOnStudy(professor, {
+        ...study,
+        createdBy: { ...study.createdBy, environment: Environment.COURSE_TILT },
+      }),
+    ).toBe(false)
+    expect(
+      isProfessorOnStudy(professor, {
+        ...study,
+        organizationVersion: { ...study.organizationVersion, environment: Environment.COURSE_TILT },
+      }),
+    ).toBe(false)
+  })
+
+  it('revokes implicit access as soon as the registration is removed', () => {
+    expect(
+      isProfessorOnStudy(professor, {
+        ...study,
+        createdBy: { ...study.createdBy, organizationVersion: { traineeCourseSessions: [] } },
+      }),
+    ).toBe(false)
+  })
+
+  it('does not grant Editor on simplified COURSE_TILT studies', () => {
+    const tiltStudy = {
+      ...study,
+      simplified: true,
+      organizationVersion: { ...study.organizationVersion, environment: Environment.COURSE_TILT },
+      createdBy: {
+        ...study.createdBy,
+        environment: Environment.COURSE_TILT,
+        organizationVersion: {
+          traineeCourseSessions: [
+            {
+              courseSession: {
+                type: CourseSessionType.INITIAL,
+                environment: Environment.COURSE_TILT,
+                professorOrganizationVersionId: professor.organizationVersionId,
+              },
+            },
+          ],
+        },
+      },
+    }
+
+    expect(getAccountRoleOnStudy({ ...professor, environment: Environment.COURSE_TILT }, tiltStudy)).toBe(
+      StudyRole.Reader,
+    )
+  })
+})
 
 describe('StudyUtils functions', () => {
   describe('getDuplicableEnvironments', () => {

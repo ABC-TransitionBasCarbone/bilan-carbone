@@ -1,9 +1,11 @@
 import * as studyUtilsModule from '@/utils/study'
 import { CourseSessionType, Environment, Import, StudyRole, SubPost } from '@abc-transitionbascarbone/common/db/enums'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { expect } from '@jest/globals'
 import { v4 as uuidv4 } from 'uuid'
 import * as accountModule from '../../db/account'
 import * as courseOrganismModule from '../../db/courseOrganism'
+import * as courseSessionModule from '../../db/courseSession'
 import * as emissionFactorsModule from '../../db/emissionFactors'
 import * as emissionSourcesModule from '../../db/emissionSource'
 import * as organizationModule from '../../db/organization'
@@ -49,10 +51,13 @@ jest.mock('../../services/auth', () => ({
 jest.mock('../../db/study', () => ({
   getStudyById: jest.fn(),
   getStudySites: jest.fn(),
+  getStudiesSitesFromIds: jest.fn(),
   createStudyEmissionSource: jest.fn(),
   createUserOnStudy: jest.fn(),
   createStudy: jest.fn(),
   updateStudy: jest.fn(),
+  updateStudySiteData: jest.fn(),
+  updateStudySites: jest.fn(),
   updateStudyEmissionFactorVersion: jest.fn(),
   createContributorOnStudy: jest.fn(),
   createEmissionSourceTags: jest.fn(),
@@ -79,6 +84,9 @@ jest.mock('../../services/permissions/study', () => ({
   canDuplicateStudy: jest.fn(),
   canChangeSites: jest.fn(),
   canChangeDates: jest.fn(),
+  canChangePublicStatus: jest.fn(),
+  canChangeName: jest.fn(),
+  canChangeOpeningHours: jest.fn(),
   canAddRightOnStudy: jest.fn(),
 }))
 jest.mock('../../services/permissions/study.utils', () => ({
@@ -91,6 +99,7 @@ jest.mock('../../utils/study', () => ({
 }))
 jest.mock('../../db/organization', () => ({
   getOrganizationVersionById: jest.fn(),
+  getOrganizationWithSitesById: jest.fn(),
   getOrgVersionWithNameById: jest.fn(),
   getOrgSitesWithCNCByOrgVersionId: jest.fn(),
   isOrganizationVersionCR: jest.fn(),
@@ -106,6 +115,9 @@ jest.mock('../../db/account', () => ({
 }))
 jest.mock('../../db/courseOrganism', () => ({
   getCourseSessionsForTrainee: jest.fn(),
+}))
+jest.mock('../../db/courseSession', () => ({
+  isCourseProfessor: jest.fn(),
 }))
 jest.mock('../../services/serverFunctions/user', () => ({
   addUserChecklistItem: jest.fn(),
@@ -196,8 +208,18 @@ jest.mock('../../services/serverFunctions/transitionPlan', () => ({
   getLinkedAndExternalStudies: jest.fn(),
 }))
 
-const { createStudyCommand, duplicateStudyCommand, duplicateSiteAndEmissionSources, changeStudyDates } =
-  jest.requireActual('./study')
+const {
+  createStudyCommand,
+  duplicateStudyCommand,
+  duplicateSiteAndEmissionSources,
+  changeStudyDates,
+  changeStudyName,
+  changeStudyPublicStatus,
+  changeStudySites,
+  changeStudyCinema,
+  changeStudyEstablishment,
+  duplicateStudyInOtherEnvironment,
+} = jest.requireActual('./study')
 
 const mockedSessionValidator = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.validator })
 const mockedSession = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.currentUser })
@@ -206,6 +228,7 @@ const mockedStudyCommand = getMockedDuplicateStudyCommand() as CreateStudyComman
 
 const mockDbActualizedAuth = authModule.dbActualizedAuth as jest.Mock
 const mockGetCourseSessionsForTrainee = jest.mocked(courseOrganismModule.getCourseSessionsForTrainee)
+const mockIsCourseProfessor = jest.mocked(courseSessionModule.isCourseProfessor)
 const mockGetStudyById = studyDbModule.getStudyById as jest.Mock
 const mockGetStudySites = studyDbModule.getStudySites as jest.Mock
 const mockCreateStudyEmissionSource = studyDbModule.createStudyEmissionSource as jest.Mock
@@ -245,6 +268,90 @@ const mockGetLinkedAndExternalStudies = (
 ).getLinkedAndExternalStudies
 
 describe('study', () => {
+  describe('read-only study actions', () => {
+    beforeEach(() => {
+      jest.clearAllMocks()
+      mockDbActualizedAuth.mockResolvedValue(mockedSession)
+      mockGetStudyById.mockResolvedValue(mockedSourceStudy)
+    })
+
+    it('awaits permission denial before changing the study name', async () => {
+      jest.mocked(studyPermissionsModule.canChangeName).mockResolvedValue(false)
+
+      expect(await changeStudyName({ studyId: TEST_IDS.sourceStudy, name: 'New name' })).toEqual({
+        success: false,
+        errorMessage: 'Not authorized',
+      })
+      expect(studyDbModule.updateStudy).not.toHaveBeenCalled()
+    })
+
+    it('awaits permission denial before changing public visibility', async () => {
+      jest.mocked(studyPermissionsModule.canChangePublicStatus).mockResolvedValue(false)
+
+      expect(await changeStudyPublicStatus({ studyId: TEST_IDS.sourceStudy, isPublic: 'true' })).toEqual({
+        success: false,
+        errorMessage: 'Not authorized',
+      })
+      expect(studyDbModule.updateStudy).not.toHaveBeenCalled()
+    })
+
+    it('still allows authorized name changes', async () => {
+      jest.mocked(studyPermissionsModule.canChangeName).mockResolvedValue(true)
+
+      expect(await changeStudyName({ studyId: TEST_IDS.sourceStudy, name: 'New name' })).toEqual({
+        success: true,
+        data: undefined,
+      })
+      expect(studyDbModule.updateStudy).toHaveBeenCalledWith(TEST_IDS.sourceStudy, { name: 'New name' })
+    })
+
+    it('awaits permission denial before changing study sites', async () => {
+      const mockGetOrganization = organizationModule.getOrganizationWithSitesById as jest.Mock
+      mockGetOrganization.mockResolvedValue({ sites: [] })
+      mockCanChangeSites.mockResolvedValue(false)
+
+      expect(await changeStudySites(TEST_IDS.sourceStudy, { organizationId: 'org', sites: [] })).toEqual({
+        success: false,
+        errorMessage: 'Not authorized',
+      })
+      expect(studyDbModule.updateStudySites).not.toHaveBeenCalled()
+    })
+
+    it('awaits permission denial before changing establishment data', async () => {
+      const mockGetStudySitesFromIds = studyDbModule.getStudiesSitesFromIds as jest.Mock
+      mockGetStudySitesFromIds.mockResolvedValue([{ study: mockedSourceStudy }])
+      jest.mocked(studyPermissionsModule.canChangeOpeningHours).mockResolvedValue(false)
+
+      expect(await changeStudyEstablishment(TEST_IDS.studySite, {})).toEqual({
+        success: false,
+        errorMessage: 'Not authorized',
+      })
+      expect(studyDbModule.updateStudySiteData).not.toHaveBeenCalled()
+    })
+
+    it('awaits permission denial before changing cinema data', async () => {
+      const mockGetStudySitesFromIds = studyDbModule.getStudiesSitesFromIds as jest.Mock
+      mockGetStudySitesFromIds.mockResolvedValue([{ study: mockedSourceStudy }])
+      jest.mocked(studyPermissionsModule.canChangeOpeningHours).mockResolvedValue(false)
+
+      expect(await changeStudyCinema(TEST_IDS.studySite, 'cinema', {})).toEqual({
+        success: false,
+        errorMessage: 'Not authorized',
+      })
+      expect(studyDbModule.updateStudySiteData).not.toHaveBeenCalled()
+    })
+
+    it('awaits permission denial before cross-environment duplication', async () => {
+      mockCanDuplicateStudy.mockResolvedValue(false)
+
+      expect(await duplicateStudyInOtherEnvironment(TEST_IDS.sourceStudy, Environment.COURSE_TILT)).toEqual({
+        success: false,
+        errorMessage: 'Not authorized',
+      })
+      expect(mockCreateStudy).not.toHaveBeenCalled()
+    })
+  })
+
   describe('duplicateStudyCommand', () => {
     const setupSuccessfullDuplication = () => {
       mockCreateEmissionSourceTags.mockResolvedValue(undefined)
@@ -289,6 +396,7 @@ describe('study', () => {
       mockCreateStudyEmissionSource.mockResolvedValue(undefined)
       mockCreateStudy.mockResolvedValue({ id: TEST_IDS.newStudy, sites: [] })
       mockCreateContributorOnStudy.mockResolvedValue(undefined)
+      mockIsCourseProfessor.mockResolvedValue(false)
     }
 
     const setupInvitationMocks = () => {
@@ -367,6 +475,45 @@ describe('study', () => {
         const result = await createStudyCommand(mockedStudyCommand)
 
         expect(result).toEqual({ success: false, errorMessage: 'multipleCourseSessions' })
+        expect(mockCreateStudy).not.toHaveBeenCalled()
+      })
+
+      it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
+        'lets a professor create a study on their own organization in %s',
+        async (environment) => {
+          mockDbActualizedAuth.mockResolvedValue({
+            ...mockedSession,
+            user: { ...mockedSession.user, environment, organizationVersionId: TEST_IDS.orgVersion },
+          })
+          mockIsCourseProfessor.mockResolvedValue(true)
+
+          const result = await createStudyCommand({ ...mockedStudyCommand, organizationVersionId: TEST_IDS.orgVersion })
+
+          expect(result.success).toBe(true)
+          expect(mockGetCourseSessionsForTrainee).not.toHaveBeenCalled()
+          expect(mockCreateStudy).toHaveBeenCalledWith(
+            expect.objectContaining({ courseSessionType: null }),
+            environment,
+            true,
+            undefined,
+          )
+        },
+      )
+
+      it('prevents a professor from creating a study on another organization', async () => {
+        mockDbActualizedAuth.mockResolvedValue({
+          ...mockedSession,
+          user: {
+            ...mockedSession.user,
+            environment: Environment.COURSE_BC,
+            organizationVersionId: TEST_IDS.orgVersion,
+          },
+        })
+        mockIsCourseProfessor.mockResolvedValue(true)
+
+        const result = await createStudyCommand({ ...mockedStudyCommand, organizationVersionId: 'client-org-version' })
+
+        expect(result).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
         expect(mockCreateStudy).not.toHaveBeenCalled()
       })
 

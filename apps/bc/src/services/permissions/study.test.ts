@@ -30,7 +30,10 @@ import {
   canCreateSpecificStudy,
   canDeleteStudy,
   canDuplicateStudy,
+  canReadStudy,
+  canReadStudyDetail,
   getEnvironmentsForDuplication,
+  hasEditAccessOnStudy,
   NEWGetAccountRoleOnStudy,
 } from './study'
 
@@ -51,6 +54,7 @@ jest.mock('@/utils/study', () => ({
   getDuplicableEnvironments: jest.fn(),
   hasSufficientLevel: jest.fn(),
   getUserRoleOnPublicStudy: jest.fn(),
+  isProfessorOnStudy: jest.fn(),
 }))
 jest.mock('@/utils/organization', () => ({
   canEditOrganizationVersion: jest.fn(),
@@ -89,10 +93,50 @@ const mockGetOrganizationVersionForRightsCheck = dbOrganizationModule.getOrganiz
 const mockIsTiltSimplified = environmentAdvancedModule.isTiltSimplified as jest.Mock
 const mockIsInOrgaOrParent = organizationUtils.isInOrgaOrParent as jest.Mock
 const mockGetUserRoleOnPublicStudy = studyUtils.getUserRoleOnPublicStudy as jest.Mock
+const mockIsProfessorOnStudy = jest.mocked(studyUtils.isProfessorOnStudy)
 
 const advancedStudy = getMockedStudyCreateInput({ level: Level.Advanced })
 const standardStudy = getMockedStudyCreateInput({ level: Level.Standard })
 const initialStudy = getMockedStudyCreateInput({ level: Level.Initial })
+
+describe('professor study access', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    mockIsProfessorOnStudy.mockReturnValue(true)
+    mockIsAdminOnOrga.mockReturnValue(false)
+    mockIsInOrgaOrParent.mockReturnValue(false)
+    mockGetStudyById.mockResolvedValue(getMockedFullStudy())
+  })
+
+  afterEach(() => {
+    mockIsProfessorOnStudy.mockReturnValue(false)
+    mockIsTiltSimplified.mockReturnValue(false)
+  })
+
+  it('allows reading study details without an explicit invitation if user is professor', async () => {
+    expect(await canReadStudy(mockedSession, 'study')).toBe(true)
+    expect(await canReadStudyDetail(mockedSession, getMockedFullStudy())).toBe(true)
+  })
+
+  it('grants only Reader in the minimal permissions path, including simplified studies', () => {
+    mockIsTiltSimplified.mockReturnValue(true)
+    expect(NEWGetAccountRoleOnStudy(mockedSession, getMockedMinimalStudy({ allowedUsers: [] }))).toBe(StudyRole.Reader)
+  })
+
+  it('does not grant editing, deletion or invitations through the professor access', async () => {
+    mockGetAccountRoleOnStudy.mockReturnValue(StudyRole.Reader)
+    mockHasActiveLicence.mockReturnValue(true)
+    mockDBActualizedAuth.mockResolvedValue({ user: mockedSession })
+    mockGetStudyById.mockResolvedValue(getMockedFullStudy({ createdById: 'student-account' }))
+
+    expect(await hasEditAccessOnStudy('study', { user: mockedSession })).toBe(false)
+    expect(await canDeleteStudy('study')).toBe(false)
+    expect(canAddContributorOnStudy(mockedSession, getMockedFullStudy())).toBe(false)
+    expect(canAddRightOnStudy(mockedSession, getMockedMinimalStudy({ allowedUsers: [] }), null, StudyRole.Reader)).toBe(
+      false,
+    )
+  })
+})
 
 describe('course study invitations', () => {
   it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(

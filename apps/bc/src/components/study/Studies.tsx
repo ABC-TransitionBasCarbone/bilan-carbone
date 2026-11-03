@@ -4,6 +4,7 @@ import { StudyCardItem } from '@/db/study'
 import { getFeedbackFormUrl } from '@/utils/ressources'
 import Block, { type Action } from '@abc-transitionbascarbone/common/components/base/Block'
 import LinkButton from '@abc-transitionbascarbone/common/components/base/LinkButton'
+import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import AddIcon from '@mui/icons-material/Add'
 import { Box } from '@mui/material'
 import { UserSession } from 'next-auth'
@@ -24,6 +25,7 @@ interface Props {
   collaborations?: boolean
   simplified?: boolean
   showBetaBanner?: boolean
+  courseSession?: boolean
 }
 
 const Studies = async ({
@@ -34,15 +36,19 @@ const Studies = async ({
   collaborations,
   simplified,
   showBetaBanner,
+  courseSession,
 }: Props) => {
   const t = await getTranslations('study')
   const tResults = await getTranslations('study.results')
   const tFeedback = await getTranslations('feedback')
   const feedbackButtonLabel = tResults.has('feedback.button') ? tResults('feedback.button') : tFeedback('answer')
-  const feedbackFormUrl = await getFeedbackFormUrl(user.environment)
+  const feedbackFormUrl = isCourseEnvironment(user.environment) ? null : await getFeedbackFormUrl(user.environment)
+  const tCourse = isCourseEnvironment(user.environment) ? await getTranslations('courseSessions') : null
 
   let title = ''
-  if (collaborations) {
+  if (tCourse) {
+    title = tCourse('studies')
+  } else if (collaborations) {
     title = t('myCollaborations')
   } else if (simplified) {
     title = t('mySimplifiedStudies')
@@ -94,10 +100,17 @@ const Studies = async ({
     <Block title={title} data-testid="home-studies" actions={actions.length ? actions : undefined}>
       {showBetaBanner && <BetaBanner />}
       <Box className="flex-col grow">
-        {studies.length && (
+        {!studies.length && tCourse && <p role="status">{tCourse('empty')}</p>}
+        {studies.length > 0 && (
           <ul className={styles.grid}>
             {studies.map((study) => (
-              <StudyCard key={study.id} study={study} user={user} simplified={simplified} />
+              <StudyCard
+                key={study.id}
+                study={study}
+                user={user}
+                simplified={simplified ?? study.simplified}
+                showStudentName={courseSession}
+              />
             ))}
           </ul>
         )}

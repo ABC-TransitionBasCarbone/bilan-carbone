@@ -4,8 +4,7 @@ import {
   getAllowedStudiesByAccount,
   getAllowedStudiesByUserAndOrganization,
   getExternalAllowedStudiesByUser,
-  getStudiesForCards,
-  getStudiesValidatedEmissionsSources,
+  getStudyCards,
 } from '@/db/study'
 import {
   canCreateStudyOnlyAsAdministrator,
@@ -39,21 +38,10 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
 
   const mainStudyOrganizationVersionId = organizationVersionId ?? user.organizationVersionId
 
-  const [organizationVersion, studiesForCards, studiesValidatedSources] = await Promise.all([
+  const [organizationVersion, studies] = await Promise.all([
     getOrganizationVersionForRightsCheck(mainStudyOrganizationVersionId),
-    getStudiesForCards(allowedStudyIds),
-    getStudiesValidatedEmissionsSources(allowedStudyIds),
+    getStudyCards(allowedStudyIds),
   ])
-
-  const studies = allowedStudyIds
-    .map((studyId) => {
-      const card = studiesForCards[studyId]
-      if (!card) {
-        return null
-      }
-      return { ...card, validatedSources: studiesValidatedSources[studyId] }
-    })
-    .filter((c): c is StudyCardItem => c !== null)
 
   const isOrgaHomePage = !organizationVersionId && !isCR
   const [orgaStudies, otherStudies] = isOrgaHomePage

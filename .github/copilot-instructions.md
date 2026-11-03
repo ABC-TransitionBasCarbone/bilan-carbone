@@ -1,9 +1,10 @@
 # Copilot Instructions for bc and mip
 
-## Règles
+## Rules
 
 Do not run commands in the terminal without approval. When we approve a command, only that command is approved.
 Do not run git commands that edit the repository state (only read-only commands like git status, show, etc. are allowed).
+Write unit tests for all logical methods. Do not write tests for components. Write End-to-End tests for some user flows when critical. Focus on testing the behavior and outcomes rather than implementation details.
 
 ## Scope
 

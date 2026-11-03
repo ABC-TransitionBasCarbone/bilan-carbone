@@ -1114,7 +1114,7 @@ const users = async () => {
         courseOrganism: {
           create: {
             name: `Course test organism ${courseEnv}`,
-            contactEmail: 'course-organism@example.org',
+            contactEmail: 'course-organism@yopmail.com',
             ftpPath: `course-test-${i}`,
           },
         },
@@ -1131,6 +1131,7 @@ const users = async () => {
       data: [
         {
           name: `Course second test session ${courseEnv}`,
+          type: CourseSessionType.INITIAL,
           environment: courseEnv,
           code: `course-second-test-${i}`,
           startDate: faker.date.past(),
@@ -1140,6 +1141,7 @@ const users = async () => {
         },
         {
           name: `Course other professor session ${courseEnv}`,
+          type: CourseSessionType.INITIAL,
           environment: courseEnv,
           code: `course-other-professor-test-${i}`,
           startDate: faker.date.past(),
@@ -1170,6 +1172,7 @@ const users = async () => {
           isPublic: false,
           level: Level.Initial,
           name: `course study source ${courseEnv.toLowerCase()}`,
+          courseSessionType: CourseSessionType.INITIAL,
           organizationVersionId: courseOrganizationVersionId,
           sites: {
             createMany: {
@@ -1198,6 +1201,7 @@ const users = async () => {
           isPublic: false,
           level: Level.Initial,
           name: `course study to delete ${courseEnv.toLowerCase()}`,
+          courseSessionType: CourseSessionType.INITIAL,
           organizationVersionId: courseOrganizationVersionId,
           sites: {
             createMany: {
