@@ -104,13 +104,7 @@ const Studies = async ({
         {studies.length > 0 && (
           <ul className={styles.grid}>
             {studies.map((study) => (
-              <StudyCard
-                key={study.id}
-                study={study}
-                user={user}
-                simplified={simplified ?? study.simplified}
-                showStudentName={courseSession}
-              />
+              <StudyCard key={study.id} study={study} user={user} simplified={simplified ?? study.simplified} />
             ))}
           </ul>
         )}
