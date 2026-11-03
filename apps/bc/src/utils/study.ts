@@ -97,7 +97,7 @@ export const getAccountRoleOnStudy = (user: UserSession, study: StudyWithRoleFie
 
   if (
     isTiltSimplified(study.organizationVersion.environment, study.simplified) &&
-    user.organizationVersionId === study.organizationVersion.id
+    (isInOrgaOrParent(user.organizationVersionId, study.organizationVersion) || right)
   ) {
     return StudyRole.Editor
   }
@@ -127,7 +127,8 @@ export const getDisplayedRoleOnStudy = (
 ) => {
   const roleOnStudy = getAccountRoleOnStudy(user, study)
 
-  return study.contributors.some((contributor) => contributor.accountId === user.accountId) && !roleOnStudy
+  return study.contributors.some((contributor) => contributor.accountId === user.accountId) &&
+    (!roleOnStudy || roleOnStudy === StudyRole.Reader)
     ? 'Contributor'
     : roleOnStudy
 }

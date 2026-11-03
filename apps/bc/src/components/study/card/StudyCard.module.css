@@ -5,6 +5,7 @@
 .student {
   gap: 0.5rem;
   color: var(--primary-800);
+  align-self: center
 }
 
 .validated {

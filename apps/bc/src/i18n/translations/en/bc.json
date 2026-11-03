@@ -392,6 +392,7 @@
       "confirm": "Duplicate",
       "selectEnvironment": "Select the target environment"
     },
+    "createdBy": "Created by:",
     "myCollaborations": "My collaborations",
     "myStudies": "My Bilan Carbone®",
     "createFirstStudy": "Create my first Bilan Carbone®",

@@ -17,10 +17,9 @@ interface Props {
   study: StudyCardItem
   user: UserSession
   simplified?: boolean
-  showStudentName?: boolean
 }
 
-const StudyCard = async ({ study, user, simplified, showStudentName }: Props) => {
+const StudyCard = async ({ study, user, simplified }: Props) => {
   const t = await getTranslations('study')
   const { id, name, validatedSources } = study
 
@@ -41,12 +40,11 @@ const StudyCard = async ({ study, user, simplified, showStudentName }: Props) =>
         <div className="justify-center">
           <StudyName studyId={id} name={name} role={showRoleInChip ? accountRoleOnStudy : null} clickable />
         </div>
-        {showStudentName && (
-          <p className={classNames(styles.student, 'align-center')} data-testid="study-student">
-            <PersonOutlineIcon aria-hidden="true" />
-            {study.createdBy.user.firstName} {study.createdBy.user.lastName}
-          </p>
-        )}
+        <p className={classNames(styles.student, 'align-center')} data-testid="study-student">
+          <PersonOutlineIcon aria-hidden="true" />
+          {t('createdBy')}
+          {study.createdBy.user.firstName} {study.createdBy.user.lastName}
+        </p>
         {hasAccessToEmissionSourceValidation(user.environment, simplified) && (
           <Box>
             <p className="mb1 align-center">
