@@ -282,7 +282,9 @@
       },
       "error": {
         "default": "Se ha producido un error...",
-        "noActiveVersion_BaseEmpreinte": "No hay ninguna versión activa de Base Empreinte. Póngase en contacto con el soporte."
+        "noActiveVersion_BaseEmpreinte": "No hay ninguna versión activa de Base Empreinte. Póngase en contacto con el soporte.",
+        "noCourseSession": "Debe estar inscrito en una sesión de formación para crear un estudio.",
+        "multipleCourseSessions": "Está inscrito en varias sesiones de formación. Póngase en contacto con el soporte."
       },
       "coming": "próximamente",
       "title": "Información sobre el nuevo estudio",

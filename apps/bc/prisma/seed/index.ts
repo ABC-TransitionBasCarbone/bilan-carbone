@@ -6,6 +6,7 @@ import type { Account, User } from '@abc-transitionbascarbone/common/db'
 import { PrismaClient } from '@abc-transitionbascarbone/common/db'
 import {
   CourseSessionTraineeOrganizationStatus,
+  CourseSessionType,
   EmissionFactorBase,
   EmissionFactorStatus,
   Environment,
@@ -1104,6 +1105,7 @@ const users = async () => {
     const courseSession = await prisma.courseSession.create({
       data: {
         name: `Course test session ${courseEnv}`,
+        type: CourseSessionType.INITIAL,
         environment: courseEnv,
         professorOrganization: { connect: { id: courseProfessorOrganizationVersionId } },
         code: `course-test-${i}`,

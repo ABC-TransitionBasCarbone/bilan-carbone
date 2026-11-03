@@ -514,7 +514,9 @@
       },
       "error": {
         "default": "Une erreur s'est produite ...",
-        "noActiveVersion_BaseEmpreinte": "Aucune version active de Base Empreinte. Veuillez contacter le support."
+        "noActiveVersion_BaseEmpreinte": "Aucune version active de Base Empreinte. Veuillez contacter le support.",
+        "noCourseSession": "Vous devez être inscrit à une session de formation pour créer une étude.",
+        "multipleCourseSessions": "Vous êtes inscrit à plusieurs sessions de formation. Veuillez contacter le support."
       },
       "coming": "à venir"
     },

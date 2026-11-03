@@ -12,6 +12,7 @@ import {
 } from '@/db/account'
 import { prismaClient } from '@/db/client.server'
 import { findCncByCncCode, updateNumberOfProgrammedFilms } from '@/db/cnc'
+import { getCourseSessionsForTrainee } from '@/db/courseOrganism'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
   getEmissionFactorsByIdsAndSource,
@@ -108,6 +109,7 @@ import { mapStudyForReport } from '@/utils/studyReport.utils'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import { LocaleType } from '@abc-transitionbascarbone/common/i18n/config'
+import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import type { IsSuccess } from '@abc-transitionbascarbone/common/utils/serverResponse'
 
 import type {
@@ -121,6 +123,7 @@ import type {
 import {
   CommentStatus,
   ControlMode,
+  CourseSessionType,
   DocumentCategory,
   DuplicableStudy,
   EmissionSourceCaracterisation,
@@ -246,6 +249,20 @@ export const createStudyCommand = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
+    let courseSessionType: CourseSessionType | null = null
+    if (isCourseEnvironment(session.user.environment)) {
+      const courseSessions = await getCourseSessionsForTrainee(session.user.accountId, session.user.environment, tx)
+      if (courseSessions.length !== 1) {
+        console.error('createStudyCommand: expected one trainee course session', {
+          accountId: session.user.accountId,
+          environment: session.user.environment,
+          sessionCount: courseSessions.length,
+        })
+        throw new Error(courseSessions.length === 0 ? 'noCourseSession' : 'multipleCourseSessions')
+      }
+      courseSessionType = courseSessions[0].type
+    }
+
     const rights: Prisma.UserOnStudyCreateManyStudyInput[] = []
     if (validator === session.user.email) {
       rights.push({
@@ -307,6 +324,7 @@ export const createStudyCommand = async (
 
     const study = {
       ...studyCommand,
+      courseSessionType,
       createdBy: { connect: { id: session.user.accountId } },
       organizationVersion: { connect: { id: organizationVersionId } },
       isPublic: isPublic === 'true',

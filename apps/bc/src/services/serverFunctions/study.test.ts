@@ -1,8 +1,9 @@
 import * as studyUtilsModule from '@/utils/study'
-import { Environment, Import, StudyRole, SubPost } from '@abc-transitionbascarbone/common/db/enums'
+import { CourseSessionType, Environment, Import, StudyRole, SubPost } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import { v4 as uuidv4 } from 'uuid'
 import * as accountModule from '../../db/account'
+import * as courseOrganismModule from '../../db/courseOrganism'
 import * as emissionFactorsModule from '../../db/emissionFactors'
 import * as emissionSourcesModule from '../../db/emissionSource'
 import * as organizationModule from '../../db/organization'
@@ -103,6 +104,9 @@ jest.mock('../../db/account', () => ({
   getAccountByEmailAndOrganizationVersionId: jest.fn(),
   getAccountByEmailAndEnvironment: jest.fn(),
 }))
+jest.mock('../../db/courseOrganism', () => ({
+  getCourseSessionsForTrainee: jest.fn(),
+}))
 jest.mock('../../services/serverFunctions/user', () => ({
   addUserChecklistItem: jest.fn(),
   sendInvitation: jest.fn(),
@@ -192,7 +196,8 @@ jest.mock('../../services/serverFunctions/transitionPlan', () => ({
   getLinkedAndExternalStudies: jest.fn(),
 }))
 
-const { duplicateStudyCommand, duplicateSiteAndEmissionSources, changeStudyDates } = jest.requireActual('./study')
+const { createStudyCommand, duplicateStudyCommand, duplicateSiteAndEmissionSources, changeStudyDates } =
+  jest.requireActual('./study')
 
 const mockedSessionValidator = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.validator })
 const mockedSession = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.currentUser })
@@ -200,6 +205,7 @@ const mockedSourceStudy = getMockeFullStudy()
 const mockedStudyCommand = getMockedDuplicateStudyCommand() as CreateStudyCommand
 
 const mockDbActualizedAuth = authModule.dbActualizedAuth as jest.Mock
+const mockGetCourseSessionsForTrainee = jest.mocked(courseOrganismModule.getCourseSessionsForTrainee)
 const mockGetStudyById = studyDbModule.getStudyById as jest.Mock
 const mockGetStudySites = studyDbModule.getStudySites as jest.Mock
 const mockCreateStudyEmissionSource = studyDbModule.createStudyEmissionSource as jest.Mock
@@ -208,10 +214,7 @@ const mockCreateStudy = studyDbModule.createStudy as jest.Mock
 const mockUpdateStudyEmissionFactorVersion = studyDbModule.updateStudyEmissionFactorVersion as jest.Mock
 const mockCreateContributorOnStudy = studyDbModule.createContributorOnStudy as jest.Mock
 const mockCreateEmissionSourceTags = studyDbModule.createEmissionSourceTags as jest.Mock
-const mockUpdateUserOnStudy = studyDbModule.updateUserOnStudy as jest.Mock
-const mockGetMinimalStudyForRights = studyDbModule.getMinimalStudyForRights as jest.Mock
 const mockAddUserChecklistItem = userModule.addUserChecklistItem as jest.Mock
-const mockSendInvitation = userModule.sendInvitation as jest.Mock
 const mockGetOrganizationVersionById = organizationModule.getOrganizationVersionById as jest.Mock
 const mockGetOrgSitesWithCNCByOrgVersionId = organizationModule.getOrgSitesWithCNCByOrgVersionId as jest.Mock
 const mockGetUserByEmail = userDbModule.getUserByEmail as jest.Mock
@@ -224,7 +227,6 @@ const mockGetAccountRoleOnStudy = studyUtilsModule.getAccountRoleOnStudy as jest
 const mockHasSufficientLevel = studyUtilsModule.hasSufficientLevel as jest.Mock
 const mockCanCreateSpecificStudy = studyPermissionsModule.canCreateSpecificStudy as jest.Mock
 const mockCanDuplicateStudy = studyPermissionsModule.canDuplicateStudy as jest.Mock
-const mockCanAddRightOnStudy = studyPermissionsModule.canAddRightOnStudy as jest.Mock
 const mockGetEmissionFactorsImportActiveVersion =
   emissionFactorsModule.getEmissionFactorsImportActiveVersion as jest.Mock
 const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
@@ -307,6 +309,110 @@ describe('study', () => {
       expect(mockAddUserChecklistItem).toHaveBeenCalled()
       expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
       expect(mockCreateContributorOnStudy).not.toHaveBeenCalled()
+    })
+
+    describe('course session at creation', () => {
+      it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
+        'copies the enrolled session type in %s',
+        async (environment) => {
+          mockDbActualizedAuth.mockResolvedValue({
+            ...mockedSession,
+            user: { ...mockedSession.user, environment },
+          })
+          mockGetCourseSessionsForTrainee.mockResolvedValue([{ type: CourseSessionType.INITIAL }])
+
+          const result = await createStudyCommand(mockedStudyCommand)
+
+          expect(result.success).toBe(true)
+          expect(mockGetCourseSessionsForTrainee).toHaveBeenCalledWith(
+            mockedSession.user.accountId,
+            environment,
+            undefined,
+          )
+          expect(mockCreateStudy).toHaveBeenCalledWith(
+            expect.objectContaining({ courseSessionType: CourseSessionType.INITIAL }),
+            environment,
+            true,
+            undefined,
+          )
+        },
+      )
+
+      it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
+        'rejects creation without a session in %s',
+        async (environment) => {
+          mockDbActualizedAuth.mockResolvedValue({
+            ...mockedSession,
+            user: { ...mockedSession.user, environment },
+          })
+          mockGetCourseSessionsForTrainee.mockResolvedValue([])
+
+          const result = await createStudyCommand(mockedStudyCommand)
+
+          expect(result).toEqual({ success: false, errorMessage: 'noCourseSession' })
+          expect(mockCreateStudy).not.toHaveBeenCalled()
+        },
+      )
+
+      it('rejects ambiguous registrations rather than choosing an arbitrary session', async () => {
+        mockDbActualizedAuth.mockResolvedValue({
+          ...mockedSession,
+          user: { ...mockedSession.user, environment: Environment.COURSE_BC },
+        })
+        mockGetCourseSessionsForTrainee.mockResolvedValue([
+          { type: CourseSessionType.INITIAL },
+          { type: CourseSessionType.PROFESSIONNEL },
+        ])
+
+        const result = await createStudyCommand(mockedStudyCommand)
+
+        expect(result).toEqual({ success: false, errorMessage: 'multipleCourseSessions' })
+        expect(mockCreateStudy).not.toHaveBeenCalled()
+      })
+
+      it.each([Environment.BC, Environment.TILT, Environment.CUT, Environment.CLICKSON])(
+        'does not require a course session in %s',
+        async (environment) => {
+          mockDbActualizedAuth.mockResolvedValue({
+            ...mockedSession,
+            user: { ...mockedSession.user, environment },
+          })
+
+          const result = await createStudyCommand(mockedStudyCommand)
+
+          expect(result.success).toBe(true)
+          expect(mockGetCourseSessionsForTrainee).not.toHaveBeenCalled()
+          expect(mockCreateStudy).toHaveBeenCalledWith(
+            expect.objectContaining({ courseSessionType: null }),
+            environment,
+            true,
+            undefined,
+          )
+        },
+      )
+
+      it('uses the enrolled session type when duplicating, within the existing transaction', async () => {
+        mockDbActualizedAuth.mockResolvedValue({
+          ...mockedSession,
+          user: { ...mockedSession.user, environment: Environment.COURSE_BC },
+        })
+        mockGetCourseSessionsForTrainee.mockResolvedValue([{ type: CourseSessionType.PROFESSIONNEL }])
+
+        const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
+
+        expect(result.success).toBe(true)
+        expect(mockGetCourseSessionsForTrainee).toHaveBeenCalledWith(
+          mockedSession.user.accountId,
+          Environment.COURSE_BC,
+          expect.objectContaining(mockTransaction),
+        )
+        expect(mockCreateStudy).toHaveBeenCalledWith(
+          expect.objectContaining({ courseSessionType: CourseSessionType.PROFESSIONNEL }),
+          Environment.COURSE_BC,
+          true,
+          mockTransaction,
+        )
+      })
     })
 
     describe('Authentication and Authorization', () => {

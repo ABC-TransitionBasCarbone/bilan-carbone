@@ -1,5 +1,5 @@
 import { getRecords, Worksheet } from '@/utils/excel.utils'
-import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { CourseSessionType } from '@abc-transitionbascarbone/common/db/enums'
 import xlsx from 'node-xlsx'
 import {
   CourseParticipant,
@@ -16,6 +16,15 @@ import {
   getSession,
   normalizeEmail,
 } from './importTrainingSessionsUtils'
+
+const courseSessionTypes: Record<string, CourseSessionType | undefined> = {
+  M1: CourseSessionType.INITIAL,
+  M2: CourseSessionType.PROFESSIONNEL,
+  M3: CourseSessionType.MAITRISE,
+  INITIAL: CourseSessionType.INITIAL,
+  PROFESSIONNEL: CourseSessionType.PROFESSIONNEL,
+  MAITRISE: CourseSessionType.MAITRISE,
+}
 
 const handleDeletionTab = (worksheets: Worksheet[], courseOrganismId: string) => {
   const deletions: CourseSessionDeletion[] = []
@@ -80,7 +89,13 @@ const handleSessionTab = (worksheets: Worksheet[], deletedSessionNames: Set<stri
       console.error(`Invalid Type de formation for training session: ${name}`)
       continue
     }
-    const type = typeValue?.trim().toUpperCase() || (environment === Environment.COURSE_BC ? 'M1' : null)
+    const normalizedType = typeValue?.trim().toUpperCase()
+    const type = normalizedType ? (courseSessionTypes[normalizedType] ?? null) : null
+
+    if (!type) {
+      console.error(`Invalid type for training session: ${name}`)
+      continue
+    }
 
     const startDate = getDateAtMidnight(record, 'Date de début')
     const endDate = getDateAtMidnight(record, 'Date de fin')

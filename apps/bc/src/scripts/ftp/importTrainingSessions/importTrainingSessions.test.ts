@@ -1,7 +1,11 @@
 import { prismaClient } from '@/db/client.server'
 import { createUsersWithAccount } from '@/db/user'
 import type { CourseSession } from '@abc-transitionbascarbone/common/db'
-import { CourseSessionTraineeOrganizationStatus, Environment } from '@abc-transitionbascarbone/common/db/enums'
+import {
+  CourseSessionTraineeOrganizationStatus,
+  CourseSessionType,
+  Environment,
+} from '@abc-transitionbascarbone/common/db/enums'
 import { sendCourseSessionsCreatedEmail } from '@abc-transitionbascarbone/common/services/email/email'
 import { Client } from 'basic-ftp'
 import { getJsDateFromExcel } from 'excel-date-to-js'
@@ -67,7 +71,7 @@ const savedSessions: CourseSession[] = [
     id: 'session-1',
     courseOrganismId: 'organism-1',
     name: 'Session Numéro 1',
-    type: 'M1',
+    type: CourseSessionType.INITIAL,
     environment: Environment.COURSE_BC,
     startDate: getJsDateFromExcel(46277),
     endDate: new Date(getJsDateFromExcel(46377).setUTCHours(23, 59, 59, 999)),
@@ -80,7 +84,7 @@ const savedSessions: CourseSession[] = [
     id: 'session-2',
     courseOrganismId: 'organism-1',
     name: 'Session Numéro 2',
-    type: null,
+    type: CourseSessionType.MAITRISE,
     environment: Environment.COURSE_TILT,
     startDate: getJsDateFromExcel(46368),
     endDate: new Date(getJsDateFromExcel(46508).setUTCHours(23, 59, 59, 999)),
@@ -212,7 +216,7 @@ describe('getCourseSessionsFromFTP', () => {
       {
         courseOrganismId: 'organism-1',
         name: 'Session Numéro 1',
-        type: 'M1',
+        type: CourseSessionType.INITIAL,
         startDate: getJsDateFromExcel(46277),
         endDate: savedSessions[0].endDate,
         environment: 'COURSE_BC',
@@ -760,6 +764,51 @@ describe('getCourseSessionsFromFTP', () => {
   })
 
   it.each([
+    ['M1', 'initial'],
+    ['M2', 'professionnel'],
+    ['M3', 'maitrise'],
+    [' initial ', 'initial'],
+    ['professionnel', 'professionnel'],
+    ['maitrise', 'maitrise'],
+    ['', 'initial'],
+  ])('imports training type %s as %s', (input, expected) => {
+    jest.mocked(xlsx.parse).mockReturnValue([
+      {
+        name: 'Sessions',
+        data: [
+          ['Nom de la session', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
+          ['Session', 46277, 46377, 'BC', input],
+        ],
+      },
+      { name: 'Stagiaires', data: [] },
+      { name: 'Formateur', data: [] },
+    ])
+
+    expect(parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1').sessions).toEqual([
+      expect.objectContaining({ type: expected }),
+    ])
+  })
+
+  it('rejects unknown training types', () => {
+    jest.mocked(xlsx.parse).mockReturnValue([
+      {
+        name: 'Sessions',
+        data: [
+          ['Nom de la session', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
+          ['Session', 46277, 46377, 'BC', 'M4'],
+        ],
+      },
+      { name: 'Stagiaires', data: [] },
+      { name: 'Formateur', data: [] },
+    ])
+
+    expect(() => parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')).toMatchObject({
+      sessions: [],
+      deletions: [],
+    })
+  })
+
+  it.each([
     [46277, 46278, 'Second'],
     [46278, 46277, 'First'],
     [undefined, 46277, 'Second'],
@@ -797,13 +846,17 @@ describe('getCourseSessionsFromFTP', () => {
       { name: 'Second', emails: winner === 'Second' ? ['trainee@example.org'] : [] },
       { name: 'Other type', emails: ['trainee@example.org'] },
     ])
-    expect(sessions.map(({ type }) => type)).toEqual(['M1', 'M1', 'M2'])
+    expect(sessions.map(({ type }) => type)).toEqual([
+      CourseSessionType.INITIAL,
+      CourseSessionType.INITIAL,
+      CourseSessionType.PROFESSIONNEL,
+    ])
   })
 
   it.each([
-    [46278, 46277, 'M1'],
-    [46277, 46278, 'M2'],
-    [undefined, undefined, 'M2'],
+    [46278, 46277, CourseSessionType.INITIAL],
+    [46277, 46278, CourseSessionType.PROFESSIONNEL],
+    [undefined, undefined, CourseSessionType.PROFESSIONNEL],
   ])('selects the most recent session definition, then the lowest row', (firstDate, secondDate, type) => {
     jest.mocked(xlsx.parse).mockReturnValue([
       {
@@ -851,7 +904,7 @@ describe('getCourseSessionsFromFTP', () => {
   it('moves an existing trainee from a conflicting session, including one absent from Excel', async () => {
     const current = savedSessions.map(withParticipants)
     const previous = { ...current[0], id: 'old-session', name: 'Old session' }
-    const otherType = { ...previous, id: 'other-type', type: 'M2' }
+    const otherType = { ...previous, id: 'other-type', type: CourseSessionType.PROFESSIONNEL }
     const otherOrganism = { ...previous, id: 'other-organism', courseOrganismId: 'organism-2' }
     const after = { ...previous, traineeOrganizations: [] }
     mockFindCourseSessions
@@ -893,8 +946,8 @@ describe('getCourseSessionsFromFTP', () => {
     })
     expect(mockUpsertCourseSession.mock.calls[0][0]).toEqual(
       expect.objectContaining({
-        create: expect.objectContaining({ type: 'M1' }),
-        update: expect.objectContaining({ type: 'M1' }),
+        create: expect.objectContaining({ type: CourseSessionType.INITIAL }),
+        update: expect.objectContaining({ type: CourseSessionType.INITIAL }),
       }),
     )
     expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalledWith(
@@ -933,7 +986,11 @@ describe('getCourseSessionsFromFTP', () => {
       { name: 'Formateur', data: [] },
     ])
     const first = withParticipants(savedSessions[0])
-    const second = withParticipants({ ...savedSessions[1], environment: Environment.COURSE_BC, type: 'M1' })
+    const second = withParticipants({
+      ...savedSessions[1],
+      environment: Environment.COURSE_BC,
+      type: CourseSessionType.INITIAL,
+    })
     const before = { ...first, traineeOrganizations: second.traineeOrganizations }
     mockFindCourseSessions
       .mockResolvedValueOnce([before, { ...second, traineeOrganizations: [] }])
@@ -971,7 +1028,7 @@ describe('getCourseSessionsFromFTP', () => {
         OR: expect.arrayContaining([
           {
             courseOrganismId: 'organism-1',
-            type: 'M1',
+            type: CourseSessionType.INITIAL,
             traineeOrganizations: {
               some: {
                 organizationVersion: {
