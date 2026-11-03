@@ -98,9 +98,9 @@ const workbook = [
   {
     name: 'Sessions',
     data: [
-      ['Nom de la session ', 'Date de début ', 'Date de fin ', 'Environment'],
-      ['Session Numéro 1', 46277, 46377, 'BC'],
-      ['Session Numéro 2 ', 46368, 46508, 'TILT'],
+      ['Nom de la session ', 'Date de début ', 'Date de fin ', 'Environment', 'Type de formation'],
+      ['Session Numéro 1', 46277, 46377, 'BC', 'M1'],
+      ['Session Numéro 2 ', 46368, 46508, 'TILT', 'M3'],
     ],
   },
   {
@@ -229,7 +229,7 @@ describe('getCourseSessionsFromFTP', () => {
       {
         courseOrganismId: 'organism-1',
         name: 'Session Numéro 2',
-        type: null,
+        type: CourseSessionType.MAITRISE,
         startDate: getJsDateFromExcel(46368),
         endDate: savedSessions[1].endDate,
         environment: 'COURSE_TILT',
@@ -764,13 +764,12 @@ describe('getCourseSessionsFromFTP', () => {
   })
 
   it.each([
-    ['M1', 'initial'],
-    ['M2', 'professionnel'],
-    ['M3', 'maitrise'],
-    [' initial ', 'initial'],
-    ['professionnel', 'professionnel'],
-    ['maitrise', 'maitrise'],
-    ['', 'initial'],
+    ['M1', CourseSessionType.INITIAL],
+    ['M2', CourseSessionType.PROFESSIONNEL],
+    ['M3', CourseSessionType.MAITRISE],
+    [' initial ', CourseSessionType.INITIAL],
+    ['professionnel', CourseSessionType.PROFESSIONNEL],
+    ['maitrise', CourseSessionType.MAITRISE],
   ])('imports training type %s as %s', (input, expected) => {
     jest.mocked(xlsx.parse).mockReturnValue([
       {
@@ -789,23 +788,29 @@ describe('getCourseSessionsFromFTP', () => {
     ])
   })
 
-  it('rejects unknown training types', () => {
+  it.each(['M4', '', ' ', undefined, null])('rejects unknown or missing training type %s', (type) => {
     jest.mocked(xlsx.parse).mockReturnValue([
       {
         name: 'Sessions',
         data: [
           ['Nom de la session', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
-          ['Session', 46277, 46377, 'BC', 'M4'],
+          ['Session', 46277, 46377, 'BC', type],
         ],
       },
       { name: 'Stagiaires', data: [] },
       { name: 'Formateur', data: [] },
     ])
 
-    expect(() => parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')).toMatchObject({
-      sessions: [],
-      deletions: [],
-    })
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined)
+    try {
+      expect(parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')).toEqual({
+        sessions: [],
+        deletions: [],
+      })
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Invalid type for training session: Session')
+    } finally {
+      consoleErrorSpy.mockRestore()
+    }
   })
 
   it.each([
@@ -1053,8 +1058,8 @@ describe('getCourseSessionsFromFTP', () => {
       {
         name: 'Sessions',
         data: [
-          ['Nom de la session', 'Date de début', 'Date de fin', 'Environment'],
-          ['Session', startDate, endDate, 'BC'],
+          ['Nom de la session', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
+          ['Session', startDate, endDate, 'BC', 'M1'],
         ],
       },
       { name: 'Stagiaires', data: [] },

@@ -1,7 +1,8 @@
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import type { CourseSession } from '@abc-transitionbascarbone/common/db'
+import { formatDateFr } from '@abc-transitionbascarbone/common/utils'
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined'
-import { getFormatter, getTranslations } from 'next-intl/server'
+import { getTranslations } from 'next-intl/server'
 import styles from './CourseSessionHeader.module.css'
 
 interface Props {
@@ -9,8 +10,7 @@ interface Props {
 }
 
 const CourseSessionHeader = async ({ session }: Props) => {
-  const [t, format] = await Promise.all([getTranslations('courseSessions'), getFormatter()])
-
+  const t = await getTranslations('courseSessions')
   return (
     <Block className={styles.header}>
       <div className={styles.heading}>
@@ -25,13 +25,9 @@ const CourseSessionHeader = async ({ session }: Props) => {
             <p className={styles.dates}>
               <CalendarMonthOutlinedIcon aria-hidden="true" />
               <span>
-                <time dateTime={session.startDate.toISOString()}>
-                  {format.dateTime(session.startDate, { dateStyle: 'long', timeZone: 'UTC' })}
-                </time>
+                <time dateTime={session.startDate.toISOString()}>{formatDateFr(session.startDate)}</time>
                 {' – '}
-                <time dateTime={session.endDate.toISOString()}>
-                  {format.dateTime(session.endDate, { dateStyle: 'long', timeZone: 'UTC' })}
-                </time>
+                <time dateTime={session.endDate.toISOString()}>{formatDateFr(session.endDate)}</time>
               </span>
             </p>
           </div>

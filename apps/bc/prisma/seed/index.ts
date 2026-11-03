@@ -1078,7 +1078,7 @@ const users = async () => {
     }),
   )
 
-  const courseEnvironments = [Environment.COURSE_BC, Environment.COURSE_TILT]
+  const courseEnvironments = [Environment.COURSE_BC]
 
   if (courseEnvironments.length > 9) {
     throw new Error('Too many course environments defined needs to change seeds to handle ids')
