@@ -1,8 +1,11 @@
-import { courseEnvironments } from '@abc-transitionbascarbone/common/utils/environments'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import dayjs from 'dayjs'
 
-for (let i = 0; i < courseEnvironments.length; i++) {
-  const env = courseEnvironments[i]
+// Must match the course environments seeded in prisma/seed/index.ts (COURSE_TILT is not seeded yet)
+const testedCourseEnvironments = [Environment.COURSE_BC]
+
+for (let i = 0; i < testedCourseEnvironments.length; i++) {
+  const env = testedCourseEnvironments[i]
   const traineeEmail = `${env.toLowerCase()}-env-admin-0@yopmail.com`
   const professorEmail = `${env.toLowerCase()}-env-admin-1@yopmail.com`
   describe(`BC Course - ${env}`, () => {
