@@ -1098,10 +1098,14 @@ const users = async () => {
       throw new Error('Course test accounts must belong to an organization version')
     }
 
-    await prisma.courseSession.create({
+    const courseProfessorOrganizationVersionId = environmentOrganizationVersions[courseEnv][1].id
+    const otherCourseProfessorOrganizationVersionId = environmentOrganizationVersions[courseEnv][2].id
+
+    const courseSession = await prisma.courseSession.create({
       data: {
         name: `Course test session ${courseEnv}`,
         environment: courseEnv,
+        professorOrganization: { connect: { id: courseProfessorOrganizationVersionId } },
         code: `course-test-${i}`,
         startDate: faker.date.past(),
         endDate: faker.date.future(),
@@ -1119,6 +1123,29 @@ const users = async () => {
           },
         },
       },
+    })
+
+    await prisma.courseSession.createMany({
+      data: [
+        {
+          name: `Course second test session ${courseEnv}`,
+          environment: courseEnv,
+          code: `course-second-test-${i}`,
+          startDate: faker.date.past(),
+          endDate: faker.date.future(),
+          courseOrganismId: courseSession.courseOrganismId,
+          professorOrganizationVersionId: courseProfessorOrganizationVersionId,
+        },
+        {
+          name: `Course other professor session ${courseEnv}`,
+          environment: courseEnv,
+          code: `course-other-professor-test-${i}`,
+          startDate: faker.date.past(),
+          endDate: faker.date.future(),
+          courseOrganismId: courseSession.courseOrganismId,
+          professorOrganizationVersionId: otherCourseProfessorOrganizationVersionId,
+        },
+      ],
     })
 
     await prisma.account.update({

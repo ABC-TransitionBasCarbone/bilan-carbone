@@ -31,9 +31,9 @@ describe('Home page - ', () => {
     it('Should display the list of organizations as a CR user', () => {
       cy.login('bc-cr-collaborator-1@yopmail.com', 'password-1')
 
-      cy.getByTestId('home-organizations').scrollIntoView()
-      cy.getByTestId('home-organizations').should('be.visible')
-      cy.getByTestId('home-organizations').contains('Mes clients actuels')
+      cy.getByTestId('home-cards-list').scrollIntoView()
+      cy.getByTestId('home-cards-list').should('be.visible')
+      cy.getByTestId('home-cards-list').contains('Mes clients actuels')
     })
   })
 

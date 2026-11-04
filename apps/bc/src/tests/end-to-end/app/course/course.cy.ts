@@ -3,6 +3,8 @@ import dayjs from 'dayjs'
 
 for (let i = 0; i < courseEnvironments.length; i++) {
   const env = courseEnvironments[i]
+  const traineeEmail = `${env.toLowerCase()}-env-admin-0@yopmail.com`
+  const professorEmail = `${env.toLowerCase()}-env-admin-1@yopmail.com`
   describe(`BC Course - ${env}`, () => {
     before(() => {
       cy.resetTestDatabase()
@@ -13,16 +15,28 @@ for (let i = 0; i < courseEnvironments.length; i++) {
       cy.intercept('POST', '/api/auth/signout').as('logout')
     })
 
-    it('displays the course studies on the home page', () => {
-      cy.loginForEnv(env)
+    it('displays trainee studies without professor sessions on the home page', () => {
+      cy.loginForEnv(env, traineeEmail, 'password-0')
 
       cy.getByTestId('home-studies').should('be.visible')
-      cy.getByTestId('study-name-chip').contains('course study source').should('exist')
+      cy.getByTestId('study-name-chip').contains(`course study source ${env.toLowerCase()}`).should('be.visible')
+      cy.getByTestId('course-session').should('not.exist')
     })
 
-    it('allows a course administrator to create a study', () => {
+    it('displays only the professor sessions for the current environment on the home page', () => {
+      cy.loginForEnv(env, professorEmail, 'password-1')
+
+      cy.getByTestId('home-cards-list').should('be.visible')
+      cy.getByTestId('course-session').should('have.length', 2)
+      cy.getByTestId('course-session').contains(`Course test session ${env}`).should('be.visible')
+      cy.getByTestId('course-session').contains(`Course second test session ${env}`).should('be.visible')
+      cy.getByTestId('course-session').should('not.contain.text', 'Course other professor session')
+      cy.contains('[data-testid="study-name-chip"]', `course study source ${env.toLowerCase()}`).should('not.exist')
+    })
+
+    it('allows a trainee administrator to create a study', () => {
       cy.intercept('POST', '**/etudes/creer**').as('createStudy')
-      cy.loginForEnv(env)
+      cy.loginForEnv(env, traineeEmail, 'password-0')
 
       cy.visit('/etudes/creer')
       cy.getByTestId('new-study-organization-title').should('be.visible')
@@ -42,8 +56,8 @@ for (let i = 0; i < courseEnvironments.length; i++) {
       cy.contains('course BC study').should('be.visible')
     })
 
-    it('allows a course administrator to delete a study', () => {
-      cy.loginForEnv(env)
+    it('allows a trainee administrator to delete a study', () => {
+      cy.loginForEnv(env, traineeEmail, 'password-0')
 
       cy.getByTestId('study-name-chip')
         .contains(`course study to delete ${env.toLowerCase()}`)
@@ -66,8 +80,8 @@ for (let i = 0; i < courseEnvironments.length; i++) {
       })
     })
 
-    it('allows a course administrator to add and delete an emission source', () => {
-      cy.loginForEnv(env)
+    it('allows a trainee administrator to add and delete an emission source', () => {
+      cy.loginForEnv(env, traineeEmail, 'password-0')
 
       cy.visit(
         `/etudes/88c93e88-7c80-4be4-905b-f0bbd2ccd95${i}/comptabilisation/saisie-des-donnees/IntrantsBiensEtMatieres`,
@@ -84,8 +98,8 @@ for (let i = 0; i < courseEnvironments.length; i++) {
       cy.getByTestId('emission-source-course source').should('not.exist')
     })
 
-    it('keeps the team read-only for course administrators', () => {
-      cy.loginForEnv(env)
+    it('keeps the team read-only for trainee administrators', () => {
+      cy.loginForEnv(env, traineeEmail, 'password-0')
       cy.visit('/equipe')
       cy.getByTestId('team-table-row').should('exist')
       cy.getByTestId('team-table-row').find('input').should('not.exist')
@@ -96,7 +110,7 @@ for (let i = 0; i < courseEnvironments.length; i++) {
       cy.getByTestId('not-found-page').should('be.visible')
     })
 
-    it('does not give course default members access to team role editing', () => {
+    it('does not give trainee default members access to team role editing', () => {
       cy.loginForEnv(env, `${env.toLowerCase()}-env-default-0@yopmail.com`, 'password-0')
       cy.visit('/equipe')
       cy.getByTestId('team-table-row').should('exist')
@@ -105,9 +119,9 @@ for (let i = 0; i < courseEnvironments.length; i++) {
       cy.getByTestId('add-member-link').should('not.exist')
     })
 
-    it('allows a course administrator to edit an organization', () => {
+    it('allows a trainee administrator to edit an organization', () => {
       cy.intercept('POST', '/organisations/*/modifier').as('updateOrganization')
-      cy.loginForEnv(env)
+      cy.loginForEnv(env, traineeEmail, 'password-0')
 
       cy.getByTestId('button-menu-my-organization').trigger('mouseover')
       cy.getByTestId('link-organization').click()

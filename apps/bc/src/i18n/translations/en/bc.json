@@ -1,4 +1,10 @@
 {
+  "homeCards": {
+    "search": "Search clients by name",
+    "noResults": "No results match your search.",
+    "invalidDate": "Please enter a valid date.",
+    "invalidDateRange": "The start date must be on or before the end date."
+  },
   "links": {
     "openCarbonPracticeUrl": "https://www.opencarbonpractice.com/rejoindre-la-communaute",
     "methodologyUrl": "https://www.bilancarbone-methode.com/",

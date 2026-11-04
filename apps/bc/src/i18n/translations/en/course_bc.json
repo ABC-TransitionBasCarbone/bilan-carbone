@@ -1,4 +1,7 @@
 {
+  "homeCards": {
+    "searchSessions": "Search sessions by name"
+  },
   "activation": {
     "description": "Enter the email address and session code provided by the training organization accompanying you.",
     "sessionCode": "Session code",

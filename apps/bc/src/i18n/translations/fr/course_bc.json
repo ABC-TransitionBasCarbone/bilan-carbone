@@ -1,4 +1,7 @@
 {
+  "homeCards": {
+    "searchSessions": "Rechercher une session par nom"
+  },
   "activation": {
     "description": "Indiquez l'adresse e-mail et le code de session que vous a transmis l'organisme de formation qui vous accompagne.",
     "sessionCode": "Code de session",

@@ -1,23 +1,23 @@
 'use client'
 
-import { OrganizationVersionWithOrganization } from '@/db/organization'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import { Button } from '@abc-transitionbascarbone/common/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState } from 'react'
-import ClientCard from './CRClient'
-import styles from './CRClients.module.css'
+import HomeCard, { HomeCardItem } from './HomeCard'
+import styles from './HomeCards.module.css'
+import HomeCardsFilters from './HomeCardsFilters'
 
-interface Props {
-  organizationVersions: OrganizationVersionWithOrganization[]
-  canCreateOrga: boolean
-}
+type Props = {
+  items: HomeCardItem[]
+} & ({ type: 'clients'; canCreateOrga: boolean } | { type: 'sessions'; canCreateOrga?: never })
 
-const CRClients = ({ organizationVersions, canCreateOrga }: Props) => {
-  const t = useTranslations('organization')
+const HomeCards = ({ items, type, canCreateOrga }: Props) => {
+  const t = useTranslations()
   const [showAll, setShowAll] = useState(false)
   const [hiddenRows, setHiddenRows] = useState(false)
+  const [visibleItems, setVisibleItems] = useState(items)
   const gridRef = useRef<HTMLUListElement>(null)
 
   useEffect(() => {
@@ -31,12 +31,12 @@ const CRClients = ({ organizationVersions, canCreateOrga }: Props) => {
     checkHiddenRows()
     window.addEventListener('resize', checkHiddenRows)
     return () => window.removeEventListener('resize', checkHiddenRows)
-  }, [organizationVersions])
+  }, [visibleItems])
 
   return (
     <Block
-      title={t('myOrganizations')}
-      data-testid="home-organizations"
+      title={type === 'clients' ? t('organization.myOrganizations') : t('courseSessions.title')}
+      data-testid="home-cards-list"
       actions={
         canCreateOrga
           ? [
@@ -44,24 +44,30 @@ const CRClients = ({ organizationVersions, canCreateOrga }: Props) => {
                 actionType: 'link',
                 href: '/organisations/creer',
                 ['data-testid']: 'new-organization',
-                children: t('create'),
+                children: t('organization.create'),
               },
             ]
           : []
       }
     >
+      <HomeCardsFilters type={type} items={items} setVisibleItems={setVisibleItems} />
+      {!visibleItems.length && <p role="status">{t('homeCards.noResults')}</p>}
       <ul
-        id="organization-grid"
+        id="home-cards-grid"
         ref={gridRef}
         className={classNames(styles.grid, 'mb1', { [styles.hideSubRows]: !showAll })}
       >
-        {organizationVersions.map((organizationVersion) => (
-          <ClientCard key={organizationVersion.id} organizationVersion={organizationVersion} />
+        {visibleItems.map((item) => (
+          <HomeCard key={item.id} item={item} type={type} />
         ))}
       </ul>
-      {hiddenRows && <Button onClick={() => setShowAll(!showAll)}>{t(showAll ? 'seeLess' : 'seeMore')}</Button>}
+      {hiddenRows && (
+        <Button onClick={() => setShowAll(!showAll)}>
+          {t(showAll ? 'organization.seeLess' : 'organization.seeMore')}
+        </Button>
+      )}
     </Block>
   )
 }
 
-export default CRClients
+export default HomeCards
