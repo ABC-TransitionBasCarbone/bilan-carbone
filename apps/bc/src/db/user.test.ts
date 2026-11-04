@@ -1,6 +1,6 @@
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment, Level, Role, UserChecklist, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 import { updateUserPasswordForEmail } from './user'
 
 const mockTransaction = {
@@ -9,7 +9,7 @@ const mockTransaction = {
   userCheckedStep: { upsert: jest.fn() },
 }
 
-jest.mock('./client.server', () => ({
+jest.mock('./client', () => ({
   prismaClient: { $transaction: jest.fn((callback) => callback(mockTransaction)) },
 }))
 jest.mock('@/services/serverFunctions/user', () => ({}))

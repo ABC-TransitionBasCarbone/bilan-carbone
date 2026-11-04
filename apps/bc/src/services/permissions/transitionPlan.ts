@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { getTransitionPlanById } from '@/db/transitionPlan'
 import { getEnvironment } from '@/i18n/environment'
 import { DeactivatableFeature, Environment } from '@abc-transitionbascarbone/common/db/enums'

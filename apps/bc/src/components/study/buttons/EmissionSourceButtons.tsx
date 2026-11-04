@@ -1,7 +1,7 @@
 'use client'
 
 import ImportEmissionSourcesModal from '@/components/study/ImportEmissionSourcesModal'
-import { download } from '@/services/file'
+import { download } from '@/services/fileDownload'
 import {
   exportEmissionSourcesToCSV,
   exportEmissionSourcesToExcel,

@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { getUserByEmail } from '@/db/user'
 import { canEditMemberRole } from '@/utils/user'
 import { dbActualizedAuth } from '../auth'

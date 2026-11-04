@@ -18,7 +18,7 @@ jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(() => (key: string) => key),
 }))
 
-jest.mock('../../db/client.server', () => ({
+jest.mock('../../db/client', () => ({
   prismaClient: {
     $transaction: jest.fn((callback) => callback({})),
   },

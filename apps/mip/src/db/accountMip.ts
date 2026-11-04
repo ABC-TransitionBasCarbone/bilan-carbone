@@ -4,7 +4,7 @@ import { findAccountMipSelect } from '@abc-transitionbascarbone/common/db/db/com
 import { Environment, RoleMip, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { UserSession } from 'next-auth'
 import { AccountMipWithUserSelect } from './accountMip.select'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 
 export const getAccountMipByEmailAndOrganizationVersionMipId = (
   email: string,

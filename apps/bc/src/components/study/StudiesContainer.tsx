@@ -7,11 +7,8 @@ import {
   getStudiesForCards,
   getStudiesValidatedEmissionsSources,
 } from '@/db/study'
-import {
-  canCreateStudyOnlyAsAdministrator,
-  isTilt,
-  isTiltSimplifiedFeatureActive,
-} from '@/services/permissions/environment'
+import { canCreateStudyOnlyAsAdministrator, isTilt } from '@/services/permissions/environment'
+import { isTiltSimplifiedFeatureActive } from '@/services/permissions/environmentFeature'
 import { canCreateAStudy } from '@/services/permissions/study'
 import { hasActiveLicence } from '@/utils/organization'
 import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'

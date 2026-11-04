@@ -1,3 +1,5 @@
+import 'client-only'
+
 export const getSurveyStorageKey = (surveyId: string) => `mip-publicodes-state-${surveyId}`
 export const getSurveySubmittedStorageKey = (surveyId: string) => `mip-publicodes-submitted-${surveyId}`
 

@@ -1,5 +1,5 @@
 import { CourseOrganism } from '@abc-transitionbascarbone/common/db'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 
 export const createCourseOrganismList = (
   courseOrganisme: Pick<CourseOrganism, 'name' | 'contactEmail' | 'ftpPath'>[],

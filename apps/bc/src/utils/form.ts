@@ -1,3 +1,5 @@
+import 'client-only'
+
 export const appendForm = () => {
   const script = document.createElement('script')
   script.src = 'https://embed.typeform.com/next/embed.js'

@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { getOrganizationVersionForRightsCheck } from '@/db/organization'
 import { getUserById } from '@/db/user'
 import { hasActiveLicence } from '@/utils/organization'

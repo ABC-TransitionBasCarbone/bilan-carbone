@@ -1,5 +1,3 @@
-'use server'
-
 import withAuth from '@/components/hoc/withAuth'
 import RessourcesPage from '@/components/pages/Ressources'
 import { auth } from '@/services/auth'

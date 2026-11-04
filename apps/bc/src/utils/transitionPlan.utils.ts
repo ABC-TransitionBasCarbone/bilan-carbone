@@ -1,3 +1,5 @@
+import 'client-only'
+
 import type { FullStudy } from '@/db/study'
 import { getStudyTotalCo2Emissions } from '@/services/study'
 import type { PastStudy } from '@/types/trajectory.types'

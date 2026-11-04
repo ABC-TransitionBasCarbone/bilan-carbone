@@ -1,14 +1,14 @@
 import { getLocale } from '@/i18n/locale'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { Locale } from '@abc-transitionbascarbone/common/i18n/config'
-import { getAllActualitiesLocale, getMainActualitiesLocale } from './actuality.server'
-import { prismaClient } from './client.server'
+import { getAllActualitiesLocale, getMainActualitiesLocale } from './actuality'
+import { prismaClient } from './client'
 
 jest.mock('@/i18n/locale', () => ({
   getLocale: jest.fn(),
 }))
 
-jest.mock('./client.server', () => ({
+jest.mock('./client', () => ({
   prismaClient: {
     actuality: {
       findMany: jest.fn(),

@@ -38,7 +38,7 @@ cp packages/common/db/.env.dist packages/common/db/.env
 ### 3. Start the database
 
 ```bash
-cd apps/bc && docker-compose up -d && cd ../..
+cd apps/bc && (docker compose up -d || podman compose up -d) && cd ../..
 ```
 
 ### 4. Set up the database with Prisma

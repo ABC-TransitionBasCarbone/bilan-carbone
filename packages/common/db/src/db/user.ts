@@ -1,4 +1,4 @@
-import { prismaClient } from "./client.server";
+import { prismaClient } from "./client";
 
 
 export const updateUserResetTokenForEmail = async (email: string, resetToken: string) =>
