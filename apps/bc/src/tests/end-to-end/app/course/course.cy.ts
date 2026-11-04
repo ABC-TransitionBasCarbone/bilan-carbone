@@ -4,6 +4,13 @@ import dayjs from 'dayjs'
 // Must match the course environments seeded in prisma/seed/index.ts (COURSE_TILT is not seeded yet)
 const testedCourseEnvironments = [Environment.COURSE_BC]
 
+const submitTraineeForm = (email: string) => {
+  cy.getByTestId('new-trainee-lastName').find('input').clear().type('Transfer')
+  cy.getByTestId('new-trainee-firstName').find('input').clear().type('Camille')
+  cy.getByTestId('new-trainee-email').find('input').clear().type(email)
+  cy.getByTestId('new-trainee-create-button').click()
+}
+
 for (let i = 0; i < testedCourseEnvironments.length; i++) {
   const env = testedCourseEnvironments[i]
   const traineeEmail = `${env.toLowerCase()}-env-admin-0@yopmail.com`
@@ -68,6 +75,51 @@ for (let i = 0; i < testedCourseEnvironments.length; i++) {
       cy.get('[role="status"]').should('be.visible')
       cy.getByTestId('study').should('not.exist')
       cy.getByTestId('new-study').should('not.exist')
+    })
+
+    it('accepts duplicates and transfers a trainee only after confirmation', () => {
+      const email = `manual-transfer-${env.toLowerCase()}-${Date.now()}@example.com`
+      cy.loginForEnv(env, professorEmail, 'password-1')
+
+      cy.getByTestId('course-session').contains(`Course test session ${env}`).click()
+      cy.get('a[href$="/formees"]').click()
+      cy.location('pathname').as('sourceTraineesPath')
+      cy.get('a[href$="/formees/ajouter"]').click()
+      submitTraineeForm(email)
+      cy.location('pathname').should('match', /\/formees$/)
+      cy.contains('[data-testid="course-session-trainees-table-row"]', email).should('be.visible')
+
+      cy.get('a[href$="/formees/ajouter"]').click()
+      submitTraineeForm(email)
+      cy.location('pathname').should('match', /\/formees$/)
+      cy.contains('Ce formé est déjà inscrit à cette session.').should('be.visible')
+      cy.getByTestId('course-session-trainees-user_email')
+        .filter((_, cell) => cell.textContent === email)
+        .should('have.length', 1)
+
+      cy.visit('/')
+      cy.getByTestId('course-session').contains(`Course second test session ${env}`).click()
+      cy.get('a[href$="/formees"]').click()
+      cy.location('pathname').as('targetTraineesPath')
+      cy.get('a[href$="/formees/ajouter"]').click()
+      submitTraineeForm(email)
+      cy.getByTestId('trainee-transfer-modal').should('be.visible').and('contain.text', email)
+      cy.getByTestId('trainee-transfer-cancel').click()
+      cy.getByTestId('trainee-transfer-modal').should('not.exist')
+
+      cy.get('@sourceTraineesPath').then((path) => cy.visit(String(path)))
+      cy.contains('[data-testid="course-session-trainees-table-row"]', email).should('be.visible')
+      cy.get('@targetTraineesPath').then((path) => cy.visit(String(path)))
+      cy.contains('[data-testid="course-session-trainees-table-row"]', email).should('not.exist')
+
+      cy.get('a[href$="/formees/ajouter"]').click()
+      submitTraineeForm(email)
+      cy.getByTestId('trainee-transfer-modal').should('be.visible')
+      cy.getByTestId('trainee-transfer-confirm').click()
+      cy.location('pathname').should('match', /\/formees$/)
+      cy.contains('[data-testid="course-session-trainees-table-row"]', email).should('be.visible')
+      cy.get('@sourceTraineesPath').then((path) => cy.visit(String(path)))
+      cy.contains('[data-testid="course-session-trainees-table-row"]', email).should('not.exist')
     })
 
     it('allows a trainee administrator to create a study', () => {
