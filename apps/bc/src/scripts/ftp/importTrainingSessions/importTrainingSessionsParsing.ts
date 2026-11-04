@@ -166,7 +166,7 @@ const handleTraineeTab = (
     ) {
       continue
     }
-    const key = JSON.stringify([session.type, trainee.email])
+    const key = JSON.stringify([session.type, session.environment, trainee.email])
     const timestamp = getRecordTimestamp(record)
     const previous = traineeAssignments.get(key)
     if (!previous || timestamp >= previous.timestamp) {

@@ -1,6 +1,6 @@
 import { prismaClient } from '@/db/client.server'
 import { createUsersWithAccount } from '@/db/user'
-import type { CourseSession } from '@abc-transitionbascarbone/common/db'
+import type { CourseSession, CourseSessionTraineeOrganization, Prisma } from '@abc-transitionbascarbone/common/db'
 import {
   CourseSessionTraineeOrganizationStatus,
   CourseSessionType,
@@ -23,7 +23,7 @@ jest.mock('@/db/client.server', () => {
   const courseOrganism = { findMany: jest.fn() }
   const account = { findMany: jest.fn(), update: jest.fn() }
   const courseSession = { findMany: jest.fn(), upsert: jest.fn(), deleteMany: jest.fn(), updateMany: jest.fn() }
-  const courseSessionTraineeOrganization = { deleteMany: jest.fn() }
+  const courseSessionTraineeOrganization = { deleteMany: jest.fn(), findMany: jest.fn() }
   const courseSessionTraineeRemoval = { findMany: jest.fn() }
   const transaction = { account, courseSession, courseSessionTraineeOrganization, courseSessionTraineeRemoval }
   return {
@@ -63,10 +63,17 @@ const mockFindCourseOrganisms = jest.mocked(prismaClient.courseOrganism.findMany
 const mockFindAccounts = jest.mocked(prismaClient.account.findMany)
 const mockUpdateAccount = prismaClient.account.update as jest.Mock
 const mockFindCourseSessions = jest.mocked(prismaClient.courseSession.findMany)
-const mockUpsertCourseSession = jest.mocked(prismaClient.courseSession.upsert)
+const mockUpsertCourseSession = jest.mocked<(args: Prisma.CourseSessionUpsertArgs) => Promise<CourseSession>>(
+  prismaClient.courseSession.upsert,
+)
 const mockDeleteCourseSessions = jest.mocked(prismaClient.courseSession.deleteMany)
-const mockUpdateCourseSessions = jest.mocked(prismaClient.courseSession.updateMany)
+const mockUpdateCourseSessions = jest.mocked<
+  (args: Prisma.CourseSessionUpdateManyArgs) => Promise<Prisma.BatchPayload>
+>(prismaClient.courseSession.updateMany)
 const mockDeleteTrainees = jest.mocked(prismaClient.courseSessionTraineeOrganization.deleteMany)
+const mockFindRegistrations = jest.mocked<
+  (args?: Prisma.CourseSessionTraineeOrganizationFindManyArgs) => Promise<CourseSessionTraineeOrganization[]>
+>(prismaClient.courseSessionTraineeOrganization.findMany)
 const mockFindTraineeRemovals = jest.mocked(prismaClient.courseSessionTraineeRemoval.findMany)
 const mockCreateUsersWithAccount = jest.mocked(createUsersWithAccount)
 const mockSendCourseSessionsCreatedEmail = jest.mocked(sendCourseSessionsCreatedEmail)
@@ -233,6 +240,7 @@ describe('getCourseSessionsFromFTP', () => {
     )
     mockFindCourseSessions.mockReset().mockResolvedValue([])
     mockFindTraineeRemovals.mockReset().mockResolvedValue([])
+    mockFindRegistrations.mockReset().mockResolvedValue([])
     mockUpsertCourseSession
       .mockReset()
       .mockResolvedValueOnce(withParticipants(savedSessions[0]))
@@ -427,10 +435,13 @@ describe('getCourseSessionsFromFTP', () => {
       deletedProfessors: 0,
     })
 
-    expect(mockCreateUsersWithAccount).toHaveBeenCalledWith([
-      expect.objectContaining({ email: 'test.abc2@abc-transitionbascarbone.fr' }),
-      expect.objectContaining({ email: 'test.abc@abc-transitionbascarbone.fr' }),
-    ])
+    expect(mockCreateUsersWithAccount).toHaveBeenCalledWith(
+      [
+        expect.objectContaining({ email: 'test.abc2@abc-transitionbascarbone.fr' }),
+        expect.objectContaining({ email: 'test.abc@abc-transitionbascarbone.fr' }),
+      ],
+      expect.objectContaining({ account: prismaClient.account }),
+    )
     expect(mockUpsertCourseSession).toHaveBeenCalledWith(
       expect.objectContaining({
         create: expect.objectContaining({ professorOrganizationVersionId: null }),
@@ -510,6 +521,7 @@ describe('getCourseSessionsFromFTP', () => {
           lastName: 'ABC',
         }),
       ]),
+      expect.objectContaining({ account: prismaClient.account }),
     )
     expect(mockUpdateAccount).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -538,11 +550,11 @@ describe('getCourseSessionsFromFTP', () => {
           traineeOrganizations: {
             create: [
               {
-                organizationVersion: { connect: { id: 'organization-account-0' } },
+                organizationVersionId: 'organization-account-0',
                 courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE,
               },
               {
-                organizationVersion: { connect: { id: 'organization-account-1' } },
+                organizationVersionId: 'organization-account-1',
                 courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE,
               },
             ],
@@ -601,8 +613,8 @@ describe('getCourseSessionsFromFTP', () => {
 
     const { create, update } = mockUpsertCourseSession.mock.calls[0][0]
     expect(create.traineeOrganizations).toEqual({
-      create: ['organization-0', 'organization-1'].map((id) => ({
-        organizationVersion: { connect: { id } },
+      create: ['organization-0', 'organization-1'].map((organizationVersionId) => ({
+        organizationVersionId,
         courseStatus,
       })),
     })
@@ -1068,13 +1080,29 @@ describe('getCourseSessionsFromFTP', () => {
     const current = savedSessions.map(withParticipants)
     const previous = { ...current[0], id: 'old-session', name: 'Old session' }
     const otherType = { ...previous, id: 'other-type', type: CourseSessionType.PROFESSIONNEL }
-    const otherOrganism = { ...previous, id: 'other-organism', courseOrganismId: 'organism-2' }
+    const otherEnvironment = { ...previous, id: 'other-environment', environment: Environment.COURSE_TILT }
     const after = { ...previous, traineeOrganizations: [] }
     mockFindCourseSessions
-      .mockResolvedValueOnce([previous, otherType, otherOrganism])
+      .mockResolvedValueOnce([previous, otherType, otherEnvironment])
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([...current, after, otherType, otherOrganism])
+      .mockResolvedValueOnce([...current, after, otherType, otherEnvironment])
+    mockFindRegistrations.mockResolvedValueOnce([
+      {
+        courseSessionId: previous.id,
+        organizationVersionId: 'organization-0',
+        courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        courseSessionId: previous.id,
+        organizationVersionId: 'organization-1',
+        courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ])
     mockDeleteTrainees.mockResolvedValueOnce({ count: 2 })
     mockCreateUsersWithAccount.mockResolvedValue({
       newUsers: { count: 0 },
@@ -1095,16 +1123,11 @@ describe('getCourseSessionsFromFTP', () => {
     expect(mockDeleteTrainees).toHaveBeenCalledTimes(1)
     expect(mockDeleteTrainees).toHaveBeenCalledWith({
       where: {
-        courseSessionId: 'old-session',
-        organizationVersion: {
-          userAccounts: {
-            some: {
-              user: {
-                email: { in: ['test.abc2@abc-transitionbascarbone.fr', 'test.abc@abc-transitionbascarbone.fr'] },
-              },
-            },
-          },
-        },
+        courseSession: { type: CourseSessionType.INITIAL, environment: Environment.COURSE_BC },
+        OR: [
+          { courseSessionId: 'old-session', organizationVersionId: 'organization-0' },
+          { courseSessionId: 'old-session', organizationVersionId: 'organization-1' },
+        ],
       },
     })
     expect(mockUpsertCourseSession.mock.calls[0][0]).toEqual(
@@ -1127,6 +1150,165 @@ describe('getCourseSessionsFromFTP', () => {
       ],
     )
   })
+
+  it('transfers a trainee between organisms in the same type and environment', async () => {
+    const current = savedSessions.map(withParticipants)
+    const previous = {
+      ...current[0],
+      id: 'partner-session',
+      name: 'Partner session',
+      courseOrganismId: 'other-organism',
+    }
+    mockFindCourseSessions
+      .mockResolvedValueOnce([previous])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([...current, { ...previous, traineeOrganizations: [] }])
+    mockFindRegistrations.mockResolvedValueOnce([
+      {
+        courseSessionId: previous.id,
+        organizationVersionId: 'organization-0',
+        courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ])
+    mockDeleteTrainees.mockResolvedValueOnce({ count: 1 })
+
+    await expect(importCourseSessionsFromFTP()).resolves.toEqual(expect.objectContaining({ deletedTrainees: 1 }))
+
+    expect(mockDeleteTrainees).toHaveBeenCalledWith({
+      where: {
+        courseSession: { type: CourseSessionType.INITIAL, environment: Environment.COURSE_BC },
+        OR: [{ courseSessionId: previous.id, organizationVersionId: 'organization-0' }],
+      },
+    })
+    expect(mockFindCourseSessions).toHaveBeenNthCalledWith(1, {
+      where: {
+        OR: expect.arrayContaining([
+          {
+            type: CourseSessionType.INITIAL,
+            environment: Environment.COURSE_BC,
+            traineeOrganizations: {
+              some: {
+                organizationVersion: {
+                  userAccounts: {
+                    some: {
+                      user: { email: { in: expect.arrayContaining(['test.abc2@abc-transitionbascarbone.fr']) } },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        ]),
+      },
+      select: expect.any(Object),
+    })
+  })
+
+  it('keeps the same trainee registered in BC and TILT for the same training type', () => {
+    jest.mocked(xlsx.parse).mockReturnValue([
+      {
+        name: 'Sessions',
+        data: [
+          ['Nom de la session', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
+          ['BC session', 46277, 46377, 'BC', 'M1'],
+          ['TILT session', 46277, 46377, 'TILT', 'M1'],
+        ],
+      },
+      {
+        name: 'Stagiaires',
+        data: [
+          ['Nom de la session', 'Email', 'Prénom', 'Nom', "Date d'ajout/modification de cette ligne"],
+          ['BC session', 'trainee@example.com', 'Camille', 'Martin', '2026-11-03'],
+          ['TILT session', 'trainee@example.com', 'Camille', 'Martin', '2026-11-04'],
+        ],
+      },
+      { name: 'Formateur', data: [] },
+    ])
+
+    const { sessions } = parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')
+
+    expect(
+      sessions.map(({ environment, trainees }) => ({ environment, emails: trainees.map(({ email }) => email) })),
+    ).toEqual([
+      { environment: Environment.COURSE_BC, emails: ['trainee@example.com'] },
+      { environment: Environment.COURSE_TILT, emails: ['trainee@example.com'] },
+    ])
+  })
+
+  it.each([
+    { sourceFirst: false, previousType: CourseSessionType.PROFESSIONNEL, importedType: CourseSessionType.INITIAL },
+    { sourceFirst: true, previousType: CourseSessionType.PROFESSIONNEL, importedType: CourseSessionType.INITIAL },
+    { sourceFirst: false, previousType: CourseSessionType.INITIAL, importedType: CourseSessionType.PROFESSIONNEL },
+    { sourceFirst: true, previousType: CourseSessionType.INITIAL, importedType: CourseSessionType.PROFESSIONNEL },
+  ])(
+    'uses the imported type for transfers from $previousType to $importedType with sourceFirst=$sourceFirst',
+    async ({ sourceFirst, previousType, importedType }) => {
+      const source = {
+        ...withParticipants(savedSessions[0]),
+        type: previousType,
+        traineeOrganizations: withParticipants(savedSessions[0]).traineeOrganizations.slice(0, 1),
+      }
+      const target = {
+        ...source,
+        id: 'target-session',
+        name: 'Target session',
+        type: CourseSessionType.INITIAL,
+        traineeOrganizations: [],
+      }
+      const sourceRow = [source.name, 46277, 46377, 'BC', importedType]
+      const targetRow = [target.name, 46277, 46377, 'BC', 'M1']
+      jest.mocked(xlsx.parse).mockReturnValue([
+        {
+          name: 'Sessions',
+          data: [workbook[0].data[0], ...(sourceFirst ? [sourceRow, targetRow] : [targetRow, sourceRow])],
+        },
+        {
+          name: 'Stagiaires',
+          data: [workbook[1].data[0], [target.name, 'test.abc2@abc-transitionbascarbone.fr', 'Test', 'ABC']],
+        },
+        { name: 'Formateur', data: [] },
+      ])
+      mockFindCourseSessions.mockResolvedValueOnce([source, target])
+      let currentSourceType = previousType
+      mockUpdateCourseSessions.mockImplementationOnce(async () => {
+        currentSourceType = importedType
+        return { count: 1 }
+      })
+      mockFindRegistrations.mockImplementation(async () =>
+        currentSourceType === CourseSessionType.INITIAL
+          ? [
+              {
+                courseSessionId: source.id,
+                organizationVersionId: 'organization-0',
+                courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+              },
+            ]
+          : [],
+      )
+      mockUpsertCourseSession.mockReset().mockImplementation(async ({ where }) => {
+        if (where.courseOrganismId_name_environment?.name === source.name) {
+          currentSourceType = importedType
+          return { ...source, type: importedType }
+        }
+        return target
+      })
+      mockDeleteTrainees.mockResolvedValue({ count: 1 })
+
+      const result = await importCourseSessionsFromFTP()
+
+      expect(mockUpdateCourseSessions).toHaveBeenCalledWith({
+        where: { id: source.id },
+        data: { type: importedType },
+      })
+      expect(result.deletedTrainees).toBe(importedType === CourseSessionType.INITIAL ? 1 : 0)
+      expect(mockDeleteTrainees).toHaveBeenCalledTimes(importedType === CourseSessionType.INITIAL ? 1 : 0)
+    },
+  )
 
   it('removes the losing registration when both sessions are present in Excel', async () => {
     jest.mocked(xlsx.parse).mockReturnValue([
@@ -1162,6 +1344,15 @@ describe('getCourseSessionsFromFTP', () => {
       .mockResolvedValueOnce([first, second])
     mockUpsertCourseSession.mockReset().mockResolvedValueOnce(first).mockResolvedValueOnce(second)
     mockDeleteTrainees.mockResolvedValueOnce({ count: 1 })
+    mockFindRegistrations.mockResolvedValueOnce([
+      {
+        courseSessionId: first.id,
+        organizationVersionId: 'organization-0',
+        courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ])
     mockCreateUsersWithAccount.mockResolvedValue({ newUsers: { count: 0 }, newAccounts: { count: 0 } })
 
     await expect(importCourseSessionsFromFTP()).resolves.toEqual({
@@ -1177,10 +1368,8 @@ describe('getCourseSessionsFromFTP', () => {
     })
     expect(mockDeleteTrainees).toHaveBeenCalledWith({
       where: {
-        courseSessionId: first.id,
-        organizationVersion: {
-          userAccounts: { some: { user: { email: { in: ['test.abc2@abc-transitionbascarbone.fr'] } } } },
-        },
+        courseSession: { type: CourseSessionType.INITIAL, environment: Environment.COURSE_BC },
+        OR: [{ courseSessionId: first.id, organizationVersionId: 'organization-0' }],
       },
     })
     expect(mockUpsertCourseSession.mock.calls[0][0].update?.traineeOrganizations).toEqual({
@@ -1190,8 +1379,8 @@ describe('getCourseSessionsFromFTP', () => {
       where: {
         OR: expect.arrayContaining([
           {
-            courseOrganismId: 'organism-1',
             type: CourseSessionType.INITIAL,
+            environment: Environment.COURSE_BC,
             traineeOrganizations: {
               some: {
                 organizationVersion: {

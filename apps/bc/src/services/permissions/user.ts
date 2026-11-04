@@ -1,11 +1,23 @@
 import { AccountWithUser } from '@/types/account.types'
 import { canEditMemberRole } from '@/utils/user'
-import type { Prisma } from '@abc-transitionbascarbone/common/db'
+import type { Account, CourseSession, Prisma } from '@abc-transitionbascarbone/common/db'
 import { Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import { canBeUntrainedRole } from '@abc-transitionbascarbone/common/utils/user'
 import { UserSession } from 'next-auth'
 
 export const canEditSelfRole = (userRole: Role) => userRole === Role.ADMIN || userRole === Role.GESTIONNAIRE
+
+export const canRegisterForCourseSession = (
+  professor: Pick<UserSession, 'organizationVersionId' | 'environment'>,
+  session: Pick<CourseSession, 'professorOrganizationVersionId' | 'environment'> | null,
+  account: Pick<Account, 'status'> | null,
+) =>
+  !!professor.organizationVersionId &&
+  isCourseEnvironment(professor.environment) &&
+  session?.environment === professor.environment &&
+  session.professorOrganizationVersionId === professor.organizationVersionId &&
+  (!account || account.status !== UserStatus.SUSPENDED)
 
 export const canAddMember = (
   user: UserSession,

@@ -1,19 +1,34 @@
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment, Level, Role, UserChecklist, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { prismaClient } from './client.server'
-import { updateUserPasswordForEmail } from './user'
+import { createUsersWithAccount, updateUserPasswordForEmail } from './user'
+
+let mockBlockedEnvironments: Environment[] = []
 
 const mockTransaction = {
-  user: { findUnique: jest.fn(), update: jest.fn() },
-  account: { findFirst: jest.fn(), findMany: jest.fn(), count: jest.fn(), update: jest.fn() },
+  user: { findUnique: jest.fn(), update: jest.fn(), createMany: jest.fn(), findMany: jest.fn() },
+  account: { findFirst: jest.fn(), findMany: jest.fn(), count: jest.fn(), update: jest.fn(), create: jest.fn() },
   userCheckedStep: { upsert: jest.fn() },
 }
 
 jest.mock('./client.server', () => ({
-  prismaClient: { $transaction: jest.fn((callback) => callback(mockTransaction)) },
+  prismaClient: {
+    get user() {
+      return mockTransaction.user
+    },
+    get account() {
+      return mockTransaction.account
+    },
+    $transaction: jest.fn((callback) => callback(mockTransaction)),
+  },
 }))
 jest.mock('@/services/serverFunctions/user', () => ({}))
-jest.mock('@/services/serverFunctions/deactivableFeatures', () => ({}))
+jest.mock('@/services/serverFunctions/deactivableFeatures', () => ({
+  getDeactivableFeatureRestrictions: jest.fn(async () => ({
+    active: mockBlockedEnvironments.length > 0,
+    deactivatedEnvironments: mockBlockedEnvironments,
+  })),
+}))
 jest.mock('@abc-transitionbascarbone/common/utils/auth', () => ({
   signPassword: jest.fn().mockResolvedValue('hashed-password'),
 }))
@@ -170,5 +185,74 @@ describe('updateUserPasswordForEmail', () => {
     await expect(updateUserPasswordForEmail('user@example.com', 'password', Environment.TILT)).rejects.toThrow(
       'Activation failed',
     )
+  })
+})
+
+describe('createUsersWithAccount', () => {
+  const users: Parameters<typeof createUsersWithAccount>[0] = [
+    {
+      firstName: 'Camille',
+      lastName: 'Martin',
+      email: 'camille@example.com',
+      account: {
+        environment: Environment.COURSE_BC,
+        role: Role.DEFAULT,
+        status: UserStatus.IMPORTED,
+        user: { create: undefined, connectOrCreate: undefined, connect: undefined },
+      },
+    },
+  ]
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    mockBlockedEnvironments = []
+    mockTransaction.user.createMany.mockResolvedValue({ count: 1 })
+    mockTransaction.user.findMany.mockResolvedValue([{ id: 'trainee-user', email: 'camille@example.com' }])
+    mockTransaction.account.findFirst.mockResolvedValue(null)
+    mockTransaction.account.create.mockResolvedValue({ id: 'trainee-account' })
+  })
+
+  it('uses the supplied transaction for both users and accounts', async () => {
+    expect(await prismaClient.$transaction((transaction) => createUsersWithAccount(users, transaction))).toEqual({
+      newUsers: { count: 1 },
+      newAccounts: { count: 1 },
+    })
+    expect(mockTransaction.user.createMany).toHaveBeenCalledWith({
+      data: [{ firstName: 'Camille', lastName: 'Martin', email: 'camille@example.com' }],
+      skipDuplicates: true,
+    })
+    expect(mockTransaction.account.findFirst).toHaveBeenCalledWith({
+      where: { user: { email: 'camille@example.com' }, environment: Environment.COURSE_BC },
+      select: expect.any(Object),
+    })
+    expect(mockTransaction.account.create).toHaveBeenCalledWith({
+      data: { ...users[0].account, user: { connect: { id: 'trainee-user' } } },
+    })
+  })
+
+  it('keeps the existing default client behavior when no transaction is supplied', async () => {
+    expect(await createUsersWithAccount(users)).toEqual({ newUsers: { count: 1 }, newAccounts: { count: 1 } })
+    expect(prismaClient.$transaction).not.toHaveBeenCalled()
+    expect(mockTransaction.account.create).toHaveBeenCalled()
+  })
+
+  it('reuses existing accounts without changing their user information', async () => {
+    mockTransaction.user.createMany.mockResolvedValue({ count: 0 })
+    mockTransaction.account.findFirst.mockResolvedValue({ id: 'existing-account' })
+
+    expect(await createUsersWithAccount(users)).toEqual({ newUsers: { count: 0 }, newAccounts: { count: 0 } })
+    expect(mockTransaction.account.create).not.toHaveBeenCalled()
+    expect(mockTransaction.user.update).not.toHaveBeenCalled()
+  })
+
+  it('respects disabled account creation within a transaction', async () => {
+    mockBlockedEnvironments = [Environment.COURSE_BC]
+    mockTransaction.user.createMany.mockResolvedValue({ count: 0 })
+    mockTransaction.user.findMany.mockResolvedValue([])
+
+    await prismaClient.$transaction((transaction) => createUsersWithAccount(users, transaction))
+
+    expect(mockTransaction.user.createMany).toHaveBeenCalledWith({ data: [], skipDuplicates: true })
+    expect(mockTransaction.account.create).not.toHaveBeenCalled()
   })
 })

@@ -1,6 +1,9 @@
 import { prismaClient } from '@/db/client.server'
 import { CourseSessionTraineeOrganizationStatus } from '@abc-transitionbascarbone/common/db/enums'
-import { updateCourseSessionTraineeOrganizationStatuses } from './courseSessionTraineeOrganization'
+import {
+  getCourseSessionTraineeOrganizationData,
+  updateCourseSessionTraineeOrganizationStatuses,
+} from './courseSessionTraineeOrganization'
 
 jest.mock('@/db/client.server', () => {
   const courseSessionTraineeOrganization = { updateMany: jest.fn(), deleteMany: jest.fn() }
@@ -15,6 +18,34 @@ jest.mock('@/db/client.server', () => {
 
 const mockUpdateMany = jest.mocked(prismaClient.courseSessionTraineeOrganization.updateMany)
 const mockDeleteMany = jest.mocked(prismaClient.courseSessionTraineeOrganization.deleteMany)
+
+describe('getCourseSessionTraineeOrganizationData', () => {
+  const session = {
+    startDate: new Date('2026-11-04T00:00:00Z'),
+    endDate: new Date('2026-11-06T23:59:59.999Z'),
+  }
+
+  afterEach(() => {
+    jest.useRealTimers()
+  })
+
+  it.each([
+    ['2026-11-03T23:59:59Z', CourseSessionTraineeOrganizationStatus.INACTIVE],
+    ['2026-11-04T00:00:00Z', CourseSessionTraineeOrganizationStatus.ACTIVE],
+    ['2026-11-05T12:00:00Z', CourseSessionTraineeOrganizationStatus.ACTIVE],
+    ['2026-11-06T23:59:59.999Z', CourseSessionTraineeOrganizationStatus.ACTIVE],
+    ['2026-11-07T00:00:00Z', CourseSessionTraineeOrganizationStatus.INACTIVE],
+  ])('builds the same registration data at %s with status %s', (date, courseStatus) => {
+    jest.useFakeTimers().setSystemTime(new Date(date))
+
+    expect(getCourseSessionTraineeOrganizationData(session, 'trainee-org')).toEqual({
+      organizationVersionId: 'trainee-org',
+      courseStatus,
+    })
+    expect(session.startDate.toISOString()).toBe('2026-11-04T00:00:00.000Z')
+    expect(session.endDate.toISOString()).toBe('2026-11-06T23:59:59.999Z')
+  })
+})
 
 describe('updateCourseSessionTraineeOrganizationStatuses', () => {
   const previousAccessDays = process.env.COURSE_SESSION_ACCESS_DAYS

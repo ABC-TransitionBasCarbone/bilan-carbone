@@ -55,8 +55,12 @@ export const getAccountOrganizationVersions = async (accountId: string) => {
   return account.organizationVersion ? [account.organizationVersion] : []
 }
 
-export const getAccountByEmailAndEnvironment = (email: string, environment: Environment) => {
-  return prismaClient.account.findFirst({
+export const getAccountByEmailAndEnvironment = (
+  email: string,
+  environment: Environment,
+  transaction: Prisma.TransactionClient = prismaClient,
+) => {
+  return transaction.account.findFirst({
     where: { user: { email }, environment },
     select: AccountWithUserSelect,
   })

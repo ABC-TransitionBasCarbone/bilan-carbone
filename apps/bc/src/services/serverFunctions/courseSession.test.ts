@@ -3,6 +3,7 @@ import {
   getCourseSessionForProfessor,
   getCourseSessionStudies,
   getCourseSessionTrainees,
+  registerCourseSessionTrainee,
   removeCourseSessionTrainee,
 } from '@/db/courseSession'
 import { dbActualizedAuth } from '@/services/auth'
@@ -12,12 +13,15 @@ import { CourseSessionType, Environment, UserStatus } from '@abc-transitionbasca
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { revalidatePath } from 'next/cache'
 import {
+  addCourseSessionTrainee,
   deleteCourseSessionTrainee,
   getProfessorCourseSession,
   getProfessorCourseSessionTrainees,
 } from './courseSession'
+import { AddCourseSessionTraineeCommandValidation } from './courseSession.command'
 
 let mockAccountStatus: UserStatus = UserStatus.ACTIVE
+let mockCreationBlocked = false
 
 jest.mock('@/db/account', () => ({
   getAccountById: jest.fn(async () => ({ status: mockAccountStatus })),
@@ -27,9 +31,16 @@ jest.mock('@/db/courseSession', () => ({
   getCourseSessionForProfessor: jest.fn(),
   getCourseSessionStudies: jest.fn(),
   getCourseSessionTrainees: jest.fn(),
+  registerCourseSessionTrainee: jest.fn(),
   removeCourseSessionTrainee: jest.fn(),
 }))
 jest.mock('@/services/auth', () => ({ dbActualizedAuth: jest.fn() }))
+jest.mock('@/services/serverFunctions/deactivableFeatures', () => ({
+  getDeactivableFeatureRestrictions: jest.fn(async () => ({
+    active: mockCreationBlocked,
+    deactivatedEnvironments: ['COURSE_BC', 'COURSE_TILT'],
+  })),
+}))
 jest.mock('next/cache', () => ({ revalidatePath: jest.fn() }))
 jest.mock('@/utils/serverResponse', () => ({
   withServerResponse: jest.fn(async (_name, operation) => {
@@ -52,6 +63,26 @@ const courseSession = {
   startDate: new Date('2026-11-01'),
   endDate: new Date('2026-11-05'),
 }
+
+describe('course session trainee input', () => {
+  it('trims names and normalizes the email', () => {
+    expect(
+      AddCourseSessionTraineeCommandValidation.parse({
+        firstName: ' Camille ',
+        lastName: ' Martin ',
+        email: ' CAMILLE@EXAMPLE.COM ',
+      }),
+    ).toEqual({ firstName: 'Camille', lastName: 'Martin', email: 'camille@example.com' })
+  })
+
+  it.each([
+    { firstName: ' ', lastName: 'Martin', email: 'camille@example.com' },
+    { firstName: 'Camille', lastName: ' ', email: 'camille@example.com' },
+    { firstName: 'Camille', lastName: 'Martin', email: 'invalid' },
+  ])('rejects invalid trainee input %j', (input) => {
+    expect(AddCourseSessionTraineeCommandValidation.safeParse(input).success).toBe(false)
+  })
+})
 
 describe('getProfessorCourseSession server function', () => {
   beforeEach(() => {
@@ -217,6 +248,143 @@ describe('getProfessorCourseSessionTrainees server function', () => {
     jest.mocked(getCourseSessionTrainees).mockResolvedValue([])
 
     expect(await getProfessorCourseSessionTrainees(courseSession.id)).toEqual({ success: true, data: [] })
+  })
+})
+
+describe('addCourseSessionTrainee server function', () => {
+  const trainee = { firstName: ' Camille ', lastName: ' Martin ', email: ' CAMILLE@EXAMPLE.COM ' }
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    mockAccountStatus = UserStatus.ACTIVE
+    mockCreationBlocked = false
+    mockAuth.mockResolvedValue({ user: professor, expires: '2026-12-01T00:00:00.000Z' })
+    mockGetSession.mockResolvedValue(courseSession)
+    jest.mocked(registerCourseSessionTrainee).mockResolvedValue({ status: 'added', previousSessionIds: [] })
+  })
+
+  it.each([Environment.COURSE_BC, Environment.COURSE_TILT])('adds a validated trainee in %s', async (environment) => {
+    mockAuth.mockResolvedValue({ user: { ...professor, environment }, expires: '2026-12-01T00:00:00.000Z' })
+
+    expect(await addCourseSessionTrainee(courseSession.id, trainee)).toEqual({
+      success: true,
+      data: { status: 'added', previousSessionIds: [] },
+    })
+    expect(registerCourseSessionTrainee).toHaveBeenCalledWith(
+      courseSession.id,
+      professor.organizationVersionId,
+      environment,
+      { firstName: 'Camille', lastName: 'Martin', email: 'camille@example.com' },
+    )
+    expect(revalidatePath).toHaveBeenCalledWith(`/sessions/${courseSession.id}`)
+    expect(revalidatePath).toHaveBeenCalledWith(`/sessions/${courseSession.id}/formees`)
+  })
+
+  it('rejects unauthenticated calls without creating a trainee', async () => {
+    mockAuth.mockResolvedValue(null)
+
+    expect(await addCourseSessionTrainee(courseSession.id, trainee)).toEqual({
+      success: false,
+      errorMessage: NOT_AUTHORIZED,
+    })
+    expect(registerCourseSessionTrainee).not.toHaveBeenCalled()
+  })
+
+  it('rejects suspended professors without creating a trainee', async () => {
+    mockAccountStatus = UserStatus.SUSPENDED
+
+    expect(await addCourseSessionTrainee(courseSession.id, trainee)).toEqual({
+      success: false,
+      errorMessage: NOT_AUTHORIZED,
+    })
+    expect(registerCourseSessionTrainee).not.toHaveBeenCalled()
+  })
+
+  it('rejects sessions owned by another professor', async () => {
+    mockGetSession.mockResolvedValue(null)
+
+    expect(await addCourseSessionTrainee(courseSession.id, trainee)).toEqual({
+      success: false,
+      errorMessage: NOT_AUTHORIZED,
+    })
+    expect(mockGetSession).toHaveBeenCalledWith(
+      professor.organizationVersionId,
+      professor.environment,
+      courseSession.id,
+    )
+    expect(registerCourseSessionTrainee).not.toHaveBeenCalled()
+    expect(revalidatePath).not.toHaveBeenCalled()
+  })
+
+  it.each([Environment.BC, Environment.TILT, Environment.CUT, Environment.CLICKSON, Environment.MIP])(
+    'rejects calls from %s',
+    async (environment) => {
+      mockAuth.mockResolvedValue({ user: { ...professor, environment }, expires: '2026-12-01T00:00:00.000Z' })
+
+      expect(await addCourseSessionTrainee(courseSession.id, trainee)).toEqual({
+        success: false,
+        errorMessage: NOT_AUTHORIZED,
+      })
+      expect(registerCourseSessionTrainee).not.toHaveBeenCalled()
+    },
+  )
+
+  it('respects the creation restrictions', async () => {
+    mockCreationBlocked = true
+
+    expect(await addCourseSessionTrainee(courseSession.id, trainee)).toEqual({
+      success: false,
+      errorMessage: NOT_AUTHORIZED,
+    })
+    expect(registerCourseSessionTrainee).not.toHaveBeenCalled()
+  })
+
+  it('validates input on the server without creating invalid trainees', async () => {
+    expect((await addCourseSessionTrainee(courseSession.id, { ...trainee, email: 'invalid' })).success).toBe(false)
+    expect(registerCourseSessionTrainee).not.toHaveBeenCalled()
+  })
+
+  it('preserves enrollment errors without refreshing the pages', async () => {
+    jest.mocked(registerCourseSessionTrainee).mockRejectedValueOnce(new Error('database unavailable'))
+
+    expect(await addCourseSessionTrainee(courseSession.id, trainee)).toEqual({
+      success: false,
+      errorMessage: 'database unavailable',
+    })
+    expect(revalidatePath).not.toHaveBeenCalled()
+  })
+
+  it('returns confirmation requirements without refreshing or reporting an error', async () => {
+    jest
+      .mocked(registerCourseSessionTrainee)
+      .mockResolvedValue({ status: 'confirmationRequired', sessionIds: ['old-session'] })
+
+    expect(await addCourseSessionTrainee(courseSession.id, trainee)).toEqual({
+      success: true,
+      data: { status: 'confirmationRequired', sessionIds: ['old-session'] },
+    })
+    expect(revalidatePath).not.toHaveBeenCalled()
+  })
+
+  it('returns success for an existing registration', async () => {
+    jest.mocked(registerCourseSessionTrainee).mockResolvedValue({ status: 'alreadyRegistered', previousSessionIds: [] })
+
+    expect(await addCourseSessionTrainee(courseSession.id, trainee)).toEqual({
+      success: true,
+      data: { status: 'alreadyRegistered', previousSessionIds: [] },
+    })
+  })
+
+  it('refreshes both sessions after a confirmed transfer', async () => {
+    jest
+      .mocked(registerCourseSessionTrainee)
+      .mockResolvedValue({ status: 'transferred', previousSessionIds: ['old-session'] })
+
+    await addCourseSessionTrainee(courseSession.id, { ...trainee, confirmedTransferFrom: ['old-session'] })
+
+    expect(revalidatePath).toHaveBeenCalledWith('/sessions/old-session')
+    expect(revalidatePath).toHaveBeenCalledWith('/sessions/old-session/formees')
+    expect(revalidatePath).toHaveBeenCalledWith(`/sessions/${courseSession.id}`)
   })
 })
 
