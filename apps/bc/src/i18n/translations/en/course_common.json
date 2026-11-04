@@ -2,6 +2,9 @@
   "courseSessions": {
     "title": "My training sessions",
     "session": "Training session",
+    "manageTrainees": "Manage trainees",
+    "traineesTitle": "Trainee management",
+    "backToSession": "Back to session",
     "studies": "Trainees' studies",
     "empty": "There are no studies for this session's trainees yet.",
     "types": {
