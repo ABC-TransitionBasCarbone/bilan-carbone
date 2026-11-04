@@ -1,19 +1,13 @@
 import { prismaClient } from '@/db/client.server'
-import { createUsersWithAccount } from '@/db/user'
+import { createCourseParticipantAccounts, prepareCourseSessionTraineeRegistrations } from '@/db/courseSession'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
-import {
-  CourseSessionTraineeOrganizationStatus,
-  Environment,
-  Role,
-  UserSource,
-  UserStatus,
-} from '@abc-transitionbascarbone/common/db/enums'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import {
   sendCourseSessionsCreatedEmail,
   type TrainingSessionUpdate,
 } from '@abc-transitionbascarbone/common/services/email/email'
 import { Client } from 'basic-ftp'
-import { randomInt } from 'crypto'
+import { randomInt, randomUUID } from 'crypto'
 import fs from 'fs'
 import path from 'path'
 import { downloadFileFromFTP, getFTPClient } from '../utils'
@@ -146,74 +140,17 @@ export const importCourseSessionsFromFTP = async () => {
   today.setUTCHours(0, 0, 0, 0)
   const notFinishedSessions = sessions.filter(({ endDate }) => endDate >= today)
 
-  const userAccountInSession = []
-  for (const session of notFinishedSessions) {
-    for (const participant of session.trainees) {
-      userAccountInSession.push({ ...participant, environment: session.environment })
-    }
-    if (session.professor) {
-      userAccountInSession.push({ ...session.professor, environment: session.environment })
-    }
-  }
-
-  const { newUsers, newAccounts } =
-    userAccountInSession.length > 0
-      ? await createUsersWithAccount(
-          userAccountInSession.map(({ email, firstName, lastName, environment }) => ({
-            email,
-            firstName,
-            lastName,
-            source: UserSource.CRON,
-            account: {
-              environment,
-              role: Role.DEFAULT,
-              status: UserStatus.IMPORTED,
-              user: { create: undefined, connectOrCreate: undefined, connect: undefined },
-            },
-          })),
-        )
-      : { newUsers: { count: 0 }, newAccounts: { count: 0 } }
-
-  const accounts =
-    userAccountInSession.length > 0
-      ? await prismaClient.account.findMany({
-          where: {
-            environment: { in: [...new Set(notFinishedSessions.map(({ environment }) => environment))] },
-            user: { email: { in: userAccountInSession.map(({ email }) => email) } },
-          },
-          select: {
-            id: true,
-            environment: true,
-            organizationVersionId: true,
-            user: { select: { email: true, firstName: true, lastName: true } },
-          },
-        })
-      : []
-  const createdOrganizationVersions = await prismaClient.$transaction(
-    accounts
-      .filter(({ organizationVersionId }) => !organizationVersionId)
-      .map((account) =>
-        prismaClient.account.update({
-          where: { id: account.id },
-          data: {
-            organizationVersion: {
-              create: {
-                environment: account.environment,
-                organization: { create: { name: `${account.user.firstName} ${account.user.lastName}` } },
-              },
-            },
-          },
-          select: { id: true, organizationVersionId: true },
-        }),
-      ),
+  const userAccountInSession = notFinishedSessions.flatMap(({ trainees, professor, environment }) =>
+    [...trainees, ...(professor ? [professor] : [])].map((participant) => ({ ...participant, environment })),
   )
-  const createdOrganizationVersionIds = new Map(
-    createdOrganizationVersions.map(({ id, organizationVersionId }) => [id, organizationVersionId]),
+
+  const {
+    newUsers,
+    newAccounts,
+    accounts: accountsWithOrganizationVersions,
+  } = await prismaClient.$transaction((transaction) =>
+    createCourseParticipantAccounts(userAccountInSession, transaction),
   )
-  const accountsWithOrganizationVersions = accounts.map((account) => ({
-    ...account,
-    organizationVersionId: account.organizationVersionId ?? createdOrganizationVersionIds.get(account.id) ?? null,
-  }))
 
   const affectedSessionsSQLRequest: Prisma.CourseSessionWhereInput[] = [
     ...notFinishedSessions.flatMap(({ courseOrganismId, name, environment, type, trainees }) => [
@@ -221,8 +158,8 @@ export const importCourseSessionsFromFTP = async () => {
       ...(trainees.length > 0
         ? [
             {
-              courseOrganismId,
               type,
+              environment,
               traineeOrganizations: {
                 some: {
                   organizationVersion: {
@@ -269,20 +206,6 @@ export const importCourseSessionsFromFTP = async () => {
           ),
         }
       })
-      const conflictingRegistrations = sessionsToImport.flatMap((session) =>
-        existingSessions.flatMap((previous) => {
-          if (previous.courseOrganismId !== session.courseOrganismId || isSameSession(previous, session)) {
-            return []
-          }
-          const imported = sessions.find((session) => isSameSession(previous, session))
-          if ((imported ? imported.type : previous.type) !== session.type) {
-            return []
-          }
-          const previousEmails = new Set(getTrainees(previous).map(({ email }) => email))
-          const emails = session.trainees.filter(({ email }) => previousEmails.has(email)).map(({ email }) => email)
-          return emails.length > 0 ? [{ courseSessionId: previous.id, emails }] : []
-        }),
-      )
 
       for (const deletion of deletions) {
         const where = { courseOrganismId: deletion.courseOrganismId, name: deletion.name }
@@ -309,28 +232,35 @@ export const importCourseSessionsFromFTP = async () => {
           ).count
         }
       }
-      for (const { courseSessionId, emails } of conflictingRegistrations) {
-        deletedCounts.deletedTrainees += (
-          await transaction.courseSessionTraineeOrganization.deleteMany({
-            where: {
-              courseSessionId,
-              organizationVersion: { userAccounts: { some: { user: { email: { in: emails } } } } },
-            },
+      for (const session of sessionsToImport) {
+        const previous = existingSessions.find((existingSession) => isSameSession(existingSession, session))
+        if (previous && previous.type !== session.type) {
+          await transaction.courseSession.updateMany({
+            where: { id: previous.id },
+            data: { type: session.type },
           })
-        ).count
+        }
       }
+
+      let hasTransferredTrainees = false
       const importedSessionsPromises = []
       for (const session of sessionsToImport) {
-        const courseStatus =
-          session.startDate <= today
-            ? CourseSessionTraineeOrganizationStatus.ACTIVE
-            : CourseSessionTraineeOrganizationStatus.INACTIVE
         const professorOrganizationVersionId = session.professor
           ? getOrganizationVersionId(accountsWithOrganizationVersions, session.professor.email, session.environment)
           : null
         const traineeOrganizationVersionIds = session.trainees.map(({ email }) =>
           getOrganizationVersionId(accountsWithOrganizationVersions, email, session.environment),
         )
+        const previous = existingSessions.find((existingSession) => isSameSession(existingSession, session))
+        const courseSessionId = previous?.id ?? randomUUID()
+        const prepared = await prepareCourseSessionTraineeRegistrations(
+          { ...session, id: courseSessionId },
+          traineeOrganizationVersionIds,
+          transaction,
+          { source: 'ftp' },
+        )
+        deletedCounts.deletedTrainees += prepared.removedCount
+        hasTransferredTrainees ||= prepared.removedCount > 0
 
         let code = randomInt(99999999).toString()
 
@@ -361,6 +291,7 @@ export const importCourseSessionsFromFTP = async () => {
             },
             select: sessionsSelect,
             create: {
+              id: courseSessionId,
               courseOrganismId: session.courseOrganismId,
               name: session.name,
               type: session.type,
@@ -370,10 +301,7 @@ export const importCourseSessionsFromFTP = async () => {
               code,
               professorOrganizationVersionId,
               traineeOrganizations: {
-                create: traineeOrganizationVersionIds.map((id) => ({
-                  organizationVersion: { connect: { id } },
-                  courseStatus,
-                })),
+                create: prepared.data,
               },
             },
             update: {
@@ -383,10 +311,7 @@ export const importCourseSessionsFromFTP = async () => {
               ...(professorOrganizationVersionId && { professorOrganizationVersionId }),
               traineeOrganizations: {
                 createMany: {
-                  data: traineeOrganizationVersionIds.map((organizationVersionId) => ({
-                    organizationVersionId,
-                    courseStatus,
-                  })),
+                  data: prepared.data,
                   skipDuplicates: true,
                 },
               },
@@ -394,7 +319,7 @@ export const importCourseSessionsFromFTP = async () => {
           }),
         )
       }
-      return deletions.length > 0 || conflictingRegistrations.length > 0
+      return deletions.length > 0 || hasTransferredTrainees
         ? transaction.courseSession.findMany({
             where: {
               OR: [...affectedSessionsSQLRequest, { id: { in: existingSessions.map(({ id }) => id) } }],

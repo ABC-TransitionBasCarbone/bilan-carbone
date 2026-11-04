@@ -3,6 +3,7 @@ import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import { getProfessorCourseSessionTrainees } from '@/services/serverFunctions/courseSession'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined'
 import { getTranslations } from 'next-intl/server'
 
 interface Props {
@@ -24,6 +25,12 @@ const SessionTraineesPage = async ({ params }: Props & UserSessionProps) => {
       as="h1"
       id="course-session-trainees-table-title"
       actions={[
+        {
+          actionType: 'link',
+          href: `/sessions/${id}/formees/ajouter`,
+          startIcon: <PersonAddOutlinedIcon />,
+          children: t('addTrainee'),
+        },
         {
           actionType: 'link',
           href: `/sessions/${id}`,
