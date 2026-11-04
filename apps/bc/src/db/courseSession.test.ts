@@ -1,10 +1,18 @@
 import { CourseSessionType, Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { prismaClient } from './client.server'
-import { getCourseSessionForProfessor, getCourseSessionStudies, isCourseProfessor } from './courseSession'
+import {
+  getCourseSessionForProfessor,
+  getCourseSessionStudies,
+  getCourseSessionTrainees,
+  isCourseProfessor,
+  removeCourseSessionTrainee,
+} from './courseSession'
 
 jest.mock('./client.server', () => ({
   prismaClient: {
     courseSession: { findFirst: jest.fn() },
+    account: { findMany: jest.fn() },
+    courseSessionTraineeOrganization: { deleteMany: jest.fn() },
     study: { findMany: jest.fn() },
   },
 }))
@@ -104,5 +112,37 @@ describe('course session database queries', () => {
   it('does not treat an account without organization as a professor', async () => {
     expect(await isCourseProfessor(null, professor.environment)).toBe(false)
     expect(mockFindSession).not.toHaveBeenCalled()
+  })
+
+  it('lists trainees enrolled in the session and environment, ordered by name', async () => {
+    await getCourseSessionTrainees(session.id, professor.environment)
+
+    expect(prismaClient.account.findMany).toHaveBeenCalledWith({
+      where: {
+        environment: professor.environment,
+        organizationVersion: { traineeCourseSessions: { some: { courseSessionId: session.id } } },
+      },
+      select: {
+        id: true,
+        organizationVersionId: true,
+        user: { select: { firstName: true, lastName: true, email: true } },
+      },
+      orderBy: [{ user: { lastName: 'asc' } }, { user: { firstName: 'asc' } }],
+    })
+  })
+
+  it('only removes the enrollment in the session owned by the authenticated professor', async () => {
+    await removeCourseSessionTrainee(session.id, 'trainee-org', professor.organizationVersionId, professor.environment)
+
+    expect(prismaClient.courseSessionTraineeOrganization.deleteMany).toHaveBeenCalledWith({
+      where: {
+        courseSessionId: session.id,
+        organizationVersionId: 'trainee-org',
+        courseSession: {
+          professorOrganizationVersionId: professor.organizationVersionId,
+          environment: professor.environment,
+        },
+      },
+    })
   })
 })

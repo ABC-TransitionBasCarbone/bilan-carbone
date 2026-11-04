@@ -5,6 +5,10 @@
     "manageTrainees": "Manage trainees",
     "traineesTitle": "Trainee management",
     "backToSession": "Back to session",
+    "emptyTrainees": "There are no trainees in this session yet.",
+    "deleteTraineeTitle": "Remove a trainee",
+    "deleteTraineeLabel": "Remove trainee {firstName} {lastName}",
+    "deleteTraineeDescription": "Are you sure you want to remove trainee {firstName} {lastName} from your session?",
     "studies": "Trainees' studies",
     "empty": "There are no studies for this session's trainees yet.",
     "types": {

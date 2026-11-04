@@ -47,6 +47,36 @@ export const getCourseSessionForProfessor = (organizationVersionId: string, envi
     select: { id: true, name: true, type: true, startDate: true, endDate: true },
   })
 
+export const getCourseSessionTrainees = (courseSessionId: string, environment: Environment) =>
+  prismaClient.account.findMany({
+    where: {
+      environment,
+      organizationVersion: { traineeCourseSessions: { some: { courseSessionId } } },
+    },
+    select: {
+      id: true,
+      organizationVersionId: true,
+      user: { select: { firstName: true, lastName: true, email: true } },
+    },
+    orderBy: [{ user: { lastName: 'asc' } }, { user: { firstName: 'asc' } }],
+  })
+
+export type CourseSessionTrainee = AsyncReturnType<typeof getCourseSessionTrainees>[number]
+
+export const removeCourseSessionTrainee = (
+  courseSessionId: string,
+  organizationVersionId: string,
+  professorOrganizationVersionId: string,
+  environment: Environment,
+) =>
+  prismaClient.courseSessionTraineeOrganization.deleteMany({
+    where: {
+      courseSessionId,
+      organizationVersionId,
+      courseSession: { professorOrganizationVersionId, environment },
+    },
+  })
+
 export const getCourseSessionStudies = (
   session: Pick<CourseSession, 'id' | 'type'>,
   professorOrganizationVersionId: string,

@@ -5,6 +5,10 @@
     "manageTrainees": "Gérer les formées",
     "traineesTitle": "Gestion des formées",
     "backToSession": "Revenir à la session",
+    "emptyTrainees": "Aucun stagiaire dans cette session pour le moment.",
+    "deleteTraineeTitle": "Supprimer un stagiaire",
+    "deleteTraineeLabel": "Supprimer le stagiaire {firstName} {lastName}",
+    "deleteTraineeDescription": "Êtes-vous sûr.e de vouloir supprimer le stagiaire {firstName} {lastName} de votre session ?",
     "studies": "Les études des stagiaires",
     "empty": "Aucune étude pour les stagiaires de cette session pour le moment.",
     "types": {
