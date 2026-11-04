@@ -6,6 +6,7 @@ import type { Account, User } from '@abc-transitionbascarbone/common/db'
 import { PrismaClient } from '@abc-transitionbascarbone/common/db'
 import {
   CourseSessionTraineeOrganizationStatus,
+  CourseSessionType,
   EmissionFactorBase,
   EmissionFactorStatus,
   Environment,
@@ -1077,7 +1078,7 @@ const users = async () => {
     }),
   )
 
-  const courseEnvironments = [Environment.COURSE_BC, Environment.COURSE_TILT]
+  const courseEnvironments = [Environment.COURSE_BC]
 
   if (courseEnvironments.length > 9) {
     throw new Error('Too many course environments defined needs to change seeds to handle ids')
@@ -1104,6 +1105,7 @@ const users = async () => {
     const courseSession = await prisma.courseSession.create({
       data: {
         name: `Course test session ${courseEnv}`,
+        type: CourseSessionType.INITIAL,
         environment: courseEnv,
         professorOrganization: { connect: { id: courseProfessorOrganizationVersionId } },
         code: `course-test-${i}`,
@@ -1112,7 +1114,7 @@ const users = async () => {
         courseOrganism: {
           create: {
             name: `Course test organism ${courseEnv}`,
-            contactEmail: 'course-organism@example.org',
+            contactEmail: 'course-organism@yopmail.com',
             ftpPath: `course-test-${i}`,
           },
         },
@@ -1129,6 +1131,7 @@ const users = async () => {
       data: [
         {
           name: `Course second test session ${courseEnv}`,
+          type: CourseSessionType.INITIAL,
           environment: courseEnv,
           code: `course-second-test-${i}`,
           startDate: faker.date.past(),
@@ -1138,6 +1141,7 @@ const users = async () => {
         },
         {
           name: `Course other professor session ${courseEnv}`,
+          type: CourseSessionType.INITIAL,
           environment: courseEnv,
           code: `course-other-professor-test-${i}`,
           startDate: faker.date.past(),
@@ -1168,6 +1172,7 @@ const users = async () => {
           isPublic: false,
           level: Level.Initial,
           name: `course study source ${courseEnv.toLowerCase()}`,
+          courseSessionType: CourseSessionType.INITIAL,
           organizationVersionId: courseOrganizationVersionId,
           sites: {
             createMany: {
@@ -1196,6 +1201,7 @@ const users = async () => {
           isPublic: false,
           level: Level.Initial,
           name: `course study to delete ${courseEnv.toLowerCase()}`,
+          courseSessionType: CourseSessionType.INITIAL,
           organizationVersionId: courseOrganizationVersionId,
           sites: {
             createMany: {

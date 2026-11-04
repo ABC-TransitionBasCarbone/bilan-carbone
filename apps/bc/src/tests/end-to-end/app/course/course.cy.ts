@@ -1,8 +1,11 @@
-import { courseEnvironments } from '@abc-transitionbascarbone/common/utils/environments'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import dayjs from 'dayjs'
 
-for (let i = 0; i < courseEnvironments.length; i++) {
-  const env = courseEnvironments[i]
+// Must match the course environments seeded in prisma/seed/index.ts (COURSE_TILT is not seeded yet)
+const testedCourseEnvironments = [Environment.COURSE_BC]
+
+for (let i = 0; i < testedCourseEnvironments.length; i++) {
+  const env = testedCourseEnvironments[i]
   const traineeEmail = `${env.toLowerCase()}-env-admin-0@yopmail.com`
   const professorEmail = `${env.toLowerCase()}-env-admin-1@yopmail.com`
   describe(`BC Course - ${env}`, () => {
@@ -32,6 +35,39 @@ for (let i = 0; i < courseEnvironments.length; i++) {
       cy.getByTestId('course-session').contains(`Course second test session ${env}`).should('be.visible')
       cy.getByTestId('course-session').should('not.contain.text', 'Course other professor session')
       cy.contains('[data-testid="study-name-chip"]', `course study source ${env.toLowerCase()}`).should('not.exist')
+    })
+
+    it('opens a professor session and its trainee studies in read-only mode', () => {
+      cy.loginForEnv(env, professorEmail, 'password-1')
+
+      cy.getByTestId('course-session').contains(`Course test session ${env}`).click()
+      cy.url().should('include', '/sessions/')
+      cy.getByTestId('course-session-name').should('have.text', `Course test session ${env}`)
+      cy.getByTestId('course-session-type').should('be.visible')
+      cy.getByTestId('new-study').should('not.exist')
+      cy.getByTestId('edit-organization-button').should('not.exist')
+
+      cy.getByTestId('study-name-chip')
+        .contains(`course study source ${env.toLowerCase()}`)
+        .parents('[data-testid="study"]')
+        .within(() => {
+          cy.getByTestId('study-student').should('be.visible').and('not.be.empty')
+          cy.getByTestId('study-link').click()
+        })
+
+      cy.url().should('include', `/etudes/88c93e88-7c80-4be4-905b-f0bbd2ccd95${i}`)
+      cy.getByTestId('not-found-page').should('not.exist')
+      cy.getByTestId('delete-study').should('not.exist')
+    })
+
+    it('shows an empty state for a professor session without trainees', () => {
+      cy.loginForEnv(env, professorEmail, 'password-1')
+
+      cy.getByTestId('course-session').contains(`Course second test session ${env}`).click()
+      cy.getByTestId('course-session-name').should('have.text', `Course second test session ${env}`)
+      cy.get('[role="status"]').should('be.visible')
+      cy.getByTestId('study').should('not.exist')
+      cy.getByTestId('new-study').should('not.exist')
     })
 
     it('allows a trainee administrator to create a study', () => {

@@ -392,6 +392,7 @@
       "confirm": "Duplicate",
       "selectEnvironment": "Select the target environment"
     },
+    "createdBy": "Created by:",
     "myCollaborations": "My collaborations",
     "myStudies": "My Bilan Carbone®",
     "createFirstStudy": "Create my first Bilan Carbone®",
@@ -514,7 +515,9 @@
       },
       "error": {
         "default": "Something went wrong ...",
-        "noActiveVersion_BaseEmpreinte": "No active version for BaseEmpreinte. Please contact support"
+        "noActiveVersion_BaseEmpreinte": "No active version for BaseEmpreinte. Please contact support",
+        "noCourseSession": "You must be enrolled in a training session to create a study.",
+        "multipleCourseSessions": "You are enrolled in multiple training sessions. Please contact support."
       },
       "coming": "coming"
     },

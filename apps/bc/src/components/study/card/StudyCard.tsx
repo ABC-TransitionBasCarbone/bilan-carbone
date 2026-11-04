@@ -5,6 +5,7 @@ import { getDisplayedRoleOnStudy } from '@/utils/study'
 import Box from '@abc-transitionbascarbone/common/components/base/Box'
 import { Button } from '@abc-transitionbascarbone/common/ui'
 import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline'
 import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
@@ -39,6 +40,11 @@ const StudyCard = async ({ study, user, simplified }: Props) => {
         <div className="justify-center">
           <StudyName studyId={id} name={name} role={showRoleInChip ? accountRoleOnStudy : null} clickable />
         </div>
+        <p className={classNames(styles.student, 'align-center')} data-testid="study-student">
+          <PersonOutlineIcon aria-hidden="true" />
+          {t('createdBy')}
+          {study.createdBy.user.firstName} {study.createdBy.user.lastName}
+        </p>
         {hasAccessToEmissionSourceValidation(user.environment, simplified) && (
           <Box>
             <p className="mb1 align-center">

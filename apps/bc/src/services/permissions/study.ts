@@ -10,6 +10,7 @@ import {
   getUserRoleOnPublicStudy,
   hasEditionRights,
   hasSufficientLevel,
+  isProfessorOnStudy,
   StudyWithRoleFields,
 } from '@/utils/study'
 import type { Prisma, Study, User } from '@abc-transitionbascarbone/common/db'
@@ -48,6 +49,7 @@ export const canReadStudy = async (user: UserSession | UserWithAllowedStudies, s
   }
 
   if (
+    isProfessorOnStudy(user, study) ||
     isAdminOnStudyOrga(user, study.organizationVersion) ||
     (study.isPublic && isInOrgaOrParent(user.organizationVersionId, study.organizationVersion))
   ) {
@@ -291,6 +293,10 @@ export const NEWGetAccountRoleOnStudy = (user: UserSession, minimalStudy: Minima
     return getRoleIfHasAccess(user, minimalStudy, right.role)
   }
 
+  if (isProfessorOnStudy(user, minimalStudy)) {
+    return StudyRole.Reader
+  }
+
   if (minimalStudy.isPublic && isInOrgaOrParent(user.organizationVersionId, minimalStudy.organizationVersion)) {
     return getRoleIfHasAccess(user, minimalStudy, getUserRoleOnPublicStudy(user, minimalStudy.level))
   }
@@ -458,6 +464,7 @@ export const canReadStudyDetail = async (user: UserSession, study: StudyWithRole
   }
 
   if (
+    isProfessorOnStudy(user, study) ||
     isAdminOnStudyOrga(user, study.organizationVersion) ||
     (study.isPublic && isInOrgaOrParent(user.organizationVersionId, study.organizationVersion))
   ) {

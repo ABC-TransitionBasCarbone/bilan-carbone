@@ -1,4 +1,15 @@
 {
+  "courseSessions": {
+    "title": "My training sessions",
+    "session": "Training session",
+    "studies": "Trainees' studies",
+    "empty": "There are no studies for this session's trainees yet.",
+    "types": {
+      "INITIAL": "Initial",
+      "PROFESSIONNEL": "Professional",
+      "MAITRISE": "Mastery"
+    }
+  },
   "login": {
     "welcome": "Welcome on the BC+ [TRAINING BC] !",
     "form": {

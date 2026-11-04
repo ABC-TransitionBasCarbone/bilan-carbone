@@ -1,3 +1,11 @@
+enum CourseSessionType {
+  INITIAL
+  PROFESSIONNEL
+  MAITRISE
+
+  @@schema("bilan_carbone")
+}
+
 model CourseOrganism {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
@@ -19,12 +27,12 @@ model CourseSession {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  startDate   DateTime    @map("start_date")
-  endDate     DateTime    @map("end_date")
+  startDate   DateTime           @map("start_date")
+  endDate     DateTime           @map("end_date")
   name        String
-  type        String?
+  type        CourseSessionType
   environment Environment
-  code        String      @unique
+  code        String             @unique
 
   courseOrganism   CourseOrganism @relation(fields: [courseOrganismId], references: [id], onDelete: Cascade)
   courseOrganismId String         @map("course_organism_id")

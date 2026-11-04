@@ -24,7 +24,12 @@ type Props =
 
 const HomeCardsList = async (props: Props) => {
   if (props.type === 'sessions') {
-    return <HomeCards type="sessions" items={props.sessions} />
+    return (
+      <HomeCards
+        type="sessions"
+        items={props.sessions.map((session) => ({ ...session, href: `/sessions/${session.id}` }))}
+      />
+    )
   }
 
   const { organizationVersions, account } = props

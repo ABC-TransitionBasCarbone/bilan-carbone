@@ -440,7 +440,9 @@
       },
       "error": {
         "default": "Si è verificato un errore...",
-        "noActiveVersion_BaseEmpreinte": "Nessuna versione attiva di Base Empreinte. Contatta l'assistenza."
+        "noActiveVersion_BaseEmpreinte": "Nessuna versione attiva di Base Empreinte. Contatta l'assistenza.",
+        "noCourseSession": "Devi essere iscritto a una sessione di formazione per creare uno studio.",
+        "multipleCourseSessions": "Sei iscritto a più sessioni di formazione. Contatta l'assistenza."
       },
       "coming": "in arrivo"
     },

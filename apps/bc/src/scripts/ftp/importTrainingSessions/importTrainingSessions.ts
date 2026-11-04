@@ -57,11 +57,8 @@ const getSessionUpdate = (before: SavedCourseSession, after: SavedCourseSession)
 const getInfoFromLocal = async (organisms: { id: string }[]) => {
   const localFilePath = path.resolve(process.cwd(), 'sessions_a_importer.xlsx')
   const data = await fs.promises.readFile(localFilePath)
-  const imports = organisms.map(({ id }) => parseCourseSessionWorkbook(data, id))
-  return {
-    sessions: imports.flatMap(({ sessions }) => sessions),
-    deletions: imports.flatMap(({ deletions }) => deletions),
-  }
+  const imports = parseCourseSessionWorkbook(data, organisms[0].id)
+  return imports
 }
 
 export const getCourseSessionsFromFTP = async (): Promise<CourseSessionImport> => {

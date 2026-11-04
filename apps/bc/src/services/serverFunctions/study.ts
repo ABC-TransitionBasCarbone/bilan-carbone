@@ -12,6 +12,8 @@ import {
 } from '@/db/account'
 import { prismaClient } from '@/db/client.server'
 import { findCncByCncCode, updateNumberOfProgrammedFilms } from '@/db/cnc'
+import { getCourseSessionsForTrainee } from '@/db/courseOrganism'
+import { isCourseProfessor } from '@/db/courseSession'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
   getEmissionFactorsByIdsAndSource,
@@ -108,6 +110,7 @@ import { mapStudyForReport } from '@/utils/studyReport.utils'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import { LocaleType } from '@abc-transitionbascarbone/common/i18n/config'
+import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import type { IsSuccess } from '@abc-transitionbascarbone/common/utils/serverResponse'
 
 import type {
@@ -121,6 +124,7 @@ import type {
 import {
   CommentStatus,
   ControlMode,
+  CourseSessionType,
   DocumentCategory,
   DuplicableStudy,
   EmissionSourceCaracterisation,
@@ -246,6 +250,32 @@ export const createStudyCommand = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
+    let courseSessionType: CourseSessionType | null = null
+    if (isCourseEnvironment(session.user.environment)) {
+      if (await isCourseProfessor(session.user.organizationVersionId, session.user.environment, tx)) {
+        if (organizationVersionId !== session.user.organizationVersionId) {
+          console.error('createStudyCommand: professor cannot create a study outside their organization', {
+            accountId: session.user.accountId,
+            userOrganizationVersionId: session.user.organizationVersionId,
+            organizationVersionId,
+          })
+          throw new Error(NOT_AUTHORIZED)
+        }
+      } else {
+        const courseSessions = await getCourseSessionsForTrainee(session.user.accountId, session.user.environment, tx)
+
+        if (courseSessions.length !== 1) {
+          console.error('createStudyCommand: expected one trainee course session', {
+            accountId: session.user.accountId,
+            environment: session.user.environment,
+            sessionCount: courseSessions.length,
+          })
+          throw new Error(courseSessions.length === 0 ? 'noCourseSession' : 'multipleCourseSessions')
+        }
+        courseSessionType = courseSessions[0].type
+      }
+    }
+
     const rights: Prisma.UserOnStudyCreateManyStudyInput[] = []
     if (validator === session.user.email) {
       rights.push({
@@ -307,6 +337,7 @@ export const createStudyCommand = async (
 
     const study = {
       ...studyCommand,
+      courseSessionType,
       createdBy: { connect: { id: session.user.accountId } },
       organizationVersion: { connect: { id: organizationVersionId } },
       isPublic: isPublic === 'true',
@@ -401,7 +432,8 @@ export const changeStudyPublicStatus = async ({ studyId, ...command }: ChangeStu
     if (informations === null) {
       throw new Error(NOT_AUTHORIZED)
     }
-    if (!canChangePublicStatus(informations.user, informations.studyWithRights)) {
+    if (!(await canChangePublicStatus(informations.user, informations.studyWithRights))) {
+      console.error('changeStudyPublicStatus: user not authorized', informations.user.accountId, studyId)
       throw new Error(NOT_AUTHORIZED)
     }
     await updateStudy(studyId, { isPublic: command.isPublic === 'true' })
@@ -506,7 +538,8 @@ export const changeStudyName = async ({ studyId, ...command }: ChangeStudyNameCo
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!canChangeName(informations.user, informations.studyWithRights)) {
+    if (!(await canChangeName(informations.user, informations.studyWithRights))) {
+      console.error('changeStudyName: user not authorized', informations.user.accountId, studyId)
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -534,7 +567,8 @@ export const changeStudyCinema = async (studySiteId: string, cncId: string, data
     }
     const { openingHours, openingHoursHoliday, numberOfProgrammedFilms, ...updateData } = data
 
-    if (!canChangeOpeningHours(informations.user, informations.studyWithRights)) {
+    if (!(await canChangeOpeningHours(informations.user, informations.studyWithRights))) {
+      console.error('changeStudyCinema: user not authorized', informations.user.accountId, study.id)
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -682,7 +716,8 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!canChangeSites(informations.user, informations.studyWithRights)) {
+    if (!(await canChangeSites(informations.user, informations.studyWithRights))) {
+      console.error('changeStudySites: user not authorized', informations.user.accountId, studyId)
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -1818,7 +1853,8 @@ const buildStudyForDuplication = (
 
 export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEnvironment: Environment) =>
   withServerResponse('duplicateStudyInOtherEnvironment', async () => {
-    if (!canDuplicateStudy(studyId)) {
+    if (!(await canDuplicateStudy(studyId))) {
+      console.error('duplicateStudyInOtherEnvironment: user not authorized', studyId, targetEnvironment)
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -2478,7 +2514,8 @@ export const changeStudyEstablishment = async (studySiteId: string, data: Change
     if (informations === null) {
       throw new Error(NOT_AUTHORIZED)
     }
-    if (!canChangeOpeningHours(informations.user, informations.studyWithRights)) {
+    if (!(await canChangeOpeningHours(informations.user, informations.studyWithRights))) {
+      console.error('changeStudyEstablishment: user not authorized', informations.user.accountId, study.id)
       throw new Error(NOT_AUTHORIZED)
     }
 
