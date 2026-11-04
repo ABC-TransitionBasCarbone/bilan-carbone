@@ -8,14 +8,16 @@ import {
   removeCourseSessionTrainee,
 } from './courseSession'
 
-jest.mock('./client.server', () => ({
-  prismaClient: {
+jest.mock('./client.server', () => {
+  const transaction = {
     courseSession: { findFirst: jest.fn() },
     account: { findMany: jest.fn() },
     courseSessionTraineeOrganization: { deleteMany: jest.fn() },
+    courseSessionTraineeRemoval: { upsert: jest.fn() },
     study: { findMany: jest.fn() },
-  },
-}))
+  }
+  return { prismaClient: { ...transaction, $transaction: jest.fn((operation) => operation(transaction)) } }
+})
 
 const mockFindSession = jest.mocked(prismaClient.courseSession.findFirst)
 const mockFindStudies = jest.mocked(prismaClient.study.findMany)
@@ -39,6 +41,7 @@ describe('course session database queries', () => {
     jest.clearAllMocks()
     mockFindSession.mockResolvedValue(session)
     mockFindStudies.mockResolvedValue([])
+    jest.mocked(prismaClient.courseSessionTraineeOrganization.deleteMany).mockResolvedValue({ count: 1 })
   })
 
   it('restricts session access to its professor organization and environment', async () => {
@@ -144,5 +147,27 @@ describe('course session database queries', () => {
         },
       },
     })
+    expect(prismaClient.courseSessionTraineeRemoval.upsert).toHaveBeenCalledWith({
+      where: {
+        courseSessionId_organizationVersionId: { courseSessionId: session.id, organizationVersionId: 'trainee-org' },
+      },
+      create: { courseSessionId: session.id, organizationVersionId: 'trainee-org', removedAt: expect.any(Date) },
+      update: { removedAt: expect.any(Date) },
+    })
+    expect(prismaClient.$transaction).toHaveBeenCalledWith(expect.any(Function), { isolationLevel: 'Serializable' })
+  })
+
+  it('does not record a deletion when the trainee is not enrolled in an authorized session', async () => {
+    jest.mocked(prismaClient.courseSessionTraineeOrganization.deleteMany).mockResolvedValue({ count: 0 })
+
+    expect(
+      await removeCourseSessionTrainee(
+        session.id,
+        'trainee-org',
+        professor.organizationVersionId,
+        professor.environment,
+      ),
+    ).toEqual({ count: 0 })
+    expect(prismaClient.courseSessionTraineeRemoval.upsert).not.toHaveBeenCalled()
   })
 })

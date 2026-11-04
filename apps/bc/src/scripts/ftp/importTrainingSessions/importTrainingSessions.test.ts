@@ -13,6 +13,7 @@ import fs from 'fs'
 import xlsx from 'node-xlsx'
 import { getCourseSessionsFromFTP, importCourseSessionsFromFTP } from './importTrainingSessions'
 import { parseCourseSessionWorkbook } from './importTrainingSessionsParsing'
+import { shouldImportCourseSessionTrainee } from './importTrainingSessionsUtils'
 
 jest.mock('basic-ftp', () => ({
   Client: jest.fn(() => ({ access: jest.fn(), downloadTo: jest.fn(), close: jest.fn() })),
@@ -23,13 +24,15 @@ jest.mock('@/db/client.server', () => {
   const account = { findMany: jest.fn(), update: jest.fn() }
   const courseSession = { findMany: jest.fn(), upsert: jest.fn(), deleteMany: jest.fn(), updateMany: jest.fn() }
   const courseSessionTraineeOrganization = { deleteMany: jest.fn() }
-  const transaction = { account, courseSession, courseSessionTraineeOrganization }
+  const courseSessionTraineeRemoval = { findMany: jest.fn() }
+  const transaction = { account, courseSession, courseSessionTraineeOrganization, courseSessionTraineeRemoval }
   return {
     prismaClient: {
       courseOrganism,
       account,
       courseSession,
       courseSessionTraineeOrganization,
+      courseSessionTraineeRemoval,
       $transaction: jest.fn((operation) =>
         Array.isArray(operation) ? Promise.all(operation) : operation(transaction),
       ),
@@ -64,6 +67,7 @@ const mockUpsertCourseSession = jest.mocked(prismaClient.courseSession.upsert)
 const mockDeleteCourseSessions = jest.mocked(prismaClient.courseSession.deleteMany)
 const mockUpdateCourseSessions = jest.mocked(prismaClient.courseSession.updateMany)
 const mockDeleteTrainees = jest.mocked(prismaClient.courseSessionTraineeOrganization.deleteMany)
+const mockFindTraineeRemovals = jest.mocked(prismaClient.courseSessionTraineeRemoval.findMany)
 const mockCreateUsersWithAccount = jest.mocked(createUsersWithAccount)
 const mockSendCourseSessionsCreatedEmail = jest.mocked(sendCourseSessionsCreatedEmail)
 const savedSessions: CourseSession[] = [
@@ -135,6 +139,35 @@ const withParticipants = (session: CourseSession) => {
   }
 }
 
+describe('trainee import priority', () => {
+  it.each([
+    { importedAt: undefined, removedAt: undefined, endDate: '2026-11-06', expected: true },
+    { importedAt: undefined, removedAt: '2026-11-04T10:00:00Z', endDate: '2026-11-06', expected: false },
+    { importedAt: '2026-11-03', removedAt: '2026-11-04T10:00:00Z', endDate: '2026-11-06', expected: false },
+    { importedAt: '2026-11-05', removedAt: '2026-11-04T10:00:00Z', endDate: '2026-11-06', expected: true },
+    {
+      importedAt: '2026-11-04T08:00:00Z',
+      removedAt: '2026-11-04T16:00:00Z',
+      endDate: '2026-11-06',
+      expected: true,
+    },
+    {
+      importedAt: '2026-11-04T18:00:00Z',
+      removedAt: '2026-11-04T08:00:00Z',
+      endDate: '2026-11-04T23:59:59.999Z',
+      expected: false,
+    },
+  ])('applies the UTC day priority for $importedAt / $removedAt', ({ importedAt, removedAt, endDate, expected }) => {
+    expect(
+      shouldImportCourseSessionTrainee(
+        importedAt ? new Date(importedAt) : undefined,
+        removedAt ? new Date(removedAt) : undefined,
+        new Date(endDate),
+      ),
+    ).toBe(expected)
+  })
+})
+
 describe('getCourseSessionsFromFTP', () => {
   const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => undefined)
 
@@ -180,6 +213,7 @@ describe('getCourseSessionsFromFTP', () => {
       })) as never,
     )
     mockFindCourseSessions.mockReset().mockResolvedValue([])
+    mockFindTraineeRemovals.mockReset().mockResolvedValue([])
     mockUpsertCourseSession
       .mockReset()
       .mockResolvedValueOnce(withParticipants(savedSessions[0]))
@@ -193,6 +227,67 @@ describe('getCourseSessionsFromFTP', () => {
   afterEach(() => {
     jest.useRealTimers()
   })
+
+  it.each([
+    { importedDay: undefined, removedDay: '2026-12-20', expected: false },
+    { importedDay: '2026-12-19', removedDay: '2026-12-20', expected: false },
+    { importedDay: '2026-12-20', removedDay: '2026-12-20', expected: true },
+    { importedDay: '2026-12-21', removedDay: '2026-12-20', expected: true },
+    { importedDay: '2026-12-21', removedDay: '2026-12-21', expected: false },
+  ])(
+    'respects removal priority when importing $importedDay / $removedDay',
+    async ({ importedDay, removedDay, expected }) => {
+      const previous = withParticipants(savedSessions[0])
+      const removedAt = new Date(removedDay)
+      const importedAt = importedDay ? new Date(importedDay) : undefined
+      const datedWorkbook = workbook.map((sheet) =>
+        sheet.name === 'Stagiaires'
+          ? {
+              ...sheet,
+              data: sheet.data.map((row, index) => [
+                ...row,
+                index === 0 ? "Date d'ajout/modification de cette ligne" : importedAt,
+              ]),
+            }
+          : sheet,
+      )
+      jest.mocked(xlsx.parse).mockReturnValue(datedWorkbook)
+      mockFindCourseSessions.mockResolvedValueOnce([previous])
+      mockFindTraineeRemovals.mockResolvedValue([
+        {
+          courseSessionId: previous.id,
+          organizationVersionId: 'organization-0',
+          removedAt,
+          createdAt: removedAt,
+          updatedAt: removedAt,
+        },
+      ])
+
+      await importCourseSessionsFromFTP()
+
+      expect(mockFindTraineeRemovals).toHaveBeenCalledWith({
+        where: { courseSessionId: { in: [previous.id] } },
+        select: { courseSessionId: true, organizationVersionId: true, removedAt: true },
+      })
+      const update = mockUpsertCourseSession.mock.calls[0][0].update
+      expect(update.traineeOrganizations).toEqual({
+        createMany: {
+          data: [
+            ...(expected
+              ? [
+                  {
+                    organizationVersionId: 'organization-0',
+                    courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE,
+                  },
+                ]
+              : []),
+            { organizationVersionId: 'organization-1', courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE },
+          ],
+          skipDuplicates: true,
+        },
+      })
+    },
+  )
 
   it('does not add trainees or replace existing registrations after a session ends', async () => {
     jest.setSystemTime(new Date(savedSessions[1].endDate.getTime() + 24 * 60 * 60 * 1000))

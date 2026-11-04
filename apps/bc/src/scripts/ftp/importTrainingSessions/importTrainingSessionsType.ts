@@ -4,6 +4,7 @@ export type CourseParticipant = {
   email: string
   firstName: string
   lastName: string
+  OfUpdatedAt?: Date
 }
 
 export type CourseSession = {
