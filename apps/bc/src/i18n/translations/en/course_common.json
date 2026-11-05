@@ -6,6 +6,7 @@
     "traineesTitle": "Trainee management",
     "backToSession": "Back to session",
     "addTrainee": "Add a trainee",
+    "signAttendance": "Sign trainees in",
     "backToTrainees": "Back to trainees",
     "traineeAdded": "The trainee has been added to the session.",
     "traineeAlreadyInSession": "This trainee is already registered for this session.",
