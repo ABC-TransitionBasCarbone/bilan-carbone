@@ -2,7 +2,7 @@ import { getCourseSessionTraineeOrganizationData } from '@/services/courseSessio
 import { canRegisterForCourseSession } from '@/services/permissions/user'
 import type { AddCourseSessionTraineeCommand } from '@/services/serverFunctions/courseSession.command'
 import type { CourseSession, Environment, Prisma } from '@abc-transitionbascarbone/common/db'
-import { Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { AttendanceStatus, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { UserSession } from 'next-auth'
 import { prismaClient } from './client.server'
@@ -53,21 +53,85 @@ export const getCourseSessionForProfessor = (organizationVersionId: string, envi
     select: { id: true, name: true, type: true, startDate: true, endDate: true },
   })
 
-export const getCourseSessionTrainees = (courseSessionId: string, environment: Environment) =>
-  prismaClient.account.findMany({
-    where: {
-      environment,
-      organizationVersion: { traineeCourseSessions: { some: { courseSessionId } } },
-    },
+export const getCourseSessionTrainees = async (courseSessionId: string, environment: Environment) => {
+  const session = await prismaClient.courseSession.findUniqueOrThrow({
+    where: { id: courseSessionId, environment },
     select: {
-      id: true,
-      organizationVersionId: true,
-      user: { select: { firstName: true, lastName: true, email: true } },
+      traineeOrganizations: {
+        select: {
+          attendance: { select: { status: true } },
+          organizationVersion: {
+            select: {
+              userAccounts: {
+                where: { environment },
+                select: {
+                  id: true,
+                  organizationVersionId: true,
+                  user: { select: { firstName: true, lastName: true, email: true } },
+                },
+              },
+            },
+          },
+        },
+      },
     },
-    orderBy: [{ user: { lastName: 'asc' } }, { user: { firstName: 'asc' } }],
   })
+  return session.traineeOrganizations
+    .flatMap(({ attendance, organizationVersion }) =>
+      organizationVersion.userAccounts.map((trainee) => ({ ...trainee, attendance })),
+    )
+    .sort((a, b) => a.user.lastName.localeCompare(b.user.lastName) || a.user.firstName.localeCompare(b.user.firstName))
+}
 
 export type CourseSessionTrainee = AsyncReturnType<typeof getCourseSessionTrainees>[number]
+
+export const saveCourseSessionAttendance = (
+  courseSessionId: string,
+  professorOrganizationVersionId: string,
+  environment: Environment,
+  organizationVersionIds: string[],
+) =>
+  prismaClient.$transaction(
+    async (transaction) => {
+      const session = await transaction.courseSession.findFirst({
+        where: { id: courseSessionId, professorOrganizationVersionId, environment },
+        select: { id: true },
+      })
+      if (!session) {
+        console.error('saveCourseSessionAttendance: session not authorized', {
+          courseSessionId,
+          professorOrganizationVersionId,
+          environment,
+        })
+        throw new Error(NOT_AUTHORIZED)
+      }
+
+      const enrollments = await transaction.courseSessionTraineeOrganization.findMany({
+        where: { courseSessionId },
+        select: { id: true, organizationVersionId: true },
+      })
+      const selectedIds = new Set(organizationVersionIds)
+
+      for (const enrollment of enrollments) {
+        if (selectedIds.has(enrollment.organizationVersionId)) {
+          await transaction.attendance.upsert({
+            where: { courseSessionTraineeOrganizationId: enrollment.id },
+            create: { courseSessionTraineeOrganizationId: enrollment.id, status: AttendanceStatus.PRESENT },
+            update: { status: AttendanceStatus.PRESENT },
+          })
+        }
+      }
+      await transaction.attendance.deleteMany({
+        where: {
+          traineeOrganization: {
+            courseSessionId,
+            organizationVersionId: { notIn: [...selectedIds] },
+          },
+        },
+      })
+    },
+    { isolationLevel: 'Serializable' },
+  )
 
 export const createCourseParticipantAccounts = async (
   participants: (Pick<Prisma.UserCreateManyInput, 'email' | 'firstName' | 'lastName'> & { environment: Environment })[],

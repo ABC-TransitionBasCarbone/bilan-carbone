@@ -109,7 +109,6 @@ enum CourseSessionTraineeOrganizationStatus {
 enum AttendanceStatus {
   PRESENT
   ABSENT
-  NOT_DISCLOSED
 
   @@schema("bilan_carbone")
 }
