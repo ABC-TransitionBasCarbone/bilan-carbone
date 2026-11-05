@@ -5,6 +5,7 @@ import {
   getCourseSessionTrainees,
   registerCourseSessionTrainee,
   removeCourseSessionTrainee,
+  saveCourseSessionAttendance,
 } from '@/db/courseSession'
 import { dbActualizedAuth } from '@/services/auth'
 import { mockedSession } from '@/tests/utils/models/user'
@@ -15,8 +16,10 @@ import { revalidatePath } from 'next/cache'
 import {
   addCourseSessionTrainee,
   deleteCourseSessionTrainee,
+  getCourseSessionDetails,
   getProfessorCourseSession,
   getProfessorCourseSessionTrainees,
+  updateCourseSessionAttendance,
 } from './courseSession'
 import { AddCourseSessionTraineeCommandValidation } from './courseSession.command'
 
@@ -33,6 +36,7 @@ jest.mock('@/db/courseSession', () => ({
   getCourseSessionTrainees: jest.fn(),
   registerCourseSessionTrainee: jest.fn(),
   removeCourseSessionTrainee: jest.fn(),
+  saveCourseSessionAttendance: jest.fn(),
 }))
 jest.mock('@/services/auth', () => ({ dbActualizedAuth: jest.fn() }))
 jest.mock('@/services/serverFunctions/deactivableFeatures', () => ({
@@ -162,6 +166,7 @@ describe('getProfessorCourseSessionTrainees server function', () => {
     {
       id: 'trainee-account',
       organizationVersionId: 'trainee-org',
+      attendance: null,
       user: { firstName: 'Camille', lastName: 'Martin', email: 'camille@example.com' },
     },
   ]
@@ -172,6 +177,104 @@ describe('getProfessorCourseSessionTrainees server function', () => {
     mockAuth.mockResolvedValue({ user: professor, expires: '2026-12-01T00:00:00.000Z' })
     mockGetSession.mockResolvedValue(courseSession)
     jest.mocked(getCourseSessionTrainees).mockResolvedValue(trainees)
+  })
+
+  describe('course attendance server functions', () => {
+    beforeEach(() => {
+      jest.clearAllMocks()
+      mockAccountStatus = UserStatus.ACTIVE
+      mockAuth.mockResolvedValue({ user: professor, expires: '2026-12-01T00:00:00.000Z' })
+      mockGetSession.mockResolvedValue(courseSession)
+    })
+
+    it('returns session details without loading studies or trainees', async () => {
+      expect(await getCourseSessionDetails(courseSession.id)).toEqual({ success: true, data: courseSession })
+      expect(mockGetSession).toHaveBeenCalledWith(
+        professor.organizationVersionId,
+        professor.environment,
+        courseSession.id,
+      )
+      expect(mockGetStudies).not.toHaveBeenCalled()
+      expect(getCourseSessionTrainees).not.toHaveBeenCalled()
+    })
+
+    it.each(['unauthenticated', 'no organization', 'suspended', 'wrong environment', 'other professor'])(
+      'rejects reading details and saving attendance when %s',
+      async (reason) => {
+        if (reason === 'unauthenticated') {
+          mockAuth.mockResolvedValue(null)
+        } else if (reason === 'no organization') {
+          mockAuth.mockResolvedValue({ user: { ...professor, organizationVersionId: null }, expires: '2026-12-01' })
+        } else if (reason === 'suspended') {
+          mockAccountStatus = UserStatus.SUSPENDED
+        } else if (reason === 'wrong environment') {
+          mockAuth.mockResolvedValue({ user: { ...professor, environment: Environment.BC }, expires: '2026-12-01' })
+        } else {
+          mockGetSession.mockResolvedValue(null)
+        }
+
+        expect(await getCourseSessionDetails(courseSession.id)).toEqual({
+          success: false,
+          errorMessage: NOT_AUTHORIZED,
+        })
+        expect(await updateCourseSessionAttendance(courseSession.id, { organizationVersionIds: ['one'] })).toEqual({
+          success: false,
+          errorMessage: NOT_AUTHORIZED,
+        })
+        expect(saveCourseSessionAttendance).not.toHaveBeenCalled()
+        expect(revalidatePath).not.toHaveBeenCalled()
+      },
+    )
+
+    it('rejects a session deleted between the permission check and the details query', async () => {
+      mockGetSession.mockResolvedValueOnce(courseSession).mockResolvedValueOnce(null)
+      expect(await getCourseSessionDetails(courseSession.id)).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+    })
+
+    it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
+      'saves attendance using the authenticated professor in %s and refreshes the trainee page',
+      async (environment) => {
+        mockAuth.mockResolvedValue({ user: { ...professor, environment }, expires: '2026-12-01' })
+        expect(await updateCourseSessionAttendance(courseSession.id, { organizationVersionIds: ['one'] })).toEqual({
+          success: true,
+          data: undefined,
+        })
+        expect(saveCourseSessionAttendance).toHaveBeenCalledWith(
+          courseSession.id,
+          professor.organizationVersionId,
+          environment,
+          ['one'],
+        )
+        expect(revalidatePath).toHaveBeenCalledWith(`/sessions/${courseSession.id}/formees`)
+      },
+    )
+
+    it('accepts an empty selection so all attendance can be removed', async () => {
+      expect((await updateCourseSessionAttendance(courseSession.id, { organizationVersionIds: [] })).success).toBe(true)
+      expect(saveCourseSessionAttendance).toHaveBeenCalledWith(
+        courseSession.id,
+        professor.organizationVersionId,
+        professor.environment,
+        [],
+      )
+    })
+
+    it('rejects invalid identifiers before writing', async () => {
+      expect((await updateCourseSessionAttendance(courseSession.id, { organizationVersionIds: [''] })).success).toBe(
+        false,
+      )
+      expect(saveCourseSessionAttendance).not.toHaveBeenCalled()
+      expect(revalidatePath).not.toHaveBeenCalled()
+    })
+
+    it('returns save failures without revalidating the page', async () => {
+      jest.mocked(saveCourseSessionAttendance).mockRejectedValueOnce(new Error('database unavailable'))
+      expect(await updateCourseSessionAttendance(courseSession.id, { organizationVersionIds: ['one'] })).toEqual({
+        success: false,
+        errorMessage: 'database unavailable',
+      })
+      expect(revalidatePath).not.toHaveBeenCalled()
+    })
   })
 
   it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
