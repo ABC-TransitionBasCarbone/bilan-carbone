@@ -82,6 +82,7 @@ model OrganizationVersion {
   userAccounts            Account[]
   studies                 Study[]
   traineeCourseSessions   CourseSessionTraineeOrganization[]
+  courseSessionRemovals    CourseSessionTraineeRemoval[]
   professorCourseSessions CourseSession[]                    @relation("CourseSessionProfessor")
 
   onboarded   Boolean  @default(false)
