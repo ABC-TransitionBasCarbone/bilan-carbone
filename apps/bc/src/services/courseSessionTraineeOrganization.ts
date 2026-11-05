@@ -8,10 +8,13 @@ export const getCourseSessionTraineeOrganizationData = (
 ) => {
   const today = new Date()
   today.setUTCHours(0, 0, 0, 0)
+
+  const endAccessDate = new Date(session.endDate)
+  endAccessDate.setUTCDate(endAccessDate.getUTCDate() + getCourseSessionAccessDays())
   return {
     organizationVersionId,
     courseStatus:
-      session.startDate <= today && session.endDate >= today
+      session.startDate <= today && endAccessDate >= today
         ? CourseSessionTraineeOrganizationStatus.ACTIVE
         : CourseSessionTraineeOrganizationStatus.INACTIVE,
   }

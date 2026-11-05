@@ -54,6 +54,20 @@ const session = {
   updatedAt: new Date('2026-10-01'),
 }
 
+const previousAccessDays = process.env.COURSE_SESSION_ACCESS_DAYS
+
+beforeAll(() => {
+  process.env.COURSE_SESSION_ACCESS_DAYS = '7'
+})
+
+afterAll(() => {
+  if (previousAccessDays === undefined) {
+    delete process.env.COURSE_SESSION_ACCESS_DAYS
+  } else {
+    process.env.COURSE_SESSION_ACCESS_DAYS = previousAccessDays
+  }
+})
+
 describe('course session database queries', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -329,7 +343,7 @@ describe('registerCourseSessionTrainee', () => {
   it('asks for confirmation before transferring an existing trainee', async () => {
     jest
       .mocked(prismaClient.courseSessionTraineeOrganization.findMany)
-      .mockResolvedValue([{ ...registration, courseSessionId: 'other-session' }])
+      .mockResolvedValue([{ ...registration, id: '1234', courseSessionId: 'other-session' }])
 
     expect(
       await registerCourseSessionTrainee(session.id, professor.organizationVersionId, professor.environment, trainee),
@@ -345,7 +359,7 @@ describe('registerCourseSessionTrainee', () => {
   it('transfers the trainee after confirmation and preserves the old-session deletion date', async () => {
     jest
       .mocked(prismaClient.courseSessionTraineeOrganization.findMany)
-      .mockResolvedValue([{ ...registration, courseSessionId: 'other-session' }])
+      .mockResolvedValue([{ ...registration, id: '1234', courseSessionId: 'other-session' }])
 
     expect(
       await registerCourseSessionTrainee(session.id, professor.organizationVersionId, professor.environment, {
@@ -374,29 +388,32 @@ describe('registerCourseSessionTrainee', () => {
     expect(prismaClient.account.findFirst).not.toHaveBeenCalled()
   })
 
-  it.each(['2026-10-31T12:00:00Z', '2026-11-06T12:00:00Z'])(
-    'does not activate an enrollment outside the formation dates at %s',
-    async (date) => {
-      jest.setSystemTime(new Date(date))
+  it.each([
+    ['2026-10-31T12:00:00Z', CourseSessionTraineeOrganizationStatus.INACTIVE],
+    ['2026-11-06T12:00:00Z', CourseSessionTraineeOrganizationStatus.ACTIVE],
+    ['2026-11-12T23:59:59.999Z', CourseSessionTraineeOrganizationStatus.ACTIVE],
+    ['2026-11-13T00:00:00Z', CourseSessionTraineeOrganizationStatus.INACTIVE],
+  ])('sets enrollment status from the access period at %s', async (date, courseStatus) => {
+    jest.setSystemTime(new Date(date))
 
-      await registerCourseSessionTrainee(session.id, professor.organizationVersionId, professor.environment, trainee)
+    await registerCourseSessionTrainee(session.id, professor.organizationVersionId, professor.environment, trainee)
 
-      expect(prismaClient.courseSessionTraineeOrganization.createMany).toHaveBeenCalledWith({
-        data: [
-          {
-            courseSessionId: session.id,
-            organizationVersionId: 'trainee-org',
-            courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE,
-          },
-        ],
-        skipDuplicates: true,
-      })
-    },
-  )
+    expect(prismaClient.courseSessionTraineeOrganization.createMany).toHaveBeenCalledWith({
+      data: [
+        {
+          courseSessionId: session.id,
+          organizationVersionId: 'trainee-org',
+          courseStatus,
+        },
+      ],
+      skipDuplicates: true,
+    })
+  })
 })
 
 describe('prepareCourseSessionTraineeRegistrations', () => {
   const conflict = {
+    id: '1234',
     courseSessionId: 'old-session',
     organizationVersionId: 'trainee-org',
     courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
