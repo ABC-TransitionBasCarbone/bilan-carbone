@@ -20,13 +20,24 @@ const mockUpdateMany = jest.mocked(prismaClient.courseSessionTraineeOrganization
 const mockDeleteMany = jest.mocked(prismaClient.courseSessionTraineeOrganization.deleteMany)
 
 describe('getCourseSessionTraineeOrganizationData', () => {
+  const previousAccessDays = process.env.COURSE_SESSION_ACCESS_DAYS
   const session = {
     startDate: new Date('2026-11-04T00:00:00Z'),
     endDate: new Date('2026-11-06T23:59:59.999Z'),
   }
 
+  beforeEach(() => {
+    jest.useFakeTimers()
+    process.env.COURSE_SESSION_ACCESS_DAYS = '7'
+  })
+
   afterEach(() => {
     jest.useRealTimers()
+    if (previousAccessDays === undefined) {
+      delete process.env.COURSE_SESSION_ACCESS_DAYS
+    } else {
+      process.env.COURSE_SESSION_ACCESS_DAYS = previousAccessDays
+    }
   })
 
   it.each([
@@ -34,9 +45,11 @@ describe('getCourseSessionTraineeOrganizationData', () => {
     ['2026-11-04T00:00:00Z', CourseSessionTraineeOrganizationStatus.ACTIVE],
     ['2026-11-05T12:00:00Z', CourseSessionTraineeOrganizationStatus.ACTIVE],
     ['2026-11-06T23:59:59.999Z', CourseSessionTraineeOrganizationStatus.ACTIVE],
-    ['2026-11-07T00:00:00Z', CourseSessionTraineeOrganizationStatus.INACTIVE],
+    ['2026-11-07T00:00:00Z', CourseSessionTraineeOrganizationStatus.ACTIVE],
+    ['2026-11-13T23:59:59.999Z', CourseSessionTraineeOrganizationStatus.ACTIVE],
+    ['2026-11-14T00:00:00Z', CourseSessionTraineeOrganizationStatus.INACTIVE],
   ])('builds the same registration data at %s with status %s', (date, courseStatus) => {
-    jest.useFakeTimers().setSystemTime(new Date(date))
+    jest.setSystemTime(new Date(date))
 
     expect(getCourseSessionTraineeOrganizationData(session, 'trainee-org')).toEqual({
       organizationVersionId: 'trainee-org',
@@ -44,6 +57,53 @@ describe('getCourseSessionTraineeOrganizationData', () => {
     })
     expect(session.startDate.toISOString()).toBe('2026-11-04T00:00:00.000Z')
     expect(session.endDate.toISOString()).toBe('2026-11-06T23:59:59.999Z')
+  })
+
+  it('does not extend access again when called for multiple trainees', () => {
+    jest.setSystemTime(new Date('2026-11-14T00:00:00Z'))
+    for (const id of ['first', 'second']) {
+      expect(getCourseSessionTraineeOrganizationData(session, id).courseStatus).toBe(
+        CourseSessionTraineeOrganizationStatus.INACTIVE,
+      )
+    }
+    expect(session.endDate.toISOString()).toBe('2026-11-06T23:59:59.999Z')
+  })
+
+  it.each([
+    ['2026-11-06T23:59:59.999Z', CourseSessionTraineeOrganizationStatus.ACTIVE],
+    ['2026-11-07T00:00:00Z', CourseSessionTraineeOrganizationStatus.INACTIVE],
+  ])('does not extend access when the duration is zero at %s', (date, status) => {
+    process.env.COURSE_SESSION_ACCESS_DAYS = '0'
+    jest.setSystemTime(new Date(date))
+    expect(getCourseSessionTraineeOrganizationData(session, 'trainee').courseStatus).toBe(status)
+  })
+
+  it.each([
+    ['2026-03-01T23:59:59.999Z', CourseSessionTraineeOrganizationStatus.ACTIVE],
+    ['2026-03-02T00:00:00Z', CourseSessionTraineeOrganizationStatus.INACTIVE],
+  ])('extends access across month boundaries at %s', (date, status) => {
+    process.env.COURSE_SESSION_ACCESS_DAYS = '2'
+    jest.setSystemTime(new Date(date))
+    expect(
+      getCourseSessionTraineeOrganizationData(
+        {
+          startDate: new Date('2026-02-01T00:00:00Z'),
+          endDate: new Date('2026-02-27T23:59:59.999Z'),
+        },
+        'trainee',
+      ).courseStatus,
+    ).toBe(status)
+  })
+
+  it.each([undefined, '', '-1', '1.5', 'invalid'])('rejects invalid access duration %s', (value) => {
+    if (value === undefined) {
+      delete process.env.COURSE_SESSION_ACCESS_DAYS
+    } else {
+      process.env.COURSE_SESSION_ACCESS_DAYS = value
+    }
+    expect(() => getCourseSessionTraineeOrganizationData(session, 'trainee')).toThrow(
+      'COURSE_SESSION_ACCESS_DAYS must be a non-negative integer',
+    )
   })
 })
 

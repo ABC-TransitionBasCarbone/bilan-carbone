@@ -196,10 +196,12 @@ describe('trainee import priority', () => {
 
 describe('getCourseSessionsFromFTP', () => {
   const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => undefined)
+  const previousAccessDays = process.env.COURSE_SESSION_ACCESS_DAYS
 
   beforeEach(() => {
     jest.useFakeTimers({ doNotFake: ['nextTick', 'setImmediate'] }).setSystemTime(new Date('2026-01-01'))
     jest.clearAllMocks()
+    process.env.COURSE_SESSION_ACCESS_DAYS = '7'
     process.env.FTP_HOST = 'host'
     process.env.FTP_USER = 'user'
     process.env.FTP_PASSWORD = 'password'
@@ -282,6 +284,7 @@ describe('getCourseSessionsFromFTP', () => {
       mockFindCourseSessions.mockResolvedValueOnce([previous])
       mockFindTraineeRemovals.mockResolvedValue([
         {
+          id: '1324',
           courseSessionId: previous.id,
           organizationVersionId: 'organization-0',
           removedAt,
@@ -325,6 +328,7 @@ describe('getCourseSessionsFromFTP', () => {
     mockFindCourseSessions.mockResolvedValueOnce([previous])
     mockFindTraineeRemovals.mockResolvedValue([
       {
+        id: '1234',
         courseSessionId: previous.id,
         organizationVersionId: 'organization-0',
         removedAt,
@@ -1089,6 +1093,7 @@ describe('getCourseSessionsFromFTP', () => {
       .mockResolvedValueOnce([...current, after, otherType, otherEnvironment])
     mockFindRegistrations.mockResolvedValueOnce([
       {
+        id: '1234',
         courseSessionId: previous.id,
         organizationVersionId: 'organization-0',
         courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
@@ -1096,6 +1101,7 @@ describe('getCourseSessionsFromFTP', () => {
         updatedAt: new Date(),
       },
       {
+        id: '12345',
         courseSessionId: previous.id,
         organizationVersionId: 'organization-1',
         courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
@@ -1166,6 +1172,7 @@ describe('getCourseSessionsFromFTP', () => {
       .mockResolvedValueOnce([...current, { ...previous, traineeOrganizations: [] }])
     mockFindRegistrations.mockResolvedValueOnce([
       {
+        id: '1234',
         courseSessionId: previous.id,
         organizationVersionId: 'organization-0',
         courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
@@ -1281,6 +1288,7 @@ describe('getCourseSessionsFromFTP', () => {
         currentSourceType === CourseSessionType.INITIAL
           ? [
               {
+                id: '1234',
                 courseSessionId: source.id,
                 organizationVersionId: 'organization-0',
                 courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE,
@@ -1346,6 +1354,7 @@ describe('getCourseSessionsFromFTP', () => {
     mockDeleteTrainees.mockResolvedValueOnce({ count: 1 })
     mockFindRegistrations.mockResolvedValueOnce([
       {
+        id: '1234',
         courseSessionId: first.id,
         organizationVersionId: 'organization-0',
         courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
@@ -1702,5 +1711,10 @@ describe('getCourseSessionsFromFTP', () => {
 
   afterAll(() => {
     consoleLogSpy.mockRestore()
+    if (previousAccessDays === undefined) {
+      delete process.env.COURSE_SESSION_ACCESS_DAYS
+    } else {
+      process.env.COURSE_SESSION_ACCESS_DAYS = previousAccessDays
+    }
   })
 })
