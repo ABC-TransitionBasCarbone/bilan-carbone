@@ -2,7 +2,7 @@ import { getCourseSessionTraineeOrganizationData } from '@/services/courseSessio
 import { canRegisterForCourseSession } from '@/services/permissions/user'
 import type { AddCourseSessionTraineeCommand } from '@/services/serverFunctions/courseSession.command'
 import type { CourseSession, Environment, Prisma } from '@abc-transitionbascarbone/common/db'
-import { AttendanceStatus, Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { UserSession } from 'next-auth'
 import { prismaClient } from './client.server'
@@ -59,7 +59,7 @@ export const getCourseSessionTrainees = async (courseSessionId: string, environm
     select: {
       traineeOrganizations: {
         select: {
-          attendance: { select: { status: true } },
+          attendance: { select: { id: true } },
           organizationVersion: {
             select: {
               userAccounts: {
@@ -116,8 +116,8 @@ export const saveCourseSessionAttendance = (
         if (selectedIds.has(enrollment.organizationVersionId)) {
           await transaction.attendance.upsert({
             where: { courseSessionTraineeOrganizationId: enrollment.id },
-            create: { courseSessionTraineeOrganizationId: enrollment.id, status: AttendanceStatus.PRESENT },
-            update: { status: AttendanceStatus.PRESENT },
+            create: { courseSessionTraineeOrganizationId: enrollment.id },
+            update: {},
           })
         }
       }

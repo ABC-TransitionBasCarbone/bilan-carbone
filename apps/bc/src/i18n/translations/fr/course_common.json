@@ -9,6 +9,7 @@
     "signAttendance": "Émarger les stagiaires",
     "attendance": "Émargement",
     "attendancePresent": "Émargé",
+    "attendanceAbsent": "Absent",
     "attendanceMissing": "Non émargé",
     "attendanceDescription": "Sélectionnez les stagiaires à émarger pour la fin de formation du {date}. Les émargements des stagiaires décochés seront supprimés.",
     "selectAllTrainees": "Sélectionner tous les stagiaires",

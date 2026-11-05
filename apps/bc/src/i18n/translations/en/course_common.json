@@ -9,6 +9,7 @@
     "signAttendance": "Sign trainees in",
     "attendance": "Attendance",
     "attendancePresent": "Signed in",
+    "attendanceAbsent": "Absent",
     "attendanceMissing": "Not signed in",
     "attendanceDescription": "Select trainees to sign in for the end of training on {date}. Attendance records for unchecked trainees will be deleted.",
     "selectAllTrainees": "Select all trainees",

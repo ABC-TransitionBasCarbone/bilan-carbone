@@ -1,5 +1,4 @@
 import type { CourseSessionTrainee } from '@/db/courseSession'
-import { AttendanceStatus } from '@abc-transitionbascarbone/common/db/enums'
 
 export const getInitialAttendanceSelection = (
   trainees: Pick<CourseSessionTrainee, 'organizationVersionId' | 'attendance'>[],
@@ -8,9 +7,7 @@ export const getInitialAttendanceSelection = (
   return [
     ...new Set(
       trainees.flatMap(({ organizationVersionId, attendance }) =>
-        organizationVersionId && (!hasAttendance || attendance?.status === AttendanceStatus.PRESENT)
-          ? [organizationVersionId]
-          : [],
+        organizationVersionId && (!hasAttendance || attendance) ? [organizationVersionId] : [],
       ),
     ),
   ]
