@@ -284,7 +284,6 @@ describe('getCourseSessionsFromFTP', () => {
       mockFindCourseSessions.mockResolvedValueOnce([previous])
       mockFindTraineeRemovals.mockResolvedValue([
         {
-          id: '1324',
           courseSessionId: previous.id,
           organizationVersionId: 'organization-0',
           removedAt,
@@ -328,7 +327,6 @@ describe('getCourseSessionsFromFTP', () => {
     mockFindCourseSessions.mockResolvedValueOnce([previous])
     mockFindTraineeRemovals.mockResolvedValue([
       {
-        id: '1234',
         courseSessionId: previous.id,
         organizationVersionId: 'organization-0',
         removedAt,
@@ -1093,7 +1091,6 @@ describe('getCourseSessionsFromFTP', () => {
       .mockResolvedValueOnce([...current, after, otherType, otherEnvironment])
     mockFindRegistrations.mockResolvedValueOnce([
       {
-        id: '1234',
         courseSessionId: previous.id,
         organizationVersionId: 'organization-0',
         courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
@@ -1101,7 +1098,6 @@ describe('getCourseSessionsFromFTP', () => {
         updatedAt: new Date(),
       },
       {
-        id: '12345',
         courseSessionId: previous.id,
         organizationVersionId: 'organization-1',
         courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
@@ -1172,7 +1168,6 @@ describe('getCourseSessionsFromFTP', () => {
       .mockResolvedValueOnce([...current, { ...previous, traineeOrganizations: [] }])
     mockFindRegistrations.mockResolvedValueOnce([
       {
-        id: '1234',
         courseSessionId: previous.id,
         organizationVersionId: 'organization-0',
         courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
@@ -1354,7 +1349,6 @@ describe('getCourseSessionsFromFTP', () => {
     mockDeleteTrainees.mockResolvedValueOnce({ count: 1 })
     mockFindRegistrations.mockResolvedValueOnce([
       {
-        id: '1234',
         courseSessionId: first.id,
         organizationVersionId: 'organization-0',
         courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,

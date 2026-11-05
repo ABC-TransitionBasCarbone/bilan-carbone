@@ -343,7 +343,7 @@ describe('registerCourseSessionTrainee', () => {
   it('asks for confirmation before transferring an existing trainee', async () => {
     jest
       .mocked(prismaClient.courseSessionTraineeOrganization.findMany)
-      .mockResolvedValue([{ ...registration, id: '1234', courseSessionId: 'other-session' }])
+      .mockResolvedValue([{ ...registration, courseSessionId: 'other-session' }])
 
     expect(
       await registerCourseSessionTrainee(session.id, professor.organizationVersionId, professor.environment, trainee),
@@ -359,7 +359,7 @@ describe('registerCourseSessionTrainee', () => {
   it('transfers the trainee after confirmation and preserves the old-session deletion date', async () => {
     jest
       .mocked(prismaClient.courseSessionTraineeOrganization.findMany)
-      .mockResolvedValue([{ ...registration, id: '1234', courseSessionId: 'other-session' }])
+      .mockResolvedValue([{ ...registration, courseSessionId: 'other-session' }])
 
     expect(
       await registerCourseSessionTrainee(session.id, professor.organizationVersionId, professor.environment, {
