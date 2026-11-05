@@ -6,7 +6,11 @@ import tableStyles from '@abc-transitionbascarbone/common/components/base/Table.
 import { TableActionButton } from '@abc-transitionbascarbone/common/components/base/TableActionButton'
 import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
 import Modal from '@abc-transitionbascarbone/common/components/modals/Modal'
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
+import { AttendanceStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { formatDateFr } from '@abc-transitionbascarbone/common/utils'
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
+import { Chip, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -15,9 +19,10 @@ import { useState } from 'react'
 interface Props {
   sessionId: string
   trainees: CourseSessionTrainee[]
+  endDate: Date
 }
 
-const CourseSessionTraineesTable = ({ sessionId, trainees }: Props) => {
+const CourseSessionTraineesTable = ({ sessionId, trainees, endDate }: Props) => {
   const t = useTranslations('courseSessions')
   const tTeam = useTranslations('team.table')
   const tAction = useTranslations('common.action')
@@ -60,6 +65,7 @@ const CourseSessionTraineesTable = ({ sessionId, trainees }: Props) => {
               <TableCell scope="col">{tTeam('lastName')}</TableCell>
               <TableCell scope="col">{tTeam('firstName')}</TableCell>
               <TableCell scope="col">{tTeam('email')}</TableCell>
+              <TableCell scope="col">{t('attendance')}</TableCell>
               <TableCell scope="col" className={tableStyles.actionsColumn} />
             </TableRow>
           </TableHead>
@@ -69,6 +75,29 @@ const CourseSessionTraineesTable = ({ sessionId, trainees }: Props) => {
                 <TableCell data-testid="course-session-trainees-user_lastName">{trainee.user.lastName}</TableCell>
                 <TableCell data-testid="course-session-trainees-user_firstName">{trainee.user.firstName}</TableCell>
                 <TableCell data-testid="course-session-trainees-user_email">{trainee.user.email}</TableCell>
+                <TableCell data-testid="course-session-trainees-attendance">
+                  {trainee.attendance?.status === AttendanceStatus.PRESENT ? (
+                    <div className="flex-col align-start">
+                      <Chip
+                        size="small"
+                        color="success"
+                        variant="outlined"
+                        icon={<CheckCircleOutlineIcon />}
+                        label={t('attendancePresent')}
+                      />
+                      <Typography variant="caption" color="textSecondary">
+                        {formatDateFr(endDate)}
+                      </Typography>
+                    </div>
+                  ) : (
+                    <Chip
+                      size="small"
+                      variant="outlined"
+                      icon={<RadioButtonUncheckedIcon />}
+                      label={t('attendanceMissing')}
+                    />
+                  )}
+                </TableCell>
                 <TableCell className={tableStyles.actionsColumn} data-testid="course-session-trainees-actions">
                   <TableActionButton
                     type="delete"
