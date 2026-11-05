@@ -50,7 +50,7 @@ const SessionTraineesPage = async ({ params }: Props & UserSessionProps) => {
         },
       ]}
     >
-      <CourseSessionTraineesTable sessionId={id} trainees={response.data} endDate={sessionResponse.data.endDate} />
+      <CourseSessionTraineesTable sessionId={id} trainees={response.data} />
     </Block>
   )
 }

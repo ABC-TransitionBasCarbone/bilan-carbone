@@ -74,8 +74,6 @@ model Attendance {
   courseSessionTraineeOrganizationId String                          @unique @map("course_session_trainee_organization_id")
   traineeOrganization                CourseSessionTraineeOrganization @relation(fields: [courseSessionTraineeOrganizationId], references: [id], onDelete: Cascade)
 
-  status AttendanceStatus
-
   @@map("attendance")
   @@schema("bilan_carbone")
 }
@@ -102,13 +100,6 @@ model CourseSessionTraineeRemoval {
 enum CourseSessionTraineeOrganizationStatus {
   INACTIVE
   ACTIVE
-
-  @@schema("bilan_carbone")
-}
-
-enum AttendanceStatus {
-  PRESENT
-  ABSENT
 
   @@schema("bilan_carbone")
 }
