@@ -30,6 +30,14 @@ export const sessionsSelect = {
 } satisfies Prisma.CourseSessionSelect
 export type SavedCourseSession = Prisma.CourseSessionGetPayload<{ select: typeof sessionsSelect }>
 
+export const isSameSession = (
+  savedSession: Pick<SavedCourseSession, 'courseOrganismId' | 'name' | 'environment'>,
+  importedSession: Pick<CourseSession, 'courseOrganismId' | 'name' | 'environment'>,
+) =>
+  savedSession.courseOrganismId === importedSession.courseOrganismId &&
+  savedSession.name === importedSession.name &&
+  savedSession.environment === importedSession.environment
+
 export const getProfessor = (session: SavedCourseSession) =>
   session.professorOrganization?.userAccounts[0]?.user ?? null
 

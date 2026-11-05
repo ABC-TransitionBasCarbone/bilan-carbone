@@ -13,7 +13,7 @@ import fs from 'fs'
 import xlsx from 'node-xlsx'
 import { getCourseSessionsFromFTP, importCourseSessionsFromFTP } from './importTrainingSessions'
 import { parseCourseSessionWorkbook } from './importTrainingSessionsParsing'
-import { shouldImportCourseSessionTrainee } from './importTrainingSessionsUtils'
+import { isSameSession, shouldImportCourseSessionTrainee } from './importTrainingSessionsUtils'
 
 jest.mock('basic-ftp', () => ({
   Client: jest.fn(() => ({ access: jest.fn(), downloadTo: jest.fn(), close: jest.fn() })),
@@ -129,7 +129,7 @@ const workbook = [
 
 const withParticipants = (session: CourseSession) => {
   const { sessions: participants } = parseCourseSessionWorkbook(Buffer.from('xlsx content'), session.courseOrganismId)
-  const importedSession = participants.find(({ name }) => name === session.name)!
+  const importedSession = participants.find((imported) => isSameSession(session, imported))!
   return {
     ...session,
     traineeOrganizations: importedSession.trainees.map((user) => ({
@@ -138,6 +138,25 @@ const withParticipants = (session: CourseSession) => {
     professorOrganization: importedSession.professor ? { userAccounts: [{ user: importedSession.professor }] } : null,
   }
 }
+
+describe('isSameSession', () => {
+  it.each([
+    { label: 'identical identity', overrides: {}, expected: true },
+    { label: 'different organism', overrides: { courseOrganismId: 'other-organism' }, expected: false },
+    { label: 'different name', overrides: { name: 'Other session' }, expected: false },
+    { label: 'different environment', overrides: { environment: Environment.COURSE_TILT }, expected: false },
+    { label: 'different type', overrides: { type: CourseSessionType.PROFESSIONNEL }, expected: true },
+    {
+      label: 'different dates',
+      overrides: { startDate: new Date('2026-01-01'), endDate: new Date('2026-01-02') },
+      expected: true,
+    },
+  ])('compares sessions with $label', ({ overrides, expected }) => {
+    const importedSession = { ...savedSessions[0], ...overrides }
+
+    expect(isSameSession(savedSessions[0], importedSession)).toBe(expected)
+  })
+})
 
 describe('trainee import priority', () => {
   it.each([
@@ -281,13 +300,57 @@ describe('getCourseSessionsFromFTP', () => {
                   },
                 ]
               : []),
-            { organizationVersionId: 'organization-1', courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE },
+            {
+              organizationVersionId: 'organization-1',
+              courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE,
+            },
           ],
           skipDuplicates: true,
         },
       })
     },
   )
+
+  it('keeps the existing session and its trainee removals when the imported type changes', async () => {
+    const previous = { ...withParticipants(savedSessions[0]), type: CourseSessionType.PROFESSIONNEL }
+    const removedAt = new Date('2025-12-20')
+    mockFindCourseSessions.mockResolvedValueOnce([previous])
+    mockFindTraineeRemovals.mockResolvedValue([
+      {
+        courseSessionId: previous.id,
+        organizationVersionId: 'organization-0',
+        removedAt,
+        createdAt: removedAt,
+        updatedAt: removedAt,
+      },
+    ])
+
+    const result = await importCourseSessionsFromFTP()
+
+    expect(mockFindCourseSessions.mock.calls[0][0]?.where?.OR).toContainEqual({
+      courseOrganismId: previous.courseOrganismId,
+      name: previous.name,
+      environment: previous.environment,
+    })
+    expect(mockUpsertCourseSession.mock.calls[0][0].update).toEqual(
+      expect.objectContaining({
+        type: CourseSessionType.INITIAL,
+        traineeOrganizations: {
+          createMany: {
+            data: [
+              {
+                organizationVersionId: 'organization-1',
+                courseStatus: CourseSessionTraineeOrganizationStatus.INACTIVE,
+              },
+            ],
+            skipDuplicates: true,
+          },
+        },
+      }),
+    )
+    expect(mockDeleteTrainees).not.toHaveBeenCalled()
+    expect(result.importedSessions).toBe(1)
+  })
 
   it('does not add trainees or replace existing registrations after a session ends', async () => {
     jest.setSystemTime(new Date(savedSessions[1].endDate.getTime() + 24 * 60 * 60 * 1000))

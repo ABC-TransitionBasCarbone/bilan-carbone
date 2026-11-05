@@ -22,6 +22,7 @@ import { CourseSessionImport } from './importTrainingSessionsType'
 import {
   getProfessor,
   getTrainees,
+  isSameSession,
   SavedCourseSession,
   sessionsSelect,
   shouldImportCourseSessionTrainee,
@@ -216,7 +217,7 @@ export const importCourseSessionsFromFTP = async () => {
 
   const affectedSessionsSQLRequest: Prisma.CourseSessionWhereInput[] = [
     ...notFinishedSessions.flatMap(({ courseOrganismId, name, environment, type, trainees }) => [
-      { courseOrganismId, type, name, environment },
+      { courseOrganismId, name, environment },
       ...(trainees.length > 0
         ? [
             {
@@ -249,12 +250,7 @@ export const importCourseSessionsFromFTP = async () => {
         select: { courseSessionId: true, organizationVersionId: true, removedAt: true },
       })
       const sessionsToImport = notFinishedSessions.map((session) => {
-        const previous = existingSessions.find(
-          ({ courseOrganismId, name, environment }) =>
-            courseOrganismId === session.courseOrganismId &&
-            name === session.name &&
-            environment === session.environment,
-        )
+        const previous = existingSessions.find((previous) => isSameSession(previous, session))
         const removedAtByOrganization = new Map(
           removals
             .filter(({ courseSessionId }) => courseSessionId === previous?.id)
@@ -275,18 +271,10 @@ export const importCourseSessionsFromFTP = async () => {
       })
       const conflictingRegistrations = sessionsToImport.flatMap((session) =>
         existingSessions.flatMap((previous) => {
-          if (
-            previous.courseOrganismId !== session.courseOrganismId ||
-            (previous.name === session.name && previous.environment === session.environment)
-          ) {
+          if (previous.courseOrganismId !== session.courseOrganismId || isSameSession(previous, session)) {
             return []
           }
-          const imported = sessions.find(
-            ({ courseOrganismId, name, environment }) =>
-              courseOrganismId === previous.courseOrganismId &&
-              name === previous.name &&
-              environment === previous.environment,
-          )
+          const imported = sessions.find((session) => isSameSession(previous, session))
           if ((imported ? imported.type : previous.type) !== session.type) {
             return []
           }
