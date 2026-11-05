@@ -1,4 +1,5 @@
 import { SubPost } from '@abc-transitionbascarbone/common/db/enums'
+import { readStoredStringArray } from './localStorage'
 
 const filtersMatcheScope = (scope: string[], filters: string[]): boolean => {
   return scope.some((id) => filters.includes(id))
@@ -49,8 +50,7 @@ export const resolveFilterIds = (
   allKey: string,
   filterKey: string,
 ): string[] | null => {
-  const storedAllRaw = localStorage.getItem(allKey)
-  const storedAll: string[] = storedAllRaw ? (JSON.parse(storedAllRaw) as string[]) : []
+  const storedAll = readStoredStringArray(allKey) ?? []
 
   const wasSelectAll = storedAll.length > 0 && storedAll.every((id) => stored.includes(id))
   if (wasSelectAll) {
