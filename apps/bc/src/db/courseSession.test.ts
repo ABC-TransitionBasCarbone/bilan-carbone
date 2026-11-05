@@ -16,6 +16,7 @@ import {
   prepareCourseSessionTraineeRegistrations,
   registerCourseSessionTrainee,
   removeCourseSessionTrainee,
+  saveCourseSessionAttendance,
 } from './courseSession'
 import { createUsersWithAccount } from './user'
 
@@ -23,7 +24,7 @@ jest.mock('./user', () => ({ createUsersWithAccount: jest.fn() }))
 
 jest.mock('./client.server', () => {
   const transaction = {
-    courseSession: { findFirst: jest.fn() },
+    courseSession: { findFirst: jest.fn(), findUniqueOrThrow: jest.fn() },
     account: { findMany: jest.fn(), findFirst: jest.fn(), create: jest.fn(), update: jest.fn() },
     courseSessionTraineeOrganization: {
       deleteMany: jest.fn(),
@@ -32,6 +33,7 @@ jest.mock('./client.server', () => {
       createMany: jest.fn(),
     },
     courseSessionTraineeRemoval: { upsert: jest.fn(), deleteMany: jest.fn() },
+    attendance: { upsert: jest.fn(), deleteMany: jest.fn() },
     study: { findMany: jest.fn() },
   }
   return { prismaClient: { ...transaction, $transaction: jest.fn((operation) => operation(transaction)) } }
@@ -150,20 +152,54 @@ describe('course session database queries', () => {
   })
 
   it('lists trainees enrolled in the session and environment, ordered by name', async () => {
-    await getCourseSessionTrainees(session.id, professor.environment)
+    const alice = {
+      ...getMockedAccount({ id: 'alice', organizationVersionId: 'org-1' }),
+      user: { firstName: 'Alice', lastName: 'Martin', email: 'alice@example.com' },
+    }
+    const camille = {
+      ...getMockedAccount({ id: 'camille', organizationVersionId: 'org-1' }),
+      user: { firstName: 'Camille', lastName: 'Martin', email: 'camille@example.com' },
+    }
+    const zoe = {
+      ...getMockedAccount({ id: 'zoe', organizationVersionId: 'org-2' }),
+      user: { firstName: 'Zoe', lastName: 'Albert', email: 'zoe@example.com' },
+    }
+    const result = {
+      ...session,
+      traineeOrganizations: [
+        { attendance: { id: 'attendance-1' }, organizationVersion: { userAccounts: [camille, alice] } },
+        { attendance: null, organizationVersion: { userAccounts: [zoe] } },
+      ],
+    }
+    jest.mocked(prismaClient.courseSession.findUniqueOrThrow).mockResolvedValueOnce(result)
 
-    expect(prismaClient.account.findMany).toHaveBeenCalledWith({
-      where: {
-        environment: professor.environment,
-        organizationVersion: { traineeCourseSessions: { some: { courseSessionId: session.id } } },
-      },
-      select: {
-        id: true,
-        organizationVersionId: true,
-        user: { select: { firstName: true, lastName: true, email: true } },
-      },
-      orderBy: [{ user: { lastName: 'asc' } }, { user: { firstName: 'asc' } }],
-    })
+    expect(await getCourseSessionTrainees(session.id, professor.environment)).toEqual([
+      { ...zoe, attendance: null },
+      { ...alice, attendance: { id: 'attendance-1' } },
+      { ...camille, attendance: { id: 'attendance-1' } },
+    ])
+    expect(prismaClient.courseSession.findUniqueOrThrow).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: session.id, environment: professor.environment },
+        select: expect.objectContaining({
+          traineeOrganizations: expect.objectContaining({
+            select: expect.objectContaining({
+              organizationVersion: {
+                select: {
+                  userAccounts: expect.objectContaining({ where: { environment: professor.environment } }),
+                },
+              },
+            }),
+          }),
+        }),
+      }),
+    )
+  })
+
+  it('returns an empty list for a session without trainees', async () => {
+    const result = { ...session, traineeOrganizations: [] }
+    jest.mocked(prismaClient.courseSession.findUniqueOrThrow).mockResolvedValueOnce(result)
+    expect(await getCourseSessionTrainees(session.id, professor.environment)).toEqual([])
   })
 
   it('only removes the enrollment in the session owned by the authenticated professor', async () => {
@@ -209,6 +245,7 @@ describe('registerCourseSessionTrainee', () => {
   const account = getMockedAccount({ organizationVersionId: 'trainee-org', environment: professor.environment })
   const participantAccount = { ...account, user: trainee }
   const registration = {
+    id: 'registration',
     courseSessionId: session.id,
     organizationVersionId: 'trainee-org',
     courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
@@ -413,7 +450,7 @@ describe('registerCourseSessionTrainee', () => {
 
 describe('prepareCourseSessionTraineeRegistrations', () => {
   const conflict = {
-    id: '1234',
+    id: 'conflict-registration',
     courseSessionId: 'old-session',
     organizationVersionId: 'trainee-org',
     courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
@@ -426,6 +463,74 @@ describe('prepareCourseSessionTraineeRegistrations', () => {
     jest.useFakeTimers().setSystemTime(new Date('2026-11-04T12:00:00Z'))
     jest.mocked(prismaClient.courseSessionTraineeOrganization.findMany).mockResolvedValue([conflict])
     jest.mocked(prismaClient.courseSessionTraineeOrganization.deleteMany).mockResolvedValue({ count: 1 })
+  })
+
+  describe('saveCourseSessionAttendance', () => {
+    const enrollments = ['one', 'two'].map((id) => ({
+      id: `enrollment-${id}`,
+      organizationVersionId: id,
+      courseSessionId: session.id,
+      courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE,
+      createdAt: session.createdAt,
+      updatedAt: session.updatedAt,
+    }))
+
+    beforeEach(() => {
+      jest.clearAllMocks()
+      mockFindSession.mockResolvedValue(session)
+      jest.mocked(prismaClient.courseSessionTraineeOrganization.findMany).mockResolvedValue(enrollments)
+    })
+
+    it('upserts selected enrollments once, ignores outsiders and scopes deletions to this session', async () => {
+      await saveCourseSessionAttendance(session.id, professor.organizationVersionId, professor.environment, [
+        'one',
+        'one',
+        'outsider',
+      ])
+
+      expect(mockFindSession).toHaveBeenCalledWith({
+        where: {
+          id: session.id,
+          professorOrganizationVersionId: professor.organizationVersionId,
+          environment: professor.environment,
+        },
+        select: { id: true },
+      })
+      expect(prismaClient.courseSessionTraineeOrganization.findMany).toHaveBeenCalledWith({
+        where: { courseSessionId: session.id },
+        select: { id: true, organizationVersionId: true },
+      })
+      expect(prismaClient.attendance.upsert).toHaveBeenCalledTimes(1)
+      expect(prismaClient.attendance.upsert).toHaveBeenCalledWith({
+        where: { courseSessionTraineeOrganizationId: 'enrollment-one' },
+        create: { courseSessionTraineeOrganizationId: 'enrollment-one' },
+        update: {},
+      })
+      expect(prismaClient.attendance.deleteMany).toHaveBeenCalledWith({
+        where: {
+          traineeOrganization: { courseSessionId: session.id, organizationVersionId: { notIn: ['one', 'outsider'] } },
+        },
+      })
+      expect(prismaClient.$transaction).toHaveBeenCalledWith(expect.any(Function), { isolationLevel: 'Serializable' })
+    })
+
+    it('clears attendance only for this session when the selection is empty', async () => {
+      await saveCourseSessionAttendance(session.id, professor.organizationVersionId, professor.environment, [])
+      expect(prismaClient.attendance.upsert).not.toHaveBeenCalled()
+      expect(prismaClient.attendance.deleteMany).toHaveBeenCalledWith({
+        where: { traineeOrganization: { courseSessionId: session.id, organizationVersionId: { notIn: [] } } },
+      })
+    })
+
+    it('rejects unauthorized sessions before reading enrollments or writing attendance', async () => {
+      mockFindSession.mockResolvedValue(null)
+      await expect(
+        saveCourseSessionAttendance(session.id, professor.organizationVersionId, professor.environment, ['one']),
+      ).rejects.toThrow('Not authorized')
+      expect(prismaClient.courseSessionTraineeOrganization.findMany).not.toHaveBeenCalled()
+      expect(prismaClient.attendance.upsert).not.toHaveBeenCalled()
+      expect(prismaClient.attendance.deleteMany).not.toHaveBeenCalled()
+    })
   })
 
   afterEach(() => {

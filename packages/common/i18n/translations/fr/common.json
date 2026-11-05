@@ -48,7 +48,8 @@
       "back": "Retour",
       "import": "Importer",
       "export": "Exporter",
-      "continue": "Continuer"
+      "continue": "Continuer", 
+      "actions": "Actions"
     },
     "questions": {
       "glossary": {

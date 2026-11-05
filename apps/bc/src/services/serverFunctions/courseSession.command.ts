@@ -8,3 +8,9 @@ export const AddCourseSessionTraineeCommandValidation = z.object({
 })
 
 export type AddCourseSessionTraineeCommand = z.infer<typeof AddCourseSessionTraineeCommandValidation>
+
+export const SaveCourseSessionAttendanceCommandValidation = z.object({
+  organizationVersionIds: z.array(z.string().min(1)),
+})
+
+export type SaveCourseSessionAttendanceCommand = z.infer<typeof SaveCourseSessionAttendanceCommandValidation>
