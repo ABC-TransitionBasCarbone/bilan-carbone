@@ -1,5 +1,6 @@
 import { storageKeys } from '@/constants/storage.constants'
 import { useLocalStorageSync } from '@/hooks/useLocalStorageSync'
+import { readStoredStringArray } from '@/utils/localStorage'
 import { resolveFilterIds } from '@/utils/scopeFilter'
 import { SubPost } from '@abc-transitionbascarbone/common/db/enums'
 import { useEffect, useState } from 'react'
@@ -23,37 +24,27 @@ export const useTransitionPlanFilters = (studyId: string, validTagIds: string[] 
   useLocalStorageSync(tagsAllKey, validTagIds, filtersMounted)
 
   useEffect(() => {
-    const storedSites = localStorage.getItem(sitesKey)
+    const storedSites = readStoredStringArray(sitesKey)
     if (storedSites) {
-      const parsed: unknown = JSON.parse(storedSites)
-      if (Array.isArray(parsed) && parsed.every((id: unknown) => typeof id === 'string')) {
-        const resolved = resolveFilterIds(parsed as string[], validSiteIds, sitesAllKey, sitesKey)
-        if (resolved !== null) {
-          setSelectedSiteIds(resolved)
-        }
+      const resolved = resolveFilterIds(storedSites, validSiteIds, sitesAllKey, sitesKey)
+      if (resolved !== null) {
+        setSelectedSiteIds(resolved)
       }
     }
 
-    const storedSubposts = localStorage.getItem(subpostsKey)
+    const storedSubposts = readStoredStringArray(subpostsKey)
     if (storedSubposts) {
-      const parsed: unknown = JSON.parse(storedSubposts)
-      if (Array.isArray(parsed)) {
-        const valid = parsed.filter(
-          (subPost: unknown): subPost is SubPost =>
-            typeof subPost === 'string' && Object.values(SubPost).includes(subPost as SubPost),
-        )
-        setSelectedSubPosts(valid)
-      }
+      const valid = storedSubposts.filter((subPost): subPost is SubPost =>
+        Object.values(SubPost).includes(subPost as SubPost),
+      )
+      setSelectedSubPosts(valid)
     }
 
-    const storedTags = localStorage.getItem(tagsKey)
-    if (storedTags) {
-      const parsed: unknown = JSON.parse(storedTags)
-      if (Array.isArray(parsed) && parsed.length > 0 && parsed.every((id: unknown) => typeof id === 'string')) {
-        const resolved = resolveFilterIds(parsed as string[], validTagIds, tagsAllKey, tagsKey)
-        if (resolved !== null) {
-          setSelectedTagIds(resolved)
-        }
+    const storedTags = readStoredStringArray(tagsKey)
+    if (storedTags && storedTags.length > 0) {
+      const resolved = resolveFilterIds(storedTags, validTagIds, tagsAllKey, tagsKey)
+      if (resolved !== null) {
+        setSelectedTagIds(resolved)
       }
     }
 
