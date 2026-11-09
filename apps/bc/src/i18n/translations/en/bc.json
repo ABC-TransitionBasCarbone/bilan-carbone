@@ -1945,6 +1945,7 @@
       "BaseEmpreinte": "Base Empreinte®",
       "NegaOctet": "NegaOctet",
       "Legifrance": "Légifrance",
+      "ABC": "ABC",
       "AIB": "AIB",
       "GIEC": "IPCC",
       "ADEME": "Autre étude de l'Ademe",
@@ -1985,6 +1986,7 @@
         "negaOctet": "NegaOctet logo",
         "aib": "Association of Issuing Bodies logo",
         "giec": "IPCC logo",
+        "ademe": "Ademe logo",
         "manual": "Manual"
       },
       "post": "Categories",
