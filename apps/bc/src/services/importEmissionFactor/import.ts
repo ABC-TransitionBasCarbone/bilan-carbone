@@ -165,8 +165,8 @@ export const mergeRowWithOverride = (
 
 export const isRowUnchanged = (existingRawCsv: string, newRow: ImportEmissionFactor): boolean => {
   const newSerialized = serializeRowAsCsv(newRow)
-  const existingLines = existingRawCsv.split('\n')
-  const newLines = newSerialized.split('\n')
+  const existingLines = existingRawCsv.split('CO2b\n')
+  const newLines = newSerialized.split('CO2b\n')
   if (existingLines.length !== 2 || newLines.length !== 2) {
     return false
   }

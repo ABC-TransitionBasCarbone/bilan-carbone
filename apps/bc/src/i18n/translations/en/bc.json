@@ -2162,6 +2162,7 @@
     "KNOTS": "{count, plural, one {knot} other {knots}}",
     "KWH": "kWh",
     "KWH_PCI": "kWh PCI",
+    "KGCO2E": "kgCO₂e",
     "KWH_PCS": "kWh PCS",
     "KWH_ELEC_TON": "kWh elec / ton",
     "KWH_PER_KM": "kWh / km",

@@ -2083,6 +2083,7 @@
     "KM_PERSON": "km.persona",
     "KNOTS": "{count, plural, =0 {nodi} one {nodo} other {nodi}}",
     "KWH": "kWh",
+    "KGCO2E": "kgCO₂e",
     "KWH_PCI": "kWh PCI",
     "KWH_PCS": "kWh PCS",
     "KWH_ELEC_TON": "kWh elet / t",

@@ -2163,6 +2163,7 @@
     "KNOTS": "{count, plural, =0 {noeuds} one {noeud} other {noeuds}}",
     "KWH": "kWh",
     "KWH_PCI": "kWh PCI",
+    "KGCO2E": "kgCO₂e",
     "KWH_PCS": "kWh PCS",
     "KWH_ELEC_TON": "kWh elec / tonne",
     "KWH_PER_KM": "kWh / km",
