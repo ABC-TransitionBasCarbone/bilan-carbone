@@ -440,7 +440,6 @@ export const getSubPosts = (
       return [SubPost.Electricite]
     case Import.CUT:
       return [SubPost.UsagesNumeriques]
-    case Import.GIEC:
     case Import.BaseEmpreinte:
     default:
       return Object.entries(elementsBySubPost)
@@ -454,11 +453,9 @@ export const getBaseFunc = (subPosts: SubPost[], importedFrom: Import) => {
     case Import.AIB:
       return EmissionFactorBase.MarketBased
     case Import.GIEC:
+    case Import.ABC:
     case Import.BaseEmpreinte:
       return subPosts.includes(SubPost.Electricite) ? EmissionFactorBase.LocationBased : null
-    case Import.Legifrance:
-    case Import.NegaOctet:
-    case Import.CUT:
     default:
       return null
   }

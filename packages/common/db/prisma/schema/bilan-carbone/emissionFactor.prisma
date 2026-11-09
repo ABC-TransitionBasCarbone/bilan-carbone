@@ -25,6 +25,7 @@ enum Import {
   BaseEmpreinte
   Legifrance
   NegaOctet
+  ABC
   Manual
   CUT
   CLICKSON

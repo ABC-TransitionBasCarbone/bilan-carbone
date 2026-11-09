@@ -1744,6 +1744,7 @@
       "importedFrom": {
         "baseEmpreinte": "Logo de Base Empreinte",
         "legifrance": "Logo de Légifrance",
+        "abc": "Logo de l'ABC",
         "negaOctet": "Logo de NegaOctet",
         "aib": "Logo de la Association of Issuing Bodies",
         "giec": "IPCC logo",
@@ -1776,6 +1777,7 @@
       "BaseEmpreinte": "Base Empreinte®",
       "NegaOctet": "NegaOctet",
       "Legifrance": "Légifrance",
+      "ABC": "ABC",
       "AIB": "AIB",
       "GIEC": "IPCC",
       "displayArchived": "Mostrar los factores archivados",
