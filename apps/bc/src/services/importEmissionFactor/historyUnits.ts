@@ -76,6 +76,7 @@ export const unitsMatrix: Record<string, Unit> = {
   'km / voyage': Unit.KM_PER_JOURNEY,
   kWh: Unit.KWH,
   kgCO2e: Unit.KGCO2E,
+  nuitée: Unit.Night,
   'kWh PCI': Unit.KWH_PCI,
   'kWh PCS': Unit.KWH_PCS,
   'kWh elec / tonne': Unit.KWH_ELEC_TON,

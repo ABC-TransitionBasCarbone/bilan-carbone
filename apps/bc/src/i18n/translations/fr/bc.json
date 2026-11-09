@@ -1948,6 +1948,7 @@
       "ABC": "ABC",
       "AIB": "AIB",
       "GIEC": "GIEC",
+      "ADEME": "Autre étude de l'Ademe",
       "displayArchived": "Afficher les facteurs archivés",
       "goTo": "Aller à la page",
       "items": "Élements par page",
@@ -1986,6 +1987,7 @@
         "negaOctet": "Logo de NegaOctet",
         "aib": "Logo de l'Association of Issuing Bodies",
         "giec": "logo du GIEC",
+        "ademe": "Logo de l'Ademe",
         "manual": "Manuel"
       },
       "post": "Postes",
@@ -2164,6 +2166,7 @@
     "KWH": "kWh",
     "KWH_PCI": "kWh PCI",
     "KGCO2E": "kgCO₂e",
+    "Night": "nuitée",
     "KWH_PCS": "kWh PCS",
     "KWH_ELEC_TON": "kWh elec / tonne",
     "KWH_PER_KM": "kWh / km",

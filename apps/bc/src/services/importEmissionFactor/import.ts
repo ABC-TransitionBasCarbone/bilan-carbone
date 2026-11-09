@@ -454,6 +454,7 @@ export const getBaseFunc = (subPosts: SubPost[], importedFrom: Import) => {
       return EmissionFactorBase.MarketBased
     case Import.GIEC:
     case Import.ABC:
+    case Import.ADEME:
     case Import.BaseEmpreinte:
       return subPosts.includes(SubPost.Electricite) ? EmissionFactorBase.LocationBased : null
     default:

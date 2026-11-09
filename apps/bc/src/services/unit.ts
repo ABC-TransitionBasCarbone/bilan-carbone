@@ -87,6 +87,7 @@ export const BCUnit = {
   KG_NTK: Unit.KG_NTK,
   KM_PERSON: Unit.KM_PERSON,
   KGCOE2: Unit.KGCO2E,
+  Night: Unit.Night,
   KWH_PCI: Unit.KWH_PCI,
   KWH_PCS: Unit.KWH_PCS,
   LITER_LIQUID: Unit.LITER_LIQUID,

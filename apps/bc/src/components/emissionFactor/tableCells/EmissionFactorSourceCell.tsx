@@ -93,6 +93,12 @@ export const EmissionFactorSourceCell = ({
           <img className={styles.importFrom} src="/logos/ipcc.svg" title={t('importedFrom.giec')} alt="IPCC" />
         </div>
       )
+    case Import.ADEME:
+      return (
+        <div className="flex-cc">
+          <img className={styles.importFrom} src="/logos/ademe_logo.svg" title={t('importedFrom.ademe')} alt="Ademe" />
+        </div>
+      )
     case Import.ABC:
       return (
         <div className="flex-cc">
@@ -100,7 +106,7 @@ export const EmissionFactorSourceCell = ({
             className={styles.importFrom}
             src="/logos/abc/logo_abc_bleu.png"
             title={t('importedFrom.giec')}
-            alt="IPCC"
+            alt="ABC"
           />
         </div>
       )
