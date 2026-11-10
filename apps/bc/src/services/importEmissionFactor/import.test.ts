@@ -37,6 +37,7 @@ describe('import Service', () => {
         Import.Legifrance,
         Import.NegaOctet,
         Import.Manual,
+        Import.ADEME,
         Import.CUT,
         Import.ABC,
       ])
