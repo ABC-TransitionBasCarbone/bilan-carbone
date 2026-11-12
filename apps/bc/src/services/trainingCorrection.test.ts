@@ -215,18 +215,23 @@ describe('professor correction client', () => {
     expect(mockFindClient).not.toHaveBeenCalled()
   })
 
-  it('checks every linked professor once, including existing sessions absent from the FTP file', async () => {
+  it('checks professors with sessions that are ongoing or ended within the last two weeks', async () => {
+    jest.useFakeTimers().setSystemTime(new Date('2026-11-12T12:00:00.000Z'))
     mockProfessors.mockResolvedValue([
       { id: 'existing-professor', environment: Environment.COURSE_BC },
       { id: 'new-professor', environment: Environment.COURSE_TILT },
     ])
     mockFindClient.mockResolvedValue({ id: 'child', organizationId: 'client-org' })
     mockCopies.mockResolvedValue([{ sourceTemplateStudyId: 'correction-1' }, { sourceTemplateStudyId: 'correction-2' }])
-    await ensureCourseProfessorCorrections(prismaClient)
+    try {
+      await ensureCourseProfessorCorrections(prismaClient)
+    } finally {
+      jest.useRealTimers()
+    }
     expect(mockProfessors).toHaveBeenCalledWith({
       where: {
         environment: { in: [Environment.COURSE_BC, Environment.COURSE_TILT] },
-        professorCourseSessions: { some: {} },
+        professorCourseSessions: { some: { endDate: { gt: new Date('2026-10-29T12:00:00.000Z') } } },
       },
       select: { id: true, environment: true },
     })

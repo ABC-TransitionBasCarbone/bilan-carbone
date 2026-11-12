@@ -119,10 +119,11 @@ export const ensureProfessorCorrectionClient = async (
 }
 
 export const ensureCourseProfessorCorrections = async (transaction: Prisma.TransactionClient) => {
+  const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000)
   const professors = await transaction.organizationVersion.findMany({
     where: {
       environment: { in: [Environment.COURSE_BC, Environment.COURSE_TILT] },
-      professorCourseSessions: { some: {} },
+      professorCourseSessions: { some: { endDate: { gt: twoWeeksAgo } } },
     },
     select: { id: true, environment: true },
   })
