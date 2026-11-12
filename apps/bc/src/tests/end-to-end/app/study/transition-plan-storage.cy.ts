@@ -15,6 +15,21 @@ describe('Transition plan initialization without an existing plan', () => {
     cy.contains("Une erreur s'est produite").should('not.exist')
   })
 
+  it('shows the empty state with valid saved filters', () => {
+    cy.visit(initializationPath, {
+      onBeforeLoad(window) {
+        window.localStorage.setItem(storageKeys.studyFilterSites(studyId), JSON.stringify([]))
+        window.localStorage.setItem(storageKeys.studyFilterSubposts(studyId), JSON.stringify(['CombustiblesFossiles']))
+        window.localStorage.setItem(storageKeys.studyFilterTags(studyId), JSON.stringify([]))
+        window.localStorage.setItem(storageKeys.studyFilterSitesAll(studyId), JSON.stringify([]))
+        window.localStorage.setItem(storageKeys.studyFilterTagsAll(studyId), JSON.stringify([]))
+      },
+    })
+
+    cy.contains('button', 'Démarrer mon plan de transition').should('be.visible')
+    cy.contains("Une erreur s'est produite").should('not.exist')
+  })
+
   for (const [label, key] of [
     ['sites', storageKeys.studyFilterSites(studyId)],
     ['subposts', storageKeys.studyFilterSubposts(studyId)],

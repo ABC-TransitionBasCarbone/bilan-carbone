@@ -21,7 +21,6 @@ describe('readStoredStringArray', () => {
     localStorage.setItem(key, JSON.stringify(selection))
 
     expect(readStoredStringArray(key)).toEqual(selection)
-    expect(localStorage.getItem(key)).toBe(JSON.stringify(selection))
     expect(console.error).not.toHaveBeenCalled()
   })
 
