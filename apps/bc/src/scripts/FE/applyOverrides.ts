@@ -21,4 +21,4 @@ program
 const params = program.opts<{ file: string; base: Import; dryRun?: boolean }>()
 
 const rows = parseEmissionFactorFile(params.file)
-applyOverridesFromRows(Import.BaseEmpreinte, rows, params.dryRun)
+applyOverridesFromRows(params.base, rows, params.dryRun)

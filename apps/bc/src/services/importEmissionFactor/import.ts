@@ -174,6 +174,10 @@ export const isRowUnchanged = (existingRawCsv: string, newRow: ImportEmissionFac
   const existingValues = existingRawCsv.slice(existingHeaderEnd + 1).split(';')
   const newHeaders = newSerialized.slice(0, newHeaderEnd).split(';')
   const newValues = newSerialized.slice(newHeaderEnd + 1).split(';')
+  // add this check in case there is a ";" in a column
+  if (existingValues.length !== existingHeaders.length || newValues.length !== newHeaders.length) {
+    return false
+  }
 
   const existingMap = new Map(existingHeaders.map((h, i) => [h, existingValues[i] ?? '']))
 
