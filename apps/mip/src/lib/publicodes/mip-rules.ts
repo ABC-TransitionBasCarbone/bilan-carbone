@@ -56,19 +56,23 @@ const getChoiceOption = (rawNode?: RuleRawNode): unknown => {
 export const getQuestionType = (engine: Engine, ruleName: string): MipQuestionType => {
   const rules = getParsedRules(engine)
   const rule = rules[ruleName]
-
-  if (!rule?.rawNode?.question) {
+  if (!rule?.rawNode) {
     return MipQuestionType.NoRenderableQuestion
   }
-  if (rule.rawNode.mosaique) {
+  const rawNode = rule.rawNode
+
+  if (!rawNode.question) {
+    return MipQuestionType.NoRenderableQuestion
+  }
+  if (rawNode.mosaique) {
     return MipQuestionType.Mosaic
   }
 
   const evaluation = engine.evaluate(ruleName)
-  const unePossibilite = getChoiceOption(rule.rawNode)
+  const unePossibilite = getChoiceOption(rawNode)
 
   if (
-    (rule.rawNode.unité === undefined && typeof evaluation.nodeValue !== 'number') ||
+    (rawNode.unité === undefined && typeof evaluation.nodeValue !== 'number') ||
     booleanSecureTypes.some((key) => ruleName.includes(key))
   ) {
     return unePossibilite ? MipQuestionType.Choices : MipQuestionType.Boolean
@@ -120,12 +124,44 @@ const getRootMissingVariables = (engine: Engine, root: string): MissingVariables
   }
 }
 
-const isApplicable = (engine: Engine, ruleName: string): boolean => {
+const isApplicable = (engine: Engine, ruleName: string, mosaicChildren: string[]): boolean => {
+  const situation = engine.getSituation()
+  if (
+    mosaicChildren.some((child) => {
+      const branch = child.split(' . ').slice(0, -1).join(' . ')
+      return ruleName.startsWith(`${branch} . `) && situation[child] === 'non'
+    })
+  ) {
+    return false
+  }
+
   try {
     return engine.evaluate({ 'est applicable': ruleName }).nodeValue === true
   } catch {
     return false
   }
+}
+
+const getEngineWithFoldedDefaults = (engine: Engine, foldedSteps: string[]): Engine => {
+  const situation = engine.getSituation()
+  const rules = getParsedRules(engine)
+  const defaults: Situation<string> = {}
+  for (const step of foldedSteps) {
+    if (situation[step] !== undefined || !Object.hasOwn(rules[step]?.rawNode ?? {}, 'par défaut')) {
+      continue
+    }
+
+    const value = engine.evaluate(step).nodeValue
+    if (typeof value === 'string') {
+      defaults[step] = `'${value}'`
+    } else if (typeof value === 'boolean') {
+      defaults[step] = value ? 'oui' : 'non'
+    } else if (typeof value === 'number') {
+      defaults[step] = value
+    }
+  }
+
+  return Object.keys(defaults).length ? engine.shallowCopy().setSituation({ ...situation, ...defaults }) : engine
 }
 
 // Unconditional questions stay relevant once answered, even if their own answer disables them.
@@ -172,11 +208,23 @@ export const hasRuleAnswer = (
 
 // Mosaic children are replaced by their parent, scored with the max of its children.
 export const getMissingVariables = (engine: Engine, meta: MipRulesMeta): MissingVariables => {
+  const rules = getParsedRules(engine)
   const missingVariables = Object.fromEntries(
     Object.entries(getRootMissingVariables(engine, meta.root)).filter(([ruleName]) =>
       meta.everyQuestions.includes(ruleName),
     ),
   )
+
+  // Publicodes automatically resolves single-choice rules, but their questions still need confirmation.
+  const mosaicChildren = Object.values(meta.mosaicChildrenWithParent).flat()
+  for (const question of meta.everyQuestions) {
+    const choice = getChoiceOption(rules[question]?.rawNode)
+    const possibilities =
+      choice && typeof choice === 'object' && 'possibilités' in choice ? choice.possibilités : choice
+    if (Array.isArray(possibilities) && possibilities.length === 1 && isApplicable(engine, question, mosaicChildren)) {
+      missingVariables[question] ??= 1
+    }
+  }
 
   for (const [parent, children] of Object.entries(meta.mosaicChildrenWithParent)) {
     const scores = children.map((child) => missingVariables[child]).filter((score) => score !== undefined)
@@ -234,13 +282,18 @@ export const sortQuestions = (
 
 export const getFormQuestions = (engine: Engine, meta: MipRulesMeta, foldedSteps: string[]) => {
   const situation = engine.getSituation()
-  const missingVariables = getMissingVariables(engine, meta)
+  const questionEngine = getEngineWithFoldedDefaults(engine, foldedSteps)
+  const missingVariables = getMissingVariables(questionEngine, meta)
   const mosaicChildren = new Set(Object.values(meta.mosaicChildrenWithParent).flat())
 
   const remainingQuestions = sortQuestions(
     engine,
     meta.everyQuestions.filter(
-      (question) => !mosaicChildren.has(question) && !foldedSteps.includes(question) && question in missingVariables,
+      (question) =>
+        !mosaicChildren.has(question) &&
+        !foldedSteps.includes(question) &&
+        question in missingVariables &&
+        isApplicable(questionEngine, question, [...mosaicChildren]),
     ),
     meta,
     missingVariables,
@@ -254,7 +307,9 @@ export const getFormQuestions = (engine: Engine, meta: MipRulesMeta, foldedSteps
       question in meta.rawMissingVariables ||
       (meta.mosaicChildrenWithParent[question] ?? []).some((child) => child in meta.rawMissingVariables)
 
-    return !isMosaicChild && isAnswered && (wasMissingBeforeAnswers || isApplicable(engine, question))
+    return (
+      !isMosaicChild && isAnswered && (wasMissingBeforeAnswers || isApplicable(engine, question, [...mosaicChildren]))
+    )
   })
 
   const relevantQuestions = sortQuestions(
@@ -308,15 +363,19 @@ export const getStableQuestionOrder = (
     }
 
     const previousIndex = new Map(order.map((question, index) => [question, index]))
+    const activeIndex = currentQuestion ? order.indexOf(currentQuestion) : -1
     const groups = new Map<string, string[]>()
     for (const branch of branches) {
       const branchQuestions = [...groupedQuestions].filter((question) => question.startsWith(`${branch} . `))
       if (branchQuestions.length > 0) {
-        branchQuestions.sort(
-          (a, b) =>
-            (previousIndex.get(a) ?? Number.MAX_SAFE_INTEGER) - (previousIndex.get(b) ?? Number.MAX_SAFE_INTEGER) ||
-            (sortedIndex.get(a) ?? Number.MAX_SAFE_INTEGER) - (sortedIndex.get(b) ?? Number.MAX_SAFE_INTEGER),
-        )
+        branchQuestions.sort((a, b) => {
+          const previousA = previousIndex.get(a) ?? Number.MAX_SAFE_INTEGER
+          const previousB = previousIndex.get(b) ?? Number.MAX_SAFE_INTEGER
+          if (previousA <= activeIndex || previousB <= activeIndex) {
+            return previousA - previousB
+          }
+          return (sortedIndex.get(a) ?? Number.MAX_SAFE_INTEGER) - (sortedIndex.get(b) ?? Number.MAX_SAFE_INTEGER)
+        })
         groups.set(branch, branchQuestions)
       }
     }
@@ -343,7 +402,8 @@ export const getStableQuestionOrder = (
     }
   }
 
-  return order
+  const categories = [...new Set(sortedQuestions.map(getRuleCategoryKey))]
+  return order.sort((a, b) => getIndex(categories, getRuleCategoryKey(a)) - getIndex(categories, getRuleCategoryKey(b)))
 }
 
 export const getNextQuestion = (currentQuestion: string | null, orderedQuestions: string[]): string | null => {
