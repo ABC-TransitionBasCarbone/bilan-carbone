@@ -1,4 +1,4 @@
-import { HomeCardItem } from '@/types/homeCards'
+import { HomeCardItem, HomeCardType } from '@/types/homeCards'
 import Box from '@abc-transitionbascarbone/common/components/base/Box'
 import CorporateFareIcon from '@mui/icons-material/CorporateFare'
 import SchoolIcon from '@mui/icons-material/School'
@@ -13,7 +13,7 @@ interface Props {
 
 const HomeCard = ({ item }: Props) => {
   const format = useFormatter()
-  const isClient = item.type === 'client'
+  const isClient = item.type === HomeCardType.Clients
   const content = (
     <>
       {isClient ? <CorporateFareIcon /> : <SchoolIcon />}

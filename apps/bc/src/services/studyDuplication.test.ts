@@ -67,6 +67,7 @@ describe('shared training study duplication', () => {
     )
     const command = mockCreateStudy.mock.calls[0][0]
     expect(command.organizationVersion).toEqual({ connect: { id: 'correction-client' } })
+    expect(command.sourceTemplateStudy).toEqual({ connect: { id: sourceStudy.id } })
     expect(command.createdBy).toEqual({ connect: { id: 'professor' } })
     expect(command.allowedUsers.createMany.data).toEqual([{ accountId: 'professor', role: StudyRole.Validator }])
     expect(command.sites.createMany.data[0].siteId).toBe('copied-site')
@@ -251,7 +252,10 @@ describe('shared training study duplication', () => {
   })
 
   it('builds a copy with new relationships rather than existing users or sources', () => {
-    const command = buildStudyForDuplication(sourceStudy, 'creator', 'destination', [], [], [])
+    const command = buildStudyForDuplication(
+      { ...sourceStudy, sourceTemplateStudyId: 'original-template' }, 'creator', 'destination', [], [], [],
+    )
+    expect(command).not.toHaveProperty('sourceTemplateStudyId')
     expect(command.emissionSources).toEqual({ createMany: { data: [] } })
     expect(command.contributors).toEqual({ createMany: { data: [] } })
     expect(command.emissionFactorVersions.createMany.data).toEqual(

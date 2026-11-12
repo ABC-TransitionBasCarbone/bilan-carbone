@@ -1,6 +1,6 @@
 'use client'
 
-import { HomeCardItem } from '@/types/homeCards'
+import { HomeCardItem, HomeCardType } from '@/types/homeCards'
 import { getVisibleHomeCards } from '@/utils/homeCards'
 import { TextField } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
@@ -9,7 +9,7 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 
 interface Props {
-  type: 'clients' | 'sessions'
+  type: HomeCardType
   items: HomeCardItem[]
   setVisibleItems: (items: HomeCardItem[]) => void
 }
@@ -32,7 +32,7 @@ const HomeCardsFilters = ({ type, items, setVisibleItems }: Props) => {
   return (
     <div className="flex wrap gapped1 mb1">
       <TextField label={t('homeCards.search')} value={search} onChange={(event) => setSearch(event.target.value)} />
-      {type === 'sessions' && (
+      {type === HomeCardType.Session && (
         <>
           <DatePicker
             label={t('common.label.start')}

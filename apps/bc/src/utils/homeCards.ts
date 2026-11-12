@@ -1,14 +1,14 @@
 import { sortAlphabetically } from '@/services/utils'
-import { HomeCardItem } from '@/types/homeCards'
+import { HomeCardItem, HomeCardType } from '@/types/homeCards'
 import dayjs, { Dayjs } from 'dayjs'
 import { normalizeStringForSearch } from './string'
 
-export const sortHomeCards = (a: HomeCardItem, b: HomeCardItem, type: 'clients' | 'sessions') => {
-  const clientPriority = Number(b.type === 'client') - Number(a.type === 'client')
+export const sortHomeCards = (a: HomeCardItem, b: HomeCardItem, type: HomeCardType) => {
+  const clientPriority = Number(b.type === HomeCardType.Clients) - Number(a.type === HomeCardType.Clients)
   if (clientPriority) {
     return clientPriority
   }
-  if (type === 'clients' || a.type === 'client' || (!a.startDate && !b.startDate)) {
+  if (type === HomeCardType.Clients || a.type === HomeCardType.Clients || (!a.startDate && !b.startDate)) {
     return sortAlphabetically(a.name, b.name)
   }
   if (!a.startDate) {
@@ -22,7 +22,7 @@ export const sortHomeCards = (a: HomeCardItem, b: HomeCardItem, type: 'clients' 
 
 export const getVisibleHomeCards = (
   items: HomeCardItem[],
-  type: 'clients' | 'sessions',
+  type: HomeCardType,
   search: string,
   startDate: Dayjs | null,
   endDate: Dayjs | null,
@@ -33,13 +33,13 @@ export const getVisibleHomeCards = (
 
   return items
     .filter((item) => {
-      if (type === 'sessions' && item.type === 'client') {
+      if (type === HomeCardType.Session && item.type === HomeCardType.Clients) {
         return true
       }
       if (!normalizeStringForSearch(item.name).includes(normalizedSearch)) {
         return false
       }
-      if (type === 'clients') {
+      if (type === HomeCardType.Clients) {
         return true
       }
       if (invalidDateFilter) {

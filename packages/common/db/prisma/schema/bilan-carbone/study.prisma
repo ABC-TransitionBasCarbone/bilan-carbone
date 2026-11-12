@@ -184,6 +184,10 @@ model Study {
   organizationVersion   OrganizationVersion @relation(fields: [organizationVersionId], references: [id])
   organizationVersionId String              @map("organization_version_id")
 
+  sourceTemplateStudyId    String? @map("source_template_study_id")
+  sourceTemplateStudy      Study?  @relation("TrainingCorrectionCopies", fields: [sourceTemplateStudyId], references: [id], onDelete: SetNull)
+  trainingCorrectionCopies Study[] @relation("TrainingCorrectionCopies")
+
   allowedUsers    UserOnStudy[]
   emissionSources StudyEmissionSource[]
   contributors    Contributors[]
@@ -204,6 +208,7 @@ model Study {
 
   engagementActions EngagementAction[]
 
+  @@unique([organizationVersionId, sourceTemplateStudyId])
   @@map("studies")
   @@schema("bilan_carbone")
 }

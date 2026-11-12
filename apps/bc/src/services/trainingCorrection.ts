@@ -19,17 +19,28 @@ export const ensureProfessorCorrectionClient = async (
   }
   const existingClient = await transaction.organizationVersion.findFirst({
     where: { parentId: professorOrganizationVersionId, environment },
-    select: { id: true },
+    select: { id: true, organizationId: true },
+    orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
   })
-  if (existingClient) {
-    return existingClient
-  }
-
   const sourceEnvironment = getEnvironmentHandlingGenericEnvs(environment)
   const templates = await getStudyTemplates(DuplicableStudy.TrainingCorrectionExercise, sourceEnvironment, transaction)
   if (templates.length === 0) {
     console.error(`No TrainingCorrectionExercise template configured for ${sourceEnvironment}`)
     return
+  }
+  const existingCopies = existingClient
+    ? await transaction.study.findMany({
+        where: {
+          organizationVersionId: existingClient.id,
+          sourceTemplateStudyId: { in: templates.map(({ studyId }) => studyId) },
+        },
+        select: { sourceTemplateStudyId: true },
+      })
+    : []
+  const copiedTemplateIds = new Set(existingCopies.map(({ sourceTemplateStudyId }) => sourceTemplateStudyId))
+  const missingTemplates = templates.filter(({ studyId }) => !copiedTemplateIds.has(studyId))
+  if (existingClient && missingTemplates.length === 0) {
+    return { id: existingClient.id }
   }
   const account = await transaction.account.findFirst({
     where: { organizationVersionId: professorOrganizationVersionId, environment },
@@ -42,7 +53,7 @@ export const ensureProfessorCorrectionClient = async (
   }
   const studies: FullStudy[] = []
   const sites = new Map<string, Site>()
-  for (const template of templates) {
+  for (const template of missingTemplates) {
     const study = await getStudyById(template.studyId, null, transaction)
     if (!study || study.organizationVersion.environment !== sourceEnvironment) {
       console.error(`Invalid TrainingCorrectionExercise study ${template.studyId} for ${sourceEnvironment}`)
@@ -62,27 +73,35 @@ export const ensureProfessorCorrectionClient = async (
     }
   }
   const siteIds = new Map([...sites.keys()].map((id) => [id, uuidv4()]))
-  const client = await transaction.organizationVersion.create({
-    data: {
-      environment,
-      parent: { connect: { id: professorOrganizationVersionId } },
-      organization: {
-        create: {
-          name: 'Etudes corrigées',
-          sites: {
-            createMany: {
-              data: [...sites.values()].map((site) => {
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                const { id, organizationId, oldBCId, createdAt, updatedAt, ...data } = site
-                return { ...data, id: siteIds.get(id) }
-              }),
+  const copiedSites = [...sites.values()].map((site) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, organizationId, oldBCId, createdAt, updatedAt, ...data } = site
+    return { ...data, id: siteIds.get(id) }
+  })
+  const client =
+    existingClient ??
+    (await transaction.organizationVersion.create({
+      data: {
+        environment,
+        parent: { connect: { id: professorOrganizationVersionId } },
+        organization: {
+          create: {
+            name: 'Etudes corrigées',
+            sites: {
+              createMany: {
+                data: copiedSites,
+              },
             },
           },
         },
       },
-    },
-    select: { id: true },
-  })
+      select: { id: true },
+    }))
+  if (existingClient && copiedSites.length > 0) {
+    await transaction.site.createMany({
+      data: copiedSites.map((site) => ({ ...site, organizationId: existingClient.organizationId })),
+    })
+  }
   for (const study of studies) {
     await duplicateTrainingStudy(
       study,
@@ -96,5 +115,18 @@ export const ensureProfessorCorrectionClient = async (
       },
     )
   }
-  return client
+  return { id: client.id }
+}
+
+export const ensureCourseProfessorCorrections = async (transaction: Prisma.TransactionClient) => {
+  const professors = await transaction.organizationVersion.findMany({
+    where: {
+      environment: { in: [Environment.COURSE_BC, Environment.COURSE_TILT] },
+      professorCourseSessions: { some: {} },
+    },
+    select: { id: true, environment: true },
+  })
+  for (const professor of professors) {
+    await ensureProfessorCorrectionClient(professor.id, professor.environment, transaction)
+  }
 }

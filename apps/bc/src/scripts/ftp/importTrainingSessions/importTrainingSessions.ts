@@ -1,6 +1,6 @@
 import { prismaClient } from '@/db/client'
 import { createCourseParticipantAccounts, prepareCourseSessionTraineeRegistrations } from '@/db/courseSession'
-import { ensureProfessorCorrectionClient } from '@/services/trainingCorrection'
+import { ensureCourseProfessorCorrections } from '@/services/trainingCorrection'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import {
@@ -123,20 +123,6 @@ const getOrganizationVersionId = (
 export const importCourseSessionsFromFTP = async () => {
   const { sessions, deletions } = await getCourseSessionsFromFTP()
 
-  if (sessions.length === 0 && deletions.length === 0) {
-    return {
-      importedSessions: 0,
-      modifiedSessions: 0,
-      createdUsers: 0,
-      createdAccounts: 0,
-      addedTrainees: 0,
-      addedProfessors: 0,
-      deletedSessions: 0,
-      deletedTrainees: 0,
-      deletedProfessors: 0,
-    }
-  }
-
   const today = new Date()
   today.setUTCHours(0, 0, 0, 0)
   const notFinishedSessions = sessions.filter(({ endDate }) => endDate >= today)
@@ -249,9 +235,6 @@ export const importCourseSessionsFromFTP = async () => {
         const professorOrganizationVersionId = session.professor
           ? getOrganizationVersionId(accountsWithOrganizationVersions, session.professor.email, session.environment)
           : null
-        if (professorOrganizationVersionId) {
-          await ensureProfessorCorrectionClient(professorOrganizationVersionId, session.environment, transaction)
-        }
         const traineeOrganizationVersionIds = session.trainees.map(({ email }) =>
           getOrganizationVersionId(accountsWithOrganizationVersions, email, session.environment),
         )
@@ -323,6 +306,8 @@ export const importCourseSessionsFromFTP = async () => {
           }),
         )
       }
+      await ensureCourseProfessorCorrections(transaction)
+
       return deletions.length > 0 || hasTransferredTrainees
         ? transaction.courseSession.findMany({
             where: {

@@ -3,6 +3,7 @@ import { getProfessorCourseSessions } from '@/db/courseSession'
 import { OrganizationVersionWithOrganization } from '@/db/organization'
 import { hasAccountToValidateInOrganization } from '@/db/user'
 import { hasQualitylessEmissionFactors } from '@/services/serverFunctions/organization'
+import { HomeCardType } from '@/types/homeCards'
 import { canEditMemberRole } from '@/utils/user'
 import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import { UserSession } from 'next-auth'
@@ -38,7 +39,7 @@ const UserView = async ({ account }: Props) => {
       )}
       {isCR && (
         <HomeCardsList
-          type="clients"
+          type={HomeCardType.Clients}
           organizationVersions={
             organizationVersions.filter(
               (organizationVersion) => organizationVersion.parentId === account.organizationVersionId,
@@ -49,7 +50,7 @@ const UserView = async ({ account }: Props) => {
       )}
       {sessions.length > 0 && (
         <HomeCardsList
-          type="sessions"
+          type={HomeCardType.Session}
           sessions={sessions}
           organizationVersions={organizationVersions.filter(
             (organizationVersion) => organizationVersion.parentId === account.organizationVersionId,

@@ -160,7 +160,8 @@ export const getSitesForDuplication = async (study: FullStudy, tx?: Prisma.Trans
 }
 
 export const buildStudyForDuplication = (
-  study: Omit<FullStudy, 'id' | 'createdById' | 'organizationVersionId' | 'allowedUsers'>,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  { sourceTemplateStudyId, ...study }: Omit<FullStudy, 'id' | 'createdById' | 'organizationVersionId' | 'allowedUsers'>,
   userAccountId: string,
   organizationId: string,
   users: { accountId: string; role: StudyRole }[],
@@ -229,6 +230,9 @@ export const duplicateTrainingStudy = async (
     [],
     sites,
   )
+  if (target) {
+    command.sourceTemplateStudy = { connect: { id: study.id } }
+  }
   const createdStudy = await createStudy(command, environment, false, tx)
   const createdStudyWithSites = await getStudyById(createdStudy.id, targetOrganizationVersionId, tx)
   if (!createdStudyWithSites) {

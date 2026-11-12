@@ -1,7 +1,12 @@
+export enum HomeCardType {
+  Clients = 'clients',
+  Session = 'session',
+}
+
 export interface HomeCardItem {
   id: string
   name: string
-  type: 'client' | 'session'
+  type: HomeCardType
   href?: string
   startDate?: Date
   endDate?: Date

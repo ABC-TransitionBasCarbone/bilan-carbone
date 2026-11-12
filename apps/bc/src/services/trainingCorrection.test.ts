@@ -3,13 +3,15 @@ import { getStudyById, getStudyTemplates } from '@/db/study'
 import { getMockedFullStudy } from '@/tests/utils/models/study'
 import { DuplicableStudy, Environment, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
 import { duplicateTrainingStudy } from './studyDuplication'
-import { ensureProfessorCorrectionClient } from './trainingCorrection'
+import { ensureCourseProfessorCorrections, ensureProfessorCorrectionClient } from './trainingCorrection'
 
 jest.mock('@/db/client.server', () => ({
   prismaClient: {
-    organizationVersion: { findFirst: jest.fn(), create: jest.fn() },
+    organizationVersion: { findFirst: jest.fn(), findMany: jest.fn(), create: jest.fn() },
     organization: { findUnique: jest.fn() },
     account: { findFirst: jest.fn() },
+    study: { findMany: jest.fn() },
+    site: { createMany: jest.fn() },
   },
 }))
 jest.mock('@/db/study', () => ({ getStudyTemplates: jest.fn(), getStudyById: jest.fn() }))
@@ -21,6 +23,8 @@ const mockCreateClient = prismaClient.organizationVersion.create as jest.Mock
 const mockFindOrganization = prismaClient.organization.findUnique as jest.Mock
 const mockFindAccount = prismaClient.account.findFirst as jest.Mock
 const mockTemplates = getStudyTemplates as jest.Mock
+const mockCopies = prismaClient.study.findMany as jest.Mock
+const mockProfessors = prismaClient.organizationVersion.findMany as jest.Mock
 const mockStudy = jest.mocked(getStudyById)
 const mockDuplicate = jest.mocked(duplicateTrainingStudy)
 const sourceSite = {
@@ -57,6 +61,8 @@ describe('professor correction client', () => {
     mockTemplates.mockResolvedValue([{ studyId: 'correction-1' }, { studyId: 'correction-2' }])
     mockStudy.mockImplementation(async (id) => getMockedFullStudy({ id }))
     mockDuplicate.mockReset()
+    mockCopies.mockResolvedValue([])
+    mockProfessors.mockResolvedValue([])
   })
 
   it.each([
@@ -102,21 +108,61 @@ describe('professor correction client', () => {
     expect(mockDuplicate.mock.calls.map(([study]) => study.id)).toEqual(['correction-1', 'correction-2'])
   })
 
-  it('reuses an existing child without copying studies again', async () => {
-    mockFindClient.mockResolvedValue({ id: 'existing-child' })
+  it('reuses a renamed child whose corrections have all been copied without reading full studies', async () => {
+    mockFindClient.mockResolvedValue({ id: 'existing-child', organizationId: 'client-org' })
+    mockCopies.mockResolvedValue([{ sourceTemplateStudyId: 'correction-1' }, { sourceTemplateStudyId: 'correction-2' }])
     expect(await ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)).toEqual({
       id: 'existing-child',
     })
-    expect(mockTemplates).not.toHaveBeenCalled()
     expect(mockCreateClient).not.toHaveBeenCalled()
     expect(mockDuplicate).not.toHaveBeenCalled()
+    expect(mockStudy).not.toHaveBeenCalled()
+    expect(prismaClient.site.createMany).not.toHaveBeenCalled()
+    expect(mockCopies).toHaveBeenCalledWith({
+      where: {
+        organizationVersionId: 'existing-child',
+        sourceTemplateStudyId: { in: ['correction-1', 'correction-2'] },
+      },
+      select: { sourceTemplateStudyId: true },
+    })
+    expect(mockFindClient).toHaveBeenCalledWith({
+      where: { parentId: 'professor-org', environment: Environment.COURSE_BC },
+      select: { id: true, organizationId: true },
+      orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+    })
+  })
+
+  it('adds only missing corrections and new sites without modifying an existing client', async () => {
+    mockFindClient.mockResolvedValue({ id: 'existing-child', organizationId: 'client-org' })
+    mockCopies.mockResolvedValue([{ sourceTemplateStudyId: 'correction-1' }])
+
+    await ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)
+
+    expect(mockCreateClient).not.toHaveBeenCalled()
+    expect(mockStudy).toHaveBeenCalledTimes(1)
+    expect(mockStudy).toHaveBeenCalledWith('correction-2', null, prismaClient)
+    expect(mockDuplicate).toHaveBeenCalledTimes(1)
+    expect(mockDuplicate.mock.calls[0][0].id).toBe('correction-2')
+    expect(mockDuplicate.mock.calls[0][5]?.organizationVersionId).toBe('existing-child')
+    expect(prismaClient.site.createMany).toHaveBeenCalledWith({
+      data: [expect.objectContaining({ id: 'copied-site', organizationId: 'client-org', name: sourceSite.name })],
+    })
+  })
+
+  it('repairs an empty child without creating another client', async () => {
+    mockFindClient.mockResolvedValue({ id: 'existing-child', organizationId: 'client-org' })
+    await ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)
+    expect(mockCreateClient).not.toHaveBeenCalled()
+    expect(mockDuplicate).toHaveBeenCalledTimes(2)
+    expect(prismaClient.site.createMany).toHaveBeenCalledTimes(1)
   })
 
   it('rejects missing template configuration before creating a client', async () => {
     mockTemplates.mockResolvedValue([])
-    await expect(ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)).rejects.toThrow(
-      'No TrainingCorrectionExercise template configured for BC',
-    )
+    const log = jest.spyOn(console, 'error').mockImplementation()
+    await ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)
+    expect(log).toHaveBeenCalledWith('No TrainingCorrectionExercise template configured for BC')
+    log.mockRestore()
     expect(mockCreateClient).not.toHaveBeenCalled()
   })
 
@@ -130,9 +176,10 @@ describe('professor correction client', () => {
     }),
   ])('rejects missing or cross-environment correction studies', async (study) => {
     mockStudy.mockResolvedValue(study)
-    await expect(ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)).rejects.toThrow(
-      'Invalid TrainingCorrectionExercise study',
-    )
+    const log = jest.spyOn(console, 'error').mockImplementation()
+    await ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)
+    expect(log).toHaveBeenCalledWith('Invalid TrainingCorrectionExercise study correction-1 for BC')
+    log.mockRestore()
     expect(mockCreateClient).not.toHaveBeenCalled()
   })
 
@@ -145,23 +192,48 @@ describe('professor correction client', () => {
 
   it('rejects a missing professor account', async () => {
     mockFindAccount.mockResolvedValue(null)
-    await expect(ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)).rejects.toThrow(
-      'Professor account not found',
-    )
+    const log = jest.spyOn(console, 'error').mockImplementation()
+    await ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)
+    expect(log).toHaveBeenCalledWith('Professor account not found for organization professor-org in COURSE_BC')
+    log.mockRestore()
     expect(mockCreateClient).not.toHaveBeenCalled()
   })
 
   it('rejects a missing source organization', async () => {
     mockFindOrganization.mockResolvedValue(null)
-    await expect(ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)).rejects.toThrow(
-      'Template organization not found',
-    )
+    const log = jest.spyOn(console, 'error').mockImplementation()
+    await ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)
+    expect(log).toHaveBeenCalledWith(expect.stringContaining('Template organization not found'))
+    log.mockRestore()
   })
 
   it('rejects non-training environments', async () => {
-    await expect(ensureProfessorCorrectionClient('professor-org', Environment.BC, prismaClient)).rejects.toThrow(
-      'Cannot create professor corrections outside training environments',
-    )
+    const log = jest.spyOn(console, 'error').mockImplementation()
+    await ensureProfessorCorrectionClient('professor-org', Environment.BC, prismaClient)
+    expect(log).toHaveBeenCalledWith('Cannot create professor corrections outside training environments: BC')
+    log.mockRestore()
     expect(mockFindClient).not.toHaveBeenCalled()
+  })
+
+  it('checks every linked professor once, including existing sessions absent from the FTP file', async () => {
+    mockProfessors.mockResolvedValue([
+      { id: 'existing-professor', environment: Environment.COURSE_BC },
+      { id: 'new-professor', environment: Environment.COURSE_TILT },
+    ])
+    mockFindClient.mockResolvedValue({ id: 'child', organizationId: 'client-org' })
+    mockCopies.mockResolvedValue([{ sourceTemplateStudyId: 'correction-1' }, { sourceTemplateStudyId: 'correction-2' }])
+    await ensureCourseProfessorCorrections(prismaClient)
+    expect(mockProfessors).toHaveBeenCalledWith({
+      where: {
+        environment: { in: [Environment.COURSE_BC, Environment.COURSE_TILT] },
+        professorCourseSessions: { some: {} },
+      },
+      select: { id: true, environment: true },
+    })
+    expect(mockFindClient.mock.calls.map(([query]) => query.where)).toEqual([
+      { parentId: 'existing-professor', environment: Environment.COURSE_BC },
+      { parentId: 'new-professor', environment: Environment.COURSE_TILT },
+    ])
+    expect(mockDuplicate).not.toHaveBeenCalled()
   })
 })
