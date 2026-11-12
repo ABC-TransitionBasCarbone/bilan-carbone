@@ -17,14 +17,14 @@ The skill directories stay directly under `skills/` so agents can discover them 
 ### Next.js and React
 
 - [next-dev-loop](./next-dev-loop/SKILL.md) — verify Next.js changes in a running development app.
-- [vercel-react-best-practices](./vercel-react-best-practices/SKILL.md) — React and Next.js performance guidance from Vercel Engineering; it does not require deploying to Vercel.
+- [vercel-react-best-practices](./vercel-react-best-practices/SKILL.md) — React and Next.js performance guidance from Vercel Engineering; it does not require deploying to Vercel. Vendored from [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices) (MIT); the `rules/` files are its supporting content, not separate skills.
 
 ### Testing and browser automation
 
 - [cypress](./cypress/SKILL.md) — create, update, debug, or review concise, behavior-focused Cypress end-to-end tests.
 - [cypress-concise](./cypress-concise/SKILL.md) — compatibility entry for `/cypress-concise`; delegates to `cypress`.
 - [jest-concise](./jest-concise/SKILL.md) — write concise, behavior-focused Jest unit tests.
-- [playwright-cli](./playwright-cli/SKILL.md) — automate browsers and work with Playwright tests.
+- [playwright-cli](./playwright-cli/SKILL.md) — automate browsers and work with Playwright tests. Vendored from the official [microsoft/playwright-cli](https://github.com/microsoft/playwright-cli/tree/main/skills/playwright-cli) skill; the `references/` files are its supporting content.
 
 ### Data and infrastructure
 
