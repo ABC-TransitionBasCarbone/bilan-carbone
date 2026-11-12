@@ -38,8 +38,4 @@ The skill directories stay directly under `skills/` so agents can discover them 
 
 ## Personal and local-only skills
 
-Personal skills can live in `~/.agents/skills/` or `~/.copilot/skills/`; they are not shared by this repository. `.agents.local/` is gitignored for local files, but it is not a standard skill discovery path. Put skills there only if your tooling loads them explicitly; use a supported personal skill directory for automatic discovery.
-
-## Next.js upstream skills
-
-The skills in [vercel/next.js `.agents/skills`](https://github.com/vercel/next.js/tree/canary/.agents/skills) are primarily for contributing to the Next.js framework, its tests, release process, and documentation. No skill from that collection directly fits building or deploying this application to Scalingo, so none was copied. The existing `next-dev-loop` and `vercel-react-best-practices` skills cover the app-level Next.js workflows relevant here.
+Personal skills can live in `~/.agents/skills/` or `~/.copilot/skills/`; they are not shared by this repository.
