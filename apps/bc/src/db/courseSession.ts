@@ -5,7 +5,7 @@ import type { CourseSession, Environment, Prisma } from '@abc-transitionbascarbo
 import { Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { UserSession } from 'next-auth'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 import { createUsersWithAccount } from './user'
 
 export const getProfessorCourseSessions = async (

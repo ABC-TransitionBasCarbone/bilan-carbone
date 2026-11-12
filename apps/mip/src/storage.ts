@@ -1,3 +1,5 @@
+import 'client-only'
+
 import { SurveyResponse } from '@abc-transitionbascarbone/common/typeguards'
 
 const STORAGE_PREFIX = 'mip_survey_'

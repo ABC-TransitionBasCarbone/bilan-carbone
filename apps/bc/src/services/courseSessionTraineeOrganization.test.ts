@@ -1,11 +1,11 @@
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { CourseSessionTraineeOrganizationStatus } from '@abc-transitionbascarbone/common/db/enums'
 import {
   getCourseSessionTraineeOrganizationData,
   updateCourseSessionTraineeOrganizationStatuses,
 } from './courseSessionTraineeOrganization'
 
-jest.mock('@/db/client.server', () => {
+jest.mock('@/db/client', () => {
   const courseSessionTraineeOrganization = { updateMany: jest.fn(), deleteMany: jest.fn() }
   const transaction = { courseSessionTraineeOrganization }
   return {

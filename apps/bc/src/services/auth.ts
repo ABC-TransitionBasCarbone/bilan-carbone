@@ -1,7 +1,10 @@
+import 'server-only'
+
 import { getAccountById, getAccountsFromUser } from '@/db/account'
 import { getUserByEmailWithSensibleInformations } from '@/db/user'
 import { AccountWithUser } from '@/types/account.types'
 import { Environment, Level, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { DAY } from '@abc-transitionbascarbone/common/utils'
 import bcrypt from 'bcryptjs'
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
@@ -249,5 +252,27 @@ export async function dbActualizedAuth(
       organizationVersionId: account.organizationVersionId,
       level: account.user.level,
     },
+  }
+}
+
+export const getAuthenticatedAccountWithOrga = async () => {
+  const session = await auth()
+  if (!session?.user) {
+    console.error('getAuthenticatedAccountWithOrga: missing authenticated user')
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  const account = await getAccountById(session.user.accountId)
+  if (!account?.organizationVersionId || !account.organizationVersion) {
+    console.error('getAuthenticatedAccountWithOrga: account has no organization version', {
+      accountId: session.user.accountId,
+    })
+    throw new Error(NOT_AUTHORIZED)
+  }
+
+  return {
+    ...account,
+    organizationVersionId: account.organizationVersionId,
+    organizationVersion: account.organizationVersion,
   }
 }

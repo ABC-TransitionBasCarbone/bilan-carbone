@@ -22,7 +22,7 @@
     "tsx": "dotenv -e .env -- tsx",
     "cypress": "cypress run",
     "cypress:gui": "cypress open",
-    "db:test:reset": "dotenv -e .env.test -- prisma migrate reset --force --config ../../packages/common/db/prisma.config.ts && dotenv -e .env.test -- tsx prisma/seed/index.ts",
+    "db:test:reset": "dotenv -e .env.test -- prisma migrate reset --force --config ../../packages/common/db/prisma.config.ts && dotenv -e .env.test -- tsx --conditions=react-server prisma/seed/index.ts",
     "question:import:google": "npx tsx src/scripts/cut/question/add.ts -s google -f",
     "question:import:excel": "npx tsx src/scripts/cut/question/add.ts -f"
   },
@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@abc-transitionbascarbone/common": "*",
+    "client-only": "0.0.1",
     "@aws-sdk/client-s3": "^3.1144.0",
     "@aws-sdk/s3-request-presigner": "^3.1144.0",
     "@abc-transitionbascarbone/publicodes-packages": "*",

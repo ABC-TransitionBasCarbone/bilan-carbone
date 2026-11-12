@@ -1,6 +1,6 @@
+import { applyOverridesFromRows } from '@/services/importEmissionFactor/applyOverrides'
 import { Import } from '@abc-transitionbascarbone/common/db/enums'
 import { Command, Option } from 'commander'
-import { applyOverridesFromRows } from '../../services/importEmissionFactor/applyOverrides'
 import { parseEmissionFactorFile } from '../../services/importEmissionFactor/parseXlsx'
 
 const program = new Command()

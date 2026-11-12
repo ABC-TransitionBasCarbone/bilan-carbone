@@ -1,7 +1,7 @@
 'use client'
 
 import ImportFileModal from '@/components/base/ImportFileModal/ImportFileModal'
-import { download } from '@/services/file'
+import { download } from '@/services/fileDownload'
 import {
   getImportEmissionFactorsTemplate,
   importEmissionFactorsFromFile,

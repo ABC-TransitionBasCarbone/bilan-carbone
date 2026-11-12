@@ -1,5 +1,3 @@
-'use server'
-
 import { getAccountByEmailAndEnvironment } from '@/db/account'
 import {
   createOrUpdateOrganization,

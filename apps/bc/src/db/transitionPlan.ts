@@ -12,7 +12,7 @@ import type {
   TransitionPlanWithStudies,
 } from '@/types/trajectory.types'
 import { Prisma, SubPost, TransitionPlan } from '@abc-transitionbascarbone/common/db'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 
 const actionInclude = {
   indicators: true,

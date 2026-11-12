@@ -10,7 +10,7 @@ import { Post } from '@abc-transitionbascarbone/common/utils/charts'
 import { formatDateFr } from '@abc-transitionbascarbone/common/utils/time'
 import dayjs from 'dayjs'
 import { getEmissionResults, getEmissionSourceEmission } from './emissionSource'
-import { download } from './file'
+import { download } from './fileDownload'
 import { EmissionFactorWithMetaData, getEmissionFactorsByIds } from './serverFunctions/emissionFactor'
 import {
   getEmissionSourcesConfidenceInterval,

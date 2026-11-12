@@ -1,6 +1,6 @@
 'use server'
 
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { getStudyStartDate } from '@/db/study'
 import {
   createTrajectoryWithObjectives as dbCreateTrajectoryWithObjectives,
