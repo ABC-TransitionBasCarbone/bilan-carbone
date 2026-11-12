@@ -1,12 +1,14 @@
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
+import LinkButton from '@abc-transitionbascarbone/common/components/base/LinkButton'
 import type { CourseSession } from '@abc-transitionbascarbone/common/db'
 import { formatDateFr } from '@abc-transitionbascarbone/common/utils'
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined'
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline'
 import { getTranslations } from 'next-intl/server'
 import styles from './CourseSessionHeader.module.css'
 
 interface Props {
-  session: Pick<CourseSession, 'name' | 'type' | 'startDate' | 'endDate'>
+  session: Pick<CourseSession, 'id' | 'name' | 'type' | 'startDate' | 'endDate'>
 }
 
 const CourseSessionHeader = async ({ session }: Props) => {
@@ -32,6 +34,9 @@ const CourseSessionHeader = async ({ session }: Props) => {
             </p>
           </div>
         </div>
+        <LinkButton href={`/sessions/${session.id}/formees`} startIcon={<PeopleOutlineIcon />}>
+          {t('manageTrainees')}
+        </LinkButton>
       </div>
     </Block>
   )

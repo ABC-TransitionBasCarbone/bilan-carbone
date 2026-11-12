@@ -22,6 +22,7 @@ Monorepo Next.js (Yarn workspaces + Turbo) for carbon accounting products:
 - DB schema: packages/common/db/prisma/schema
 - DB access and business logic: apps/_/src/db and apps/_/src/services
 - Shared types/constants: src/types and src/constants (or shared packages when reusable)
+- Never call directly a db functions from a tsx file. Always use a serverFunction first checking the authorizations before calling the db function.
 
 ## Preferred Commands
 

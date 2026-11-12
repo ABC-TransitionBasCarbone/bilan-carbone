@@ -1,13 +1,23 @@
 import { CourseSessionType, Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { prismaClient } from './client.server'
-import { getCourseSessionForProfessor, getCourseSessionStudies, isCourseProfessor } from './courseSession'
+import {
+  getCourseSessionForProfessor,
+  getCourseSessionStudies,
+  getCourseSessionTrainees,
+  isCourseProfessor,
+  removeCourseSessionTrainee,
+} from './courseSession'
 
-jest.mock('./client.server', () => ({
-  prismaClient: {
+jest.mock('./client.server', () => {
+  const transaction = {
     courseSession: { findFirst: jest.fn() },
+    account: { findMany: jest.fn() },
+    courseSessionTraineeOrganization: { deleteMany: jest.fn() },
+    courseSessionTraineeRemoval: { upsert: jest.fn() },
     study: { findMany: jest.fn() },
-  },
-}))
+  }
+  return { prismaClient: { ...transaction, $transaction: jest.fn((operation) => operation(transaction)) } }
+})
 
 const mockFindSession = jest.mocked(prismaClient.courseSession.findFirst)
 const mockFindStudies = jest.mocked(prismaClient.study.findMany)
@@ -31,6 +41,7 @@ describe('course session database queries', () => {
     jest.clearAllMocks()
     mockFindSession.mockResolvedValue(session)
     mockFindStudies.mockResolvedValue([])
+    jest.mocked(prismaClient.courseSessionTraineeOrganization.deleteMany).mockResolvedValue({ count: 1 })
   })
 
   it('restricts session access to its professor organization and environment', async () => {
@@ -104,5 +115,59 @@ describe('course session database queries', () => {
   it('does not treat an account without organization as a professor', async () => {
     expect(await isCourseProfessor(null, professor.environment)).toBe(false)
     expect(mockFindSession).not.toHaveBeenCalled()
+  })
+
+  it('lists trainees enrolled in the session and environment, ordered by name', async () => {
+    await getCourseSessionTrainees(session.id, professor.environment)
+
+    expect(prismaClient.account.findMany).toHaveBeenCalledWith({
+      where: {
+        environment: professor.environment,
+        organizationVersion: { traineeCourseSessions: { some: { courseSessionId: session.id } } },
+      },
+      select: {
+        id: true,
+        organizationVersionId: true,
+        user: { select: { firstName: true, lastName: true, email: true } },
+      },
+      orderBy: [{ user: { lastName: 'asc' } }, { user: { firstName: 'asc' } }],
+    })
+  })
+
+  it('only removes the enrollment in the session owned by the authenticated professor', async () => {
+    await removeCourseSessionTrainee(session.id, 'trainee-org', professor.organizationVersionId, professor.environment)
+
+    expect(prismaClient.courseSessionTraineeOrganization.deleteMany).toHaveBeenCalledWith({
+      where: {
+        courseSessionId: session.id,
+        organizationVersionId: 'trainee-org',
+        courseSession: {
+          professorOrganizationVersionId: professor.organizationVersionId,
+          environment: professor.environment,
+        },
+      },
+    })
+    expect(prismaClient.courseSessionTraineeRemoval.upsert).toHaveBeenCalledWith({
+      where: {
+        courseSessionId_organizationVersionId: { courseSessionId: session.id, organizationVersionId: 'trainee-org' },
+      },
+      create: { courseSessionId: session.id, organizationVersionId: 'trainee-org', removedAt: expect.any(Date) },
+      update: { removedAt: expect.any(Date) },
+    })
+    expect(prismaClient.$transaction).toHaveBeenCalledWith(expect.any(Function), { isolationLevel: 'Serializable' })
+  })
+
+  it('does not record a deletion when the trainee is not enrolled in an authorized session', async () => {
+    jest.mocked(prismaClient.courseSessionTraineeOrganization.deleteMany).mockResolvedValue({ count: 0 })
+
+    expect(
+      await removeCourseSessionTrainee(
+        session.id,
+        'trainee-org',
+        professor.organizationVersionId,
+        professor.environment,
+      ),
+    ).toEqual({ count: 0 })
+    expect(prismaClient.courseSessionTraineeRemoval.upsert).not.toHaveBeenCalled()
   })
 })

@@ -30,6 +30,14 @@ export const sessionsSelect = {
 } satisfies Prisma.CourseSessionSelect
 export type SavedCourseSession = Prisma.CourseSessionGetPayload<{ select: typeof sessionsSelect }>
 
+export const isSameSession = (
+  savedSession: Pick<SavedCourseSession, 'courseOrganismId' | 'name' | 'environment'>,
+  importedSession: Pick<CourseSession, 'courseOrganismId' | 'name' | 'environment'>,
+) =>
+  savedSession.courseOrganismId === importedSession.courseOrganismId &&
+  savedSession.name === importedSession.name &&
+  savedSession.environment === importedSession.environment
+
 export const getProfessor = (session: SavedCourseSession) =>
   session.professorOrganization?.userAccounts[0]?.user ?? null
 
@@ -74,6 +82,25 @@ export const getRecordTimestamp = (record: Record<string, unknown>) => {
   const field = "Date d'ajout/modification de cette ligne"
   const value = record[field]
   return value == null || value === '' ? -Infinity : getRecordDate(record, field).getTime()
+}
+
+export const shouldImportCourseSessionTrainee = (
+  importedAt: Date | undefined,
+  removedAt: Date | undefined,
+  endDate: Date,
+) => {
+  if (!removedAt) {
+    return true
+  }
+  if (!importedAt) {
+    return false
+  }
+
+  const importedDay = new Date(importedAt).setUTCHours(0, 0, 0, 0)
+  const removedDay = new Date(removedAt).setUTCHours(0, 0, 0, 0)
+  const endDay = new Date(endDate).setUTCHours(0, 0, 0, 0)
+
+  return importedDay > removedDay || (importedDay === removedDay && importedDay !== endDay)
 }
 
 export const normalizeEmail = (record: Record<string, unknown>) => {

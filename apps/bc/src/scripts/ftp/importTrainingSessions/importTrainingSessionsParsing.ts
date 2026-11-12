@@ -170,7 +170,11 @@ const handleTraineeTab = (
     const timestamp = getRecordTimestamp(record)
     const previous = traineeAssignments.get(key)
     if (!previous || timestamp >= previous.timestamp) {
-      traineeAssignments.set(key, { session, trainee, timestamp })
+      traineeAssignments.set(key, {
+        session,
+        trainee: { ...trainee, ...(Number.isFinite(timestamp) && { OfUpdatedAt: new Date(timestamp) }) },
+        timestamp,
+      })
     }
   }
 
