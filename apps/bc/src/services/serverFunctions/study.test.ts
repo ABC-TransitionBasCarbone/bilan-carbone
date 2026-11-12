@@ -33,7 +33,6 @@ import {
 import { getMockedDbActualizedAuth } from '../../tests/utils/models/user'
 import * as organizationUtilsModule from '../../utils/organization'
 import * as userUtilsModule from '../../utils/user'
-import { newStudyContributor } from './study'
 import type { CreateStudyCommand, DuplicateSiteCommand } from './study.command'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
@@ -230,6 +229,7 @@ const {
   changeStudyCinema,
   changeStudyEstablishment,
   duplicateStudyInOtherEnvironment,
+  newStudyContributor,
 } = jest.requireActual('./study')
 
 const mockedSessionValidator = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.validator })

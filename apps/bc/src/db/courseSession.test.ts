@@ -7,7 +7,7 @@ import {
   UserSource,
   UserStatus,
 } from '@abc-transitionbascarbone/common/db/enums'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 import {
   getCourseSessionForProfessor,
   getCourseSessionStudies,
@@ -22,7 +22,7 @@ import { createUsersWithAccount } from './user'
 
 jest.mock('./user', () => ({ createUsersWithAccount: jest.fn() }))
 
-jest.mock('./client.server', () => {
+jest.mock('./client', () => {
   const transaction = {
     courseSession: { findFirst: jest.fn(), findUniqueOrThrow: jest.fn() },
     account: { findMany: jest.fn(), findFirst: jest.fn(), create: jest.fn(), update: jest.fn() },

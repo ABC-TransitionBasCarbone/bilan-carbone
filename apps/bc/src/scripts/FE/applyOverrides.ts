@@ -1,4 +1,4 @@
-import { applyOverridesFromRows } from '@/services/importEmissionFactor/applyOverrides.server'
+import { applyOverridesFromRows } from '@/services/importEmissionFactor/applyOverrides'
 import { Import } from '@abc-transitionbascarbone/common/db/enums'
 import { Command, Option } from 'commander'
 import { parseEmissionFactorFile } from '../../services/importEmissionFactor/parseXlsx'
