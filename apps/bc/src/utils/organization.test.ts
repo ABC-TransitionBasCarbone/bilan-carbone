@@ -155,6 +155,34 @@ describe('organisation utils', () => {
 
   describe('hasActiveLicence', () => {
     it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
+      'inherits professor course access for a client in %s, but not annual licences',
+      (environment) => {
+        const client = {
+          environment,
+          activatedLicence: [],
+          parent: {
+            activatedLicence: [],
+            professorCourseSessions: [{ id: 'session' }],
+          },
+        }
+        expect(hasActiveLicence(client)).toBe(true)
+        expect(
+          hasActiveLicence({
+            ...client,
+            parent: { activatedLicence: [new Date().getFullYear()], professorCourseSessions: [] },
+          }),
+        ).toBe(false)
+        expect(
+          hasActiveLicence({
+            ...client,
+            traineeCourseSessions: [{ courseStatus: CourseSessionTraineeOrganizationStatus.ACTIVE }],
+            parent: { activatedLicence: [], professorCourseSessions: [] },
+          }),
+        ).toBe(true)
+      },
+    )
+
+    it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
       'requires an active course session for %s regardless of organization or parent licence',
       (environment) => {
         const organizationVersion = {

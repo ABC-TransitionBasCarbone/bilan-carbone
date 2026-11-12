@@ -421,7 +421,7 @@ model StudyTemplate {
   environment Environment
   template    DuplicableStudy
 
-  @@unique([environment, template])
+  @@unique([environment, template, studyId])
   @@map("study_templates")
   @@schema("bilan_carbone")
 }

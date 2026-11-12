@@ -29,6 +29,7 @@ export const OrganizationVersionWithOrganizationSelect = {
   parentId: true,
   parent: {
     select: {
+      ...OrganizationVersionCourseAccessSelect,
       activatedLicence: true,
     },
   },

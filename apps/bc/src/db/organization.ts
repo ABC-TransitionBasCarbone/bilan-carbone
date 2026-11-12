@@ -68,7 +68,7 @@ export const getOrganizationVersionForRightsCheck = (id: string | null) =>
           environment: true,
           activatedLicence: true,
           parentId: true,
-          parent: { select: { activatedLicence: true } },
+          parent: { select: { ...OrganizationVersionCourseAccessSelect, activatedLicence: true } },
         },
       })
     : null
@@ -151,7 +151,7 @@ export const getOrganizationVersionByOrganizationIdAndEnvironment = (
       environment: true,
       activatedLicence: true,
       isCR: true,
-      parent: { select: { activatedLicence: true } },
+      parent: { select: { ...OrganizationVersionCourseAccessSelect, activatedLicence: true } },
     },
   })
 
@@ -161,8 +161,8 @@ export const getOrganizationVersionsByOrganizationId = (organizationId: string) 
     select: { id: true, environment: true, parentId: true },
   })
 
-export const getOrganizationWithSitesById = (id: string) =>
-  prismaClient.organization.findUnique({
+export const getOrganizationWithSitesById = (id: string, tx?: Prisma.TransactionClient) =>
+  (tx ?? prismaClient).organization.findUnique({
     where: { id },
     include: {
       sites: {

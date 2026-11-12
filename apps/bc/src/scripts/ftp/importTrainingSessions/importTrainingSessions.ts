@@ -1,5 +1,6 @@
 import { prismaClient } from '@/db/client'
 import { createCourseParticipantAccounts, prepareCourseSessionTraineeRegistrations } from '@/db/courseSession'
+import { ensureProfessorCorrectionClient } from '@/services/trainingCorrection'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import {
@@ -248,6 +249,9 @@ export const importCourseSessionsFromFTP = async () => {
         const professorOrganizationVersionId = session.professor
           ? getOrganizationVersionId(accountsWithOrganizationVersions, session.professor.email, session.environment)
           : null
+        if (professorOrganizationVersionId) {
+          await ensureProfessorCorrectionClient(professorOrganizationVersionId, session.environment, transaction)
+        }
         const traineeOrganizationVersionIds = session.trainees.map(({ email }) =>
           getOrganizationVersionId(accountsWithOrganizationVersions, email, session.environment),
         )

@@ -1,11 +1,12 @@
 'use client'
 
+import { HomeCardItem } from '@/types/homeCards'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import { Button } from '@abc-transitionbascarbone/common/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState } from 'react'
-import HomeCard, { HomeCardItem } from './HomeCard'
+import HomeCard from './HomeCard'
 import styles from './HomeCards.module.css'
 import HomeCardsFilters from './HomeCardsFilters'
 
@@ -58,7 +59,7 @@ const HomeCards = ({ items, type, canCreateOrga }: Props) => {
         className={classNames(styles.grid, 'mb1', { [styles.hideSubRows]: !showAll })}
       >
         {visibleItems.map((item) => (
-          <HomeCard key={item.id} item={item} type={type} />
+          <HomeCard key={item.id} item={item} />
         ))}
       </ul>
       {hiddenRows && (

@@ -72,6 +72,9 @@ export const hasAccessToAllLocales = isClickson
 
 export const hasAccessToSimplifiedEmissionAnalysis = isClickson
 
+export const hasAccessToOrgaCreation = (environment: Environment) =>
+  isAdvanced(environment) && !isCourseEnvironment(environment)
+
 export const canCreateStudyWithoutSpecificRights = (environment: Environment, simplified: boolean = false) =>
   isCut(environment) || (isTilt(environment) && simplified)
 

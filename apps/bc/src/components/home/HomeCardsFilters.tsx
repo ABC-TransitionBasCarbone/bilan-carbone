@@ -1,13 +1,12 @@
 'use client'
 
-import { sortAlphabetically } from '@/services/utils'
-import { normalizeStringForSearch } from '@/utils/string'
+import { HomeCardItem } from '@/types/homeCards'
+import { getVisibleHomeCards } from '@/utils/homeCards'
 import { TextField } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
-import dayjs, { Dayjs } from 'dayjs'
+import { Dayjs } from 'dayjs'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
-import { HomeCardItem } from './HomeCard'
 
 interface Props {
   type: 'clients' | 'sessions'
@@ -27,38 +26,8 @@ const HomeCardsFilters = ({ type, items, setVisibleItems }: Props) => {
   const invalidDateFilter = invalidStartDate || invalidEndDate || invalidDateRange
 
   useEffect(() => {
-    const normalizedSearch = normalizeStringForSearch(search)
-
-    const visibleItems = items
-      .filter((item) => {
-        if (!normalizeStringForSearch(item.name).includes(normalizedSearch)) {
-          return false
-        }
-        if (type === 'clients') {
-          return true
-        }
-        if (invalidDateFilter || (startDate && !startDate.isValid()) || (endDate && !endDate.isValid())) {
-          return false
-        }
-        return (
-          (!startDate || (!!item.endDate && !dayjs(item.endDate).isBefore(startDate, 'day'))) &&
-          (!endDate || (!!item.startDate && !dayjs(item.startDate).isAfter(endDate, 'day')))
-        )
-      })
-      .sort((a, b) => {
-        if (type === 'clients') {
-          return sortAlphabetically(a.name, b.name)
-        }
-        if (!a.startDate) {
-          return b.startDate ? 1 : sortAlphabetically(a.name, b.name)
-        }
-        if (!b.startDate) {
-          return -1
-        }
-        return b.startDate.getTime() - a.startDate.getTime() || sortAlphabetically(a.name, b.name)
-      })
-    setVisibleItems(visibleItems)
-  }, [items, type, search, startDate, endDate, invalidDateFilter, setVisibleItems])
+    setVisibleItems(getVisibleHomeCards(items, type, search, startDate, endDate))
+  }, [items, type, search, startDate, endDate, setVisibleItems])
 
   return (
     <div className="flex wrap gapped1 mb1">

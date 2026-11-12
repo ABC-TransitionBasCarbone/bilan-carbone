@@ -22,7 +22,6 @@ import {
   getEmissionFactorVersionsBySource,
   getStudyEmissionFactorSources,
 } from '@/db/emissionFactors'
-import { createEmissionSourcesWithReturn, getFamilyTagsForStudy } from '@/db/emissionSource'
 import {
   getOrganizationVersionById,
   getOrganizationVersionsByOrganizationId,
@@ -36,7 +35,6 @@ import {
   clearEmissionSourceEmissionFactor,
   countOrganizationStudiesFromOtherUsers,
   createContributorOnStudy,
-  createEmissionSourceTags,
   createEngagementAction,
   createStudy,
   createStudyComment,
@@ -63,7 +61,7 @@ import {
   getStudyNameById,
   getStudySites,
   getStudySitesWithName,
-  getStudyTemplate,
+  getStudyTemplates,
   getUsersOnStudy,
   MinimalStudyForRights,
   removeSourceToStudy,
@@ -89,6 +87,12 @@ import {
   UserWithAccounts,
 } from '@/db/user'
 import { getLocale } from '@/i18n/locale'
+import {
+  buildStudyForDuplication,
+  duplicateEmissionSources,
+  duplicateTrainingStudy,
+  getSitesForDuplication,
+} from '@/services/studyDuplication'
 import { StudySiteFields, studySiteToSituation } from '@/services/studySiteToSituation'
 import { AccountWithUser } from '@/types/account.types'
 import { groupBy } from '@/utils/array'
@@ -1452,133 +1456,6 @@ export const upgradeStudyEmissionFactorSource = async (studyId: string, source: 
     return undefined
   })
 
-const duplicateEmissionSources = async (
-  tx: Prisma.TransactionClient,
-  sourceEmissionSources: FullStudy['emissionSources'],
-  targetStudy: FullStudy,
-  sourceStudyId: string,
-  shouldClearCaracterisations: boolean,
-  shouldClearValidations: boolean,
-  sourceEnvironment?: Environment,
-  targetEnvironment?: Environment,
-) => {
-  const { id: targetStudyId, sites: targetStudySites, tagFamilies: targetTagFamilies } = targetStudy
-
-  const sourceTagFamilies = await getFamilyTagsForStudy(sourceStudyId, tx)
-
-  // Map emission sources to target study sites
-  const emissionSourcesWithSites = sourceEmissionSources
-    .map((sourceEmissionSource) => {
-      const sourceSiteId = sourceEmissionSource.studySite.site.id
-      const targetStudySiteId = targetStudySites.find((studySite) => studySite.site.id === sourceSiteId)?.id
-
-      if (!targetStudySiteId) {
-        return null
-      }
-
-      const subPost =
-        sourceEnvironment && targetEnvironment
-          ? getTransEnvironmentSubPost(sourceEnvironment, targetEnvironment, sourceEmissionSource.subPost)
-          : sourceEmissionSource.subPost
-
-      if (!subPost) {
-        return null
-      }
-
-      return {
-        sourceEmissionSource,
-        targetStudySiteId,
-        subPost,
-      }
-    })
-    .filter((item) => item !== null)
-
-  const emissionSourcesDataWithSourceId = emissionSourcesWithSites.map(
-    ({ sourceEmissionSource, targetStudySiteId, subPost }) => {
-      const newId = uuidv4()
-      const lastEditorId = sourceEmissionSource.lastEditor?.id
-      return {
-        sourceId: sourceEmissionSource.id,
-        targetId: newId,
-        data: {
-          id: newId,
-          name: sourceEmissionSource.name,
-          value: sourceEmissionSource.value,
-          subPost: subPost,
-          type: sourceEmissionSource.type,
-          source: sourceEmissionSource.source,
-          comment: sourceEmissionSource.comment,
-          depreciationPeriod: sourceEmissionSource.depreciationPeriod,
-          hectare: sourceEmissionSource.hectare,
-          duration: sourceEmissionSource.duration,
-          reliability: sourceEmissionSource.reliability,
-          technicalRepresentativeness: sourceEmissionSource.technicalRepresentativeness,
-          geographicRepresentativeness: sourceEmissionSource.geographicRepresentativeness,
-          temporalRepresentativeness: sourceEmissionSource.temporalRepresentativeness,
-          completeness: sourceEmissionSource.completeness,
-          feReliability: sourceEmissionSource.feReliability,
-          feTechnicalRepresentativeness: sourceEmissionSource.feTechnicalRepresentativeness,
-          feGeographicRepresentativeness: sourceEmissionSource.feGeographicRepresentativeness,
-          feTemporalRepresentativeness: sourceEmissionSource.feTemporalRepresentativeness,
-          feCompleteness: sourceEmissionSource.feCompleteness,
-          caracterisation: shouldClearCaracterisations ? null : sourceEmissionSource.caracterisation,
-          constructionYear: sourceEmissionSource.constructionYear,
-          studyId: targetStudyId,
-          emissionFactorId: sourceEmissionSource.emissionFactor?.id ?? null,
-          studySiteId: targetStudySiteId,
-          validated: shouldClearValidations ? false : sourceEmissionSource.validated,
-          lastEditorId,
-        },
-      }
-    },
-  )
-
-  const createdEmissionSourceIds = await createEmissionSourcesWithReturn(
-    emissionSourcesDataWithSourceId.map((item) => item.data),
-    tx,
-  )
-
-  const emissionSourceTagsData = emissionSourcesDataWithSourceId.flatMap(({ sourceId, targetId }) => {
-    const sourceEmissionSource = sourceEmissionSources.find((es) => es.id === sourceId)
-    if (!sourceEmissionSource) {
-      return []
-    }
-
-    const createdTargetEmissionSource = createdEmissionSourceIds.find((item) => item.id === targetId)
-    if (!createdTargetEmissionSource) {
-      return []
-    }
-
-    return sourceEmissionSource.emissionSourceTags
-      .map((emissionSourceTag) => {
-        const sourceTag = sourceTagFamilies
-          .flatMap((f) => f.tags.map((t) => ({ ...t, familyName: f.name })))
-          .find((t) => t.id === emissionSourceTag.tag.id)
-
-        if (!sourceTag) {
-          return null
-        }
-
-        const targetFamily = targetTagFamilies.find((f) => f.name === sourceTag.familyName)
-        const targetTag = targetFamily?.tags.find((t) => t.name === sourceTag.name)
-
-        if (!targetTag) {
-          return null
-        }
-
-        return {
-          emissionSourceId: targetId,
-          tagId: targetTag.id,
-        }
-      })
-      .filter((t) => t !== null)
-  })
-
-  if (emissionSourceTagsData.length > 0) {
-    await createEmissionSourceTags(emissionSourceTagsData, tx)
-  }
-}
-
 export const duplicateStudyCommand = async (
   sourceStudyId: string,
   studyCommand: CreateStudyCommand,
@@ -1771,85 +1648,6 @@ const getContributorsForDuplication = async (
       (contributor): contributor is { accountId: string; subPost: SubPost } => !!contributor && !!contributor.subPost,
     )
 }
-
-const getSitesForDuplication = async (study: FullStudy) => {
-  const organization = await getOrganizationWithSitesById(study.organizationVersion.organization.id)
-  if (!organization) {
-    throw new Error(NOT_AUTHORIZED)
-  }
-  return study.sites
-    .map((studySite) => {
-      const organizationSite = organization.sites.find((organizationSite) => organizationSite.id === studySite.site.id)
-      if (!organizationSite) {
-        return undefined
-      }
-      const studySiteData: Prisma.StudySiteCreateManyStudyInput = {
-        siteId: studySite.site.id,
-        etp: studySite.etp || organizationSite.etp,
-        ca: studySite.ca ? studySite.ca : organizationSite.ca,
-        volunteerNumber: studySite.volunteerNumber || organizationSite.volunteerNumber,
-        beneficiaryNumber: studySite.beneficiaryNumber || organizationSite.beneficiaryNumber,
-      }
-      const cncData = organizationSite.cnc
-      if (cncData) {
-        Object.assign(studySiteData, mapCncToStudySite(cncData))
-        studySiteData.cncVersionId = cncData.cncVersionId
-      }
-
-      return studySiteData
-    })
-    .filter((site) => !!site)
-}
-
-const buildStudyForDuplication = (
-  study: Omit<FullStudy, 'id' | 'createdById' | 'organizationVersionId' | 'allowedUsers'>,
-  userAccountId: string,
-  organizationId: string,
-  users: AsyncReturnType<typeof getAllowedUsersForDuplication>,
-  contributors: AsyncReturnType<typeof getContributorsForDuplication>,
-  sites: Prisma.StudySiteCreateManyStudyInput[],
-) => ({
-  ...study,
-  createdBy: { connect: { id: userAccountId } },
-  organizationVersion: { connect: { id: organizationId } },
-  allowedUsers: {
-    createMany: { data: users },
-  },
-  contributors: {
-    createMany: { data: contributors },
-  },
-  exports: {
-    create: { types: study.exports?.types, control: study.exports?.control },
-  },
-  sites: {
-    createMany: { data: sites },
-  },
-  emissionSources: {
-    createMany: { data: [] },
-  },
-  emissionFactorVersions: {
-    createMany: {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      data: study.emissionFactorVersions.map(({ id, ...emissionFactorVersion }) => ({
-        importVersionId: emissionFactorVersion.importVersionId,
-        source: emissionFactorVersion.source,
-      })),
-    },
-  },
-  tagFamilies: {
-    create: study.tagFamilies.map((tagFamily) => ({
-      name: tagFamily.name,
-      tags: {
-        createMany: {
-          data: tagFamily.tags.map((tag) => ({
-            name: tag.name,
-            color: tag.color,
-          })),
-        },
-      },
-    })),
-  },
-})
 
 export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEnvironment: Environment) =>
   withServerResponse('duplicateStudyInOtherEnvironment', async () => {
@@ -2067,12 +1865,13 @@ export const assignTrainingExerciseStudy = async (): Promise<{ created: number; 
   tomorrow.setDate(today.getDate() + 1)
 
   const targetAccounts = await prismaClient.account.findMany({
-    where: { formationStartDate: { gte: today, lt: tomorrow } },
+    // Historical TILT learner assignments are paused; professor imports handle corrections.
+    where: { formationStartDate: { gte: today, lt: tomorrow }, environment: { not: Environment.TILT } },
     select: { id: true, environment: true, user: { select: { firstName: true, lastName: true } } },
   })
   for (const account of targetAccounts) {
-    const studyTemplate = await getStudyTemplate(DuplicableStudy.TrainingExercise, account.environment)
-    if (studyTemplate) {
+    const studyTemplates = await getStudyTemplates(DuplicableStudy.TrainingExercise, account.environment)
+    for (const studyTemplate of studyTemplates) {
       try {
         await duplicateStudyTemplateForAccounts(
           [account],
@@ -2101,14 +1900,17 @@ export const assignTrainingCorrectionExerciseStudy = async () => {
   tomorrow.setDate(today.getDate() + 1)
 
   const targetAccounts = await prismaClient.account.findMany({
-    where: { formationEndDate: { gte: today, lt: tomorrow } },
+    where: { formationEndDate: { gte: today, lt: tomorrow }, environment: { not: Environment.TILT } },
     select: { id: true, environment: true, formationName: true, user: { select: { firstName: true, lastName: true } } },
   })
   const groupedByEnv = groupBy(targetAccounts, 'environment')
   for (const [environment, envAccounts] of Object.entries(groupedByEnv)) {
     const groupedByFormationName = groupBy(envAccounts, 'formationName')
-    const studyTemplate = await getStudyTemplate(DuplicableStudy.TrainingCorrectionExercise, environment as Environment)
-    if (studyTemplate) {
+    const studyTemplates = await getStudyTemplates(
+      DuplicableStudy.TrainingCorrectionExercise,
+      environment as Environment,
+    )
+    for (const studyTemplate of studyTemplates) {
       for (const [formationName, accounts] of Object.entries(groupedByFormationName)) {
         await duplicateStudyTemplateForAccounts(
           accounts,
@@ -2132,43 +1934,10 @@ export const duplicateStudyTemplateForAccounts = async (
   const study = await getStudyById(studyId, null)
   const environment = accounts[0].environment
   if (!study || study.organizationVersion.environment !== environment) {
+    console.error('duplicateStudyTemplateForAccounts: invalid template', { studyId, environment })
     throw new Error(NOT_AUTHORIZED)
   }
-  const allowedUsers = accounts.map((account) => ({ accountId: account.id, role }))
-  const sites = await getSitesForDuplication(study)
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { id, createdById, organizationVersionId, ...restStudy } = study
-  if (nameSuffix) {
-    restStudy.name = restStudy.name + nameSuffix
-  }
-  const creator = accounts.length === 1 ? accounts[0].id : createdById
-  const studyCommand: Prisma.StudyCreateInput = buildStudyForDuplication(
-    restStudy,
-    creator,
-    study.organizationVersion.id,
-    allowedUsers,
-    [],
-    sites,
-  )
-
-  await prismaClient.$transaction(async (tx) => {
-    const createdStudy = await createStudy(studyCommand, environment, false, tx)
-    const createdStudyWithSites = (await getStudyById(createdStudy.id, organizationVersionId, tx)) as FullStudy
-
-    await duplicateEmissionSources(
-      tx,
-      study.emissionSources,
-      createdStudyWithSites,
-      studyId,
-      false,
-      false,
-      study.organizationVersion.environment,
-      environment,
-    )
-  })
-
-  return
+  await prismaClient.$transaction((tx) => duplicateTrainingStudy(study, accounts, role, tx, nameSuffix))
 }
 
 export const duplicateSiteAndEmissionSources = async (command: DuplicateSiteCommand) =>

@@ -80,20 +80,21 @@ export const shouldRenewLicenceText = (
   return ''
 }
 
+export type CourseAccess = {
+  traineeCourseSessions?: { courseStatus: CourseSessionTraineeOrganizationStatus }[]
+  professorCourseSessions?: { id: string }[]
+}
+
 export const hasActiveLicence = (
-  organizationVersion: Pick<
-    Exclude<OrganizationVersionWithParentLicence, null>,
-    'activatedLicence' | 'parent' | 'environment'
-  > &
-    Partial<
-      Pick<NonNullable<OrganizationVersionWithParentLicence>, 'traineeCourseSessions' | 'professorCourseSessions'>
-    >,
+  organizationVersion: Pick<NonNullable<OrganizationVersionWithParentLicence>, 'activatedLicence' | 'environment'> &
+    CourseAccess & { parent: ({ activatedLicence: number[] } & CourseAccess) | null },
 ) => {
   if (isCourseEnvironment(organizationVersion.environment)) {
-    return (
-      organizationVersion.traineeCourseSessions?.some(
-        ({ courseStatus }) => courseStatus === CourseSessionTraineeOrganizationStatus.ACTIVE,
-      ) || (organizationVersion.professorCourseSessions?.length ?? 0) > 0
+    return [organizationVersion, organizationVersion.parent].some(
+      (organization) =>
+        organization?.traineeCourseSessions?.some(
+          ({ courseStatus }) => courseStatus === CourseSessionTraineeOrganizationStatus.ACTIVE,
+        ) || (organization?.professorCourseSessions?.length ?? 0) > 0,
     )
   }
   if (!needsLicenceToUseApp(organizationVersion.environment)) {
@@ -106,10 +107,9 @@ export const hasActiveLicence = (
 }
 
 export const hasActiveLicenceForFormation = (
-  organizationVersion: Pick<
-    Exclude<OrganizationVersionWithParentLicence, null>,
-    'activatedLicence' | 'parent' | 'environment'
-  >,
+  organizationVersion: Pick<NonNullable<OrganizationVersionWithParentLicence>, 'activatedLicence' | 'environment'> & {
+    parent: { activatedLicence: number[] } | null
+  },
 ) => {
   const userOrgaVersion = organizationVersion.parent ? organizationVersion.parent : organizationVersion
 

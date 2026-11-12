@@ -13,6 +13,7 @@ import { canEditOrganizationVersion, hasEditionRole, isInOrgaOrParent } from '@/
 import { canEditMemberRole } from '@/utils/user'
 import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
+import { hasAccessToOrgaCreation } from './environment'
 
 export const isInOrgaOrParentFromId = async (
   userOrganizationVersionId: string | null,
@@ -43,7 +44,7 @@ export const isVersionInOrgaOrParent = async (
 export const canCreateOrganization = async (account: UserSession) => {
   const dbAccount = await getAccountById(account.accountId)
 
-  if (!dbAccount) {
+  if (!dbAccount || !hasAccessToOrgaCreation(dbAccount.environment)) {
     return false
   }
 

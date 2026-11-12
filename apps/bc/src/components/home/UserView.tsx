@@ -41,13 +41,21 @@ const UserView = async ({ account }: Props) => {
           type="clients"
           organizationVersions={
             organizationVersions.filter(
-              (organizationVersion) => organizationVersion.id !== account.organizationVersionId,
+              (organizationVersion) => organizationVersion.parentId === account.organizationVersionId,
             ) as OrganizationVersionWithOrganization[]
           }
           account={account}
         />
       )}
-      {sessions.length > 0 && <HomeCardsList type="sessions" sessions={sessions} />}
+      {sessions.length > 0 && (
+        <HomeCardsList
+          type="sessions"
+          sessions={sessions}
+          organizationVersions={organizationVersions.filter(
+            (organizationVersion) => organizationVersion.parentId === account.organizationVersionId,
+          )}
+        />
+      )}
       <StudiesContainer user={account} isCR={isCR} />
 
       {emissionFactorWarning.success && !!emissionFactorWarning.data.length && (
