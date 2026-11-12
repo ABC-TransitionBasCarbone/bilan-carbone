@@ -157,18 +157,18 @@ export const importCourseSessionsFromFTP = async () => {
       { courseOrganismId, name, environment },
       ...(trainees.length > 0
         ? [
-          {
-            type,
-            environment,
-            traineeOrganizations: {
-              some: {
-                organizationVersion: {
-                  userAccounts: { some: { user: { email: { in: trainees.map(({ email }) => email) } } } },
+            {
+              type,
+              environment,
+              traineeOrganizations: {
+                some: {
+                  organizationVersion: {
+                    userAccounts: { some: { user: { email: { in: trainees.map(({ email }) => email) } } } },
+                  },
                 },
               },
             },
-          },
-        ]
+          ]
         : []),
     ]),
     ...deletions.map(({ courseOrganismId, name }) => ({ courseOrganismId, name })),
@@ -321,11 +321,11 @@ export const importCourseSessionsFromFTP = async () => {
       }
       return deletions.length > 0 || hasTransferredTrainees
         ? transaction.courseSession.findMany({
-          where: {
-            OR: [...affectedSessionsSQLRequest, { id: { in: existingSessions.map(({ id }) => id) } }],
-          },
-          select: sessionsSelect,
-        })
+            where: {
+              OR: [...affectedSessionsSQLRequest, { id: { in: existingSessions.map(({ id }) => id) } }],
+            },
+            select: sessionsSelect,
+          })
         : importedSessionsPromises
     },
     { isolationLevel: 'Serializable' },
