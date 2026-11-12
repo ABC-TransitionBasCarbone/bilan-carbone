@@ -83,6 +83,8 @@ enum Unit {
   KNOTS
   KWH
   KWH_PCI
+  KGCO2E
+  Night
   KWH_PCS
   KWH_ELEC_TON
   KWH_PER_KM
