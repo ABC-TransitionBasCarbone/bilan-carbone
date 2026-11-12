@@ -11,6 +11,11 @@ const submitTraineeForm = (email: string) => {
   cy.getByTestId('new-trainee-create-button').click()
 }
 
+const openAddTraineeForm = () => {
+  cy.get('#course-session-trainees-actions').click()
+  cy.get('a[href$="/formees/ajouter"]').click()
+}
+
 for (let i = 0; i < testedCourseEnvironments.length; i++) {
   const env = testedCourseEnvironments[i]
   const traineeEmail = `${env.toLowerCase()}-env-admin-0@yopmail.com`
@@ -86,12 +91,12 @@ for (let i = 0; i < testedCourseEnvironments.length; i++) {
       cy.location('pathname')
         .should('match', /\/formees$/)
         .as('sourceTraineesPath', { type: 'static' })
-      cy.get('a[href$="/formees/ajouter"]').click()
+      openAddTraineeForm()
       submitTraineeForm(email)
       cy.location('pathname').should('match', /\/formees$/)
       cy.contains('[data-testid="course-session-trainees-table-row"]', email).should('be.visible')
 
-      cy.get('a[href$="/formees/ajouter"]').click()
+      openAddTraineeForm()
       submitTraineeForm(email)
       cy.location('pathname').should('match', /\/formees$/)
       cy.contains('Ce formé est déjà inscrit à cette session.').should('be.visible')
@@ -105,7 +110,7 @@ for (let i = 0; i < testedCourseEnvironments.length; i++) {
       cy.location('pathname')
         .should('match', /\/formees$/)
         .as('targetTraineesPath', { type: 'static' })
-      cy.get('a[href$="/formees/ajouter"]').click()
+      openAddTraineeForm()
       submitTraineeForm(email)
       cy.getByTestId('trainee-transfer-modal').should('be.visible').and('contain.text', email)
       cy.getByTestId('trainee-transfer-cancel').click()
@@ -116,7 +121,7 @@ for (let i = 0; i < testedCourseEnvironments.length; i++) {
       cy.get('@targetTraineesPath').then((path) => cy.visit(String(path)))
       cy.contains('[data-testid="course-session-trainees-table-row"]', email).should('not.exist')
 
-      cy.get('a[href$="/formees/ajouter"]').click()
+      openAddTraineeForm()
       submitTraineeForm(email)
       cy.getByTestId('trainee-transfer-modal').should('be.visible')
       cy.getByTestId('trainee-transfer-confirm').click()

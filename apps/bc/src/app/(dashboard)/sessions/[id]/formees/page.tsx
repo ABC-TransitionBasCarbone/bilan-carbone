@@ -1,9 +1,9 @@
+import CourseSessionTraineesActions from '@/components/courseSession/CourseSessionTraineesActions'
 import CourseSessionTraineesTable from '@/components/courseSession/CourseSessionTraineesTable'
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
-import { getProfessorCourseSessionTrainees } from '@/services/serverFunctions/courseSession'
+import { getCourseSessionDetails, getProfessorCourseSessionTrainees } from '@/services/serverFunctions/courseSession'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined'
 import { getTranslations } from 'next-intl/server'
 
 interface Props {
@@ -12,9 +12,15 @@ interface Props {
 
 const SessionTraineesPage = async ({ params }: Props & UserSessionProps) => {
   const { id } = await params
-  const response = await getProfessorCourseSessionTrainees(id)
+  const [response, sessionResponse] = await Promise.all([
+    getProfessorCourseSessionTrainees(id),
+    getCourseSessionDetails(id),
+  ])
   if (!response.success) {
     throw new Error(response.errorMessage)
+  }
+  if (!sessionResponse.success) {
+    throw new Error(sessionResponse.errorMessage)
   }
 
   const t = await getTranslations('courseSessions')
@@ -26,10 +32,14 @@ const SessionTraineesPage = async ({ params }: Props & UserSessionProps) => {
       id="course-session-trainees-table-title"
       actions={[
         {
-          actionType: 'link',
-          href: `/sessions/${id}/formees/ajouter`,
-          startIcon: <PersonAddOutlinedIcon />,
-          children: t('addTrainee'),
+          actionType: 'node',
+          node: (
+            <CourseSessionTraineesActions
+              sessionId={id}
+              trainees={response.data}
+              endDate={sessionResponse.data.endDate}
+            />
+          ),
         },
         {
           actionType: 'link',
