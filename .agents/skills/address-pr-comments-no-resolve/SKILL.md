@@ -14,21 +14,18 @@ Apply `/ponytail` while implementing changes. Before the final summary, apply `/
 
 ### 1. Read the Active PR
 
-Call the `github-pull-request_currentActivePullRequest` tool.
-Capture the active PR URL and use it to retrieve comment metadata when needed. Do not use internal review-thread IDs as visible references.
-
-Refresh logic:
-- Call the tool once without `refresh` to get the cached state.
-- Inspect the `lastUpdatedAt` field in the result.
-- If the timestamp is less than 3 minutes ago, call the tool again with `refresh: true` to ensure you have the latest comments and state.
-- If the timestamp is older than 3 minutes, proceed with the cached data.
+Prefer approved read-only `gh` commands to identify the current branch's PR and retrieve its feedback. Ask for approval before every terminal command; approval applies only to that exact command.
+Alternatively, discover an available read-only PR tool. Do not depend on one extension-specific tool name or assume every harness exposes the same tools.
+Capture the PR URL and retrieve current review threads, reviews, and general comments, including pagination. If the PR cannot be identified, ask the user for its URL or number.
+If a selected tool returns cached data, refresh when its timestamp is missing or at least 3 minutes old. Reuse newer data without an unnecessary refresh. If freshness cannot be established, report that limitation.
+Capture comment permalinks returned by the selected API. Do not use internal review-thread IDs as visible references.
 
 ### 2. Identify Unresolved Comments
 
-From the tool result, collect feedback that needs action:
-- `reviewThreads`: inline review thread objects with an `id`, `isResolved` flag, `canResolve` flag, `file` path, and nested `comments`. Focus on threads where `isResolved` is `false`.
-- `timelineComments`: general PR comments and reviews where `commentType` is `CHANGES_REQUESTED` or `COMMENTED`.
-- Capture the exact `html_url` for each actionable reviewer comment. If the active PR result omits comment URLs, retrieve them with read-only review-comment or PR-comment metadata and match by comment content and author. Never construct or guess a `discussion_r` or `issuecomment` anchor.
+From the selected tool's result, collect feedback that needs action:
+- Inline review threads: capture their IDs, resolution state, file paths, and nested comments. Focus on unresolved threads; do not infer resolution from a flat comment list.
+- General PR comments and reviews: include actionable comments and reviews with `CHANGES_REQUESTED` or `COMMENTED` state.
+- Capture the exact comment permalink (`html_url` or GraphQL `url`). If missing, retrieve it with read-only review-comment or PR-comment metadata and match by comment content and author. Never construct or guess a `discussion_r` or `issuecomment` anchor.
 
 Group related threads by file so they can be handled efficiently.
 
@@ -40,7 +37,7 @@ Before modifying files:
 - Explain what each comment is asking for and recommend a concrete change, including the relevant file or behavior.
 - Decide whether a code change is warranted. If the feedback is mistaken, already addressed, or asks a question rather than requesting a change, explain that and recommend an appropriate response instead of making an unnecessary edit.
 - Note dependencies between comments, such as a rename that affects multiple files.
-- When general feedback asks for a clearer or shorter PR description, prepare a concise revised draft in the repository's template: put a one-sentence TL;DR near the top, explain or remove ambiguous references (such as an unspecified log), and keep only context reviewers need to understand the change and its impact. Omit test-pass claims and detailed CI results that GitHub already reports; retain required template sections and checklist items, and do not remove useful deployment or validation instructions.
+- When general feedback asks for a clearer or shorter PR description, inspect and preserve the repository's template, then prepare a concise French draft in chat: put a one-sentence TL;DR near the top, explain or remove ambiguous references, and keep only context reviewers need to understand the change and its impact. Keep technical terms in their original language. Include exact validation commands and results when the template requires them; otherwise avoid repeating CI details. Retain required sections, checklist items, and useful deployment or validation instructions.
 
 Implement minimal, clearly correct fixes by default; do not wait for approval for routine changes. If a comment is ambiguous or has materially different possible interpretations, do not guess for that comment: state the options and a recommended follow-up. Continue with unrelated clear fixes.
 
@@ -61,7 +58,6 @@ After changes are made:
 
 ### 6. Do Not Resolve or Write to GitHub
 
-Do not call `github-pull-request_resolveReviewThread`.
 Do not resolve review comments or threads directly on GitHub.
 Do not comment on, reply to, close, or otherwise mutate GitHub issues, pull requests, comments, or review threads.
 

@@ -21,8 +21,8 @@ The skill directories stay directly under `skills/` so agents can discover them 
 
 ### Testing and browser automation
 
-- [cypress](./cypress/SKILL.md) — create, update, debug, or review Cypress end-to-end tests.
-- [cypress-concise](./cypress-concise/SKILL.md) — keep Cypress tests and explanations concise without weakening coverage.
+- [cypress](./cypress/SKILL.md) — create, update, debug, or review concise, behavior-focused Cypress end-to-end tests.
+- [cypress-concise](./cypress-concise/SKILL.md) — compatibility entry for `/cypress-concise`; delegates to `cypress`.
 - [jest-concise](./jest-concise/SKILL.md) — write concise, behavior-focused Jest unit tests.
 - [playwright-cli](./playwright-cli/SKILL.md) — automate browsers and work with Playwright tests.
 

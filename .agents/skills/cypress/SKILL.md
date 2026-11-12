@@ -10,6 +10,7 @@ Follow the Cypress version and patterns already used in the project. Read its Cy
 ## Writing or updating tests
 
 - Test observable user behavior and outcomes rather than component implementation details.
+- Keep test names and flows concise. Avoid repeated setup and one-off helpers; concision must not reduce coverage or diagnostics.
 - Reuse existing custom commands, fixtures, and test data setup. Keep each test independent and clean up data it creates.
 - Prefer stable selectors already used by the app, such as accessible roles, labels, or dedicated test attributes. Avoid selectors coupled to styling or DOM structure.
 - Use Cypress retryable queries and assertions. Avoid arbitrary `cy.wait(number)` delays; wait on a meaningful condition or a specifically aliased network request.
@@ -21,7 +22,7 @@ Follow the Cypress version and patterns already used in the project. Read its Cy
 1. Reproduce the failure with the narrowest relevant Cypress spec or configured test command.
 2. Inspect the command log, browser console, and relevant requests before changing timeouts or adding waits.
 3. Make the smallest fix that addresses the flaky assumption or incorrect expectation.
-4. Re-run the affected spec, then any broader suite appropriate to the change. Report exactly what ran and whether it passed.
+4. Re-run the affected spec, then any broader suite appropriate to the change. Ask for approval before every terminal command. Keep the final response concise: state the changed area and exact command/result, including failures or checks not run.
 
 ## References
 
