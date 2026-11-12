@@ -24,10 +24,11 @@ import {
   updateTransitionPlanSectenVersion,
 } from '@/services/serverFunctions/transitionPlan'
 import { ObjectiveGroup, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
+import { readStoredStringArray } from '@/utils/localStorage'
 import { compareSectenVersions } from '@/utils/secten'
 import { calculateSectoralSNBCReductionRates, getDefaultSnbcSectoralTrajectory } from '@/utils/snbc'
 import { getAllTagIds } from '@/utils/tag.utils'
-import { getInitialCurrentStep, readStoredStringArray } from '@/utils/transitionPlan.utils'
+import { getInitialCurrentStep } from '@/utils/transitionPlan.utils'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import Box from '@abc-transitionbascarbone/common/components/base/Box'
 import Image from '@abc-transitionbascarbone/common/components/document/Image'

@@ -3,7 +3,6 @@ import { getStudyTotalCo2Emissions } from '@/services/study'
 import type { PastStudy } from '@/types/trajectory.types'
 import type { ExternalStudy } from '@abc-transitionbascarbone/common/db'
 import { StudyResultUnit } from '@abc-transitionbascarbone/common/db/enums'
-import { filterStringArray } from './array'
 import { convertValue } from './study'
 
 export const convertToPastStudies = (
@@ -38,25 +37,6 @@ export const convertToPastStudies = (
   })
 
   return pastStudies.sort((a, b) => a.year - b.year)
-}
-
-export const readStoredStringArray = (key: string): string[] | null => {
-  if (typeof window === 'undefined') {
-    return null
-  }
-  const stored = localStorage.getItem(key)
-  if (!stored) {
-    return null
-  }
-  try {
-    const parsed = JSON.parse(stored) as unknown
-    if (!Array.isArray(parsed)) {
-      return null
-    }
-    return filterStringArray(parsed)
-  } catch {
-    return null
-  }
 }
 
 export const getInitialCurrentStep = (storageKey: string, trajectoriesLength: number): number | 'complete' => {
