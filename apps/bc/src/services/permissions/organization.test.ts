@@ -104,7 +104,10 @@ describe('Organization permissions', () => {
     )
 
     it('returns true if user belongs to CR organization', async () => {
-      mockGetAccountById.mockResolvedValue({ organizationVersionId: 'mocked-organization-version-id' })
+      mockGetAccountById.mockResolvedValue({
+        organizationVersionId: 'mocked-organization-version-id',
+        environment: Environment.BC,
+      })
       mockGetOrganizationVersionIsCR.mockResolvedValue(true)
 
       const result = await canCreateOrganization(getMockedAuthUser())
@@ -125,7 +128,10 @@ describe('Organization permissions', () => {
     })
 
     it('returns false if organization is not found', async () => {
-      mockGetAccountById.mockResolvedValue({ organizationVersionId: 'mocked-organization-version-id' })
+      mockGetAccountById.mockResolvedValue({
+        organizationVersionId: 'mocked-organization-version-id',
+        environment: Environment.BC,
+      })
       mockGetOrganizationVersionIsCR.mockResolvedValue(false)
 
       const result = await canCreateOrganization(getMockedAuthUser())
@@ -136,7 +142,10 @@ describe('Organization permissions', () => {
     })
 
     it('returns false if organization is not CR', async () => {
-      mockGetAccountById.mockResolvedValue({ organizationVersionId: 'mocked-organization-version-id' })
+      mockGetAccountById.mockResolvedValue({
+        organizationVersionId: 'mocked-organization-version-id',
+        environment: Environment.BC,
+      })
       mockGetOrganizationVersionIsCR.mockResolvedValue(false)
 
       const result = await canCreateOrganization(getMockedAuthUser())
