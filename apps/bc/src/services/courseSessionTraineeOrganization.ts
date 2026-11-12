@@ -1,5 +1,24 @@
 import { prismaClient } from '@/db/client.server'
+import type { CourseSession } from '@abc-transitionbascarbone/common/db'
 import { CourseSessionTraineeOrganizationStatus } from '@abc-transitionbascarbone/common/db/enums'
+
+export const getCourseSessionTraineeOrganizationData = (
+  session: Pick<CourseSession, 'startDate' | 'endDate'>,
+  organizationVersionId: string,
+) => {
+  const today = new Date()
+  today.setUTCHours(0, 0, 0, 0)
+
+  const endAccessDate = new Date(session.endDate)
+  endAccessDate.setUTCDate(endAccessDate.getUTCDate() + getCourseSessionAccessDays())
+  return {
+    organizationVersionId,
+    courseStatus:
+      session.startDate <= today && endAccessDate >= today
+        ? CourseSessionTraineeOrganizationStatus.ACTIVE
+        : CourseSessionTraineeOrganizationStatus.INACTIVE,
+  }
+}
 
 const getCourseSessionAccessDays = () => {
   const value = process.env.COURSE_SESSION_ACCESS_DAYS
