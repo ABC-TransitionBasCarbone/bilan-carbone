@@ -82,6 +82,7 @@ Run from repo root unless specified:
 - Root prettier/eslint/tsconfig base are canonical.
 - Do not add per-app prettier configs.
 - Keep app tsconfig focused on app-specific overrides only.
+- Do not add README explanations unless explicitly requested. Keep code self-explanatory through clear naming and structure.
 - Keep README footprint minimal:
   - root README.md
   - apps/bc/README.md

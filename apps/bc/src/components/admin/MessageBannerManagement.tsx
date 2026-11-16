@@ -12,7 +12,7 @@ import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, 
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import type { FormEvent } from 'react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 type BannerForm = Omit<MessageBannerCommand, 'startAt' | 'endAt'> & {
   startAt: string
@@ -46,23 +46,35 @@ const MessageBannerManagement = ({ banners }: Props) => {
   const { callServerFunction } = useServerFunction()
   const router = useRouter()
   const [form, setForm] = useState<BannerForm>(createEmptyBannerForm)
+  const [isSaving, setIsSaving] = useState(false)
+  const saving = useRef(false)
 
   const resetForm = () => setForm(createEmptyBannerForm())
 
   const save = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    if (saving.current) {
+      return
+    }
     const command: MessageBannerCommand = {
       ...form,
       startAt: new Date(form.startAt),
       endAt: new Date(form.endAt),
     }
 
-    await callServerFunction(() => saveMessageBannerForManagement(command), {
-      onSuccess: () => {
-        resetForm()
-        router.refresh()
-      },
-    })
+    saving.current = true
+    setIsSaving(true)
+    try {
+      await callServerFunction(() => saveMessageBannerForManagement(command), {
+        onSuccess: () => {
+          resetForm()
+          router.refresh()
+        },
+      })
+    } finally {
+      saving.current = false
+      setIsSaving(false)
+    }
   }
 
   const edit = (banner: MessageBanner) => {
@@ -152,11 +164,11 @@ const MessageBannerManagement = ({ banners }: Props) => {
           label={t('active')}
         />
         <div className="align-center gapped1">
-          <Button type="submit" variant="contained">
+          <Button type="submit" variant="contained" loading={isSaving}>
             {form.id ? t('update') : t('create')}
           </Button>
           {form.id && (
-            <Button type="button" onClick={resetForm}>
+            <Button type="button" onClick={resetForm} disabled={isSaving}>
               {t('cancel')}
             </Button>
           )}
@@ -177,10 +189,10 @@ const MessageBannerManagement = ({ banners }: Props) => {
                 {toDateTimeInputValue(banner.startAt)} – {toDateTimeInputValue(banner.endAt)}
               </span>
               <div className="align-center gapped1">
-                <Button type="button" onClick={() => edit(banner)}>
+                <Button type="button" onClick={() => edit(banner)} disabled={isSaving}>
                   {t('edit')}
                 </Button>
-                <Button type="button" color="error" onClick={() => remove(banner.id)}>
+                <Button type="button" color="error" onClick={() => remove(banner.id)} disabled={isSaving}>
                   {t('delete')}
                 </Button>
               </div>
