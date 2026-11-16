@@ -1,27 +1,46 @@
 'use client'
 
 import Alert from '@mui/material/Alert'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { getMessageBannerDismissalTimeRemaining } from '../utils/messageBanner'
+import {
+  getMessageBannerDismissalTimeRemaining,
+  getMessageBannerExpirationDelay,
+  readMessageBannerDismissal,
+  startMessageBannerRefresh,
+  writeMessageBannerDismissal,
+} from '../utils/messageBanner'
 import styles from './MessageBanners.module.css'
 
 interface MessageBanner {
   id: string
   message: string
+  endAt: Date
 }
 
-const MessageBannerItem = ({ id, message }: MessageBanner) => {
+const MessageBannerItem = ({ id, message, endAt }: MessageBanner) => {
   const storageKey = `message-banner-dismissed-${id}`
   const [dismissedAt, setDismissedAt] = useState<number | null>(null)
   const [dismissalLoaded, setDismissalLoaded] = useState(false)
+  const [now, setNow] = useState(Date.now)
+  const expiresAt = endAt.getTime()
 
   useEffect(() => {
-    const storedDismissal = Number(window.localStorage.getItem(storageKey))
-    if (Number.isFinite(storedDismissal) && storedDismissal > 0) {
-      setDismissedAt(storedDismissal)
-    }
+    setDismissedAt(readMessageBannerDismissal(storageKey))
     setDismissalLoaded(true)
   }, [storageKey])
+
+  useEffect(() => {
+    const delay = getMessageBannerExpirationDelay(expiresAt)
+    if (delay === null) {
+      if (now <= expiresAt) {
+        setNow(Date.now())
+      }
+      return
+    }
+    const timeout = window.setTimeout(() => setNow(Date.now()), delay)
+    return () => window.clearTimeout(timeout)
+  }, [expiresAt, now])
 
   useEffect(() => {
     if (dismissedAt === null) {
@@ -30,13 +49,13 @@ const MessageBannerItem = ({ id, message }: MessageBanner) => {
 
     const remaining = getMessageBannerDismissalTimeRemaining(dismissedAt)
     if (remaining <= 0) {
-      window.localStorage.removeItem(storageKey)
+      writeMessageBannerDismissal(storageKey, null)
       setDismissedAt(null)
       return
     }
 
     const timeout = window.setTimeout(() => {
-      window.localStorage.removeItem(storageKey)
+      writeMessageBannerDismissal(storageKey, null)
       setDismissedAt(null)
     }, remaining)
 
@@ -45,11 +64,15 @@ const MessageBannerItem = ({ id, message }: MessageBanner) => {
 
   const dismiss = () => {
     const now = Date.now()
-    window.localStorage.setItem(storageKey, now.toString())
     setDismissedAt(now)
+    writeMessageBannerDismissal(storageKey, now)
   }
 
-  if (!dismissalLoaded || (dismissedAt !== null && getMessageBannerDismissalTimeRemaining(dismissedAt) > 0)) {
+  if (
+    !dismissalLoaded ||
+    now > expiresAt ||
+    (dismissedAt !== null && getMessageBannerDismissalTimeRemaining(dismissedAt) > 0)
+  ) {
     return null
   }
 
@@ -65,13 +88,19 @@ interface Props {
 }
 
 const MessageBanners = ({ banners }: Props) => {
-  if (!banners.length) {
+  const router = useRouter()
+
+  useEffect(() => startMessageBannerRefresh(router.refresh), [router])
+
+  const nonEmptyBanners = banners.filter((banner) => banner.message.trim().length > 0)
+
+  if (!nonEmptyBanners.length) {
     return null
   }
 
   return (
     <div className="flex-col gapped1 p1">
-      {banners.map((banner) => (
+      {nonEmptyBanners.map((banner) => (
         <MessageBannerItem key={banner.id} {...banner} />
       ))}
     </div>

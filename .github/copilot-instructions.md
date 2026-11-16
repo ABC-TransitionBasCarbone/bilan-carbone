@@ -84,7 +84,7 @@ Run from repo root unless specified:
 - When updating dependencies, try removing matching `resolutions` from the root `package.json`; regenerate `yarn.lock` and run relevant checks before keeping or restoring each resolution.
 - Do not add per-app prettier configs.
 - Keep app tsconfig focused on app-specific overrides only.
-- Do not add a README explanation for each bug fix. Keep bug-specific causes, implementation details, and regression test commands in the PR description. Update READMEs only for lasting changes to setup, usage, or maintenance.
+- Do not add README explanations unless explicitly requested. Keep bug-specific causes, implementation details, and regression test commands in the PR description; update READMEs only for lasting changes to setup, usage, or maintenance. Keep code self-explanatory through clear naming and structure.
 - Keep README footprint minimal:
   - root README.md
   - apps/bc/README.md
