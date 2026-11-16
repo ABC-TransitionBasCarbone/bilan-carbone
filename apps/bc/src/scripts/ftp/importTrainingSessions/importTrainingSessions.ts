@@ -306,12 +306,6 @@ export const importCourseSessionsFromFTP = async () => {
           }),
         )
       }
-      try {
-        await ensureCourseProfessorCorrections(transaction)
-      } catch (e) {
-        console.error('error while creating correction studies for professor', e)
-      }
-
       return deletions.length > 0 || hasTransferredTrainees
         ? transaction.courseSession.findMany({
             where: {
@@ -323,6 +317,12 @@ export const importCourseSessionsFromFTP = async () => {
     },
     { isolationLevel: 'Serializable' },
   )
+
+  try {
+    await ensureCourseProfessorCorrections()
+  } catch (error) {
+    console.error('Error creating correction studies for professors:', error)
+  }
 
   const existingSessionIds = new Set(existingSessions.map(({ id }) => id))
   const previousSessionsById = new Map(existingSessions.map((session) => [session.id, session]))

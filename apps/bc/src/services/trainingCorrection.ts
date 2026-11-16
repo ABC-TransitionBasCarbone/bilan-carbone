@@ -1,3 +1,4 @@
+import { prismaClient } from '@/db/client'
 import { FullStudy, getStudyById, getStudyTemplates } from '@/db/study'
 import type { Prisma, Site } from '@abc-transitionbascarbone/common/db'
 import { DuplicableStudy, Environment, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
@@ -144,9 +145,9 @@ export const ensureProfessorCorrectionClient = async (
   return { id: client.id }
 }
 
-export const ensureCourseProfessorCorrections = async (transaction: Prisma.TransactionClient) => {
+export const ensureCourseProfessorCorrections = async () => {
   const twoWeeksAgo = new Date(Date.now() - 14 * DAY * TIME_IN_MS)
-  const professors = await transaction.organizationVersion.findMany({
+  const professors = await prismaClient.organizationVersion.findMany({
     where: {
       environment: { in: [Environment.COURSE_BC, Environment.COURSE_TILT] },
       professorCourseSessions: { some: { endDate: { gt: twoWeeksAgo } } },
@@ -154,6 +155,17 @@ export const ensureCourseProfessorCorrections = async (transaction: Prisma.Trans
     select: { id: true, environment: true },
   })
   for (const professor of professors) {
-    await ensureProfessorCorrectionClient(professor.id, professor.environment, transaction)
+    try {
+      await prismaClient.$transaction(
+        (transaction) => ensureProfessorCorrectionClient(professor.id, professor.environment, transaction),
+        { isolationLevel: 'Serializable' },
+      )
+    } catch (error) {
+      console.error('Error creating correction studies for professor:', {
+        professorOrganizationVersionId: professor.id,
+        environment: professor.environment,
+        error,
+      })
+    }
   }
 }

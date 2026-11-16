@@ -5,15 +5,18 @@ import { DuplicableStudy, Environment, StudyRole } from '@abc-transitionbascarbo
 import { duplicateTrainingStudy } from './studyDuplication'
 import { ensureCourseProfessorCorrections, ensureProfessorCorrectionClient } from './trainingCorrection'
 
-jest.mock('@/db/client', () => ({
-  prismaClient: {
+jest.mock('@/db/client', () => {
+  const prismaClient = {
     organizationVersion: { findFirst: jest.fn(), findMany: jest.fn(), create: jest.fn() },
     organization: { findUnique: jest.fn() },
     account: { findFirst: jest.fn() },
     study: { findMany: jest.fn() },
     site: { findMany: jest.fn(), createMany: jest.fn() },
-  },
-}))
+    $transaction: jest.fn(),
+  }
+  prismaClient.$transaction.mockImplementation((operation) => operation(prismaClient))
+  return { prismaClient }
+})
 jest.mock('@/db/study', () => ({ getStudyTemplates: jest.fn(), getStudyById: jest.fn() }))
 jest.mock('./studyDuplication', () => ({ duplicateTrainingStudy: jest.fn() }))
 jest.mock('uuid', () => ({ v4: jest.fn(() => 'copied-site') }))
@@ -310,7 +313,7 @@ describe('professor correction client', () => {
     mockFindClient.mockResolvedValue({ id: 'child', organizationId: 'client-org' })
     mockCopies.mockResolvedValue([{ sourceTemplateStudyId: 'correction-1' }, { sourceTemplateStudyId: 'correction-2' }])
     try {
-      await ensureCourseProfessorCorrections(prismaClient)
+      await ensureCourseProfessorCorrections()
     } finally {
       jest.useRealTimers()
     }
@@ -326,5 +329,43 @@ describe('professor correction client', () => {
       { parentId: 'new-professor', environment: Environment.COURSE_TILT },
     ])
     expect(mockDuplicate).not.toHaveBeenCalled()
+  })
+
+  it('rolls back a failed professor and continues with the other environments', async () => {
+    mockProfessors.mockResolvedValue([
+      { id: 'failed-professor', environment: Environment.COURSE_BC },
+      { id: 'bc-professor', environment: Environment.COURSE_BC },
+      { id: 'tilt-professor', environment: Environment.COURSE_TILT },
+    ])
+    let studyCount = 0
+    mockStudy.mockImplementation(async (id) => {
+      studyCount++
+      const study = getMockedFullStudy({ id })
+      const environment = studyCount > 4 ? Environment.TILT : Environment.BC
+      return { ...study, organizationVersion: { ...study.organizationVersion, environment } }
+    })
+    const error = new Error('Cannot copy emissions')
+    mockDuplicate.mockRejectedValueOnce(error)
+    const log = jest.spyOn(console, 'error').mockImplementation()
+
+    try {
+      await expect(ensureCourseProfessorCorrections()).resolves.toBeUndefined()
+      expect(prismaClient.$transaction).toHaveBeenCalledTimes(3)
+      await expect(jest.mocked(prismaClient.$transaction).mock.results[0].value).rejects.toThrow(error)
+      expect(log).toHaveBeenCalledWith('Error creating correction studies for professor:', {
+        professorOrganizationVersionId: 'failed-professor',
+        environment: Environment.COURSE_BC,
+        error,
+      })
+      expect(mockFindClient.mock.calls.map(([query]) => query.where.parentId)).toEqual([
+        'failed-professor',
+        'bc-professor',
+        'tilt-professor',
+      ])
+      expect(mockDuplicate).toHaveBeenCalledTimes(5)
+      expect(mockDuplicate.mock.calls[4][1]).toEqual([{ id: 'professor-account', environment: Environment.COURSE_TILT }])
+    } finally {
+      log.mockRestore()
+    }
   })
 })

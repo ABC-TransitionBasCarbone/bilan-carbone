@@ -261,13 +261,12 @@ describe('getCourseSessionsFromFTP', () => {
     jest.useRealTimers()
   })
 
-  it('repairs professor corrections after session creation and updates in the same transaction', async () => {
+  it('repairs professor corrections after importing sessions', async () => {
     await importCourseSessionsFromFTP()
 
+    expect(prismaClient.$transaction).toHaveBeenCalledTimes(2)
     expect(mockEnsureProfessorCorrections).toHaveBeenCalledTimes(1)
-    expect(mockEnsureProfessorCorrections).toHaveBeenCalledWith(
-      expect.objectContaining({ courseSession: prismaClient.courseSession }),
-    )
+    expect(mockEnsureProfessorCorrections).toHaveBeenCalledWith()
     expect(mockEnsureProfessorCorrections.mock.invocationCallOrder[0]).toBeGreaterThan(
       mockUpsertCourseSession.mock.invocationCallOrder[1],
     )
@@ -296,10 +295,18 @@ describe('getCourseSessionsFromFTP', () => {
     )
   })
 
-  it('propagates a repair failure from the import transaction and does not send success emails', async () => {
-    mockEnsureProfessorCorrections.mockRejectedValue(new Error('Cannot copy correction'))
-    await expect(importCourseSessionsFromFTP()).rejects.toThrow('Cannot copy correction')
-    expect(mockSendCourseSessionsCreatedEmail).not.toHaveBeenCalled()
+  it('continues the import when correction processing fails', async () => {
+    const error = new Error('Cannot copy correction')
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined)
+    mockEnsureProfessorCorrections.mockRejectedValue(error)
+    try {
+      await expect(importCourseSessionsFromFTP()).resolves.toEqual(expect.objectContaining({ importedSessions: 2 }))
+      expect(prismaClient.$transaction).toHaveBeenCalledTimes(2)
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Error creating correction studies for professors:', error)
+      expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalled()
+    } finally {
+      consoleErrorSpy.mockRestore()
+    }
   })
 
   it.each([
