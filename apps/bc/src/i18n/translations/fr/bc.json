@@ -1,6 +1,6 @@
 {
   "homeCards": {
-    "search": "Rechercher un client par nom",
+    "search": "Rechercher un client",
     "noResults": "Aucun résultat ne correspond à votre recherche.",
     "invalidDate": "Veuillez saisir une date valide.",
     "invalidDateRange": "La date de début doit être antérieure ou égale à la date de fin."
