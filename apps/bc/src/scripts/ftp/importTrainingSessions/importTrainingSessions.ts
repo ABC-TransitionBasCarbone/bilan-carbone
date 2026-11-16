@@ -306,7 +306,11 @@ export const importCourseSessionsFromFTP = async () => {
           }),
         )
       }
-      await ensureCourseProfessorCorrections(transaction)
+      try {
+        await ensureCourseProfessorCorrections(transaction)
+      } catch (e) {
+        console.error('error while creating correction studies for professor', e)
+      }
 
       return deletions.length > 0 || hasTransferredTrainees
         ? transaction.courseSession.findMany({
