@@ -68,6 +68,7 @@ export const duplicateEmissionSources = async (
           type: sourceEmissionSource.type,
           source: sourceEmissionSource.source,
           comment: sourceEmissionSource.comment,
+          feComment: sourceEmissionSource.feComment,
           depreciationPeriod: sourceEmissionSource.depreciationPeriod,
           hectare: sourceEmissionSource.hectare,
           duration: sourceEmissionSource.duration,
