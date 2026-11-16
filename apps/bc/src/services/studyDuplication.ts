@@ -1,7 +1,12 @@
 import { createEmissionSourcesWithReturn, getFamilyTagsForStudy } from '@/db/emissionSource'
 import { getOrganizationWithSitesById } from '@/db/organization'
 import { createEmissionSourceTags, createStudy, FullStudy, getStudyById } from '@/db/study'
-import { getTransitionPlanByStudyId } from '@/db/transitionPlan'
+import {
+  createTrajectoryWithObjectives,
+  createTransitionPlan,
+  getTrajectoriesByTransitionPlanId,
+  getTransitionPlanByStudyId,
+} from '@/db/transitionPlan'
 import { mapCncToStudySite } from '@/utils/cnc'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
@@ -194,8 +199,48 @@ export const buildStudyForDuplication = (
   },
 })
 
-export const duplicateTrainingTransitionPlan = async (sourceStudyId: string, tx: Prisma.TransactionClient) => {
-  await getTransitionPlanByStudyId(sourceStudyId, tx)
+const duplicateTrainingTransitionPlan = async (
+  sourceStudyId: string,
+  targetStudyId: string,
+  tx: Prisma.TransactionClient,
+) => {
+  const sourceTransitionPlan = await getTransitionPlanByStudyId(sourceStudyId, tx)
+  if (!sourceTransitionPlan) {
+    return
+  }
+  const trajectories = await getTrajectoriesByTransitionPlanId(sourceTransitionPlan.id, tx)
+  const targetTransitionPlan = await createTransitionPlan(
+    targetStudyId,
+    sourceTransitionPlan.sectenVersionId ?? undefined,
+    tx,
+  )
+  for (const trajectory of trajectories.filter((trajectory) => trajectory.isDefault)) {
+    await createTrajectoryWithObjectives(
+      {
+        transitionPlan: { connect: { id: targetTransitionPlan.id } },
+        name: trajectory.name,
+        description: trajectory.description,
+        type: trajectory.type,
+        referenceYear: trajectory.referenceYear,
+        sectorPercentages: trajectory.sectorPercentages ?? undefined,
+        isDefault: trajectory.isDefault,
+        objectives: {
+          createMany: {
+            data: trajectory.objectives
+              .filter((objective) => objective.isDefault)
+              .map((objective) => ({
+                name: objective.name,
+                startYear: objective.startYear,
+                targetYear: objective.targetYear,
+                reductionRate: objective.reductionRate,
+                isDefault: objective.isDefault,
+              })),
+          },
+        },
+      },
+      tx,
+    )
+  }
 }
 
 export const duplicateTrainingStudy = async (
@@ -255,6 +300,6 @@ export const duplicateTrainingStudy = async (
     environment,
     target?.siteIds,
   )
-  await duplicateTrainingTransitionPlan(study.id, tx)
+  await duplicateTrainingTransitionPlan(study.id, createdStudy.id, tx)
   return createdStudy
 }

@@ -2,8 +2,14 @@ import { prismaClient } from '@/db/client'
 import { createEmissionSourcesWithReturn, getFamilyTagsForStudy } from '@/db/emissionSource'
 import { getOrganizationWithSitesById } from '@/db/organization'
 import { createEmissionSourceTags, createStudy, getStudyById } from '@/db/study'
+import {
+  createTrajectoryWithObjectives,
+  createTransitionPlan,
+  getTrajectoriesByTransitionPlanId,
+  getTransitionPlanByStudyId,
+} from '@/db/transitionPlan'
 import { getMockedFullStudy, getMockedFullStudySite, getMockeFullStudy, TEST_IDS } from '@/tests/utils/models/study'
-import { Environment, StudyRole, SubPost } from '@abc-transitionbascarbone/common/db/enums'
+import { Environment, StudyRole, SubPost, TrajectoryType } from '@abc-transitionbascarbone/common/db/enums'
 import {
   buildStudyForDuplication,
   duplicateEmissionSources,
@@ -22,7 +28,12 @@ jest.mock('@/db/study', () => ({
   getStudyById: jest.fn(),
   createEmissionSourceTags: jest.fn(),
 }))
-jest.mock('@/db/transitionPlan', () => ({ getTransitionPlanByStudyId: jest.fn() }))
+jest.mock('@/db/transitionPlan', () => ({
+  getTransitionPlanByStudyId: jest.fn(),
+  getTrajectoriesByTransitionPlanId: jest.fn(),
+  createTransitionPlan: jest.fn(),
+  createTrajectoryWithObjectives: jest.fn(),
+}))
 jest.mock('uuid', () => ({ v4: jest.fn(() => 'copied-emission') }))
 jest.mock('../services/file', () => ({ download: jest.fn() }))
 jest.mock('@/services/serverFunctions/emissionFactor', () => ({}))
@@ -35,6 +46,9 @@ const mockCreateStudy = createStudy as jest.Mock
 const mockGetStudy = jest.mocked(getStudyById)
 const mockCreateEmissions = createEmissionSourcesWithReturn as jest.Mock
 const mockTags = getFamilyTagsForStudy as jest.Mock
+const mockGetTransitionPlan = jest.mocked(getTransitionPlanByStudyId)
+const mockGetTrajectories = jest.mocked(getTrajectoriesByTransitionPlanId)
+const mockCreateTransitionPlan = jest.mocked(createTransitionPlan)
 const sourceSite = getMockedFullStudySite({ id: 'source-study-site' })
 const sourceStudy = getMockeFullStudy({
   sites: [{ ...sourceSite, site: { ...sourceSite.site, id: TEST_IDS.site } }],
@@ -55,9 +69,55 @@ describe('shared training study duplication', () => {
     mockGetStudy.mockResolvedValue(copiedStudy)
     mockCreateEmissions.mockResolvedValue([{ id: 'copied-emission' }])
     mockTags.mockResolvedValue([])
+    mockGetTransitionPlan.mockResolvedValue(null)
+    mockGetTrajectories.mockResolvedValue([])
   })
 
   it('copies studies and their emissions onto the new site IDs with Validator rights', async () => {
+    const sourceTransitionPlan = {
+      id: 'source-plan',
+      studyId: sourceStudy.id,
+      sectenVersionId: 'secten-version',
+      createdAt: new Date('2026-01-01'),
+      updatedAt: new Date('2026-01-01'),
+    }
+    const objective = {
+      id: 'source-objective',
+      trajectoryId: 'source-trajectory',
+      name: 'Objectif de référence',
+      startYear: 2026,
+      targetYear: 2030,
+      reductionRate: 0.4,
+      isDefault: true,
+      sites: [],
+      tags: [],
+      subPosts: [],
+      createdAt: new Date('2026-01-01'),
+      updatedAt: new Date('2026-01-01'),
+    }
+    const trajectory = {
+      id: 'source-trajectory',
+      transitionPlanId: sourceTransitionPlan.id,
+      name: 'SNBC sectorielle',
+      description: 'Trajectoire de référence',
+      type: TrajectoryType.SNBC_SECTORAL,
+      referenceYear: 2015,
+      sectorPercentages: { energy: 100 },
+      isDefault: true,
+      objectives: [objective, { ...objective, id: 'custom-objective', isDefault: false }],
+      createdAt: new Date('2026-01-01'),
+      updatedAt: new Date('2026-01-01'),
+    }
+    mockGetTransitionPlan.mockResolvedValue(sourceTransitionPlan)
+    mockGetTrajectories.mockResolvedValue([
+      trajectory,
+      { ...trajectory, id: 'custom-trajectory', type: TrajectoryType.CUSTOM, isDefault: false },
+    ])
+    mockCreateTransitionPlan.mockResolvedValue({
+      ...sourceTransitionPlan,
+      id: 'copied-plan',
+      studyId: copiedStudy.id,
+    })
     await duplicateTrainingStudy(
       sourceStudy,
       [{ id: 'professor', environment: Environment.COURSE_BC }],
@@ -87,6 +147,35 @@ describe('shared training study duplication', () => {
       ],
       prismaClient,
     )
+    expect(mockGetTransitionPlan).toHaveBeenCalledWith(sourceStudy.id, prismaClient)
+    expect(mockGetTrajectories).toHaveBeenCalledWith(sourceTransitionPlan.id, prismaClient)
+    expect(mockCreateTransitionPlan).toHaveBeenCalledWith(copiedStudy.id, 'secten-version', prismaClient)
+    expect(createTrajectoryWithObjectives).toHaveBeenCalledTimes(1)
+    expect(createTrajectoryWithObjectives).toHaveBeenCalledWith(
+      {
+        transitionPlan: { connect: { id: 'copied-plan' } },
+        name: trajectory.name,
+        description: trajectory.description,
+        type: trajectory.type,
+        referenceYear: trajectory.referenceYear,
+        sectorPercentages: trajectory.sectorPercentages,
+        isDefault: true,
+        objectives: {
+          createMany: {
+            data: [
+              {
+                name: objective.name,
+                startYear: 2026,
+                targetYear: 2030,
+                reductionRate: 0.4,
+                isDefault: true,
+              },
+            ],
+          },
+        },
+      },
+      prismaClient,
+    )
   })
 
   it('preserves the legacy destination, shared sites, suffix and multiple learner rights', async () => {
@@ -113,6 +202,8 @@ describe('shared training study duplication', () => {
       { accountId: 'learner-1', role: StudyRole.Reader },
       { accountId: 'learner-2', role: StudyRole.Reader },
     ])
+    expect(mockCreateTransitionPlan).not.toHaveBeenCalled()
+    expect(createTrajectoryWithObjectives).not.toHaveBeenCalled()
   })
 
   it('rejects missing copied site mappings instead of dropping study data', async () => {
