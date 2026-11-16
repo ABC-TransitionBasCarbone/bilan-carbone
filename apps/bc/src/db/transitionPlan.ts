@@ -52,8 +52,12 @@ export const getTransitionPlanByIdWithRelations = async (id: string): Promise<Tr
   })
 }
 
-export const getTransitionPlanByStudyId = async (studyId: string): Promise<TransitionPlan | null> => {
-  return prismaClient.transitionPlan.findUnique({
+export const getTransitionPlanByStudyId = async (
+  studyId: string,
+  tx?: Prisma.TransactionClient,
+): Promise<TransitionPlan | null> => {
+  const client = tx ?? prismaClient
+  return client.transitionPlan.findUnique({
     where: {
       studyId,
     },

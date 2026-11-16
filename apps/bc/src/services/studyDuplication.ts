@@ -1,6 +1,7 @@
 import { createEmissionSourcesWithReturn, getFamilyTagsForStudy } from '@/db/emissionSource'
 import { getOrganizationWithSitesById } from '@/db/organization'
 import { createEmissionSourceTags, createStudy, FullStudy, getStudyById } from '@/db/study'
+import { getTransitionPlanByStudyId } from '@/db/transitionPlan'
 import { mapCncToStudySite } from '@/utils/cnc'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
@@ -193,6 +194,10 @@ export const buildStudyForDuplication = (
   },
 })
 
+export const duplicateTrainingTransitionPlan = async (sourceStudyId: string, tx: Prisma.TransactionClient) => {
+  await getTransitionPlanByStudyId(sourceStudyId, tx)
+}
+
 export const duplicateTrainingStudy = async (
   study: FullStudy,
   accounts: { id: string; environment: Environment }[],
@@ -250,5 +255,6 @@ export const duplicateTrainingStudy = async (
     environment,
     target?.siteIds,
   )
+  await duplicateTrainingTransitionPlan(study.id, tx)
   return createdStudy
 }

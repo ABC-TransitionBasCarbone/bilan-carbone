@@ -22,6 +22,7 @@ jest.mock('@/db/study', () => ({
   getStudyById: jest.fn(),
   createEmissionSourceTags: jest.fn(),
 }))
+jest.mock('@/db/transitionPlan', () => ({ getTransitionPlanByStudyId: jest.fn() }))
 jest.mock('uuid', () => ({ v4: jest.fn(() => 'copied-emission') }))
 jest.mock('../services/file', () => ({ download: jest.fn() }))
 jest.mock('@/services/serverFunctions/emissionFactor', () => ({}))
