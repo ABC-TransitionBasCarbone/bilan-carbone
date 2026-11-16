@@ -1114,8 +1114,8 @@ const users = async () => {
         courseOrganism: {
           create: {
             name: `Course test organism ${courseEnv}`,
-            contactEmail: 'course-organism@yopmail.com',
-            ftpPath: `course-test-${i}`,
+            contactEmail: 'course-organism-abc@yopmail.com',
+            ftpPath: `ifc`,
           },
         },
         traineeOrganizations: {
