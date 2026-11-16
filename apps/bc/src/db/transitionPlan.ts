@@ -219,7 +219,10 @@ export const hasTransitionPlan = async (studyId: string): Promise<boolean> => {
   return count > 0
 }
 
-export const createAction = async (data: Prisma.ActionUncheckedCreateInput) => prismaClient.action.create({ data })
+export const createAction = async (data: Prisma.ActionUncheckedCreateInput, tx?: Prisma.TransactionClient) => {
+  const client = tx ?? prismaClient
+  return client.action.create({ data })
+}
 
 export const createActionWithRelations = async (
   command: Omit<AddActionInputCommand, 'siteIds' | 'tagIds' | 'subPosts'>,
@@ -257,8 +260,12 @@ export const getActionById = async (id: string): Promise<ActionWithRelations | n
     },
   })
 
-export const getActions = async (transitionPlanId: string): Promise<ActionWithRelations[]> =>
-  prismaClient.action.findMany({
+export const getActions = async (
+  transitionPlanId: string,
+  tx?: Prisma.TransactionClient,
+): Promise<ActionWithRelations[]> => {
+  const client = tx ?? prismaClient
+  return client.action.findMany({
     where: { transitionPlanId },
     orderBy: [{ priority: 'asc' }, { createdAt: 'desc' }],
     include: {
@@ -267,6 +274,7 @@ export const getActions = async (transitionPlanId: string): Promise<ActionWithRe
       steps: { orderBy: { order: 'asc' } },
     },
   })
+}
 
 export const createTransitionPlanStudy = async (transitionPlanId: string, studyId: string) =>
   prismaClient.transitionPlanStudy.create({ data: { transitionPlanId, studyId } })

@@ -2,8 +2,10 @@ import { createEmissionSourcesWithReturn, getFamilyTagsForStudy } from '@/db/emi
 import { getOrganizationWithSitesById } from '@/db/organization'
 import { createEmissionSourceTags, createStudy, FullStudy, getStudyById } from '@/db/study'
 import {
+  createAction,
   createTrajectoryWithObjectives,
   createTransitionPlan,
+  getActions,
   getTrajectoriesByTransitionPlanId,
   getTransitionPlanByStudyId,
 } from '@/db/transitionPlan'
@@ -200,17 +202,18 @@ export const buildStudyForDuplication = (
 })
 
 const duplicateTrainingTransitionPlan = async (
-  sourceStudyId: string,
-  targetStudyId: string,
+  sourceStudy: FullStudy,
+  targetStudy: FullStudy,
   tx: Prisma.TransactionClient,
+  siteIds?: ReadonlyMap<string, string>,
 ) => {
-  const sourceTransitionPlan = await getTransitionPlanByStudyId(sourceStudyId, tx)
+  const sourceTransitionPlan = await getTransitionPlanByStudyId(sourceStudy.id, tx)
   if (!sourceTransitionPlan) {
     return
   }
   const trajectories = await getTrajectoriesByTransitionPlanId(sourceTransitionPlan.id, tx)
   const targetTransitionPlan = await createTransitionPlan(
-    targetStudyId,
+    targetStudy.id,
     sourceTransitionPlan.sectenVersionId ?? undefined,
     tx,
   )
@@ -236,6 +239,58 @@ const duplicateTrainingTransitionPlan = async (
                 isDefault: objective.isDefault,
               })),
           },
+        },
+      },
+      tx,
+    )
+  }
+  const actions = await getActions(sourceTransitionPlan.id, tx)
+  for (const action of actions) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, transitionPlanId, createdAt, updatedAt, indicators, steps, sites, tags, subPosts, ...data } = action
+    await createAction(
+      {
+        ...data,
+        transitionPlanId: targetTransitionPlan.id,
+        indicators: {
+          create: indicators.map((indicator) => ({ type: indicator.type, description: indicator.description })),
+        },
+        steps: {
+          create: steps.map((step) => ({ title: step.title, order: step.order })),
+        },
+        sites: {
+          create: sites.map(({ studySite }) => {
+            const targetSiteId = siteIds ? siteIds.get(studySite.siteId) : studySite.siteId
+            const targetStudySite = targetStudy.sites.find((site) => site.site.id === targetSiteId)
+            if (!targetStudySite) {
+              throw new Error(`Missing copied site ${studySite.siteId} for action ${action.id}`)
+            }
+            return { studySiteId: targetStudySite.id }
+          }),
+        },
+        tags: {
+          create: tags.map(({ studyTag }) => {
+            const sourceFamily = sourceStudy.tagFamilies.find((family) => family.id === studyTag.familyId)
+            const targetFamily = targetStudy.tagFamilies.find((family) => family.name === sourceFamily?.name)
+            const targetTag = targetFamily?.tags.find((tag) => tag.name === studyTag.name)
+            if (!targetTag) {
+              throw new Error(`Missing copied tag ${studyTag.id} for action ${action.id}`)
+            }
+            return { studyTagId: targetTag.id }
+          }),
+        },
+        subPosts: {
+          create: subPosts.map(({ subPost }) => {
+            const targetSubPost = getTransEnvironmentSubPost(
+              getEnvironmentHandlingGenericEnvs(sourceStudy.organizationVersion.environment),
+              getEnvironmentHandlingGenericEnvs(targetStudy.organizationVersion.environment),
+              subPost,
+            )
+            if (!targetSubPost) {
+              throw new Error(`Cannot copy subpost ${subPost} for action ${action.id}`)
+            }
+            return { subPost: targetSubPost }
+          }),
         },
       },
       tx,
@@ -300,6 +355,6 @@ export const duplicateTrainingStudy = async (
     environment,
     target?.siteIds,
   )
-  await duplicateTrainingTransitionPlan(study.id, createdStudy.id, tx)
+  await duplicateTrainingTransitionPlan(study, createdStudyWithSites, tx, target?.siteIds)
   return createdStudy
 }

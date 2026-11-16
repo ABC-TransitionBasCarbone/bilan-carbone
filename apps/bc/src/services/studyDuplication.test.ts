@@ -3,13 +3,23 @@ import { createEmissionSourcesWithReturn, getFamilyTagsForStudy } from '@/db/emi
 import { getOrganizationWithSitesById } from '@/db/organization'
 import { createEmissionSourceTags, createStudy, getStudyById } from '@/db/study'
 import {
+  createAction,
   createTrajectoryWithObjectives,
   createTransitionPlan,
+  getActions,
   getTrajectoriesByTransitionPlanId,
   getTransitionPlanByStudyId,
 } from '@/db/transitionPlan'
 import { getMockedFullStudy, getMockedFullStudySite, getMockeFullStudy, TEST_IDS } from '@/tests/utils/models/study'
-import { Environment, StudyRole, SubPost, TrajectoryType } from '@abc-transitionbascarbone/common/db/enums'
+import type { ActionWithRelations } from '@/types/trajectory.types'
+import {
+  ActionIndicatorType,
+  ActionPotentialDeduction,
+  Environment,
+  StudyRole,
+  SubPost,
+  TrajectoryType,
+} from '@abc-transitionbascarbone/common/db/enums'
 import {
   buildStudyForDuplication,
   duplicateEmissionSources,
@@ -33,6 +43,8 @@ jest.mock('@/db/transitionPlan', () => ({
   getTrajectoriesByTransitionPlanId: jest.fn(),
   createTransitionPlan: jest.fn(),
   createTrajectoryWithObjectives: jest.fn(),
+  getActions: jest.fn(),
+  createAction: jest.fn(),
 }))
 jest.mock('uuid', () => ({ v4: jest.fn(() => 'copied-emission') }))
 jest.mock('../services/file', () => ({ download: jest.fn() }))
@@ -49,13 +61,40 @@ const mockTags = getFamilyTagsForStudy as jest.Mock
 const mockGetTransitionPlan = jest.mocked(getTransitionPlanByStudyId)
 const mockGetTrajectories = jest.mocked(getTrajectoriesByTransitionPlanId)
 const mockCreateTransitionPlan = jest.mocked(createTransitionPlan)
+const mockGetActions = jest.mocked(getActions)
+const tagFamily = {
+  id: 'source-family',
+  name: 'Family',
+  studyId: TEST_IDS.sourceStudy,
+  createdAt: new Date('2026-01-01'),
+  updatedAt: new Date('2026-01-01'),
+  tags: [
+    {
+      id: 'source-tag',
+      familyId: 'source-family',
+      name: 'Tag',
+      color: null,
+      createdAt: new Date('2026-01-01'),
+      updatedAt: new Date('2026-01-01'),
+    },
+  ],
+}
 const sourceSite = getMockedFullStudySite({ id: 'source-study-site' })
 const sourceStudy = getMockeFullStudy({
   sites: [{ ...sourceSite, site: { ...sourceSite.site, id: TEST_IDS.site } }],
+  tagFamilies: [tagFamily],
 })
 const copiedStudy = getMockedFullStudy({
   id: 'copied-study',
   sites: [{ ...sourceSite, id: 'copied-study-site', site: { ...sourceSite.site, id: 'copied-site' } }],
+  tagFamilies: [
+    {
+      ...tagFamily,
+      id: 'copied-family',
+      studyId: 'copied-study',
+      tags: [{ ...tagFamily.tags[0], id: 'copied-tag', familyId: 'copied-family' }],
+    },
+  ],
 })
 const siteIds = new Map([[TEST_IDS.site, 'copied-site']])
 
@@ -71,6 +110,7 @@ describe('shared training study duplication', () => {
     mockTags.mockResolvedValue([])
     mockGetTransitionPlan.mockResolvedValue(null)
     mockGetTrajectories.mockResolvedValue([])
+    mockGetActions.mockResolvedValue([])
   })
 
   it('copies studies and their emissions onto the new site IDs with Validator rights', async () => {
@@ -118,6 +158,87 @@ describe('shared training study duplication', () => {
       id: 'copied-plan',
       studyId: copiedStudy.id,
     })
+    const action: ActionWithRelations = {
+      id: 'source-action',
+      transitionPlanId: sourceTransitionPlan.id,
+      title: 'Reduce emissions',
+      detailedDescription: 'Action description',
+      potentialDeduction: ActionPotentialDeduction.Quantity,
+      reductionDetails: 'Reduction details',
+      reductionValueKg: 500,
+      reductionStartYear: '2026',
+      reductionEndYear: '2030',
+      owner: 'Team',
+      necessaryBudget: 1000,
+      necesssaryRessources: 'Resources',
+      facilitatorsAndObstacles: 'Obstacles',
+      additionalInformation: 'Information',
+      priority: 2,
+      nature: [],
+      category: [],
+      relevance: [],
+      enabled: false,
+      createdAt: sourceTransitionPlan.createdAt,
+      updatedAt: sourceTransitionPlan.updatedAt,
+      indicators: [
+        {
+          id: 'source-indicator',
+          actionId: 'source-action',
+          type: ActionIndicatorType.Implementation,
+          description: 'Indicator',
+          createdAt: sourceTransitionPlan.createdAt,
+          updatedAt: sourceTransitionPlan.updatedAt,
+        },
+      ],
+      steps: [
+        {
+          id: 'source-step',
+          actionId: 'source-action',
+          title: 'First step',
+          order: 0,
+          createdAt: sourceTransitionPlan.createdAt,
+          updatedAt: sourceTransitionPlan.updatedAt,
+        },
+      ],
+      sites: [
+        {
+          id: 'source-action-site',
+          actionId: 'source-action',
+          studySiteId: sourceSite.id,
+          studySite: {
+            ...sourceSite,
+            studyId: sourceStudy.id,
+            siteId: TEST_IDS.site,
+            cncVersionId: null,
+            situation: null,
+            createdAt: sourceTransitionPlan.createdAt,
+            updatedAt: sourceTransitionPlan.updatedAt,
+          },
+          createdAt: sourceTransitionPlan.createdAt,
+          updatedAt: sourceTransitionPlan.updatedAt,
+        },
+      ],
+      tags: [
+        {
+          id: 'source-action-tag',
+          actionId: 'source-action',
+          studyTagId: tagFamily.tags[0].id,
+          studyTag: tagFamily.tags[0],
+          createdAt: sourceTransitionPlan.createdAt,
+          updatedAt: sourceTransitionPlan.updatedAt,
+        },
+      ],
+      subPosts: [
+        {
+          id: 'source-action-subpost',
+          actionId: 'source-action',
+          subPost: SubPost.Electricite,
+          createdAt: sourceTransitionPlan.createdAt,
+          updatedAt: sourceTransitionPlan.updatedAt,
+        },
+      ],
+    }
+    mockGetActions.mockResolvedValue([action])
     await duplicateTrainingStudy(
       sourceStudy,
       [{ id: 'professor', environment: Environment.COURSE_BC }],
@@ -176,6 +297,36 @@ describe('shared training study duplication', () => {
       },
       prismaClient,
     )
+    expect(mockGetActions).toHaveBeenCalledWith(sourceTransitionPlan.id, prismaClient)
+    expect(createAction).toHaveBeenCalledTimes(1)
+    expect(createAction).toHaveBeenCalledWith(
+      {
+        transitionPlanId: 'copied-plan',
+        title: action.title,
+        detailedDescription: action.detailedDescription,
+        potentialDeduction: action.potentialDeduction,
+        reductionDetails: action.reductionDetails,
+        reductionValueKg: action.reductionValueKg,
+        reductionStartYear: action.reductionStartYear,
+        reductionEndYear: action.reductionEndYear,
+        owner: action.owner,
+        necessaryBudget: action.necessaryBudget,
+        necesssaryRessources: action.necesssaryRessources,
+        facilitatorsAndObstacles: action.facilitatorsAndObstacles,
+        additionalInformation: action.additionalInformation,
+        priority: 2,
+        nature: [],
+        category: [],
+        relevance: [],
+        enabled: false,
+        indicators: { create: [{ type: ActionIndicatorType.Implementation, description: 'Indicator' }] },
+        steps: { create: [{ title: 'First step', order: 0 }] },
+        sites: { create: [{ studySiteId: 'copied-study-site' }] },
+        tags: { create: [{ studyTagId: 'copied-tag' }] },
+        subPosts: { create: [{ subPost: SubPost.Electricite }] },
+      },
+      prismaClient,
+    )
   })
 
   it('preserves the legacy destination, shared sites, suffix and multiple learner rights', async () => {
@@ -204,6 +355,8 @@ describe('shared training study duplication', () => {
     ])
     expect(mockCreateTransitionPlan).not.toHaveBeenCalled()
     expect(createTrajectoryWithObjectives).not.toHaveBeenCalled()
+    expect(mockGetActions).not.toHaveBeenCalled()
+    expect(createAction).not.toHaveBeenCalled()
   })
 
   it('rejects missing copied site mappings instead of dropping study data', async () => {
