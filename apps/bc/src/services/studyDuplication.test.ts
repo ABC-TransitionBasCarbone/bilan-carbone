@@ -1,4 +1,4 @@
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { createEmissionSourcesWithReturn, getFamilyTagsForStudy } from '@/db/emissionSource'
 import { getOrganizationWithSitesById } from '@/db/organization'
 import { createEmissionSourceTags, createStudy, getStudyById } from '@/db/study'
@@ -11,7 +11,7 @@ import {
   getSitesForDuplication,
 } from './studyDuplication'
 
-jest.mock('@/db/client.server', () => ({ prismaClient: {} }))
+jest.mock('@/db/client', () => ({ prismaClient: {} }))
 jest.mock('@/db/emissionSource', () => ({
   createEmissionSourcesWithReturn: jest.fn(),
   getFamilyTagsForStudy: jest.fn(),

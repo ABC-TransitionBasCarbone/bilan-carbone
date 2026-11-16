@@ -1,4 +1,4 @@
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import * as studyUtilsModule from '@/utils/study'
 import {
   CourseSessionType,

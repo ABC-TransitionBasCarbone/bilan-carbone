@@ -1,9 +1,9 @@
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { getAccountOrganizationVersions } from './account'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 import { OrganizationVersionWithOrganizationSelect } from './organization.select'
 
-jest.mock('./client.server', () => ({
+jest.mock('./client', () => ({
   prismaClient: {
     account: { findUnique: jest.fn() },
     organizationVersion: { findMany: jest.fn() },

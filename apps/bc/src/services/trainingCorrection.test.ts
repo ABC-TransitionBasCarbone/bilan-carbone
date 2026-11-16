@@ -1,11 +1,11 @@
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { getStudyById, getStudyTemplates } from '@/db/study'
 import { getMockedFullStudy } from '@/tests/utils/models/study'
 import { DuplicableStudy, Environment, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
 import { duplicateTrainingStudy } from './studyDuplication'
 import { ensureCourseProfessorCorrections, ensureProfessorCorrectionClient } from './trainingCorrection'
 
-jest.mock('@/db/client.server', () => ({
+jest.mock('@/db/client', () => ({
   prismaClient: {
     organizationVersion: { findFirst: jest.fn(), findMany: jest.fn(), create: jest.fn() },
     organization: { findUnique: jest.fn() },

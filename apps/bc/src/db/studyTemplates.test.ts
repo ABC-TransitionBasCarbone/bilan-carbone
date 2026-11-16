@@ -1,8 +1,8 @@
 import { DuplicableStudy, Environment } from '@abc-transitionbascarbone/common/db/enums'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 import { getStudyTemplates, upsertStudyTemplate } from './study'
 
-jest.mock('./client.server', () => ({
+jest.mock('./client', () => ({
   prismaClient: { studyTemplate: { findMany: jest.fn(), upsert: jest.fn() } },
 }))
 jest.mock('@/services/permissions/study', () => ({}))
