@@ -363,7 +363,9 @@ describe('professor correction client', () => {
         'tilt-professor',
       ])
       expect(mockDuplicate).toHaveBeenCalledTimes(5)
-      expect(mockDuplicate.mock.calls[4][1]).toEqual([{ id: 'professor-account', environment: Environment.COURSE_TILT }])
+      expect(mockDuplicate.mock.calls[4][1]).toEqual([
+        { id: 'professor-account', environment: Environment.COURSE_TILT },
+      ])
     } finally {
       log.mockRestore()
     }
