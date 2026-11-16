@@ -13,3 +13,7 @@ description: 'Use when creating, changing, or debugging Zustand stores and clien
 4. Select only the state needed by a component to avoid unnecessary subscriptions and renders.
 5. Keep derived values derived rather than storing a second source of truth. Add middleware only when the feature needs it and follows an existing project pattern.
 6. Test state transitions and observable outcomes, then run the affected app's TypeScript check.
+
+## References
+
+- [Zustand documentation](https://zustand.docs.pmnd.rs/)

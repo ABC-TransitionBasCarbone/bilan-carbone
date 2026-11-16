@@ -19,6 +19,11 @@ The skill directories stay directly under `skills/` so agents can discover them 
 - [next-dev-loop](./next-dev-loop/SKILL.md) — verify Next.js changes in a running development app.
 - [vercel-react-best-practices](./vercel-react-best-practices/SKILL.md) — React and Next.js performance guidance from Vercel Engineering; it does not require deploying to Vercel. Vendored from [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices) (MIT); the `rules/` files are its supporting content, not separate skills.
 
+### UI and state
+
+- [mui](./mui/SKILL.md) — build, style, or debug MUI and MUI X features. Source: [MUI documentation](https://mui.com/material-ui/getting-started/).
+- [zustand](./zustand/SKILL.md) — create, change, or debug Zustand stores and client state. Source: [Zustand documentation](https://zustand.docs.pmnd.rs/).
+
 ### Testing and browser automation
 
 - [cypress](./cypress/SKILL.md) — create, update, debug, or review concise, behavior-focused Cypress end-to-end tests.
@@ -30,10 +35,14 @@ The skill directories stay directly under `skills/` so agents can discover them 
 
 - [prisma](./prisma/SKILL.md) — work with Prisma schemas, queries, migrations, and configuration.
 - [scalingo-docs](./scalingo-docs/SKILL.md) — answer Scalingo questions using its official documentation.
+- [zod](./zod/SKILL.md) — create schemas, validate untrusted input, and integrate validation. Source: [Zod documentation](https://zod.dev/).
 
 ### Development workflow
 
 - [address-pr-comments-no-resolve](./address-pr-comments-no-resolve/SKILL.md) — review PR feedback and prepare local fixes without posting or resolving comments.
+- [eslint](./eslint/SKILL.md) — diagnose lint failures and change ESLint configuration or rules. Source: [ESLint documentation](https://eslint.org/docs/latest/).
+- [prettier](./prettier/SKILL.md) — format code and update or diagnose Prettier configuration. Source: [Prettier documentation](https://prettier.io/docs/).
+- [typescript](./typescript/SKILL.md) — author, refactor, or debug TypeScript types and code. Source: [TypeScript documentation](https://www.typescriptlang.org/docs/).
 - [write-skills](./write-skills/SKILL.md) — create or improve agent skills.
 
 ## Personal and local-only skills

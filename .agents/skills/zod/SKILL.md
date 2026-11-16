@@ -13,3 +13,7 @@ description: 'Use when creating or changing Zod schemas, parsing untrusted input
 4. Derive TypeScript types from schemas with `z.infer` (or input/output types when transforms change the shape); avoid maintaining a duplicate type by hand.
 5. Preserve localized validation messages. Shared Zod error configuration lives in `packages/common/zod.config.ts`; do not replace it with hardcoded user-facing messages.
 6. Check how errors are surfaced by the calling form or server function, then run focused validation tests and the affected app's TypeScript check.
+
+## References
+
+- [Zod documentation](https://zod.dev/)

@@ -12,3 +12,7 @@ description: 'Use when diagnosing lint failures, changing ESLint configuration, 
 3. For configuration changes, use the existing ESLint 9 flat-config conventions and keep app-specific rules in that app's config.
 4. Preserve Prettier integration and existing overrides for declarations, tests, and Cypress files.
 5. Validate with the target app's lint script, which checks Prettier formatting and runs ESLint.
+
+## References
+
+- [ESLint documentation](https://eslint.org/docs/latest/)

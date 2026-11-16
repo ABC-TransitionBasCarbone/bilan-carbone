@@ -13,3 +13,7 @@ description: 'Use when authoring, refactoring, or debugging TypeScript types and
 4. Use `import type` for type-only imports when consistent with the surrounding code, and follow the repository's import ordering and formatting.
 5. Keep async flows on `async`/`await`. Preserve server/client boundaries and use existing authorization-aware server functions for database access.
 6. Check the affected app or package with its TypeScript script and run focused tests for changed logic.
+
+## References
+
+- [TypeScript documentation](https://www.typescriptlang.org/docs/)

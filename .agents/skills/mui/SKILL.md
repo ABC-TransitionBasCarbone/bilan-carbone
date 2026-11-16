@@ -14,3 +14,7 @@ description: 'Use when building, styling, or debugging MUI components, themes, o
 5. Reuse shared components from `packages/common` when the behavior belongs to both apps; keep app-specific UI in that app.
 6. Preserve localization with `next-intl` and existing accessibility, responsive, and form conventions.
 7. Verify the affected app with its focused tests, TypeScript check, or lint command, depending on the change.
+
+## References
+
+- [MUI documentation](https://mui.com/material-ui/getting-started/)

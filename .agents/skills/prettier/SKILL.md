@@ -12,3 +12,7 @@ description: 'Use when formatting code, diagnosing Prettier differences, or chan
 3. Prefer formatting the affected files or using the owning app's existing format script. Avoid unrelated formatting churn.
 4. If formatting conflicts with ESLint, inspect the shared ESLint configuration and existing integration instead of changing either tool's settings speculatively.
 5. Validate with the target app's lint script or the relevant Prettier check.
+
+## References
+
+- [Prettier documentation](https://prettier.io/docs/)
