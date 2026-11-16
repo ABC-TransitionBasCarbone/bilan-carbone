@@ -1,7 +1,7 @@
 import { SURVEY_CATEGORY_KEYS } from '@/constants/survey'
 import { RULE_NAME_SEPARATOR } from '@abc-transitionbascarbone/common/publicodes/form/utils'
 import { isObject } from '@abc-transitionbascarbone/common/utils/object'
-import { normalizeCategoryKey } from '@abc-transitionbascarbone/common/utils/parsing'
+import { normalizeString } from '@abc-transitionbascarbone/common/utils/parsing'
 import Engine, { parsePublicodes } from 'publicodes'
 
 export type RawRules = Parameters<typeof parsePublicodes>[0]
@@ -100,13 +100,13 @@ const getSurveyCategoryKeysFromRules = (rules: Record<string, unknown>): string[
 
   const ruleKeysByNormalized = new Map<string, string>()
   for (const ruleKey of Object.keys(rules)) {
-    const normalizedKey = normalizeCategoryKey(ruleKey)
+    const normalizedKey = normalizeString(ruleKey)
     if (!ruleKeysByNormalized.has(normalizedKey)) {
       ruleKeysByNormalized.set(normalizedKey, ruleKey)
     }
   }
 
-  return SURVEY_CATEGORY_KEYS.map((key) => ruleKeysByNormalized.get(normalizeCategoryKey(key)) ?? null).filter(
+  return SURVEY_CATEGORY_KEYS.map((key) => ruleKeysByNormalized.get(normalizeString(key)) ?? null).filter(
     (key): key is string => key !== null,
   )
 }

@@ -257,7 +257,7 @@ export const createStudyCommand = async (
     let courseSessionType: CourseSessionType | null = null
     if (isCourseEnvironment(session.user.environment)) {
       if (await isCourseProfessor(session.user.organizationVersionId, session.user.environment, tx)) {
-        if (organizationVersionId !== session.user.organizationVersionId) {
+        if (!(await isInOrgaOrParentFromId(session.user.organizationVersionId, organizationVersionId))) {
           console.error('createStudyCommand: professor cannot create a study outside their organization', {
             accountId: session.user.accountId,
             userOrganizationVersionId: session.user.organizationVersionId,

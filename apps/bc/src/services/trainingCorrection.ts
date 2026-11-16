@@ -1,11 +1,12 @@
 import { FullStudy, getStudyById, getStudyTemplates } from '@/db/study'
 import type { Prisma, Site } from '@abc-transitionbascarbone/common/db'
 import { DuplicableStudy, Environment, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
-import { DAY } from '@abc-transitionbascarbone/common/utils'
+import { DAY, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils'
 import {
   getEnvironmentHandlingGenericEnvs,
   isCourseEnvironment,
 } from '@abc-transitionbascarbone/common/utils/environments'
+import { normalizeString } from '@abc-transitionbascarbone/common/utils/parsing'
 import { v4 as uuidv4 } from 'uuid'
 import { duplicateTrainingStudy } from './studyDuplication'
 
@@ -73,12 +74,36 @@ export const ensureProfessorCorrectionClient = async (
       sites.set(site.id, site)
     }
   }
-  const siteIds = new Map([...sites.keys()].map((id) => [id, uuidv4()]))
-  const copiedSites = [...sites.values()].map((site) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, organizationId, oldBCId, createdAt, updatedAt, ...data } = site
-    return { ...data, id: siteIds.get(id) }
-  })
+  const sourceSites = [...sites.values()]
+  const sourceNames = new Set(sourceSites.map((site) => normalizeString(site.name)))
+  const existingSites = existingClient
+    ? (
+        await transaction.site.findMany({
+          where: { organizationId: existingClient.organizationId },
+          select: { id: true, name: true },
+        })
+      ).filter((site) => sourceNames.has(normalizeString(site.name)))
+    : []
+  if (
+    sourceNames.size !== sourceSites.length ||
+    new Set(existingSites.map((site) => normalizeString(site.name))).size !== existingSites.length
+  ) {
+    console.error('ensureProfessorCorrectionClient: ambiguous site names', { professorOrganizationVersionId })
+    throw new Error('Ambiguous correction site names')
+  }
+  const siteIds = new Map(
+    sourceSites.map((site) => [
+      site.id,
+      existingSites.find((copy) => normalizeString(copy.name) === normalizeString(site.name))?.id ?? uuidv4(),
+    ]),
+  )
+  const copiedSites = sourceSites
+    .filter((site) => !existingSites.some((copy) => normalizeString(copy.name) === normalizeString(site.name)))
+    .map((site) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id, organizationId, oldBCId, createdAt, updatedAt, ...data } = site
+      return { ...data, id: siteIds.get(id) }
+    })
   const client =
     existingClient ??
     (await transaction.organizationVersion.create({
@@ -120,7 +145,7 @@ export const ensureProfessorCorrectionClient = async (
 }
 
 export const ensureCourseProfessorCorrections = async (transaction: Prisma.TransactionClient) => {
-  const twoWeeksAgo = new Date(Date.now() - 14 * DAY)
+  const twoWeeksAgo = new Date(Date.now() - 14 * DAY * TIME_IN_MS)
   const professors = await transaction.organizationVersion.findMany({
     where: {
       environment: { in: [Environment.COURSE_BC, Environment.COURSE_TILT] },

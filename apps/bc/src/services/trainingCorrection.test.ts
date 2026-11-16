@@ -11,7 +11,7 @@ jest.mock('@/db/client', () => ({
     organization: { findUnique: jest.fn() },
     account: { findFirst: jest.fn() },
     study: { findMany: jest.fn() },
-    site: { createMany: jest.fn() },
+    site: { findMany: jest.fn(), createMany: jest.fn() },
   },
 }))
 jest.mock('@/db/study', () => ({ getStudyTemplates: jest.fn(), getStudyById: jest.fn() }))
@@ -24,6 +24,7 @@ const mockFindOrganization = prismaClient.organization.findUnique as jest.Mock
 const mockFindAccount = prismaClient.account.findFirst as jest.Mock
 const mockTemplates = getStudyTemplates as jest.Mock
 const mockCopies = prismaClient.study.findMany as jest.Mock
+const mockFindCopiedSites = prismaClient.site.findMany as jest.Mock
 const mockProfessors = prismaClient.organizationVersion.findMany as jest.Mock
 const mockStudy = jest.mocked(getStudyById)
 const mockDuplicate = jest.mocked(duplicateTrainingStudy)
@@ -62,6 +63,7 @@ describe('professor correction client', () => {
     mockStudy.mockImplementation(async (id) => getMockedFullStudy({ id }))
     mockDuplicate.mockReset()
     mockCopies.mockResolvedValue([])
+    mockFindCopiedSites.mockResolvedValue([])
     mockProfessors.mockResolvedValue([])
   })
 
@@ -147,6 +149,90 @@ describe('professor correction client', () => {
     expect(prismaClient.site.createMany).toHaveBeenCalledWith({
       data: [expect.objectContaining({ id: 'copied-site', organizationId: 'client-org', name: sourceSite.name })],
     })
+  })
+
+  it('reuses copied sites regardless of case and accents and creates missing sites', async () => {
+    mockFindClient.mockResolvedValue({ id: 'existing-child', organizationId: 'client-org' })
+    mockCopies.mockResolvedValue([{ sourceTemplateStudyId: 'correction-1' }])
+    mockFindOrganization.mockResolvedValue({
+      sites: [sourceSite, { ...sourceSite, id: 'new-source-site', name: 'Nouveau site' }],
+    })
+    mockFindCopiedSites.mockResolvedValue([{ id: 'existing-site-copy', name: 'SITE MODELE' }])
+
+    await ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)
+
+    expect(mockFindCopiedSites).toHaveBeenCalledWith({
+      where: { organizationId: 'client-org' },
+      select: { id: true, name: true },
+    })
+    expect(prismaClient.site.createMany).toHaveBeenCalledWith({
+      data: [expect.objectContaining({ id: 'copied-site', organizationId: 'client-org', name: 'Nouveau site' })],
+    })
+    expect(mockDuplicate).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'correction-2' }),
+      [{ id: 'professor-account', environment: Environment.COURSE_BC }],
+      StudyRole.Validator,
+      prismaClient,
+      undefined,
+      {
+        organizationVersionId: 'existing-child',
+        siteIds: new Map([
+          ['source-site', 'existing-site-copy'],
+          ['new-source-site', 'copied-site'],
+        ]),
+      },
+    )
+  })
+
+  it('creates no sites when they have all been copied already', async () => {
+    mockFindClient.mockResolvedValue({ id: 'existing-child', organizationId: 'client-org' })
+    mockCopies.mockResolvedValue([{ sourceTemplateStudyId: 'correction-1' }])
+    mockFindCopiedSites.mockResolvedValue([
+      { id: 'existing-site-copy', name: sourceSite.name },
+      { id: 'other-site-1', name: 'Autre site' },
+      { id: 'other-site-2', name: 'AUTRE SITE' },
+    ])
+
+    await ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)
+
+    expect(prismaClient.site.createMany).not.toHaveBeenCalled()
+    expect(mockDuplicate.mock.calls[0][5]?.siteIds).toEqual(new Map([['source-site', 'existing-site-copy']]))
+  })
+
+  it('rejects ambiguous copied site names instead of linking a correction to an arbitrary site', async () => {
+    mockFindClient.mockResolvedValue({ id: 'existing-child', organizationId: 'client-org' })
+    mockCopies.mockResolvedValue([{ sourceTemplateStudyId: 'correction-1' }])
+    mockFindCopiedSites.mockResolvedValue([
+      { id: 'site-copy-1', name: sourceSite.name },
+      { id: 'site-copy-2', name: 'SITE MODELE' },
+    ])
+    const log = jest.spyOn(console, 'error').mockImplementation()
+
+    await expect(ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)).rejects.toThrow(
+      'Ambiguous correction site names',
+    )
+
+    expect(log).toHaveBeenCalledWith('ensureProfessorCorrectionClient: ambiguous site names', {
+      professorOrganizationVersionId: 'professor-org',
+    })
+    expect(prismaClient.site.createMany).not.toHaveBeenCalled()
+    expect(mockDuplicate).not.toHaveBeenCalled()
+    log.mockRestore()
+  })
+
+  it('rejects distinct source sites with names differing only in case or accents', async () => {
+    mockFindOrganization.mockResolvedValue({
+      sites: [sourceSite, { ...sourceSite, id: 'other-source-site', name: 'SITE MODELE' }],
+    })
+    const log = jest.spyOn(console, 'error').mockImplementation()
+
+    await expect(ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)).rejects.toThrow(
+      'Ambiguous correction site names',
+    )
+
+    expect(mockCreateClient).not.toHaveBeenCalled()
+    expect(mockDuplicate).not.toHaveBeenCalled()
+    log.mockRestore()
   })
 
   it('repairs an empty child without creating another client', async () => {

@@ -1,4 +1,4 @@
-import { removeDiacritics } from '@abc-transitionbascarbone/common/utils/parsing'
+import { normalizeString } from '@abc-transitionbascarbone/common/utils/parsing'
 
 export type ImpactCo2DisplayMode = 'interstitial' | 'section'
 
@@ -66,15 +66,13 @@ const TRANSPORT_WIDGET_SEARCH_BY_CATEGORY: Partial<Record<string, string>> = {
   transport: buildTransportWidgetSearch(PRO_TRANSPORT_MODES, ['avion', 'intercites']),
 }
 
-const normalizeCategoryKey = (categoryKey: string): string => removeDiacritics(categoryKey).trim().toLowerCase()
-
 const CATEGORY_KEY_ALIASES: Record<string, string> = {
   numerique: 'numerique',
   deplacements: 'transport',
 }
 
 const resolveCategoryKey = (categoryKey: string): string => {
-  const normalized = normalizeCategoryKey(categoryKey)
+  const normalized = normalizeString(categoryKey)
   return CATEGORY_KEY_ALIASES[normalized] ?? normalized
 }
 

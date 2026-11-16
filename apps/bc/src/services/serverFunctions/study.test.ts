@@ -109,6 +109,7 @@ jest.mock('../../utils/study', () => ({
   hasSufficientLevel: jest.fn(),
 }))
 jest.mock('../../db/organization', () => ({
+  getOrganizationVersionForRightsCheck: jest.fn(),
   getOrganizationVersionById: jest.fn(),
   getOrganizationWithSitesById: jest.fn(),
   getOrgVersionWithNameById: jest.fn(),
@@ -283,6 +284,7 @@ const mockCreateEmissionSourceTags = studyDbModule.createEmissionSourceTags as j
 const mockAddUserChecklistItem = userModule.addUserChecklistItem as jest.Mock
 const mockSendInvitation = userModule.sendInvitation as jest.Mock
 const mockGetOrganizationVersionById = organizationModule.getOrganizationVersionById as jest.Mock
+const mockGetOrganizationVersionForRightsCheck = organizationModule.getOrganizationVersionForRightsCheck as jest.Mock
 const mockAddAccount = accountModule.addAccount as jest.Mock
 const mockGetOrgSitesWithCNCByOrgVersionId = organizationModule.getOrgSitesWithCNCByOrgVersionId as jest.Mock
 const mockGetUserByEmail = userDbModule.getUserByEmail as jest.Mock
@@ -443,6 +445,7 @@ describe('study', () => {
       mockCreateStudy.mockResolvedValue({ id: TEST_IDS.newStudy, sites: [] })
       mockCreateContributorOnStudy.mockResolvedValue(undefined)
       mockIsCourseProfessor.mockResolvedValue(false)
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue(null)
     }
 
     const setupInvitationMocks = () => {
@@ -545,6 +548,40 @@ describe('study', () => {
           )
         },
       )
+
+      it('lets a professor create a study on a child organization', async () => {
+        const childOrganizationVersionId = 'child-org-version'
+        mockDbActualizedAuth.mockResolvedValue({
+          ...mockedSession,
+          user: {
+            ...mockedSession.user,
+            environment: Environment.COURSE_BC,
+            organizationVersionId: TEST_IDS.orgVersion,
+          },
+        })
+        mockIsCourseProfessor.mockResolvedValue(true)
+        mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+          id: childOrganizationVersionId,
+          parentId: TEST_IDS.orgVersion,
+        })
+
+        const result = await createStudyCommand({
+          ...mockedStudyCommand,
+          organizationVersionId: childOrganizationVersionId,
+        })
+
+        expect(result.success).toBe(true)
+        expect(mockGetCourseSessionsForTrainee).not.toHaveBeenCalled()
+        expect(mockCreateStudy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            courseSessionType: null,
+            organizationVersion: { connect: { id: childOrganizationVersionId } },
+          }),
+          Environment.COURSE_BC,
+          true,
+          undefined,
+        )
+      })
 
       it('prevents a professor from creating a study on another organization', async () => {
         mockDbActualizedAuth.mockResolvedValue({
