@@ -57,7 +57,7 @@ const UserView = async ({ account }: Props) => {
           )}
         />
       )}
-      <StudiesContainer user={account} isCR={isCR} />
+      <StudiesContainer user={account} isCR={isCR} isProfessor={sessions.length > 0} />
 
       {emissionFactorWarning.success && !!emissionFactorWarning.data.length && (
         <EmissionFactorsWarning emissionFactors={emissionFactorWarning.data} />

@@ -21,13 +21,14 @@ interface Props {
   user: UserSession
   organizationVersionId?: string
   isCR?: boolean
+  isProfessor?: boolean
   simplified?: boolean
 }
 
-const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified = false }: Props) => {
+const StudiesContainer = async ({ user, organizationVersionId, isCR, isProfessor, simplified = false }: Props) => {
   const allowedStudies = organizationVersionId
     ? await getAllowedStudiesByUserAndOrganization(user, organizationVersionId, simplified)
-    : isCR
+    : isCR || isProfessor
       ? await getExternalAllowedStudiesByUser(user)
       : await getAllowedStudiesByAccount(user)
 
@@ -89,7 +90,7 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
     )
   }
 
-  if ((await canCreateAStudy(user, simplified)) && !isCR) {
+  if ((await canCreateAStudy(user, simplified)) && !isCR && !isProfessor) {
     return (
       <CreateFirstStudy
         simplified={simplified}

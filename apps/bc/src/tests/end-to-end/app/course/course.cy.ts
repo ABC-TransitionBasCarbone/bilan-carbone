@@ -153,6 +153,29 @@ for (let i = 0; i < testedCourseEnvironments.length; i++) {
       cy.contains('course BC study').should('be.visible')
     })
 
+    it('shows a professor personal study in their organization but not among trainee studies', () => {
+      cy.intercept('POST', '**/etudes/creer**').as('createStudy')
+      cy.loginForEnv(env, professorEmail, 'password-1')
+
+      cy.visit('/etudes/creer')
+      cy.getByTestId('new-study-organization-title').should('be.visible')
+      cy.getByTestId('organization-sites-checkbox').first().find('input').check({ force: true }).should('be.checked')
+      cy.getByTestId('new-study-organization-button').should('be.enabled').click()
+      cy.getByTestId('new-study-name').type('Professor personal study')
+      cy.getByTestId('new-study-level').click()
+      cy.get('[data-value="Initial"]').click()
+      cy.getByTestId('new-study-endDate').within(() => {
+        cy.get('span').first().type(dayjs().add(1, 'year').format('DD/MM/YYYY'))
+      })
+      cy.getByTestId('new-study-create-button').click()
+      cy.wait('@createStudy').its('response.statusCode').should('eq', 200)
+
+      cy.visit('/')
+      cy.contains('[data-testid="study-name-chip"]', 'Professor personal study').should('not.exist')
+      cy.visit('/organisations')
+      cy.getByTestId('study-name-chip').contains('Professor personal study').should('be.visible')
+    })
+
     it('allows a trainee administrator to delete a study', () => {
       cy.loginForEnv(env, traineeEmail, 'password-0')
 
