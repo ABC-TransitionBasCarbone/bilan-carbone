@@ -79,6 +79,12 @@ yarn dev
 
 The application will be available at [http://localhost:3000](http://localhost:3000)
 
+For parallel worktrees, set `PORT` in `apps/bc/.env.local` and `MIP_PORT` in
+`apps/mip/.env.local` to different available ports. These ignored files are loaded
+by the development scripts, including when running `yarn dev` from the root.
+Update `NEXTAUTH_URL`, `NEXT_API_URL` (BC), and `CYPRESS_URL` there to match.
+Without local overrides, BC uses port 3000 and MIP uses port 3002.
+
 ## Commands by workspace
 
 ### bc application

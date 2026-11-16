@@ -375,7 +375,24 @@
   "admin": {
     "title": "Administration",
     "csvOnly": "Only CSV files are accepted",
-    "uploadButton": "Import users"
+    "uploadButton": "Import users",
+    "messageBanners": {
+      "title": "Message banners",
+      "message": "Message",
+      "environments": "Environments",
+      "startAt": "Start date",
+      "endAt": "End date",
+      "active": "Active",
+      "inactive": "Inactive",
+      "create": "Create banner",
+      "update": "Update",
+      "cancel": "Cancel",
+      "existing": "Existing banners",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Delete this banner?",
+      "empty": "No banners"
+    }
   },
   "study": {
     "create": "Add a Bilan Carbone®",
