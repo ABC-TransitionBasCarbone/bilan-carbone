@@ -17,7 +17,7 @@ import { signPassword } from '@abc-transitionbascarbone/common/utils/auth'
 import { environmentsWithChecklist } from '@abc-transitionbascarbone/common/utils/environments'
 import { UserSession } from 'next-auth'
 import { addAccount, getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 
 export const getUserByEmailWithSensibleInformations = (email: string) =>
   prismaClient.user.findUnique({

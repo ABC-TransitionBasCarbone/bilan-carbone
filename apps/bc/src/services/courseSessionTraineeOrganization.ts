@@ -1,4 +1,4 @@
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import type { CourseSession } from '@abc-transitionbascarbone/common/db'
 import { CourseSessionTraineeOrganizationStatus } from '@abc-transitionbascarbone/common/db/enums'
 

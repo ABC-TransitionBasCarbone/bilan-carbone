@@ -1,4 +1,4 @@
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 import { OrganizationVersionCourseAccessSelect } from './organization.select'
 
 export const getOrganizationVersionsByIds = (organizationVersionIds: string[]) =>

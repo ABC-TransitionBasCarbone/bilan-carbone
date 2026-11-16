@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { getOrgVersionWithOrgId } from '@/db/organization'
 import { getStudyById } from '@/db/study'
 

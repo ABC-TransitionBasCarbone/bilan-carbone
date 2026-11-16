@@ -4,9 +4,9 @@ import {
   hasHomeAlert,
   hasStartLinkOnFootprints,
   isTilt,
-  isTiltSimplifiedFeatureActive,
 } from '@/services/permissions/environment'
 import { hasAccessToStudies } from '@/services/permissions/environmentAdvanced'
+import { isTiltSimplifiedFeatureActive } from '@/services/permissions/environmentFeature'
 import { getFeedbackFormUrl } from '@/utils/ressources'
 import LinkButton from '@abc-transitionbascarbone/common/components/base/LinkButton'
 import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'

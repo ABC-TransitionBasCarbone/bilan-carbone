@@ -1,4 +1,4 @@
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { getValidSubPostsForEnvironment } from '@/utils/importEmissionSources.utils'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 

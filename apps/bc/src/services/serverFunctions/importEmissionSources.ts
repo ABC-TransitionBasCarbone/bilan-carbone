@@ -1,6 +1,6 @@
 'use server'
 
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { EmissionFactorList, findEmissionFactorByIdForMatch } from '@/db/emissionFactors'
 import { createEmissionSourcesWithReturn, getFamilyTagsForStudy } from '@/db/emissionSource'
 import { createEmissionSourceTags, FullStudy, getStudyById } from '@/db/study'
@@ -40,11 +40,11 @@ import { yearToDate } from '@abc-transitionbascarbone/common/utils'
 import { Post } from '@abc-transitionbascarbone/common/utils/charts'
 import { buildCsv } from '@abc-transitionbascarbone/common/utils/csv'
 import xlsx from 'node-xlsx'
+import { getAuthenticatedAccountWithOrga } from '../auth'
 import { canBeValidated, getCaracterisationsBySubPost, getEmissionSourceEmission } from '../emissionSource'
-import { getAuthenticatedAccountWithOrga } from '../permissions/account.permissions'
 import { hasStudyBasicRights } from '../permissions/emissionSource'
 import { canReadStudy } from '../permissions/study'
-import { getStudyParentOrganizationId } from '../study.server'
+import { getStudyParentOrganizationId } from '../studyAccess'
 import {
   getQualitativeUncertaintyFromQuality,
   getQualitativeUncertaintyFromSquaredStandardDeviation,

@@ -3,7 +3,7 @@
 import { getUserByEmailWithSensibleInformations, updateUserPasswordForEmail } from '@/db/user'
 import { withServerResponse } from '@/utils/serverResponse'
 import { computePasswordValidation } from '@abc-transitionbascarbone/common/utils/auth'
-import { hashResetToken } from '@abc-transitionbascarbone/common/utils/user.server'
+import { hashResetToken } from '@abc-transitionbascarbone/common/utils/userTokens'
 import jwt from 'jsonwebtoken'
 
 export const checkToken = async (token: string) => {

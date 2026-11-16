@@ -1,3 +1,5 @@
+import 'client-only'
+
 import { useEffect } from 'react'
 
 interface UseBeforeUnloadOptions {

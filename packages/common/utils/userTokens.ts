@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { createHash, randomBytes } from 'node:crypto'
 
 export const generateResetToken = () => randomBytes(32).toString('hex')

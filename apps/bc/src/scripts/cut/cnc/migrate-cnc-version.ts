@@ -9,7 +9,7 @@
  * Run with: npx tsx src/scripts/migrations/link-existing-cncs-to-version.ts
  */
 
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { getOrCreateCncVersion } from '@/db/cnc'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 

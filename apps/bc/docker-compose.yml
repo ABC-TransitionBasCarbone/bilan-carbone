@@ -4,6 +4,7 @@ services:
   db:
     image: postgres:17
     environment:
+      POSTGRES_DB: bilancarbone
       POSTGRES_USER: bilancarbone
       POSTGRES_PASSWORD: bilancarbone
     ports:
@@ -11,9 +12,9 @@ services:
   db_test:
     image: postgres:17
     environment:
+      POSTGRES_DB: bilancarbone_test
       POSTGRES_USER: bilancarbone
       POSTGRES_PASSWORD: bilancarbone
-      POSTGRES_DB: bilancarbone_test
     ports:
       - '5433:5432'
   maildev:
