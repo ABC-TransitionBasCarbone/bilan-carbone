@@ -858,6 +858,7 @@ const getOrCreateUserAndSendStudyInvite = async (
   lastName?: string,
 ) => {
   let accountId = ''
+  let activeEnvs: Environment[] = []
   const t = await getTranslations('study.role')
   const creatorDBUser = await getUserSourceById(creator.id)
 
@@ -894,6 +895,12 @@ const getOrCreateUserAndSendStudyInvite = async (
 
     accountId = newAccountId
   } else {
+    activeEnvs = existingUser.accounts
+      .filter(
+        (account) => account.status === UserStatus.ACTIVE && account.environment !== organizationVersion.environment,
+      )
+      .map((account) => account.environment)
+
     let account = (await getAccountByEmailAndEnvironment(email, organizationVersion.environment)) as AccountWithUser
     let skipEmail = skipInviteEmail
     if (!account) {
@@ -901,17 +908,21 @@ const getOrCreateUserAndSendStudyInvite = async (
         user: { connect: { id: existingUser.id } },
         role: Role.COLLABORATOR,
         environment: organizationVersion.environment,
-        status: UserStatus.VALIDATED,
+        status: activeEnvs.length ? UserStatus.ACTIVE : UserStatus.VALIDATED,
       })) as AccountWithUser
     } else if (account.status === UserStatus.IMPORTED) {
       await updateAccount(account.id, {
         organizationVersion: { disconnect: true },
-        status: UserStatus.VALIDATED,
+        status: activeEnvs.length ? UserStatus.ACTIVE : UserStatus.VALIDATED,
         role: Role.COLLABORATOR,
       })
       account = (await getAccountByEmailAndEnvironment(email, organizationVersion.environment)) as AccountWithUser
+    } else if (account.status === UserStatus.ACTIVE) {
+      activeEnvs = []
     } else if (account.status === UserStatus.SUSPENDED) {
       skipEmail = true
+    } else if (activeEnvs.length) {
+      await updateAccount(account.id, { status: UserStatus.ACTIVE })
     }
 
     if (!skipEmail) {
@@ -923,6 +934,7 @@ const getOrCreateUserAndSendStudyInvite = async (
         newRoleOnStudy ? t(newRoleOnStudy).toLowerCase() : '',
         organizationVersion.environment,
         account,
+        activeEnvs,
       )
     }
     accountId = account.id

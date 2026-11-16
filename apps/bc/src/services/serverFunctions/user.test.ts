@@ -41,6 +41,7 @@ import {
   sendAccountActivatedEmail,
   sendActivationEmail,
   sendActivationRequest,
+  sendAddedActiveUserEmail,
 } from '@abc-transitionbascarbone/common/services/email/email'
 import { EMAIL_SENT, NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { mockedOrganizationId } from '@abc-transitionbascarbone/common/services/tests/models/organization'
@@ -49,7 +50,13 @@ import { DAY, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils'
 import jwt from 'jsonwebtoken'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
-import { activateEmail, activateEmailForCourse, checkCourseActivation, signUpWithSiretOrCNC } from './user'
+import {
+  activateEmail,
+  activateEmailForCourse,
+  checkCourseActivation,
+  sendInvitation,
+  signUpWithSiretOrCNC,
+} from './user'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../file', () => ({ download: jest.fn() }))
@@ -81,6 +88,7 @@ jest.mock('@/services/associationApi')
 jest.mock('@abc-transitionbascarbone/common/db/db')
 jest.mock('@abc-transitionbascarbone/common/services/email/email', () => ({
   sendAccountActivatedEmail: jest.fn(),
+  sendAddedActiveUserEmail: jest.fn(),
   sendActivationEmail: jest.fn(),
   sendActivationRequest: jest.fn(),
 }))
@@ -118,6 +126,7 @@ const mockGetCompanyName = getCompanyName as jest.Mock
 const mockSendActivationEmail = sendActivationEmail as jest.Mock
 const mockSendActivationRequest = sendActivationRequest as jest.Mock
 const mockSendAccountActivatedEmail = sendAccountActivatedEmail as jest.Mock
+const mockSendAddedActiveUserEmail = sendAddedActiveUserEmail as jest.Mock
 const mockGetOrganizationVersionForRightsCheck = getOrganizationVersionForRightsCheck as jest.Mock
 const mockOrganizationVersionActiveAccountsCount = organizationVersionActiveAccountsCount as jest.Mock
 const mockActivateEmail = activateEmail as jest.Mock
@@ -171,6 +180,42 @@ describe('signUpWithSiretOrCNC', () => {
     mockGetAccountsFromOrganizationForActivation.mockResolvedValue([])
     mockRemoveOtherAccountActivation.mockResolvedValue(true)
     mockActivateEmail.mockResolvedValue({ success: true, data: EMAIL_SENT })
+  })
+
+  describe('sendInvitation', () => {
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    it('sends a new-environment email instead of a password-setup invitation to an active user', async () => {
+      const existingAccount = {
+        status: UserStatus.ACTIVE,
+        user: { firstName: 'Contributor' },
+      } as NonNullable<Parameters<typeof sendInvitation>[6]>
+      const creator = { firstName: 'Study', lastName: 'Owner' } as Parameters<typeof sendInvitation>[3]
+
+      const result = await sendInvitation(
+        testEmail,
+        { name: 'Study name' } as Parameters<typeof sendInvitation>[1],
+        { name: 'Organization' } as Parameters<typeof sendInvitation>[2],
+        creator,
+        '',
+        Environment.CUT,
+        existingAccount,
+        [Environment.BC],
+      )
+
+      expect(result.success).toBe(true)
+      expect(mockSendAddedActiveUserEmail).toHaveBeenCalledWith(
+        testEmail,
+        'Study Owner',
+        'Contributor',
+        Environment.CUT,
+        [Environment.BC],
+        'Organization',
+        { studyName: 'Study name', organizationName: 'Organization', roleOnStudy: '' },
+      )
+    })
   })
 
   describe('Feature deactivation checks', () => {
@@ -355,6 +400,44 @@ describe('signUpWithSiretOrCNC', () => {
       )
       expect(mockUpdateUserPasswordForEmail.mock.calls[0][3]).toBe(mockValidateUser.mock.calls[0][1])
       expect(mockSendAccountActivatedEmail).toHaveBeenCalledWith(testEmail, Environment.COURSE_BC)
+    })
+
+    it('activates a course account for an existing user without changing their password', async () => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [
+          { id: mockedAccountId, environment: Environment.COURSE_BC, status: UserStatus.IMPORTED },
+          { id: 'bc-account-id', environment: Environment.BC, status: UserStatus.ACTIVE },
+        ],
+      })
+
+      const result = await actualActivateEmailForCourse(testEmail, '123456', undefined, Environment.COURSE_BC)
+
+      expect(result.success).toBe(true)
+      expect(mockValidateUser).not.toHaveBeenCalled()
+      expect(mockUpdateUserPasswordForEmail).not.toHaveBeenCalled()
+      expect(mockUpdateAccount).toHaveBeenCalledWith(
+        mockedAccountId,
+        { role: Role.ADMIN, status: UserStatus.ACTIVE },
+        {},
+        expect.anything(),
+      )
+      expect(mockSendAccountActivatedEmail).toHaveBeenCalledWith(testEmail, Environment.COURSE_BC, {
+        environments: [Environment.BC],
+        userName: 'Test User',
+      })
+    })
+
+    it('requires a password when the user has no active account in another environment', async () => {
+      const result = await actualActivateEmailForCourse(testEmail, '123456', undefined, Environment.COURSE_BC)
+
+      expect(result).toEqual({ success: false, errorMessage: 'Password invalid' })
+      expect(mockValidateUser).not.toHaveBeenCalled()
+      expect(mockUpdateUserPasswordForEmail).not.toHaveBeenCalled()
+      expect(mockSendAccountActivatedEmail).not.toHaveBeenCalled()
     })
 
     it('succeeds and logs the error when the confirmation email cannot be sent', async () => {
