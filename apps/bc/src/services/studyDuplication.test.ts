@@ -253,7 +253,12 @@ describe('shared training study duplication', () => {
 
   it('builds a copy with new relationships rather than existing users or sources', () => {
     const command = buildStudyForDuplication(
-      { ...sourceStudy, sourceTemplateStudyId: 'original-template' }, 'creator', 'destination', [], [], [],
+      { ...sourceStudy, sourceTemplateStudyId: 'original-template' },
+      'creator',
+      'destination',
+      [],
+      [],
+      [],
     )
     expect(command).not.toHaveProperty('sourceTemplateStudyId')
     expect(command.emissionSources).toEqual({ createMany: { data: [] } })

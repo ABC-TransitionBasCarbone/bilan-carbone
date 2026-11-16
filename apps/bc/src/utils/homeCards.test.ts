@@ -41,16 +41,12 @@ describe('sortHomeCards', () => {
 
   it('sorts multiple children alphabetically before sessions', () => {
     const otherChild: HomeCardItem = { id: 'other-child', name: 'Alpha', type: HomeCardType.Clients }
-    expect(getVisibleHomeCards([...items, otherChild], HomeCardType.Session, '', null, null).map(({ id }) => id)).toEqual([
-      'other-child',
-      'correction-client',
-      'later-session',
-      'initial-session',
-    ])
-    expect(getVisibleHomeCards([...items, otherChild], HomeCardType.Session, 'introuvable', dayjs('invalid'), null)).toEqual([
-      otherChild,
-      correctionClient,
-    ])
+    expect(
+      getVisibleHomeCards([...items, otherChild], HomeCardType.Session, '', null, null).map(({ id }) => id),
+    ).toEqual(['other-child', 'correction-client', 'later-session', 'initial-session'])
+    expect(
+      getVisibleHomeCards([...items, otherChild], HomeCardType.Session, 'introuvable', dayjs('invalid'), null),
+    ).toEqual([otherChild, correctionClient])
   })
 
   it('sorts sessions by newest start date, with names breaking ties', () => {
@@ -94,7 +90,10 @@ describe('getVisibleHomeCards', () => {
   })
 
   it('still filters session names case-insensitively and without accents', () => {
-    expect(getVisibleHomeCards(items, HomeCardType.Session, 'MAITRISE', null, null)).toEqual([correctionClient, laterSession])
+    expect(getVisibleHomeCards(items, HomeCardType.Session, 'MAITRISE', null, null)).toEqual([
+      correctionClient,
+      laterSession,
+    ])
   })
 
   it('preserves inclusive date overlap filtering for sessions', () => {
@@ -109,7 +108,10 @@ describe('getVisibleHomeCards', () => {
       { id: 'b', name: 'Beta', type: HomeCardType.Clients },
       { id: 'a', name: 'Alpha', type: HomeCardType.Clients },
     ]
-    expect(getVisibleHomeCards(clients, HomeCardType.Clients, '', dayjs('invalid'), null)).toEqual([clients[1], clients[0]])
+    expect(getVisibleHomeCards(clients, HomeCardType.Clients, '', dayjs('invalid'), null)).toEqual([
+      clients[1],
+      clients[0],
+    ])
     expect(getVisibleHomeCards(clients, HomeCardType.Clients, 'beta', null, null)).toEqual([clients[0]])
   })
 
