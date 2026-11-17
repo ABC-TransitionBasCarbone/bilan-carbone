@@ -1,13 +1,10 @@
 'use client'
 
-import {
-  deleteMessageBannerForManagement,
-  saveMessageBannerForManagement,
-} from '@/services/serverFunctions/messageBanner'
-import type { MessageBannerCommand } from '@/services/serverFunctions/messageBanner.command'
 import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
 import type { MessageBanner } from '@abc-transitionbascarbone/common/db'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import type { MessageBannerCommand } from '@abc-transitionbascarbone/common/utils/messageBanner.command'
+import type { ApiResponse } from '@abc-transitionbascarbone/common/utils/serverResponse'
 import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Switch, TextField } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -24,12 +21,12 @@ const toDateTimeInputValue = (date: Date) => {
   return localDate.toISOString().slice(0, 16)
 }
 
-const createEmptyBannerForm = (): BannerForm => {
+const createEmptyBannerForm = (environments: Environment[]): BannerForm => {
   const startAt = new Date()
   const endAt = new Date(startAt.getTime() + 24 * 60 * 60 * 1000)
   return {
     message: '',
-    environments: Object.values(Environment),
+    environments,
     startAt: toDateTimeInputValue(startAt),
     endAt: toDateTimeInputValue(endAt),
     active: true,
@@ -38,18 +35,21 @@ const createEmptyBannerForm = (): BannerForm => {
 
 interface Props {
   banners: MessageBanner[]
+  environments: Environment[]
+  saveBanner: (command: MessageBannerCommand) => Promise<ApiResponse<unknown>>
+  deleteBanner: (id: string) => Promise<ApiResponse<unknown>>
 }
 
-const MessageBannerManagement = ({ banners }: Props) => {
-  const t = useTranslations('admin.messageBanners')
+const MessageBannerManagement = ({ banners, environments, saveBanner, deleteBanner }: Props) => {
+  const t = useTranslations('messageBanners')
   const tEnvironment = useTranslations('environment')
   const { callServerFunction } = useServerFunction()
   const router = useRouter()
-  const [form, setForm] = useState<BannerForm>(createEmptyBannerForm)
+  const [form, setForm] = useState<BannerForm>(() => createEmptyBannerForm(environments))
   const [isSaving, setIsSaving] = useState(false)
   const saving = useRef(false)
 
-  const resetForm = () => setForm(createEmptyBannerForm())
+  const resetForm = () => setForm(createEmptyBannerForm(environments))
 
   const save = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -65,7 +65,7 @@ const MessageBannerManagement = ({ banners }: Props) => {
     saving.current = true
     setIsSaving(true)
     try {
-      await callServerFunction(() => saveMessageBannerForManagement(command), {
+      await callServerFunction(() => saveBanner(command), {
         onSuccess: () => {
           resetForm()
           router.refresh()
@@ -93,7 +93,7 @@ const MessageBannerManagement = ({ banners }: Props) => {
       return
     }
 
-    await callServerFunction(() => deleteMessageBannerForManagement(id), {
+    await callServerFunction(() => deleteBanner(id), {
       onSuccess: () => {
         if (form.id === id) {
           resetForm()
@@ -118,7 +118,7 @@ const MessageBannerManagement = ({ banners }: Props) => {
         <FormControl component="fieldset">
           <FormLabel component="legend">{t('environments')}</FormLabel>
           <FormGroup row>
-            {Object.values(Environment).map((environment) => (
+            {environments.map((environment) => (
               <FormControlLabel
                 key={environment}
                 control={

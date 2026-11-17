@@ -1,11 +1,44 @@
 'use server'
 
 import { prismaClient } from '@/db/client'
+import {
+  deleteMessageBanner as dbDeleteMessageBanner,
+  saveMessageBanner as dbSaveMessageBanner,
+  getMessageBannersForAdmin,
+} from '@/db/messageBanner'
 import { dbActualizedAuth } from '@/services/auth'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getActiveMessageBannerWhere } from '@abc-transitionbascarbone/common/db/db'
-import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { Environment, RoleMip } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
+import type { MessageBannerCommand } from '@abc-transitionbascarbone/common/utils/messageBanner.command'
+import { MessageBannerCommandValidation } from './messageBanner.command'
+
+const requireSuperAdmin = async (functionName: string) => {
+  const session = await dbActualizedAuth()
+  if (!session?.user || session.user.role !== RoleMip.SUPER_ADMIN) {
+    console.error(`${functionName}: NOT_AUTHORIZED`, { userId: session?.user?.id ?? 'anonymous' })
+    throw new Error(NOT_AUTHORIZED)
+  }
+}
+
+export const getMessageBannersForManagement = async () =>
+  withServerResponse('getMessageBannersForManagement', async () => {
+    await requireSuperAdmin('getMessageBannersForManagement')
+    return getMessageBannersForAdmin()
+  })
+
+export const saveMessageBannerForManagement = async (input: MessageBannerCommand) =>
+  withServerResponse('saveMessageBannerForManagement', async () => {
+    await requireSuperAdmin('saveMessageBannerForManagement')
+    return dbSaveMessageBanner(MessageBannerCommandValidation.parse(input))
+  })
+
+export const deleteMessageBannerForManagement = async (id: string) =>
+  withServerResponse('deleteMessageBannerForManagement', async () => {
+    await requireSuperAdmin('deleteMessageBannerForManagement')
+    return dbDeleteMessageBanner(id)
+  })
 
 export const getCurrentMessageBanners = async () =>
   withServerResponse('getCurrentMessageBanners', async () => {

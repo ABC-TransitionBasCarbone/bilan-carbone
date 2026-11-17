@@ -1,9 +1,15 @@
 import type { MessageBanner, Prisma } from '@abc-transitionbascarbone/common/db'
-import { getActiveMessageBannerWhere } from '@abc-transitionbascarbone/common/db/db'
+import {
+  deleteManagedMessageBanner,
+  getActiveMessageBannerWhere,
+  getManagedMessageBanners,
+  saveManagedMessageBanner,
+} from '@abc-transitionbascarbone/common/db/db'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { bcEnvironments } from '@abc-transitionbascarbone/common/utils/environments'
 import { prismaClient } from './client'
 
-export const getMessageBannersForAdmin = () => prismaClient.messageBanner.findMany({ orderBy: { startAt: 'desc' } })
+export const getMessageBannersForAdmin = () => getManagedMessageBanners(prismaClient, bcEnvironments)
 
 export const getMessageBannersForEnvironment = (environment: Environment) =>
   prismaClient.messageBanner.findMany({
@@ -11,7 +17,8 @@ export const getMessageBannersForEnvironment = (environment: Environment) =>
     orderBy: { startAt: 'asc' },
   })
 
-export const saveMessageBanner = ({ id, ...data }: Prisma.MessageBannerUncheckedCreateInput) =>
-  id ? prismaClient.messageBanner.update({ where: { id }, data }) : prismaClient.messageBanner.create({ data })
+export const saveMessageBanner = (data: Prisma.MessageBannerUncheckedCreateInput) =>
+  saveManagedMessageBanner(prismaClient, bcEnvironments, data)
 
-export const deleteMessageBanner = (id: MessageBanner['id']) => prismaClient.messageBanner.delete({ where: { id } })
+export const deleteMessageBanner = (id: MessageBanner['id']) =>
+  deleteManagedMessageBanner(prismaClient, bcEnvironments, id)

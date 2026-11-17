@@ -375,24 +375,7 @@
   "admin": {
     "title": "Administration du BC+",
     "csvOnly": "Seuls les fichiers CSV sont acceptés",
-    "uploadButton": "Importer un fichier CSV d'utilisateur·rices",
-    "messageBanners": {
-      "title": "Bandeaux de message",
-      "message": "Message",
-      "environments": "Environnements",
-      "startAt": "Date de début",
-      "endAt": "Date de fin",
-      "active": "Actif",
-      "inactive": "Inactif",
-      "create": "Créer le bandeau",
-      "update": "Mettre à jour",
-      "cancel": "Annuler",
-      "existing": "Bandeaux existants",
-      "edit": "Modifier",
-      "delete": "Supprimer",
-      "confirmDelete": "Supprimer ce bandeau ?",
-      "empty": "Aucun bandeau"
-    }
+    "uploadButton": "Importer un fichier CSV d'utilisateur·rices"
   },
   "study": {
     "create": "Ajouter un Bilan Carbone®",

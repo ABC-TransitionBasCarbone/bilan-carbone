@@ -1,4 +1,30 @@
 {
+  "messageBanners": {
+    "title": "Bandeaux de message",
+    "message": "Message",
+    "environments": "Environnements",
+    "startAt": "Date de début",
+    "endAt": "Date de fin",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "create": "Créer le bandeau",
+    "update": "Mettre à jour",
+    "cancel": "Annuler",
+    "existing": "Bandeaux existants",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "confirmDelete": "Supprimer ce bandeau ?",
+    "empty": "Aucun bandeau"
+  },
+  "environment": {
+    "BC": "BC+ 2.0",
+    "CUT": "Count",
+    "TILT": "Tilt",
+    "CLICKSON": "ClicksOn",
+    "MIP": "Mon Impact Pro",
+    "COURSE_BC": "BC+ Formation",
+    "COURSE_TILT": "BC+ Formation TILT"
+  },
   "common": {
     "colon": " :",
     "error": "Une erreur est survenue. Si le problème persiste, contactez le support.",

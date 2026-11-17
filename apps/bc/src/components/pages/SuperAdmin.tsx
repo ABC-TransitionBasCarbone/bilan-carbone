@@ -1,10 +1,15 @@
 import { getDeactivableFeaturesRestrictionValues } from '@/services/serverFunctions/deactivableFeatures'
-import { getMessageBannersForManagement } from '@/services/serverFunctions/messageBanner'
+import {
+  deleteMessageBannerForManagement,
+  getMessageBannersForManagement,
+  saveMessageBannerForManagement,
+} from '@/services/serverFunctions/messageBanner'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
+import MessageBannerManagement from '@abc-transitionbascarbone/common/components/MessageBannerManagement'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { bcEnvironments } from '@abc-transitionbascarbone/common/utils/environments'
 import { getTranslations } from 'next-intl/server'
 import DeactivableFeatures from '../admin/DeactivableFeatures'
-import MessageBannerManagement from '../admin/MessageBannerManagement'
 import SuperAdminImport from '../admin/SuperAdminImport'
 
 interface Props {
@@ -25,7 +30,12 @@ const SuperAdminPage = async ({ environment }: Props) => {
     <>
       <Block title={t('title')} as="h1">
         <SuperAdminImport environment={environment} />
-        <MessageBannerManagement banners={messageBanners.data} />
+        <MessageBannerManagement
+          banners={messageBanners.data}
+          environments={bcEnvironments}
+          saveBanner={saveMessageBannerForManagement}
+          deleteBanner={deleteMessageBannerForManagement}
+        />
         {deactivatedFeaturesRestrictions.success && (
           <DeactivableFeatures restrictions={deactivatedFeaturesRestrictions.data} />
         )}
