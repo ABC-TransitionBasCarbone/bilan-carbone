@@ -240,6 +240,7 @@
     "loading": "Caricamento"
   },
   "error": {
+    "invalidForm": "Il modulo contiene dati mancanti o non validi. Controlla i campi. Se il problema persiste, contatta l'assistenza.",
     "Not authorized": "Non hai i permessi per eseguire questa azione",
     "Not found": "La risorsa richiesta non è stata trovata",
     "Server error": "Si è verificato un errore del server, contatta l'assistenza",

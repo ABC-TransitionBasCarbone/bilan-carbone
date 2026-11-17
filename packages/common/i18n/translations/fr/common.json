@@ -48,7 +48,7 @@
       "back": "Retour",
       "import": "Importer",
       "export": "Exporter",
-      "continue": "Continuer", 
+      "continue": "Continuer",
       "actions": "Actions"
     },
     "questions": {
@@ -243,6 +243,7 @@
     "loading": "Chargement"
   },
   "error": {
+    "invalidForm": "Le formulaire contient des données manquantes ou invalides. Vérifiez les champs. Si le problème persiste, contactez le support.",
     "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
     "Not found": "La ressource demandée n'a pas été trouvée",
     "Server error": "Une erreur serveur est survenue, veuillez contacter le support",

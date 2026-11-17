@@ -240,6 +240,7 @@
     "loading": "Se încarcă"
   },
   "error": {
+    "invalidForm": "Formularul conține date lipsă sau nevalide. Verificați câmpurile. Dacă problema persistă, contactați asistența.",
     "Not authorized": "Nu aveți permisiunea de a efectua această acțiune",
     "Not found": "Resursa solicitată nu a fost găsită",
     "Server error": "A apărut o eroare de server, contactați asistența",
