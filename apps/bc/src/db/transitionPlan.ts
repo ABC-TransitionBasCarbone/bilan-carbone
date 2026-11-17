@@ -279,8 +279,12 @@ export const getActions = async (
 export const createTransitionPlanStudy = async (transitionPlanId: string, studyId: string) =>
   prismaClient.transitionPlanStudy.create({ data: { transitionPlanId, studyId } })
 
-export const createExternalStudy = async (data: Prisma.ExternalStudyUncheckedCreateInput) => {
-  return prismaClient.externalStudy.create({ data })
+export const createExternalStudy = async (
+  data: Prisma.ExternalStudyUncheckedCreateInput,
+  tx?: Prisma.TransactionClient,
+) => {
+  const client = tx ?? prismaClient
+  return client.externalStudy.create({ data })
 }
 
 export const updateExternalStudy = async (id: string, data: Prisma.ExternalStudyUpdateInput) => {
@@ -308,8 +312,10 @@ export const getLinkedStudiesForTransitionPlanAndYear = async (
     where: { transitionPlanId, study: { startDate: { gte: startDate, lt: endDate } } },
   })
 
-export const getExternalStudiesForTransitionPlan = async (transitionPlanId: string) =>
-  prismaClient.externalStudy.findMany({ where: { transitionPlanId } })
+export const getExternalStudiesForTransitionPlan = async (transitionPlanId: string, tx?: Prisma.TransactionClient) => {
+  const client = tx ?? prismaClient
+  return client.externalStudy.findMany({ where: { transitionPlanId } })
+}
 
 export const getLinkedStudiesForTransitionPlan = async (transitionPlanId: string) =>
   prismaClient.transitionPlanStudy.findMany({ where: { transitionPlanId } })

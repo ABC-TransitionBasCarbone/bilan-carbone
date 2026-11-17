@@ -45,6 +45,8 @@ jest.mock('@/db/transitionPlan', () => ({
   createTrajectoryWithObjectives: jest.fn(),
   getActions: jest.fn(),
   createAction: jest.fn(),
+  getExternalStudiesForTransitionPlan: jest.fn().mockResolvedValue([]),
+  createExternalStudy: jest.fn(),
 }))
 jest.mock('uuid', () => ({ v4: jest.fn(() => 'copied-emission') }))
 jest.mock('../services/file', () => ({ download: jest.fn() }))
@@ -210,7 +212,6 @@ describe('shared training study duplication', () => {
             studyId: sourceStudy.id,
             siteId: TEST_IDS.site,
             cncVersionId: null,
-            situation: null,
             createdAt: sourceTransitionPlan.createdAt,
             updatedAt: sourceTransitionPlan.updatedAt,
           },

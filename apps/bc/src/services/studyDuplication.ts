@@ -3,9 +3,11 @@ import { getOrganizationWithSitesById } from '@/db/organization'
 import { createEmissionSourceTags, createStudy, FullStudy, getStudyById } from '@/db/study'
 import {
   createAction,
+  createExternalStudy,
   createTrajectoryWithObjectives,
   createTransitionPlan,
   getActions,
+  getExternalStudiesForTransitionPlan,
   getTrajectoriesByTransitionPlanId,
   getTransitionPlanByStudyId,
 } from '@/db/transitionPlan'
@@ -217,6 +219,13 @@ const duplicateTrainingTransitionPlan = async (
     sourceTransitionPlan.sectenVersionId ?? undefined,
     tx,
   )
+  const externalStudies = await getExternalStudiesForTransitionPlan(sourceTransitionPlan.id, tx)
+  for (const study of externalStudies) {
+    await createExternalStudy(
+      { transitionPlanId: targetTransitionPlan.id, name: study.name, date: study.date, totalCo2Kg: study.totalCo2Kg },
+      tx,
+    )
+  }
   for (const trajectory of trajectories.filter((trajectory) => trajectory.isDefault)) {
     await createTrajectoryWithObjectives(
       {
