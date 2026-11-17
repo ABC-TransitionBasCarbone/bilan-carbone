@@ -151,10 +151,6 @@ describe('shared training study duplication', () => {
       updatedAt: new Date('2026-01-01'),
     }
     mockGetTransitionPlan.mockResolvedValue(sourceTransitionPlan)
-    mockGetTrajectories.mockResolvedValue([
-      trajectory,
-      { ...trajectory, id: 'custom-trajectory', type: TrajectoryType.CUSTOM, isDefault: false },
-    ])
     mockCreateTransitionPlan.mockResolvedValue({
       ...sourceTransitionPlan,
       id: 'copied-plan',
@@ -239,6 +235,44 @@ describe('shared training study duplication', () => {
         },
       ],
     }
+    const scopedObjective = {
+      ...objective,
+      id: 'custom-objective',
+      isDefault: false,
+      sites: action.sites.map(({ studySiteId, studySite, createdAt, updatedAt }) => ({
+        id: 'objective-site',
+        objectiveId: 'custom-objective',
+        studySiteId,
+        studySite,
+        createdAt,
+        updatedAt,
+      })),
+      tags: action.tags.map(({ studyTagId, studyTag, createdAt, updatedAt }) => ({
+        id: 'objective-tag',
+        objectiveId: 'custom-objective',
+        studyTagId,
+        studyTag,
+        createdAt,
+        updatedAt,
+      })),
+      subPosts: action.subPosts.map(({ subPost, createdAt, updatedAt }) => ({
+        id: 'objective-subpost',
+        objectiveId: 'custom-objective',
+        subPost,
+        createdAt,
+        updatedAt,
+      })),
+    }
+    mockGetTrajectories.mockResolvedValue([
+      { ...trajectory, objectives: [objective, scopedObjective] },
+      {
+        ...trajectory,
+        id: 'custom-trajectory',
+        type: TrajectoryType.CUSTOM,
+        isDefault: false,
+        objectives: [objective, scopedObjective],
+      },
+    ])
     mockGetActions.mockResolvedValue([action])
     await duplicateTrainingStudy(
       sourceStudy,
@@ -272,7 +306,29 @@ describe('shared training study duplication', () => {
     expect(mockGetTransitionPlan).toHaveBeenCalledWith(sourceStudy.id, prismaClient)
     expect(mockGetTrajectories).toHaveBeenCalledWith(sourceTransitionPlan.id, prismaClient)
     expect(mockCreateTransitionPlan).toHaveBeenCalledWith(copiedStudy.id, 'secten-version', prismaClient)
-    expect(createTrajectoryWithObjectives).toHaveBeenCalledTimes(1)
+    expect(createTrajectoryWithObjectives).toHaveBeenCalledTimes(2)
+    const copiedObjectives = [
+      {
+        name: objective.name,
+        startYear: 2026,
+        targetYear: 2030,
+        reductionRate: 0.4,
+        isDefault: true,
+        sites: { create: [] },
+        tags: { create: [] },
+        subPosts: { create: [] },
+      },
+      {
+        name: scopedObjective.name,
+        startYear: 2026,
+        targetYear: 2030,
+        reductionRate: 0.4,
+        isDefault: false,
+        sites: { create: [{ studySiteId: 'copied-study-site' }] },
+        tags: { create: [{ studyTagId: 'copied-tag' }] },
+        subPosts: { create: [{ subPost: SubPost.Electricite }] },
+      },
+    ]
     expect(createTrajectoryWithObjectives).toHaveBeenCalledWith(
       {
         transitionPlan: { connect: { id: 'copied-plan' } },
@@ -282,20 +338,16 @@ describe('shared training study duplication', () => {
         referenceYear: trajectory.referenceYear,
         sectorPercentages: trajectory.sectorPercentages,
         isDefault: true,
-        objectives: {
-          createMany: {
-            data: [
-              {
-                name: objective.name,
-                startYear: 2026,
-                targetYear: 2030,
-                reductionRate: 0.4,
-                isDefault: true,
-              },
-            ],
-          },
-        },
+        objectives: { create: copiedObjectives },
       },
+      prismaClient,
+    )
+    expect(createTrajectoryWithObjectives).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: TrajectoryType.CUSTOM,
+        isDefault: false,
+        objectives: { create: copiedObjectives },
+      }),
       prismaClient,
     )
     expect(mockGetActions).toHaveBeenCalledWith(sourceTransitionPlan.id, prismaClient)

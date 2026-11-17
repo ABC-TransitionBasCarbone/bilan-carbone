@@ -13,7 +13,7 @@ import {
 } from '@/db/transitionPlan'
 import { mapCncToStudySite } from '@/utils/cnc'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
-import { Environment, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
+import { Environment, StudyRole, SubPost } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { getEnvironmentHandlingGenericEnvs } from '@abc-transitionbascarbone/common/utils/environments'
 import { v4 as uuidv4 } from 'uuid'
@@ -203,6 +203,53 @@ export const buildStudyForDuplication = (
   },
 })
 
+const getCopiedTransitionPlanScope = (
+  scope: {
+    sites: { studySite: { siteId: string } }[]
+    tags: { studyTag: { id: string; familyId: string; name: string } }[]
+    subPosts: { subPost: SubPost }[]
+  },
+  sourceStudy: FullStudy,
+  targetStudy: FullStudy,
+  context: string,
+  siteIds?: ReadonlyMap<string, string>,
+) => ({
+  sites: {
+    create: scope.sites.map(({ studySite }) => {
+      const targetSiteId = siteIds ? siteIds.get(studySite.siteId) : studySite.siteId
+      const targetStudySite = targetStudy.sites.find((site) => site.site.id === targetSiteId)
+      if (!targetStudySite) {
+        throw new Error(`Missing copied site ${studySite.siteId} for ${context}`)
+      }
+      return { studySiteId: targetStudySite.id }
+    }),
+  },
+  tags: {
+    create: scope.tags.map(({ studyTag }) => {
+      const sourceFamily = sourceStudy.tagFamilies.find((family) => family.id === studyTag.familyId)
+      const targetFamily = targetStudy.tagFamilies.find((family) => family.name === sourceFamily?.name)
+      const targetTag = targetFamily?.tags.find((tag) => tag.name === studyTag.name)
+      if (!targetTag) {
+        throw new Error(`Missing copied tag ${studyTag.id} for ${context}`)
+      }
+      return { studyTagId: targetTag.id }
+    }),
+  },
+  subPosts: {
+    create: scope.subPosts.map(({ subPost }) => {
+      const targetSubPost = getTransEnvironmentSubPost(
+        getEnvironmentHandlingGenericEnvs(sourceStudy.organizationVersion.environment),
+        getEnvironmentHandlingGenericEnvs(targetStudy.organizationVersion.environment),
+        subPost,
+      )
+      if (!targetSubPost) {
+        throw new Error(`Cannot copy subpost ${subPost} for ${context}`)
+      }
+      return { subPost: targetSubPost }
+    }),
+  },
+})
+
 const duplicateTrainingTransitionPlan = async (
   sourceStudy: FullStudy,
   targetStudy: FullStudy,
@@ -226,7 +273,7 @@ const duplicateTrainingTransitionPlan = async (
       tx,
     )
   }
-  for (const trajectory of trajectories.filter((trajectory) => trajectory.isDefault)) {
+  for (const trajectory of trajectories) {
     await createTrajectoryWithObjectives(
       {
         transitionPlan: { connect: { id: targetTransitionPlan.id } },
@@ -237,17 +284,14 @@ const duplicateTrainingTransitionPlan = async (
         sectorPercentages: trajectory.sectorPercentages ?? undefined,
         isDefault: trajectory.isDefault,
         objectives: {
-          createMany: {
-            data: trajectory.objectives
-              .filter((objective) => objective.isDefault)
-              .map((objective) => ({
-                name: objective.name,
-                startYear: objective.startYear,
-                targetYear: objective.targetYear,
-                reductionRate: objective.reductionRate,
-                isDefault: objective.isDefault,
-              })),
-          },
+          create: trajectory.objectives.map((objective) => ({
+            name: objective.name,
+            startYear: objective.startYear,
+            targetYear: objective.targetYear,
+            reductionRate: objective.reductionRate,
+            isDefault: objective.isDefault,
+            ...getCopiedTransitionPlanScope(objective, sourceStudy, targetStudy, `objective ${objective.id}`, siteIds),
+          })),
         },
       },
       tx,
@@ -267,40 +311,13 @@ const duplicateTrainingTransitionPlan = async (
         steps: {
           create: steps.map((step) => ({ title: step.title, order: step.order })),
         },
-        sites: {
-          create: sites.map(({ studySite }) => {
-            const targetSiteId = siteIds ? siteIds.get(studySite.siteId) : studySite.siteId
-            const targetStudySite = targetStudy.sites.find((site) => site.site.id === targetSiteId)
-            if (!targetStudySite) {
-              throw new Error(`Missing copied site ${studySite.siteId} for action ${action.id}`)
-            }
-            return { studySiteId: targetStudySite.id }
-          }),
-        },
-        tags: {
-          create: tags.map(({ studyTag }) => {
-            const sourceFamily = sourceStudy.tagFamilies.find((family) => family.id === studyTag.familyId)
-            const targetFamily = targetStudy.tagFamilies.find((family) => family.name === sourceFamily?.name)
-            const targetTag = targetFamily?.tags.find((tag) => tag.name === studyTag.name)
-            if (!targetTag) {
-              throw new Error(`Missing copied tag ${studyTag.id} for action ${action.id}`)
-            }
-            return { studyTagId: targetTag.id }
-          }),
-        },
-        subPosts: {
-          create: subPosts.map(({ subPost }) => {
-            const targetSubPost = getTransEnvironmentSubPost(
-              getEnvironmentHandlingGenericEnvs(sourceStudy.organizationVersion.environment),
-              getEnvironmentHandlingGenericEnvs(targetStudy.organizationVersion.environment),
-              subPost,
-            )
-            if (!targetSubPost) {
-              throw new Error(`Cannot copy subpost ${subPost} for action ${action.id}`)
-            }
-            return { subPost: targetSubPost }
-          }),
-        },
+        ...getCopiedTransitionPlanScope(
+          { sites, tags, subPosts },
+          sourceStudy,
+          targetStudy,
+          `action ${action.id}`,
+          siteIds,
+        ),
       },
       tx,
     )
