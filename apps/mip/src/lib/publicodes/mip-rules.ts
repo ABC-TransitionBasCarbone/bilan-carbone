@@ -126,6 +126,7 @@ const getRootMissingVariables = (engine: Engine, root: string): MissingVariables
 
 const isApplicable = (engine: Engine, ruleName: string, mosaicChildren: string[]): boolean => {
   const situation = engine.getSituation()
+  // A "non" mosaic choice also hides every question under that choice.
   if (
     mosaicChildren.some((child) => {
       const branch = child.split(' . ').slice(0, -1).join(' . ')
@@ -146,6 +147,7 @@ const getEngineWithFoldedDefaults = (engine: Engine, foldedSteps: string[]): Eng
   const situation = engine.getSituation()
   const rules = getParsedRules(engine)
   const defaults: Situation<string> = {}
+  // Folded defaults are absent from getSituation, so materialize them for dependent questions.
   for (const step of foldedSteps) {
     if (situation[step] !== undefined || !Object.hasOwn(rules[step]?.rawNode ?? {}, 'par défaut')) {
       continue
@@ -206,8 +208,12 @@ export const hasRuleAnswer = (
   })
 }
 
-// Mosaic children are replaced by their parent, scored with the max of its children.
-export const getMissingVariables = (engine: Engine, meta: MipRulesMeta): MissingVariables => {
+// The UI asks for a mosaic parent, so use the maximum missing child score for it.
+const getMissingVariables = (
+  engine: Engine,
+  meta: MipRulesMeta,
+  isQuestionApplicable: (question: string) => boolean,
+): MissingVariables => {
   const rules = getParsedRules(engine)
   const missingVariables = Object.fromEntries(
     Object.entries(getRootMissingVariables(engine, meta.root)).filter(([ruleName]) =>
@@ -216,12 +222,11 @@ export const getMissingVariables = (engine: Engine, meta: MipRulesMeta): Missing
   )
 
   // Publicodes automatically resolves single-choice rules, but their questions still need confirmation.
-  const mosaicChildren = Object.values(meta.mosaicChildrenWithParent).flat()
   for (const question of meta.everyQuestions) {
     const choice = getChoiceOption(rules[question]?.rawNode)
     const possibilities =
       choice && typeof choice === 'object' && 'possibilités' in choice ? choice.possibilités : choice
-    if (Array.isArray(possibilities) && possibilities.length === 1 && isApplicable(engine, question, mosaicChildren)) {
+    if (Array.isArray(possibilities) && possibilities.length === 1 && isQuestionApplicable(question)) {
       missingVariables[question] ??= 1
     }
   }
@@ -283,33 +288,47 @@ export const sortQuestions = (
 export const getFormQuestions = (engine: Engine, meta: MipRulesMeta, foldedSteps: string[]) => {
   const situation = engine.getSituation()
   const questionEngine = getEngineWithFoldedDefaults(engine, foldedSteps)
-  const missingVariables = getMissingVariables(questionEngine, meta)
-  const mosaicChildren = new Set(Object.values(meta.mosaicChildrenWithParent).flat())
+  const mosaicChildren = Object.values(meta.mosaicChildrenWithParent).flat()
+  const mosaicChildSet = new Set(mosaicChildren)
+  const applicability = new Map<string, boolean>()
+  const isQuestionApplicable = (question: string): boolean => {
+    const cached = applicability.get(question)
+    if (cached !== undefined) {
+      return cached
+    }
+
+    const result = isApplicable(questionEngine, question, mosaicChildren)
+    applicability.set(question, result)
+    return result
+  }
+  const isAnswerApplicable =
+    questionEngine === engine
+      ? isQuestionApplicable
+      : (question: string) => isApplicable(engine, question, mosaicChildren)
+  const missingVariables = getMissingVariables(questionEngine, meta, isQuestionApplicable)
 
   const remainingQuestions = sortQuestions(
     engine,
     meta.everyQuestions.filter(
       (question) =>
-        !mosaicChildren.has(question) &&
+        !mosaicChildSet.has(question) &&
         !foldedSteps.includes(question) &&
         question in missingVariables &&
-        isApplicable(questionEngine, question, [...mosaicChildren]),
+        isQuestionApplicable(question),
     ),
     meta,
     missingVariables,
   )
 
   const relevantAnsweredQuestions = meta.everyQuestions.filter((question) => {
-    const isMosaicChild = mosaicChildren.has(question)
+    const isMosaicChild = mosaicChildSet.has(question)
     const isAnswered =
       foldedSteps.includes(question) || hasRuleAnswer(question, situation, meta.mosaicChildrenWithParent)
     const wasMissingBeforeAnswers =
       question in meta.rawMissingVariables ||
       (meta.mosaicChildrenWithParent[question] ?? []).some((child) => child in meta.rawMissingVariables)
 
-    return (
-      !isMosaicChild && isAnswered && (wasMissingBeforeAnswers || isApplicable(engine, question, [...mosaicChildren]))
-    )
+    return !isMosaicChild && isAnswered && (wasMissingBeforeAnswers || isAnswerApplicable(question))
   })
 
   const relevantQuestions = sortQuestions(

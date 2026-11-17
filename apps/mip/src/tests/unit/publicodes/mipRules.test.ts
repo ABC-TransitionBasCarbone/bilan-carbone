@@ -13,7 +13,7 @@ import {
   MipQuestionType,
   sortQuestions,
 } from '@/lib/publicodes/mip-rules'
-import { describe, expect, it } from '@jest/globals'
+import { describe, expect, it, jest } from '@jest/globals'
 import { getEvaluatedFormElement } from '@publicodes/forms'
 import seedModel from '../../../../prisma/seed/co2-model.FR-lang.fr-opti.json'
 
@@ -467,6 +467,28 @@ describe('mip-rules', () => {
     expect(getFormQuestions(engine, meta, ['transport . confirmation']).relevantQuestions).toEqual([
       'transport . confirmation',
     ])
+  })
+
+  it('evaluates each question applicability only once while building the form', () => {
+    const engine = createMipEngine({
+      bilan: { valeur: 'transport' },
+      transport: { valeur: 'confirmation' },
+      'transport . confirmation': {
+        question: 'Information',
+        'par défaut': "'ok'",
+        'une possibilité': ['ok'],
+        'applicable si': 'oui',
+      },
+      'transport . confirmation . ok': { titre: 'OK' },
+    })
+    engine.setSituation({ 'transport . confirmation': "'ok'" })
+    const evaluate = jest.spyOn(engine, 'evaluate')
+
+    getFormQuestions(engine, getRulesMeta(engine), [])
+
+    expect(
+      evaluate.mock.calls.filter(([input]) => typeof input === 'object' && input !== null && 'est applicable' in input),
+    ).toHaveLength(1)
   })
 
   it('shows the defaulted DT two-wheel passenger question with its label', () => {
