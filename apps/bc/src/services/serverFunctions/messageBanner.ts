@@ -9,8 +9,8 @@ import {
 import { withServerResponse } from '@/utils/serverResponse'
 import { Role } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
+import type { MessageBannerCommand } from '@abc-transitionbascarbone/common/utils/messageBanner.command'
 import { dbActualizedAuth } from '../auth'
-import type { MessageBannerCommand } from './messageBanner.command'
 import { MessageBannerCommandValidation } from './messageBanner.command'
 
 const requireSuperAdmin = async (functionName: string) => {

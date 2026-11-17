@@ -1,15 +1,40 @@
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import SuperAdminPage from '@/components/pages/SuperAdmin'
 import { getAllModelCampaigns } from '@/db/campaign'
+import {
+  deleteMessageBannerForManagement,
+  getMessageBannersForManagement,
+  saveMessageBannerForManagement,
+} from '@/services/serverFunctions/messageBanner'
+import Block from '@abc-transitionbascarbone/common/components/base/Block'
+import MessageBannerManagement from '@abc-transitionbascarbone/common/components/MessageBannerManagement'
 import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
 import { RoleMip } from '@abc-transitionbascarbone/common/db/enums'
+import { mipMessageBannerEnvironments } from '@abc-transitionbascarbone/common/utils/messageBanner.command'
+import classNames from 'classnames'
+import styles from './page.module.css'
 
 const SuperAdmin = async ({ user }: UserSessionProps) => {
   if (user?.role !== RoleMip.SUPER_ADMIN) {
     return <NotFound />
   }
-  const allModelCampaigns = await getAllModelCampaigns()
-  return <SuperAdminPage modelCampaigns={allModelCampaigns} />
+  const [allModelCampaigns, banners] = await Promise.all([getAllModelCampaigns(), getMessageBannersForManagement()])
+  if (!banners.success) {
+    throw new Error(banners.errorMessage)
+  }
+  return (
+    <div className={classNames('grow', styles.content)}>
+      <SuperAdminPage modelCampaigns={allModelCampaigns} />
+      <Block>
+        <MessageBannerManagement
+          banners={banners.data}
+          environments={mipMessageBannerEnvironments}
+          saveBanner={saveMessageBannerForManagement}
+          deleteBanner={deleteMessageBannerForManagement}
+        />
+      </Block>
+    </div>
+  )
 }
 
 export default withAuth(SuperAdmin)

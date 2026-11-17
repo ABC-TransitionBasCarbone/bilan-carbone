@@ -79,6 +79,10 @@ it('rejects invalid input before writing and reports database errors', async () 
   } as Awaited<ReturnType<typeof dbActualizedAuth>>)
 
   expect((await saveMessageBannerForManagement({ ...command, endAt: command.startAt })).success).toBe(false)
+  expect((await saveMessageBannerForManagement({ ...command, environments: [Environment.MIP] })).success).toBe(false)
+  expect(
+    (await saveMessageBannerForManagement({ ...command, environments: [Environment.BC, Environment.MIP] })).success,
+  ).toBe(false)
   expect(saveMessageBanner).not.toHaveBeenCalled()
 
   jest.mocked(saveMessageBanner).mockRejectedValue(new Error('database unavailable'))

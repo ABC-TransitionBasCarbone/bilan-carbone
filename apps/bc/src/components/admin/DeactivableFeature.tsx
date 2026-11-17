@@ -7,6 +7,7 @@ import {
 } from '@/services/serverFunctions/deactivableFeatures'
 import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
 import { DeactivatableFeature, Environment, UserSource } from '@abc-transitionbascarbone/common/db/enums'
+import { bcEnvironments } from '@abc-transitionbascarbone/common/utils/environments'
 import { FormControl, FormControlLabel, FormLabel, Switch } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -62,7 +63,7 @@ const DeactivableFeature = ({ restrictions }: Props) => {
       title: 'environment',
       criterias: restrictions.deactivatedEnvironments,
       t: tEnvironment,
-      values: Object.values(Environment),
+      values: bcEnvironments,
     },
   ]
 

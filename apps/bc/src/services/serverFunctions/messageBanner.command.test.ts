@@ -24,6 +24,10 @@ describe('MessageBannerCommandValidation', () => {
   it('rejects an end time that is not after the start time', () => {
     expect(MessageBannerCommandValidation.safeParse({ ...validBanner, endAt: validBanner.startAt }).success).toBe(false)
   })
+
+  it.each([[Environment.MIP], [Environment.BC, Environment.MIP]])('rejects MIP targets %j', (...environments) => {
+    expect(MessageBannerCommandValidation.safeParse({ ...validBanner, environments }).success).toBe(false)
+  })
 })
 
 describe('getActiveMessageBannerWhere', () => {
