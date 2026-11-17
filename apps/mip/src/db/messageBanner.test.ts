@@ -24,8 +24,8 @@ it('scopes MIP reads and ID-based mutations to MIP-only records', async () => {
   expect(prismaClient.messageBanner.findMany).toHaveBeenCalledWith({ where, orderBy: { startAt: 'desc' } })
   expect(prismaClient.messageBanner.create).toHaveBeenCalledWith({ data: command })
   expect(prismaClient.messageBanner.update).toHaveBeenCalledWith({
-    where: { id: 'banner-id', ...where },
+    where: { ...where, id: 'banner-id' },
     data: command,
   })
-  expect(prismaClient.messageBanner.delete).toHaveBeenCalledWith({ where: { id: 'banner-id', ...where } })
+  expect(prismaClient.messageBanner.delete).toHaveBeenCalledWith({ where: { ...where, id: 'banner-id' } })
 })
