@@ -118,7 +118,6 @@ jest.mock('../../db/user', () => ({
   getUserByEmail: jest.fn(),
   getUserApplicationSettings: jest.fn(),
   getUserSourceById: jest.fn(),
-  updateAccount: jest.fn(),
 }))
 jest.mock('../../db/account', () => ({
   addAccount: jest.fn(),
@@ -256,7 +255,6 @@ const mockGetOrganizationVersionById = organizationModule.getOrganizationVersion
 const mockAddAccount = accountModule.addAccount as jest.Mock
 const mockGetOrgSitesWithCNCByOrgVersionId = organizationModule.getOrgSitesWithCNCByOrgVersionId as jest.Mock
 const mockGetUserByEmail = userDbModule.getUserByEmail as jest.Mock
-const mockUpdateAccount = userDbModule.updateAccount as jest.Mock
 const mockGetUserApplicationSettings = userDbModule.getUserApplicationSettings as jest.Mock
 const mockGetUserSourceById = userDbModule.getUserSourceById as jest.Mock
 const mockGetAccountByEmailAndOrganizationVersionId =
@@ -1277,7 +1275,7 @@ describe('study', () => {
 
     beforeEach(() => {
       jest.clearAllMocks()
-        ; (authModule.dbActualizedAuth as jest.Mock).mockResolvedValue(mockedSession)
+      mockDbActualizedAuth.mockResolvedValue(mockedSession)
       mockGetStudyById.mockResolvedValue(mockedStudy)
       mockCanChangeDates.mockResolvedValue(true)
       mockGetTransitionPlanByStudyId.mockResolvedValue(null)
