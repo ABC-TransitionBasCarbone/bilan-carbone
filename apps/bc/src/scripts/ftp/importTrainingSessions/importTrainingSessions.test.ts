@@ -109,7 +109,7 @@ const workbook = [
   {
     name: 'Sessions',
     data: [
-      ['Nom de la session ', 'Date de début ', 'Date de fin ', 'Environment', 'Type de formation'],
+      ['ParcoursProg', 'Date de début ', 'Date de fin ', 'Environment', 'Type de formation'],
       ['Session Numéro 1', 46277, 46377, 'BC', 'M1'],
       ['Session Numéro 2 ', 46368, 46508, 'TILT', 'M3'],
     ],
@@ -117,7 +117,7 @@ const workbook = [
   {
     name: 'Stagiaires',
     data: [
-      ['Nom de la session ', 'Email', 'Prénom', 'Nom'],
+      ['ParcoursProg', 'E-mail', 'Prénom', 'Nom'],
       ['Session Numéro 1', 'test.abc2@abc-transitionbascarbone.fr', 'Test', 'ABC'],
       ['Session Numéro 2 ', 'bc-admin-0@yopmail.com', 'Admin', 'BC'],
       ['Session Numéro 1', 'test.abc@abc-transitionbascarbone.fr', 'Test', 'ABC'],
@@ -127,7 +127,7 @@ const workbook = [
   {
     name: 'Formateur',
     data: [
-      ['Nom de la session ', 'Email', 'Prénom', 'Nom'],
+      ['ParcoursProg', 'E-mail', 'Prénom', 'Nom'],
       ['Session Numéro 1', 'onboarding@yopmail.com', 'Onboarding', 'Yopmail'],
       ['Session Numéro 2 ', 'bc-cr-admin-0@yopmail.com', 'Admin', 'CR'],
     ],
@@ -410,6 +410,73 @@ describe('getCourseSessionsFromFTP', () => {
         professor: { email: 'bc-cr-admin-0@yopmail.com', firstName: 'Admin', lastName: 'CR' },
       },
     ])
+  })
+
+  it('imports trainees using ParcoursProg and E-mail columns', () => {
+    jest.mocked(xlsx.parse).mockReturnValue([
+      workbook[0],
+      {
+        name: 'Stagiaires',
+        data: [
+          ['ParcoursProg', 'E-mail', 'Prénom', 'Nom', "Date d'ajout/modification de cette ligne"],
+          ['Session Numéro 1', ' FIRST@EXAMPLE.ORG ', 'First', 'Trainee', '2026-11-03'],
+          ['Session Numéro 1', 'second@example.org', 'Second', 'Trainee'],
+        ],
+      },
+      { name: 'Formateur', data: [] },
+    ])
+
+    const { sessions } = parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')
+
+    expect(sessions[0].trainees).toEqual([
+      { email: 'first@example.org', firstName: 'First', lastName: 'Trainee', OfUpdatedAt: new Date('2026-11-03') },
+      { email: 'second@example.org', firstName: 'Second', lastName: 'Trainee' },
+    ])
+    expect(sessions[1].trainees).toEqual([])
+  })
+
+  it('uses only ParcoursProg and E-mail for trainees when old headers are also present', () => {
+    jest.mocked(xlsx.parse).mockReturnValue([
+      workbook[0],
+      {
+        name: 'Stagiaires',
+        data: [
+          ['ParcoursProg', 'E-mail', 'Prénom', 'Nom', 'Nom de la session', 'Email'],
+          ['Session Numéro 1', 'trainee@example.org', 'First', 'Trainee', 'Session Numéro 2', 'old@example.org'],
+        ],
+      },
+      { name: 'Formateur', data: [] },
+    ])
+
+    const { sessions } = parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')
+
+    expect(sessions[0].trainees).toEqual([{ email: 'trainee@example.org', firstName: 'First', lastName: 'Trainee' }])
+    expect(sessions[1].trainees).toEqual([])
+  })
+
+  it('reports the actual missing trainee columns', () => {
+    jest.mocked(xlsx.parse).mockReturnValue([
+      workbook[0],
+      {
+        name: 'Stagiaires',
+        data: [
+          ['ParcoursProg', 'E-mail', 'Prénom', 'Nom'],
+          ['', 'trainee@example.org', 'First', 'Trainee'],
+          ['Session Numéro 1', '', 'Second', 'Trainee'],
+        ],
+      },
+      { name: 'Formateur', data: [] },
+    ])
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined)
+    try {
+      const { sessions } = parseCourseSessionWorkbook(Buffer.from('xlsx content'), 'organism-1')
+
+      expect(sessions[0].trainees).toEqual([])
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Missing ParcoursProg in training sessions file')
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Missing E-mail in training sessions file')
+    } finally {
+      consoleErrorSpy.mockRestore()
+    }
   })
 
   it('imports a session without a professor and creates only trainee accounts', async () => {
@@ -949,7 +1016,7 @@ describe('getCourseSessionsFromFTP', () => {
       {
         name: 'Sessions',
         data: [
-          ['Nom de la session', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
+          ['ParcoursProg', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
           ['Session', 46277, 46377, 'BC', input],
         ],
       },
@@ -967,7 +1034,7 @@ describe('getCourseSessionsFromFTP', () => {
       {
         name: 'Sessions',
         data: [
-          ['Nom de la session', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
+          ['ParcoursProg', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
           ['Session', 46277, 46377, 'BC', type],
         ],
       },
@@ -1000,7 +1067,7 @@ describe('getCourseSessionsFromFTP', () => {
       {
         name: 'Sessions',
         data: [
-          ['Nom de la session', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
+          ['ParcoursProg', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
           ['First', 46277, 46377, 'BC', ' m1 '],
           ['Second', 46277, 46377, 'BC', 'M1'],
           ['Other type', 46277, 46377, 'BC', 'M2'],
@@ -1009,7 +1076,7 @@ describe('getCourseSessionsFromFTP', () => {
       {
         name: 'Stagiaires',
         data: [
-          ['Nom de la session', 'Email', 'Prénom', 'Nom', "Date d'ajout/modification de cette ligne"],
+          ['ParcoursProg', 'E-mail', 'Prénom', 'Nom', "Date d'ajout/modification de cette ligne"],
           ['First', ' TRAINEE@EXAMPLE.ORG ', 'First', 'Trainee', firstDate],
           ['Second', 'trainee@example.org', 'Second', 'Trainee', secondDate],
           ['Other type', 'trainee@example.org', 'Other', 'Trainee'],
@@ -1042,7 +1109,7 @@ describe('getCourseSessionsFromFTP', () => {
         name: 'Sessions',
         data: [
           [
-            'Nom de la session',
+            'ParcoursProg',
             'Date de début',
             'Date de fin',
             'Environment',
@@ -1068,7 +1135,7 @@ describe('getCourseSessionsFromFTP', () => {
       {
         name: 'Stagiaires',
         data: [
-          ['Nom de la session', 'Email', 'Prénom', 'Nom', "Date d'ajout/modification de cette ligne"],
+          ['ParcoursProg', 'E-mail', 'Prénom', 'Nom', "Date d'ajout/modification de cette ligne"],
           ['Session Numéro 1', 'trainee@example.org', 'First', 'Trainee', 'invalid date'],
         ],
       },
@@ -1219,7 +1286,7 @@ describe('getCourseSessionsFromFTP', () => {
       {
         name: 'Sessions',
         data: [
-          ['Nom de la session', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
+          ['ParcoursProg', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
           ['BC session', 46277, 46377, 'BC', 'M1'],
           ['TILT session', 46277, 46377, 'TILT', 'M1'],
         ],
@@ -1227,7 +1294,7 @@ describe('getCourseSessionsFromFTP', () => {
       {
         name: 'Stagiaires',
         data: [
-          ['Nom de la session', 'Email', 'Prénom', 'Nom', "Date d'ajout/modification de cette ligne"],
+          ['ParcoursProg', 'E-mail', 'Prénom', 'Nom', "Date d'ajout/modification de cette ligne"],
           ['BC session', 'trainee@example.com', 'Camille', 'Martin', '2026-11-03'],
           ['TILT session', 'trainee@example.com', 'Camille', 'Martin', '2026-11-04'],
         ],
@@ -1323,7 +1390,7 @@ describe('getCourseSessionsFromFTP', () => {
       {
         name: 'Sessions',
         data: [
-          ['Nom de la session', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
+          ['ParcoursProg', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
           ['Session Numéro 1', 46277, 46377, 'BC', 'M1'],
           ['Session Numéro 2', 46368, 46508, 'BC', 'M1'],
         ],
@@ -1331,7 +1398,7 @@ describe('getCourseSessionsFromFTP', () => {
       {
         name: 'Stagiaires',
         data: [
-          ['Nom de la session', 'Email', 'Prénom', 'Nom'],
+          ['ParcoursProg', 'E-mail', 'Prénom', 'Nom'],
           ['Session Numéro 1', 'test.abc2@abc-transitionbascarbone.fr', 'Test', 'ABC'],
           ['Session Numéro 2', 'test.abc2@abc-transitionbascarbone.fr', 'Test', 'ABC'],
         ],
@@ -1414,7 +1481,7 @@ describe('getCourseSessionsFromFTP', () => {
       {
         name: 'Sessions',
         data: [
-          ['Nom de la session', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
+          ['ParcoursProg', 'Date de début', 'Date de fin', 'Environment', 'Type de formation'],
           ['Session', startDate, endDate, 'BC', 'M1'],
         ],
       },
@@ -1456,17 +1523,15 @@ describe('getCourseSessionsFromFTP', () => {
     expect(mockUpsertCourseSession).toHaveBeenCalledTimes(1)
   })
 
-  it('accepts Email headers from the new template and normalizes deletion rows', () => {
+  it('normalizes deletion rows', () => {
     jest.mocked(xlsx.parse).mockReturnValue([
       workbook[0],
-      ...workbook.slice(1).map((sheet) => ({
-        ...sheet,
-        data: [['Nom de la session', 'Email', 'Prénom', 'Nom'], ...sheet.data.slice(1)],
-      })),
+      workbook[1],
+      workbook[2],
       {
         name: ' A supprimer ',
         data: [
-          ['Type', 'Session', 'Email'],
+          ['Type', 'ParcoursProg', 'E-mail'],
           [' Stagiaire ', ' Session Numéro 1 ', ' TEST.ABC2@ABC-TRANSITIONBASCARBONE.FR '],
           ['Formateur', 'Session Numéro 1', 'onboarding@yopmail.com'],
           ['Session', 'Session Numéro 2'],
@@ -1506,14 +1571,14 @@ describe('getCourseSessionsFromFTP', () => {
 
   it.each([
     [['Autre', 'Session Numéro 1', 'trainee@example.org'], 'Unsupported training deletion type: autre'],
-    [['Stagiaire', 'Session Numéro 1'], 'Missing Email in training sessions file'],
-    [['Formateur', 'Session Numéro 1'], 'Missing Email in training sessions file'],
-    [['Session'], 'Missing Session in training sessions file'],
+    [['Stagiaire', 'Session Numéro 1'], 'Missing E-mail in training sessions file'],
+    [['Formateur', 'Session Numéro 1'], 'Missing E-mail in training sessions file'],
+    [['Session'], 'Missing ParcoursProg in training sessions file'],
     [['', 'Session Numéro 1'], 'Missing Type in training sessions file'],
   ])('logs and ignores invalid deletion row %j while importing valid sessions', async (row, message) => {
     jest
       .mocked(xlsx.parse)
-      .mockReturnValue([...workbook, { name: 'A supprimer', data: [['Type', 'Session', 'Email'], row] }])
+      .mockReturnValue([...workbook, { name: 'A supprimer', data: [['Type', 'ParcoursProg', 'E-mail'], row] }])
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined)
     try {
       await expect(importCourseSessionsFromFTP()).resolves.toEqual(expect.objectContaining({ importedSessions: 2 }))
@@ -1539,7 +1604,7 @@ describe('getCourseSessionsFromFTP', () => {
       {
         name: 'A supprimer',
         data: [
-          ['Type', 'Session', 'Email'],
+          ['Type', 'ParcoursProg', 'E-mail'],
           ['Stagiaire', 'Session Numéro 1', 'test.abc2@abc-transitionbascarbone.fr'],
           ['Formateur', 'Session Numéro 1', 'onboarding@yopmail.com'],
         ],
@@ -1622,7 +1687,7 @@ describe('getCourseSessionsFromFTP', () => {
       {
         name: 'A supprimer',
         data: [
-          ['Type', 'Session', 'Email'],
+          ['Type', 'ParcoursProg', 'E-mail'],
           ['Session', 'Session Numéro 1'],
           ['Sessions', 'Session Numéro 2'],
         ],
@@ -1659,7 +1724,7 @@ describe('getCourseSessionsFromFTP', () => {
       {
         name: 'A supprimer',
         data: [
-          ['Type', 'Session', 'Email'],
+          ['Type', 'ParcoursProg', 'E-mail'],
           ['Stagiaire', before.name, 'test.abc2@abc-transitionbascarbone.fr'],
         ],
       },
@@ -1696,7 +1761,7 @@ describe('getCourseSessionsFromFTP', () => {
       {
         name: 'A supprimer',
         data: [
-          ['Type', 'Session', 'Email'],
+          ['Type', 'ParcoursProg', 'E-mail'],
           ['Session', 'Session Numéro 1'],
         ],
       },
