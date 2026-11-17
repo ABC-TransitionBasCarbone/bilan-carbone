@@ -34,7 +34,7 @@
     }
   },
   "login": {
-    "welcome": "Bienvenue sur le Bilan Carbone® + [ESPACE FORMATION]",
+    "welcome": "<b>Bienvenue sur le Bilan Carbone®+ [ESPACE FORMATION]</b>",
     "form": {
       "emailPlaceholder": "Votre email transmis à votre organisme de formation"
     }

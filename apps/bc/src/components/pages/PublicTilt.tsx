@@ -35,7 +35,7 @@ const PublicTiltPage = ({ children, question, environment = Environment.TILT }: 
     <PublicContainer>
       <div className={classNames(styles.info, 'flex-col grow p2 text-center gapped1')}>
         <div>
-          <p className="title-h4 mb1">{t('login.welcome')}</p>
+          <p className="title-h4 mb1">{customRich(t, 'login.welcome')}</p>
           <p className="title-h6 bold">{customRich(t, 'login.subtext')}</p>
         </div>
         <p>
