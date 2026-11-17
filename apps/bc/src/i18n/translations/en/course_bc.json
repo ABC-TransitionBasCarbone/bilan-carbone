@@ -10,6 +10,9 @@
     "validation": {
       "sessionCode": "Please enter the session code",
       "consent": "You must accept this condition to activate your account"
+    },
+    "accountActivated": {
+      "content": "You have just activated your account on the BC+ training platform."
     }
   }
 }
