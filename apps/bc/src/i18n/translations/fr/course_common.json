@@ -2,20 +2,20 @@
   "courseSessions": {
     "title": "Mes sessions de formation",
     "session": "Session de formation",
-    "manageTrainees": "Gérer les formées",
-    "traineesTitle": "Gestion des formées",
+    "manageTrainees": "Gérer les formé.es",
+    "traineesTitle": "Gestion des formé.es",
     "backToSession": "Revenir à la session",
     "addTrainee": "Ajouter un formé",
     "signAttendance": "Émarger les stagiaires",
     "attendance": "Émargement",
-    "attendancePresent": "Émargé",
-    "attendanceAbsent": "Absent",
+    "attendancePresent": "Présent.e",
+    "attendanceAbsent": "Absent.e",
     "attendanceMissing": "Non émargé",
-    "attendanceDescription": "Sélectionnez les stagiaires à émarger pour la fin de formation du {date}. Les émargements des stagiaires décochés seront supprimés.",
+    "attendanceDescription": "Sélectionnez les stagiaires présents à la session du {date}. Seuls ces stagiaires recevront les corrigés de l'étude de cas. Vous pouvez décocher les stagiaires pour supprimer leurs émargements en cas d'erreur initiale.",
     "selectAllTrainees": "Sélectionner tous les stagiaires",
     "attendanceSelectionCount": "{count} / {total} stagiaires sélectionnés",
     "attendanceSaved": "Les émargements ont été enregistrés.",
-    "backToTrainees": "Revenir aux formées",
+    "backToTrainees": "Revenir aux formé.es",
     "traineeAdded": "Le formé a été ajouté à la session.",
     "traineeAlreadyInSession": "Ce formé est déjà inscrit à cette session.",
     "traineeTransferred": "Le stagiaire a été transféré dans cette session.",
@@ -34,7 +34,7 @@
     }
   },
   "login": {
-    "welcome": "Bienvenue sur le Bilan Carbone® + [ESPACE FORMATION]",
+    "welcome": "<b>Bienvenue sur le Bilan Carbone®+ [ESPACE FORMATION]</b>",
     "form": {
       "emailPlaceholder": "Votre email transmis à votre organisme de formation"
     }

@@ -1,6 +1,6 @@
 {
   "homeCards": {
-    "search": "Rechercher un client par nom",
+    "search": "Rechercher un client",
     "noResults": "Aucun résultat ne correspond à votre recherche.",
     "invalidDate": "Veuillez saisir une date valide.",
     "invalidDateRange": "La date de début doit être antérieure ou égale à la date de fin."
@@ -286,7 +286,7 @@
     }
   },
   "login": {
-    "welcome": "Bienvenue sur le Bilan Carbone® +",
+    "welcome": "<b>Bienvenue sur le Bilan Carbone®+ !</b>",
     "subtext": "",
     "explanation": "L'outil dédié à l'application de la méthode Bilan Carbone®, développé par <abcAssociation>l'Association pour la transition Bas Carbone (ABC)</abcAssociation>, et accessible à l'ensemble de nos membres Conseil et Recherche, Entreprise, Association et Secteur Public",
     "question": "Une question ? Lisez la <faq>FAQ</faq> ou <support>contactez-nous</support> !",
