@@ -284,7 +284,6 @@
         "content": "Welcome to BC+! You have requested a password reset but your account is not yet activated. If you wish to finalise its activation, please click on"
       },
       "accountActivated": {
-        "content": "You have just activated your account on BC+ for training organisations.",
         "notYou": "If this wasn't you, please contact support: "
       },
       "activationRequest": {
