@@ -4,3 +4,45 @@
   grid-auto-rows: 1fr;
   align-items: stretch;
 }
+
+.partners {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 1rem;
+}
+
+.partnersTitle {
+  margin: 2rem 0 1.5rem;
+}
+
+.partnerCard {
+  overflow: hidden;
+  border: 2px solid var(--mui-palette-primary-main);
+  border-radius: 1rem;
+  background-color: var(--mui-palette-background-paper);
+}
+
+.partnerLogo {
+  display: grid;
+  min-height: 6.5rem;
+  padding: 1rem;
+  place-items: center;
+  background-color: var(--mui-palette-primary-light);
+}
+
+.partnerLogoImage {
+  display: block;
+  width: min(100%, 12rem);
+  height: auto;
+}
+
+.partnerName {
+  padding: 0.7rem;
+  text-align: center;
+}
+
+.partnerName a {
+  color: var(--mui-palette-primary-main);
+  font-weight: 600;
+  text-underline-offset: 0.2em;
+}

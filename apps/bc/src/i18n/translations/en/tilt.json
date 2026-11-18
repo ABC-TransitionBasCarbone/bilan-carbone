@@ -133,6 +133,9 @@
     "export": {
       "export": "Export my results"
     },
+    "ressources": {
+      "supportTools": "This tool has been developed by the Association for the Low Carbon Transition in partnership with :"
+    },
     "results": {
       "reportName": "{studyName} - Bilan Carbone® - Associative sphere",
       "feedback": {

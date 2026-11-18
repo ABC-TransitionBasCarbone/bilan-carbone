@@ -60,6 +60,8 @@ const PublicTiltPage = ({ children, question, environment = Environment.TILT }: 
           <Image src="/logos/abc/logo_abc.png" width="400" height="195" alt="ABC logo" className="w50 hauto" />
           <CloseIcon />
           <Image src="/logos/tilt/logo_tilt.svg" width="2511" height="857" alt="TILT logo" className="w50 hauto" />
+          <CloseIcon />
+          <Image src="/logos/tilt/udes_blanc.png" width="2450" height="868" alt="UDES logo" className="w50 hauto" />
         </div>
         <p className={styles.richLinks}>{question}</p>
       </div>
