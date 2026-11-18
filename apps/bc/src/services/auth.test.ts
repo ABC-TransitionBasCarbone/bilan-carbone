@@ -30,11 +30,12 @@ describe('session organization', () => {
   })
 
   it('keeps the account organization when updating the JWT', async () => {
-    // NextAuth omits user/account on update despite marking them required in its callback type.
-    const token = await jwt({
+    const params: Omit<Parameters<typeof jwt>[0], 'user' | 'account'> = {
       token: { id: account.user.id, accountId: account.id, organizationId: 'previous-organization' },
       trigger: 'update',
-    } as Parameters<typeof jwt>[0])
+    }
+    // NextAuth omits user/account on update despite marking them required in its callback type.
+    const token = await jwt(params as Parameters<typeof jwt>[0])
 
     expect(token.organizationId).toBe(account.organizationVersion.organizationId)
     expect(mockGetAccountById).toHaveBeenCalledWith(account.id)
