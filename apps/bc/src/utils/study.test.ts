@@ -122,9 +122,9 @@ describe('professor study permissions', () => {
     ).toBe(StudyRole.Reader)
   })
 
-  it('grants only Reader to the current session professor', () => {
+  it('grants only Validator to the current session professor', () => {
     expect(isProfessorOnStudy(professor, study)).toBe(true)
-    expect(getAccountRoleOnStudy(professor, study)).toBe(StudyRole.Reader)
+    expect(getAccountRoleOnStudy(professor, study)).toBe(StudyRole.Validator)
   })
 
   it('does not grant access to another professor or an account without an organization', () => {
