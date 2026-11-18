@@ -83,6 +83,7 @@ Run from repo root unless specified:
 - Root prettier/eslint/tsconfig base are canonical.
 - Do not add per-app prettier configs.
 - Keep app tsconfig focused on app-specific overrides only.
+- Do not add README explanations unless explicitly requested. Keep code self-explanatory through clear naming and structure.
 - Keep README footprint minimal:
   - root README.md
   - apps/bc/README.md
@@ -115,4 +116,5 @@ Never validate my claims without checking them. Prefer evidence over my approval
 
 ## PR
 
+- When preparing or reviewing a PR, count nonblank code and test lines added and deleted in the full diff against its base. Exclude generated files, lockfiles, and documentation. If the total exceeds 600 lines, report the count and propose a split into smaller, independently reviewable PRs, with the scope and merge order for each. Do not split the PR automatically.
 - Do not comment on french text that are not translated. We have a script that translate it automatically after the PR is merged.

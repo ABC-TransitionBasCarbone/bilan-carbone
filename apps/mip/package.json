@@ -7,7 +7,7 @@
     "yarn": "1.22"
   },
   "scripts": {
-    "dev": "next dev --port 3002",
+    "dev": "dotenv -e .env.local -- sh -c 'next dev --port ${MIP_PORT:-3002}'",
     "test": "jest",
     "test:watch": "jest --watch",
     "postbuild": "node ../../packages/common/tooling/config/copy-assets.js apps/mip",

@@ -1,6 +1,7 @@
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 
 const { BC, CUT, TILT, CLICKSON, MIP, COURSE_BC, COURSE_TILT } = Environment
+export const bcEnvironments: Environment[] = Object.values(Environment).filter((environment) => environment !== MIP)
 export const courseEnvironments = [COURSE_BC, COURSE_TILT] as const
 export type CourseEnvironment = typeof courseEnvironments[number]
 

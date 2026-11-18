@@ -9,8 +9,10 @@ import DynamicTheme from '@/environments/core/providers/DynamicTheme'
 import { getEnvironment } from '@/i18n/environment'
 import { isTiltSimplifiedFeatureActive } from '@/services/permissions/environmentFeature'
 import { hasAccessToFormation } from '@/services/permissions/formations'
+import { getCurrentMessageBanners } from '@/services/serverFunctions/messageBanner'
 import { getUserActiveAccounts } from '@/services/serverFunctions/user'
 import { shouldRenewLicenceText } from '@/utils/organization'
+import MessageBanners from '@abc-transitionbascarbone/common/components/MessageBanners'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { environmentsWithChecklist } from '@abc-transitionbascarbone/common/utils/environments'
 import { Box } from '@mui/material'
@@ -27,13 +29,18 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
     return <main className={styles.content}>{children}</main>
   }
 
-  const [organizationVersions, studyId, isTiltSimplifiedActive, hasFormation, userAccounts] = await Promise.all([
-    getAccountOrganizationVersions(account.accountId),
-    getAllowedStudyIdByAccount(account),
-    isTiltSimplifiedFeatureActive(account.environment),
-    hasAccessToFormation(account),
-    getUserActiveAccounts(),
-  ])
+  const [organizationVersions, studyId, isTiltSimplifiedActive, hasFormation, userAccounts, messageBanners] =
+    await Promise.all([
+      getAccountOrganizationVersions(account.accountId),
+      getAllowedStudyIdByAccount(account),
+      isTiltSimplifiedFeatureActive(account.environment),
+      hasAccessToFormation(account),
+      getUserActiveAccounts(),
+      getCurrentMessageBanners(),
+    ])
+  if (!messageBanners.success) {
+    console.error('NavLayout: failed to load message banners', { error: messageBanners.errorMessage })
+  }
   const hasMultipleAccounts = userAccounts.success && userAccounts.data.length > 1
 
   const accountOrganizationVersion = organizationVersions.find(
@@ -61,6 +68,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
           hasFormation={hasFormation}
           hasMultipleAccounts={hasMultipleAccounts}
         />
+        {messageBanners.success && <MessageBanners banners={messageBanners.data} />}
         {withOrganizationCard && (
           <OrganizationCard
             account={account}
