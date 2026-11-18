@@ -1,7 +1,6 @@
 {
   "name": "@abc-transitionbascarbone/common",
-  "version": "0.0.1",
-  "private": true,
+  "private": false,
   "exports": {
     ".": "./index.ts",
     "./db": "./db/src/index.ts",

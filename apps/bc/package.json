@@ -1,11 +1,6 @@
 {
   "name": "bc",
-  "version": "2.7.0",
-  "private": true,
-  "engines": {
-    "node": "24.x",
-    "yarn": "1.22"
-  },
+  "private": false,
   "scripts": {
     "postinstall": "prisma generate --config ../../packages/common/db/prisma.config.ts",
     "dev": "next dev",

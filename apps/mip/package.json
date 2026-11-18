@@ -1,11 +1,6 @@
 {
   "name": "mip",
-  "version": "1.0.0",
-  "private": true,
-  "engines": {
-    "node": "24.x",
-    "yarn": "1.22"
-  },
+  "private": false,
   "scripts": {
     "dev": "next dev --port 3002",
     "test": "jest",

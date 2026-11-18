@@ -1,5 +1,7 @@
 name: Copilot Setup Steps
 
+# Configures Node.js in the Copilot cloud agent's development environment.
+
 on:
   workflow_dispatch:
   push:
@@ -9,13 +11,15 @@ on:
     paths:
       - .github/workflows/copilot-setup-steps.yml
 
-permissions: {}
+permissions:
+  contents: read
 
 jobs:
   copilot-setup-steps:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24.22.1
+          node-version-file: .node-version
