@@ -4,6 +4,7 @@ import {
   CourseSessionType,
   Environment,
   Import,
+  Role,
   StudyRole,
   SubPost,
   UserStatus,
@@ -867,7 +868,7 @@ describe('study', () => {
         expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
       })
 
-      it('should keep a new environment account validated for an already active study contributor', async () => {
+      it('should activate a new environment account for an already active study contributor', async () => {
         const study = {
           id: 'study-id',
           organizationVersionId: 'target-organization-version-id',
@@ -878,7 +879,7 @@ describe('study', () => {
           },
           allowedUsers: [],
         }
-        const account = { id: 'new-environment-account-id', status: UserStatus.VALIDATED }
+        const account = { id: 'new-environment-account-id', status: UserStatus.ACTIVE }
         mockGetStudyById.mockResolvedValue(study)
         mockGetOrganizationVersionById.mockResolvedValue(study.organizationVersion)
         mockGetAccountByEmailAndOrganizationVersionId.mockResolvedValue(null)
@@ -899,7 +900,7 @@ describe('study', () => {
 
         expect(result).toEqual({ success: true, data: undefined })
         expect(mockAddAccount).toHaveBeenCalledWith(
-          expect.objectContaining({ environment: Environment.TILT, status: UserStatus.VALIDATED }),
+          expect.objectContaining({ environment: Environment.TILT, status: UserStatus.ACTIVE }),
         )
         expect(mockSendInvitation).toHaveBeenCalledWith(
           expect.any(String),
@@ -909,6 +910,27 @@ describe('study', () => {
           '',
           Environment.TILT,
           account,
+          [Environment.BC],
+        )
+      })
+
+      it('activates a new environment account for an existing active contributor', async () => {
+        setupInvitationMocks()
+        mockGetUserByEmail.mockResolvedValue({
+          id: 'existing-user-id',
+          accounts: [{ environment: Environment.TILT, status: UserStatus.ACTIVE }],
+        })
+        mockGetAccountByEmailAndEnvironment.mockResolvedValue(null)
+        mockAddAccount.mockResolvedValue({ id: 'new-environment-account-id' })
+
+        const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand, false, true)
+
+        expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
+        expect(mockAddAccount).toHaveBeenCalledWith(
+          expect.objectContaining({
+            role: Role.COLLABORATOR,
+            status: UserStatus.ACTIVE,
+          }),
         )
       })
 
@@ -1322,7 +1344,7 @@ describe('study', () => {
 
     beforeEach(() => {
       jest.clearAllMocks()
-      ;(authModule.dbActualizedAuth as jest.Mock).mockResolvedValue(mockedSession)
+      mockDbActualizedAuth.mockResolvedValue(mockedSession)
       mockGetStudyById.mockResolvedValue(mockedStudy)
       mockCanChangeDates.mockResolvedValue(true)
       mockGetTransitionPlanByStudyId.mockResolvedValue(null)

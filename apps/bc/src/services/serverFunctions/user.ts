@@ -187,8 +187,29 @@ export const sendInvitation = async (
   roleOnStudy: string,
   env: Environment,
   existingAccount?: AccountWithUser,
+  activeEnvs: Environment[] = [],
 ) =>
   withServerResponse('sendInvitation', async () => {
+    if (activeEnvs.length) {
+      if (!existingAccount) {
+        throw new Error('An existing account is required for an active user invitation')
+      }
+
+      return sendAddedActiveUserEmail(
+        email,
+        `${creator.firstName} ${creator.lastName}`,
+        existingAccount.user.firstName,
+        env,
+        activeEnvs,
+        organization.name,
+        {
+          studyName: study.name,
+          organizationName: organization.name,
+          roleOnStudy,
+        },
+      )
+    }
+
     if (existingAccount && existingAccount.status === UserStatus.ACTIVE) {
       return roleOnStudy
         ? sendUserOnStudyInvitationEmail(
@@ -472,7 +493,7 @@ export const checkCourseActivation = async (email: string, sessionCode: string, 
 export const activateEmailForCourse = async (
   email: string,
   sessionCode: string,
-  password: string,
+  password: string | undefined,
   environment: Environment,
 ) =>
   withServerResponse('activateEmailForCourse', async () => {
@@ -482,23 +503,37 @@ export const activateEmailForCourse = async (
     }
 
     const { user, account } = checkCourseActivationResponse.data
-    const passwordValidation = computePasswordValidation(password)
-    if (!Object.values(passwordValidation).every((value) => value)) {
-      throw new Error('Password invalid')
-    }
+    const activeEnvs = user.accounts
+      .filter((userAccount) => userAccount.status === UserStatus.ACTIVE && userAccount.environment !== environment)
+      .map((userAccount) => userAccount.environment)
 
     await prismaClient.$transaction(
       async (transaction) => {
-        await validateUser(account.id, transaction)
-        await updateUserPasswordForEmail(user.email, password, environment, transaction)
-        await updateAccount(account.id, { role: Role.ADMIN }, {}, transaction)
+        if (activeEnvs.length) {
+          await updateAccount(account.id, { role: Role.ADMIN, status: UserStatus.ACTIVE }, {}, transaction)
+        } else {
+          if (!password || !Object.values(computePasswordValidation(password)).every((value) => value)) {
+            throw new Error('Password invalid')
+          }
+
+          await validateUser(account.id, transaction)
+          await updateUserPasswordForEmail(user.email, password, environment, transaction)
+          await updateAccount(account.id, { role: Role.ADMIN }, {}, transaction)
+        }
       },
       {
         isolationLevel: 'Serializable',
       },
     )
     try {
-      await sendAccountActivatedEmail(user.email, environment)
+      if (activeEnvs.length) {
+        await sendAccountActivatedEmail(user.email, environment, {
+          environments: activeEnvs,
+          userName: `${user.firstName} ${user.lastName}`,
+        })
+      } else {
+        await sendAccountActivatedEmail(user.email, environment)
+      }
     } catch (error) {
       console.error('activateEmailForCourse: failed to send account activation email', {
         userId: user.id,
