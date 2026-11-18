@@ -55,11 +55,11 @@ const RessourcesPage = async ({ environment }: Props) => {
             <Card component="article" className={styles.partnerCard}>
               <div className={styles.partnerLogo}>
                 <Image
-                  src="/logos/tilt/udes_noir.jpg"
-                  width="2450"
-                  height="868"
+                  src="/logos/tilt/udes_noir.svg"
+                  width="842"
+                  height="595"
                   alt="Logo de l'UDES"
-                  className={styles.partnerLogoImage}
+                  className={classNames(styles.partnerLogoImage, styles.partnerLogoImageUdes)}
                 />
               </div>
               <div className={styles.partnerName}>
