@@ -25,7 +25,7 @@ describe('Duplicate study', () => {
     cy.getByTestId('duplication-modale-text').invoke('text').should('contain', 'Vous serez redirigé vers la page')
 
     cy.getByTestId('environment-selector').should('be.visible').click()
-    cy.get('[data-value="BC+ associatif"]').click()
+    cy.get('[data-value="TILT"]').click()
 
     cy.getByTestId('duplication-modale-text').invoke('text').should('contain', 'BC+ associatif')
     cy.getByTestId('duplicate-study-confirm').click()

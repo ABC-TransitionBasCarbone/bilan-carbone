@@ -27,14 +27,16 @@ const RessourcesPage = async ({ environment }: Props) => {
           {customRich(t, 'description')}
         </Alert>
       )}
+      <div className={classNames('gapped1', 'mt2')}>
+        <div className={classNames(styles.ressources, 'gapped1', 'mt2')}>
+          {ressources.map(({ title, links }) => (
+            <RessourceLinks key={title} title={title} links={links} />
+          ))}
+        </div>
+      </div>
       {isTilt(environment) && (
         <div className={classNames('gapped1', 'mt2')}>
-          <div className={classNames(styles.ressources, 'gapped1', 'mt2')}>
-            {ressources.map(({ title, links }) => (
-              <RessourceLinks key={title} title={title} links={links} />
-            ))}
-          </div>
-          <h2 className={styles.partnersTitle}>{t('supportTools')}</h2>
+          <h4 className={styles.partnersTitle}>{t('supportTools')}</h4>
           <div className={styles.partners}>
             <Card component="article" className={styles.partnerCard}>
               <div className={styles.partnerLogo}>
