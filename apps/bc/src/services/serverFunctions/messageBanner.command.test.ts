@@ -23,9 +23,9 @@ describe('BCMessageBannerCommandValidation', () => {
   })
 
   it('rejects an end time that is not after the start time', () => {
-    expect(
-      BCMessageBannerCommandValidation.safeParse({ ...validBanner, endDate: validBanner.startDate }).success,
-    ).toBe(false)
+    expect(BCMessageBannerCommandValidation.safeParse({ ...validBanner, endDate: validBanner.startDate }).success).toBe(
+      false,
+    )
   })
 
   it.each([[Environment.MIP], [Environment.BC, Environment.MIP]])('rejects MIP targets %j', (...environments) => {

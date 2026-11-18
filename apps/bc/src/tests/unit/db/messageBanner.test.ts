@@ -1,9 +1,5 @@
 import { prismaClient } from '@/db/client'
-import {
-  dbDeleteMessageBanner,
-  dbGetMessageBannersForManagement,
-  dbSaveMessageBanner,
-} from '@/db/messageBanner'
+import { dbDeleteMessageBanner, dbGetMessageBannersForManagement, dbSaveMessageBanner } from '@/db/messageBanner'
 import { getMessageBannerManagementWhereCondition } from '@abc-transitionbascarbone/common/db/db'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { bcEnvironments } from '@abc-transitionbascarbone/common/utils/environments'
