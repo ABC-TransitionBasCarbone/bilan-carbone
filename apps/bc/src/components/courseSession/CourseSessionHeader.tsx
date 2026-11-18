@@ -8,7 +8,7 @@ import { getTranslations } from 'next-intl/server'
 import styles from './CourseSessionHeader.module.css'
 
 interface Props {
-  session: Pick<CourseSession, 'id' | 'name' | 'type' | 'startDate' | 'endDate'>
+  session: Pick<CourseSession, 'id' | 'name' | 'type' | 'startDate' | 'endDate' | 'code'>
 }
 
 const CourseSessionHeader = async ({ session }: Props) => {
@@ -31,6 +31,9 @@ const CourseSessionHeader = async ({ session }: Props) => {
                 {' – '}
                 <time dateTime={session.endDate.toISOString()}>{formatDateFr(session.endDate)}</time>
               </span>
+            </p>
+            <p>
+              {t('sessionCode')}: {session.code}
             </p>
           </div>
         </div>

@@ -50,7 +50,7 @@ export const getCourseSessionForProfessor = (organizationVersionId: string, envi
       professorOrganizationVersionId: organizationVersionId,
       environment,
     },
-    select: { id: true, name: true, type: true, startDate: true, endDate: true },
+    select: { id: true, name: true, type: true, startDate: true, endDate: true, code: true },
   })
 
 export const getCourseSessionTrainees = async (courseSessionId: string, environment: Environment) => {
