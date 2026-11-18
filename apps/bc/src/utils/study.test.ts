@@ -169,7 +169,7 @@ describe('professor study permissions', () => {
     ).toBe(false)
   })
 
-  it('does not grant Editor on simplified COURSE_TILT studies', () => {
+  it('grant validator role on tilt simplified studies for course_tilt', () => {
     const tiltStudy = {
       ...study,
       simplified: true,
@@ -192,7 +192,7 @@ describe('professor study permissions', () => {
     }
 
     expect(getAccountRoleOnStudy({ ...professor, environment: Environment.COURSE_TILT }, tiltStudy)).toBe(
-      StudyRole.Reader,
+      StudyRole.Validator,
     )
   })
 })

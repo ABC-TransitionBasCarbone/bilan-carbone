@@ -69,7 +69,7 @@ for (let i = 0; i < testedCourseEnvironments.length; i++) {
 
       cy.url().should('include', `/etudes/88c93e88-7c80-4be4-905b-f0bbd2ccd95${i}`)
       cy.getByTestId('not-found-page').should('not.exist')
-      cy.getByTestId('delete-study').should('not.exist')
+      cy.getByTestId('delete-study').should('exist')
     })
 
     it('shows an empty state for a professor session without trainees', () => {

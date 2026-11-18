@@ -33,7 +33,6 @@ import {
   canReadStudy,
   canReadStudyDetail,
   getEnvironmentsForDuplication,
-  hasEditAccessOnStudy,
   NEWGetAccountRoleOnStudy,
 } from './study'
 
@@ -121,22 +120,10 @@ describe('professor study access', () => {
     expect(await canReadStudyDetail(mockedSession, getMockedFullStudy())).toBe(true)
   })
 
-  it('grants only Reader in the minimal permissions path, including simplified studies', () => {
+  it('for simplified studies grand access as validator for tilt users of the orga', () => {
     mockIsTiltSimplified.mockReturnValue(true)
-    expect(NEWGetAccountRoleOnStudy(mockedSession, getMockedMinimalStudy({ allowedUsers: [] }))).toBe(StudyRole.Reader)
-  })
-
-  it('does not grant editing, deletion or invitations through the professor access', async () => {
-    mockGetAccountRoleOnStudy.mockReturnValue(StudyRole.Reader)
-    mockHasActiveLicence.mockReturnValue(true)
-    mockDBActualizedAuth.mockResolvedValue({ user: mockedSession })
-    mockGetStudyById.mockResolvedValue(getMockedFullStudy({ createdById: 'student-account' }))
-
-    expect(await hasEditAccessOnStudy('study', { user: mockedSession })).toBe(false)
-    expect(await canDeleteStudy('study')).toBe(false)
-    expect(canAddContributorOnStudy(mockedSession, getMockedFullStudy())).toBe(false)
-    expect(canAddRightOnStudy(mockedSession, getMockedMinimalStudy({ allowedUsers: [] }), null, StudyRole.Reader)).toBe(
-      false,
+    expect(NEWGetAccountRoleOnStudy(mockedSession, getMockedMinimalStudy({ allowedUsers: [] }))).toBe(
+      StudyRole.Validator,
     )
   })
 })
