@@ -17,7 +17,7 @@ import {
 } from '@/tests/utils/models/user'
 import * as organizationUtils from '@/utils/organization'
 import * as studyUtils from '@/utils/study'
-import { Environment, Level, Role, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
+import { CourseSessionType, Environment, Level, Role, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
 import { mockedUserId } from '@abc-transitionbascarbone/common/services/tests/models/user'
 import { expect } from '@jest/globals'
 import * as authModule from '../auth'
@@ -36,6 +36,9 @@ import {
   hasEditAccessOnStudy,
   NEWGetAccountRoleOnStudy,
 } from './study'
+
+const getLegacyAccountRoleOnStudy =
+  jest.requireActual<typeof import('@/utils/study')>('@/utils/study').getAccountRoleOnStudy
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('uuid', () => ({ v4: jest.fn() }))
@@ -135,6 +138,145 @@ describe('professor study access', () => {
     expect(canAddRightOnStudy(mockedSession, getMockedMinimalStudy({ allowedUsers: [] }), null, StudyRole.Reader)).toBe(
       false,
     )
+  })
+})
+
+describe('study role parity', () => {
+  const getParityStudy = (overrides: Parameters<typeof getMockedMinimalStudy>[0] = {}) =>
+    getMockedMinimalStudy({
+      allowedUsers: [],
+      isPublic: false,
+      simplified: false,
+      level: Level.Initial,
+      organizationVersion: {
+        id: 'study-orga',
+        parentId: null,
+        environment: Environment.BC,
+        activatedLicence: [new Date().getFullYear()],
+        parent: null,
+      },
+      ...overrides,
+    })
+
+  const expectMatchingRoles = (
+    user: Parameters<typeof NEWGetAccountRoleOnStudy>[0],
+    study: Parameters<typeof NEWGetAccountRoleOnStudy>[1],
+    expectedRole: StudyRole | null,
+  ) => {
+    const legacyRole = getLegacyAccountRoleOnStudy(user, study)
+    const newRole = NEWGetAccountRoleOnStudy(user, study)
+
+    expect(legacyRole).toBe(expectedRole)
+    expect(newRole).toBe(legacyRole)
+  }
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    mockIsAdminOnOrga.mockReturnValue(false)
+    mockIsTiltSimplified.mockReturnValue(false)
+    mockIsInOrgaOrParent.mockReturnValue(false)
+    mockIsProfessorOnStudy.mockReturnValue(false)
+    mockHasSufficientLevel.mockReturnValue(true)
+    mockHasActiveLicence.mockReturnValue(true)
+  })
+
+  afterEach(() => {
+    mockIsProfessorOnStudy.mockReturnValue(false)
+  })
+
+  it('returns no role to an unassigned user on a private study', () => {
+    const user = getMockedDbActualizedAuth(
+      {},
+      { accountId: 'other-account', organizationVersionId: 'other-orga', role: Role.COLLABORATOR },
+    ).user
+
+    expectMatchingRoles(user, getParityStudy(), null)
+  })
+
+  it.each(Object.values(StudyRole))('matches an explicit %s right', (role) => {
+    const user = getMockedDbActualizedAuth(
+      {},
+      { accountId: 'allowed-account', organizationVersionId: 'other-orga', role: Role.COLLABORATOR },
+    ).user
+    const study = getParityStudy({
+      allowedUsers: [
+        getMockedAllowedUser({
+          role,
+          account: { id: 'allowed-account', user: { level: Level.Initial } },
+        }),
+      ],
+    })
+
+    expectMatchingRoles(user, study, role)
+  })
+
+  it('matches Editor for an organization member on a simplified TILT study', () => {
+    const user = getMockedDbActualizedAuth(
+      {},
+      { accountId: 'member-account', organizationVersionId: 'study-orga', environment: Environment.TILT },
+    ).user
+    const study = getParityStudy({
+      simplified: true,
+      organizationVersion: { environment: Environment.TILT },
+    })
+    mockIsTiltSimplified.mockReturnValue(true)
+    mockIsInOrgaOrParent.mockReturnValue(true)
+
+    expectMatchingRoles(user, study, StudyRole.Editor)
+  })
+
+  it('matches Validator for an organization admin', () => {
+    const user = getMockedDbActualizedAuth({}, { organizationVersionId: 'study-orga', role: Role.ADMIN }).user
+    mockIsAdminOnOrga.mockReturnValue(true)
+
+    expectMatchingRoles(user, getParityStudy(), StudyRole.Validator)
+  })
+
+  it('matches the public-study role for an organization member', () => {
+    const user = getMockedDbActualizedAuth(
+      {},
+      {
+        organizationVersionId: 'study-orga',
+        role: Role.COLLABORATOR,
+      },
+    ).user
+    const study = getParityStudy({ isPublic: true })
+    mockIsInOrgaOrParent.mockReturnValue(true)
+    mockGetUserRoleOnPublicStudy.mockReturnValue(StudyRole.Editor)
+
+    expectMatchingRoles(user, study, StudyRole.Editor)
+  })
+
+  it('matches Validator for a professor in the study course session', () => {
+    const user = getMockedDbActualizedAuth(
+      {},
+      {
+        environment: Environment.COURSE_BC,
+        organizationVersionId: 'professor-orga',
+        role: Role.COLLABORATOR,
+      },
+    ).user
+    const study = getParityStudy({
+      courseSessionType: CourseSessionType.INITIAL,
+      createdBy: {
+        environment: Environment.COURSE_BC,
+        organizationVersion: {
+          traineeCourseSessions: [
+            {
+              courseSession: {
+                type: CourseSessionType.INITIAL,
+                environment: Environment.COURSE_BC,
+                professorOrganizationVersionId: 'professor-orga',
+              },
+            },
+          ],
+        },
+      },
+      organizationVersion: { environment: Environment.COURSE_BC },
+    })
+    mockIsProfessorOnStudy.mockReturnValue(true)
+
+    expectMatchingRoles(user, study, StudyRole.Validator)
   })
 })
 
@@ -750,7 +892,7 @@ describe('Study permissions service', () => {
       expect(result).toBe(null)
     })
 
-    it('TILT SIMPLIFIED should return null if user is in orga but study is not public', () => {
+    it('TILT SIMPLIFIED should return editor if user is in orga without a study right', () => {
       const minimalStudy = getMockedMinimalStudy({
         simplified: true,
         organizationVersion: { id: 'orga', environment: Environment.TILT },
@@ -763,7 +905,7 @@ describe('Study permissions service', () => {
 
       const result = NEWGetAccountRoleOnStudy(user, minimalStudy)
 
-      expect(result).toBe(null)
+      expect(result).toBe(StudyRole.Editor)
     })
 
     it('should return null if user is not in orga and study is not public', () => {
