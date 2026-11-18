@@ -92,7 +92,7 @@ describe('course session database queries', () => {
         professorOrganizationVersionId: professor.organizationVersionId,
         environment: professor.environment,
       },
-      select: { id: true, name: true, type: true, startDate: true, endDate: true },
+      select: { id: true, name: true, type: true, startDate: true, endDate: true, code: true },
     })
     expect(result).toEqual(session)
   })
