@@ -39,7 +39,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
       getCurrentMessageBanners(),
     ])
   if (!messageBanners.success) {
-    throw new Error(messageBanners.errorMessage)
+    console.error('NavLayout: failed to load message banners', { error: messageBanners.errorMessage })
   }
   const hasMultipleAccounts = userAccounts.success && userAccounts.data.length > 1
 
@@ -68,7 +68,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
           hasFormation={hasFormation}
           hasMultipleAccounts={hasMultipleAccounts}
         />
-        <MessageBanners banners={messageBanners.data} />
+        {messageBanners.success && <MessageBanners banners={messageBanners.data} />}
         {withOrganizationCard && (
           <OrganizationCard
             account={account}

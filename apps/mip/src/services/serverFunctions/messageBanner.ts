@@ -2,9 +2,9 @@
 
 import { prismaClient } from '@/db/client'
 import {
-  deleteMessageBanner as dbDeleteMessageBanner,
-  saveMessageBanner as dbSaveMessageBanner,
-  getMessageBannersForAdmin,
+  dbDeleteMessageBanner,
+  dbGetMessageBannersForManagement,
+  dbSaveMessageBanner,
 } from '@/db/messageBanner'
 import { dbActualizedAuth } from '@/services/auth'
 import { withServerResponse } from '@/utils/serverResponse'
@@ -12,7 +12,7 @@ import { getActiveMessageBannerWhere } from '@abc-transitionbascarbone/common/db
 import { Environment, RoleMip } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import type { MessageBannerCommand } from '@abc-transitionbascarbone/common/utils/messageBanner.command'
-import { MessageBannerCommandValidation } from './messageBanner.command'
+import { MIPMessageBannerCommandValidation } from './messageBanner.command'
 
 const requireSuperAdmin = async (functionName: string) => {
   const session = await dbActualizedAuth()
@@ -25,13 +25,13 @@ const requireSuperAdmin = async (functionName: string) => {
 export const getMessageBannersForManagement = async () =>
   withServerResponse('getMessageBannersForManagement', async () => {
     await requireSuperAdmin('getMessageBannersForManagement')
-    return getMessageBannersForAdmin()
+    return dbGetMessageBannersForManagement()
   })
 
 export const saveMessageBannerForManagement = async (input: MessageBannerCommand) =>
   withServerResponse('saveMessageBannerForManagement', async () => {
     await requireSuperAdmin('saveMessageBannerForManagement')
-    return dbSaveMessageBanner(MessageBannerCommandValidation.parse(input))
+    return dbSaveMessageBanner(MIPMessageBannerCommandValidation.parse(input))
   })
 
 export const deleteMessageBannerForManagement = async (id: string) =>
@@ -50,6 +50,6 @@ export const getCurrentMessageBanners = async () =>
 
     return prismaClient.messageBanner.findMany({
       where: getActiveMessageBannerWhere(Environment.MIP),
-      orderBy: { startAt: 'asc' },
+      orderBy: { startDate: 'asc' },
     })
   })

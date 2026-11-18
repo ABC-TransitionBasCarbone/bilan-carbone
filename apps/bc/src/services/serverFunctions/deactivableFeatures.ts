@@ -11,16 +11,14 @@ import {
   updateFeatureRestictions,
 } from '@/db/deactivableFeatures'
 import { withServerResponse } from '@/utils/serverResponse'
-import { DeactivatableFeature, Environment, Role, UserSource } from '@abc-transitionbascarbone/common/db/enums'
+import { DeactivatableFeature, Environment, UserSource } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { dbActualizedAuth } from '../auth'
+import { requireSuperAdmin } from '../permissions/superAdmin'
 
 export const getDeactivableFeaturesRestrictionValues = async () =>
   withServerResponse('getDeactivableFeaturesRestrictionValues', async () => {
-    const session = await dbActualizedAuth()
-    if (!session || !session.user || session.user.role !== Role.SUPER_ADMIN) {
-      throw new Error(NOT_AUTHORIZED)
-    }
+    await requireSuperAdmin('getDeactivableFeaturesRestrictionValues')
     const featuresStatuses = await getFeaturesRestictions()
     if (featuresStatuses.length === Object.values(DeactivatableFeature).length) {
       return featuresStatuses
@@ -34,12 +32,9 @@ export const getDeactivableFeaturesRestrictionValues = async () =>
 
 export const changeDeactivableFeatureStatus = async (feature: DeactivatableFeature, status: boolean) =>
   withServerResponse('changeDeactivableFeatureStatus', async () => {
-    const session = await dbActualizedAuth()
-    if (!session || !session.user || session.user.role !== Role.SUPER_ADMIN) {
-      throw new Error(NOT_AUTHORIZED)
-    }
+    const user = await requireSuperAdmin('changeDeactivableFeatureStatus')
 
-    await createOrUpdateDeactivableFeature(feature, status, session.user.accountId)
+    await createOrUpdateDeactivableFeature(feature, status, user.accountId)
   })
 
 export const changeDeactivableFeatureRestriction = async (
@@ -48,13 +43,11 @@ export const changeDeactivableFeatureRestriction = async (
   status: boolean,
 ) =>
   withServerResponse('changeDeactivableFeatureRestriction', async () => {
-    const session = await dbActualizedAuth()
-    if (!session || !session.user || session.user.role !== Role.SUPER_ADMIN) {
-      throw new Error(NOT_AUTHORIZED)
-    }
+    await requireSuperAdmin('changeDeactivableFeatureRestriction')
 
     const active = await isFeatureActive(feature)
     if (!active) {
+      console.error('changeDeactivableFeatureRestriction: NOT_AUTHORIZED', { feature })
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -87,6 +80,11 @@ export const isDeactivableFeatureActiveForEnvironment = async (
   withServerResponse('isDeactivableFeatureActiveForEnvironment', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
+      console.error('isDeactivableFeatureActiveForEnvironment: NOT_AUTHORIZED', {
+        userId: session?.user?.id ?? 'anonymous',
+        accountId: session?.user?.accountId,
+        environment,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 

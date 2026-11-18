@@ -4,6 +4,7 @@ import { useServerFunction } from '@abc-transitionbascarbone/common/components/h
 import type { MessageBanner } from '@abc-transitionbascarbone/common/db'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import type { MessageBannerCommand } from '@abc-transitionbascarbone/common/utils/messageBanner.command'
+import { DAY, MIN, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils/time'
 import type { ApiResponse } from '@abc-transitionbascarbone/common/utils/serverResponse'
 import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Switch, TextField } from '@mui/material'
 import { useTranslations } from 'next-intl'
@@ -11,24 +12,24 @@ import { useRouter } from 'next/navigation'
 import type { FormEvent } from 'react'
 import { useRef, useState } from 'react'
 
-type BannerForm = Omit<MessageBannerCommand, 'startAt' | 'endAt'> & {
-  startAt: string
-  endAt: string
+type BannerForm = Omit<MessageBannerCommand, 'startDate' | 'endDate'> & {
+  startDate: string
+  endDate: string
 }
 
 const toDateTimeInputValue = (date: Date) => {
-  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60_000)
+  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * MIN * TIME_IN_MS)
   return localDate.toISOString().slice(0, 16)
 }
 
 const createEmptyBannerForm = (environments: Environment[]): BannerForm => {
-  const startAt = new Date()
-  const endAt = new Date(startAt.getTime() + 24 * 60 * 60 * 1000)
+  const startDate = new Date()
+  const endDate = new Date(startDate.getTime() + DAY * TIME_IN_MS)
   return {
     message: '',
     environments,
-    startAt: toDateTimeInputValue(startAt),
-    endAt: toDateTimeInputValue(endAt),
+    startDate: toDateTimeInputValue(startDate),
+    endDate: toDateTimeInputValue(endDate),
     active: true,
   }
 }
@@ -58,8 +59,8 @@ const MessageBannerManagement = ({ banners, environments, saveBanner, deleteBann
     }
     const command: MessageBannerCommand = {
       ...form,
-      startAt: new Date(form.startAt),
-      endAt: new Date(form.endAt),
+      startDate: new Date(form.startDate),
+      endDate: new Date(form.endDate),
     }
 
     saving.current = true
@@ -82,8 +83,8 @@ const MessageBannerManagement = ({ banners, environments, saveBanner, deleteBann
       id: banner.id,
       message: banner.message,
       environments: banner.environments,
-      startAt: toDateTimeInputValue(banner.startAt),
-      endAt: toDateTimeInputValue(banner.endAt),
+      startDate: toDateTimeInputValue(banner.startDate),
+      endDate: toDateTimeInputValue(banner.endDate),
       active: banner.active,
     })
   }
@@ -143,16 +144,16 @@ const MessageBannerManagement = ({ banners, environments, saveBanner, deleteBann
           <TextField
             type="datetime-local"
             label={t('startAt')}
-            value={form.startAt}
-            onChange={(event) => setForm({ ...form, startAt: event.target.value })}
+            value={form.startDate}
+            onChange={(event) => setForm({ ...form, startDate: event.target.value })}
             slotProps={{ inputLabel: { shrink: true } }}
             required
           />
           <TextField
             type="datetime-local"
             label={t('endAt')}
-            value={form.endAt}
-            onChange={(event) => setForm({ ...form, endAt: event.target.value })}
+            value={form.endDate}
+            onChange={(event) => setForm({ ...form, endDate: event.target.value })}
             slotProps={{ inputLabel: { shrink: true } }}
             required
           />
@@ -186,7 +187,7 @@ const MessageBannerManagement = ({ banners, environments, saveBanner, deleteBann
                 {banner.active ? t('active') : t('inactive')}
               </span>
               <span>
-                {toDateTimeInputValue(banner.startAt)} – {toDateTimeInputValue(banner.endAt)}
+                {toDateTimeInputValue(banner.startDate)} – {toDateTimeInputValue(banner.endDate)}
               </span>
               <div className="align-center gapped1">
                 <Button type="button" onClick={() => edit(banner)} disabled={isSaving}>

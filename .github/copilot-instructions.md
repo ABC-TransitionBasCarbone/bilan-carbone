@@ -117,5 +117,5 @@ Never validate my claims without checking them. Prefer evidence over my approval
 
 ## PR
 
-- When preparing or reviewing a PR, count nonblank code and test lines added and deleted in the full branch diff against its base, excluding generated files, lockfiles, and documentation. If the total exceeds 600 lines, report the count and propose a split. Even at or below 600 lines, propose splitting the branch when separating distinct concerns would make review easier. State the scope of each proposed PR and any dependencies or required merge order. Do not split the branch automatically.
+- When preparing or reviewing a PR, count nonblank code and test lines added and deleted in the full diff against its base, excluding generated files, lockfiles, and documentation. If the total exceeds 600 lines, report the count and propose a split into smaller, independently reviewable PRs. Even at or below 600 lines, propose splitting when separating distinct concerns would make review easier. State each proposed PR's scope and any dependencies or required merge order. Do not split the branch automatically.
 - Do not comment on french text that are not translated. We have a script that translate it automatically after the PR is merged.

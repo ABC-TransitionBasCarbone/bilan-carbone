@@ -13,11 +13,7 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true,
-      "passThroughEnv": [
-        "PORT",
-        "MIP_PORT"
-      ]
+      "persistent": true
     },
     "start": {
       "cache": false

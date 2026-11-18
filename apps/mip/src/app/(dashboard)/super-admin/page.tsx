@@ -20,18 +20,20 @@ const SuperAdmin = async ({ user }: UserSessionProps) => {
   }
   const [allModelCampaigns, banners] = await Promise.all([getAllModelCampaigns(), getMessageBannersForManagement()])
   if (!banners.success) {
-    throw new Error(banners.errorMessage)
+    console.error('SuperAdmin: failed to load message banners', { error: banners.errorMessage })
   }
   return (
     <div className={classNames('grow', styles.content)}>
       <SuperAdminPage modelCampaigns={allModelCampaigns} />
       <Block>
-        <MessageBannerManagement
-          banners={banners.data}
-          environments={mipMessageBannerEnvironments}
-          saveBanner={saveMessageBannerForManagement}
-          deleteBanner={deleteMessageBannerForManagement}
-        />
+        {banners.success && (
+          <MessageBannerManagement
+            banners={banners.data}
+            environments={mipMessageBannerEnvironments}
+            saveBanner={saveMessageBannerForManagement}
+            deleteBanner={deleteMessageBannerForManagement}
+          />
+        )}
       </Block>
     </div>
   )

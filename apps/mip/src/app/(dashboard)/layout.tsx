@@ -12,14 +12,14 @@ interface Props {
 const NavLayout = async ({ children, user: account }: Props & UserSessionProps) => {
   const messageBanners = await getCurrentMessageBanners()
   if (!messageBanners.success) {
-    throw new Error(messageBanners.errorMessage)
+    console.error('NavLayout: failed to load message banners', { error: messageBanners.errorMessage })
   }
 
   return (
     <Box className={classNames('flex-col h100')}>
       <Box component="main" className={classNames('flex-col grow overflow-hidden')}>
         <Navbar user={account} />
-        <MessageBanners banners={messageBanners.data} />
+        {messageBanners.success && <MessageBanners banners={messageBanners.data} />}
         {children}
       </Box>
     </Box>
