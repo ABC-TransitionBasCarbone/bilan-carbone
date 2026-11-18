@@ -305,7 +305,7 @@ const fullStudyInclude = {
       isCR: true,
       parentId: true,
       parent: {
-        select: { id: true, activatedLicence: true },
+        select: { ...OrganizationVersionCourseAccessSelect, id: true, activatedLicence: true },
       },
       environment: true,
       activatedLicence: true,
@@ -491,7 +491,7 @@ export const getAllowedStudiesByUserAndOrganization = async (
       environment: true,
       activatedLicence: true,
       parentId: true,
-      parent: { select: { activatedLicence: true } },
+      parent: { select: { ...OrganizationVersionCourseAccessSelect, activatedLicence: true } },
     },
   })
   if (!organizationVersion) {
@@ -577,7 +577,7 @@ export const getStudyForNavbar = async (id: string): Promise<StudyForNavbar | nu
           parentId: true,
           environment: true,
           activatedLicence: true,
-          parent: { select: { activatedLicence: true } },
+          parent: { select: { ...OrganizationVersionCourseAccessSelect, activatedLicence: true } },
         },
       },
       allowedUsers: {
@@ -624,7 +624,7 @@ export const getStudiesForCards = async (ids: string[]) => {
           parentId: true,
           environment: true,
           activatedLicence: true,
-          parent: { select: { activatedLicence: true } },
+          parent: { select: { ...OrganizationVersionCourseAccessSelect, activatedLicence: true } },
         },
       },
     },
@@ -929,7 +929,7 @@ export const getStudiesSitesFromIds = async (siteIds: string[]) =>
               id: true,
               environment: true,
               activatedLicence: true,
-              parent: { select: { activatedLicence: true } },
+              parent: { select: { ...OrganizationVersionCourseAccessSelect, activatedLicence: true } },
               isCR: true,
               parentId: true,
               organization: {
@@ -1089,13 +1089,20 @@ export const deleteStudyMemberFromOrganization = async (accountId: string, organ
 
 export const upsertStudyTemplate = async (template: DuplicableStudy, environment: Environment, studyId: string) =>
   prismaClient.studyTemplate.upsert({
-    where: { environment_template: { environment, template } },
-    update: { studyId },
+    where: { environment_template_studyId: { environment, template, studyId } },
+    update: {},
     create: { environment, template, studyId },
   })
 
-export const getStudyTemplate = async (template: DuplicableStudy, environment: Environment) =>
-  prismaClient.studyTemplate.findUnique({ where: { environment_template: { environment, template } } })
+export const getStudyTemplates = async (
+  template: DuplicableStudy,
+  environment: Environment,
+  tx?: Prisma.TransactionClient,
+) =>
+  (tx ?? prismaClient).studyTemplate.findMany({
+    where: { environment, template },
+    orderBy: { id: 'asc' },
+  })
 
 export const createEmissionSourceTags = async (
   emissionSourceTags: Prisma.EmissionSourceTagCreateManyInput[],
@@ -1303,7 +1310,7 @@ export const getMinimalStudyForRights = async (studyId: string) => {
           parentId: true,
           environment: true,
           activatedLicence: true,
-          parent: { select: { activatedLicence: true, id: true } },
+          parent: { select: { ...OrganizationVersionCourseAccessSelect, activatedLicence: true, id: true } },
           organization: { select: { name: true } },
         },
       },

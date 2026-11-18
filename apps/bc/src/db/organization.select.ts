@@ -11,6 +11,7 @@ export const OrganizationVersionCourseAccessSelect = {
     take: 1,
   },
   professorCourseSessions: {
+    select: { id: true },
     take: 1,
   },
 } satisfies Prisma.OrganizationVersionSelect
@@ -29,6 +30,7 @@ export const OrganizationVersionWithOrganizationSelect = {
   parentId: true,
   parent: {
     select: {
+      ...OrganizationVersionCourseAccessSelect,
       activatedLicence: true,
     },
   },

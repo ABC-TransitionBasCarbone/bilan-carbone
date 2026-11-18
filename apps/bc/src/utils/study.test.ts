@@ -92,6 +92,36 @@ describe('professor study permissions', () => {
     },
   })
 
+  it('preserves assigned rights on a correction client study using the professor parent course access', () => {
+    const correctionStudy = {
+      ...study,
+      level: Level.Initial,
+      courseSessionType: null,
+      allowedUsers: [
+        { role: StudyRole.Validator, account: { id: professor.accountId, user: { email: professor.email } } },
+      ],
+      organizationVersion: {
+        ...study.organizationVersion,
+        id: 'correction-client',
+        parentId: professor.organizationVersionId,
+        parent: { activatedLicence: [], professorCourseSessions: [{ id: 'session' }] },
+      },
+    }
+    expect(getAccountRoleOnStudy({ ...professor, level: Level.Initial }, correctionStudy)).toBe(StudyRole.Validator)
+    expect(
+      getAccountRoleOnStudy(
+        { ...professor, level: Level.Initial },
+        {
+          ...correctionStudy,
+          organizationVersion: {
+            ...correctionStudy.organizationVersion,
+            parent: { activatedLicence: [], professorCourseSessions: [] },
+          },
+        },
+      ),
+    ).toBe(StudyRole.Reader)
+  })
+
   it('grants only Reader to the current session professor', () => {
     expect(isProfessorOnStudy(professor, study)).toBe(true)
     expect(getAccountRoleOnStudy(professor, study)).toBe(StudyRole.Reader)

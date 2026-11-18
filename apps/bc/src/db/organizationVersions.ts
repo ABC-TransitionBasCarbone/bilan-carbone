@@ -8,7 +8,7 @@ export const getOrganizationVersionsByIds = (organizationVersionIds: string[]) =
       ...OrganizationVersionCourseAccessSelect,
       id: true,
       environment: true,
-      parent: { select: { id: true, activatedLicence: true } },
+      parent: { select: { ...OrganizationVersionCourseAccessSelect, id: true, activatedLicence: true } },
       activatedLicence: true,
     },
   })

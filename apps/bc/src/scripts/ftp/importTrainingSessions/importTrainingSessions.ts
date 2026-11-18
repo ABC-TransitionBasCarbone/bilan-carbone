@@ -1,5 +1,6 @@
 import { prismaClient } from '@/db/client'
 import { createCourseParticipantAccounts, prepareCourseSessionTraineeRegistrations } from '@/db/courseSession'
+import { ensureCourseProfessorCorrections } from '@/services/trainingCorrection'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import {
@@ -121,20 +122,6 @@ const getOrganizationVersionId = (
 
 export const importCourseSessionsFromFTP = async () => {
   const { sessions, deletions } = await getCourseSessionsFromFTP()
-
-  if (sessions.length === 0 && deletions.length === 0) {
-    return {
-      importedSessions: 0,
-      modifiedSessions: 0,
-      createdUsers: 0,
-      createdAccounts: 0,
-      addedTrainees: 0,
-      addedProfessors: 0,
-      deletedSessions: 0,
-      deletedTrainees: 0,
-      deletedProfessors: 0,
-    }
-  }
 
   const today = new Date()
   today.setUTCHours(0, 0, 0, 0)
@@ -330,6 +317,12 @@ export const importCourseSessionsFromFTP = async () => {
     },
     { isolationLevel: 'Serializable' },
   )
+
+  try {
+    await ensureCourseProfessorCorrections()
+  } catch (error) {
+    console.error('Error creating correction studies for professors:', error)
+  }
 
   const existingSessionIds = new Set(existingSessions.map(({ id }) => id))
   const previousSessionsById = new Map(existingSessions.map((session) => [session.id, session]))

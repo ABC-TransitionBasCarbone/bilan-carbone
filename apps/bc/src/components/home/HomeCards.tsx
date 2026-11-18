@@ -1,17 +1,18 @@
 'use client'
 
+import { HomeCardItem, HomeCardType } from '@/types/homeCards'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import { Button } from '@abc-transitionbascarbone/common/ui'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState } from 'react'
-import HomeCard, { HomeCardItem } from './HomeCard'
+import HomeCard from './HomeCard'
 import styles from './HomeCards.module.css'
 import HomeCardsFilters from './HomeCardsFilters'
 
 type Props = {
   items: HomeCardItem[]
-} & ({ type: 'clients'; canCreateOrga: boolean } | { type: 'sessions'; canCreateOrga?: never })
+} & ({ type: HomeCardType.Clients; canCreateOrga: boolean } | { type: HomeCardType.Session; canCreateOrga?: never })
 
 const HomeCards = ({ items, type, canCreateOrga }: Props) => {
   const t = useTranslations()
@@ -35,7 +36,7 @@ const HomeCards = ({ items, type, canCreateOrga }: Props) => {
 
   return (
     <Block
-      title={type === 'clients' ? t('organization.myOrganizations') : t('courseSessions.title')}
+      title={type === HomeCardType.Clients ? t('organization.myOrganizations') : t('courseSessions.title')}
       data-testid="home-cards-list"
       actions={
         canCreateOrga
@@ -58,7 +59,7 @@ const HomeCards = ({ items, type, canCreateOrga }: Props) => {
         className={classNames(styles.grid, 'mb1', { [styles.hideSubRows]: !showAll })}
       >
         {visibleItems.map((item) => (
-          <HomeCard key={item.id} item={item} type={type} />
+          <HomeCard key={item.id} item={item} />
         ))}
       </ul>
       {hiddenRows && (

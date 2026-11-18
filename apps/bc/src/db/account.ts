@@ -3,6 +3,7 @@ import { findUserInfo } from '@/utils/user'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { DeactivatableFeature, Environment, Role, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
+import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import { UserSession } from 'next-auth'
 import { AccountWithUserSelect } from './account.select'
 import { prismaClient } from './client'
@@ -40,11 +41,15 @@ export const getAccountOrganizationVersions = async (accountId: string) => {
     where: { id: accountId },
   })
 
-  if (!account) {
+  if (!account || !account.organizationVersion) {
     return []
   }
 
-  if (account.organizationVersion && account.organizationVersion.isCR) {
+  const isCR = account.organizationVersion.isCR
+  const isProfessorInCourseEnv =
+    isCourseEnvironment(account.organizationVersion.environment) &&
+    account.organizationVersion.professorCourseSessions.length > 0
+  if (isCR || isProfessorInCourseEnv) {
     const childOrganizations = await prismaClient.organizationVersion.findMany({
       ...{ select: OrganizationVersionWithOrganizationSelect },
       where: { parentId: account.organizationVersion.id },
@@ -52,7 +57,7 @@ export const getAccountOrganizationVersions = async (accountId: string) => {
     return [account.organizationVersion, ...childOrganizations]
   }
 
-  return account.organizationVersion ? [account.organizationVersion] : []
+  return [account.organizationVersion]
 }
 
 export const getAccountByEmailAndEnvironment = (

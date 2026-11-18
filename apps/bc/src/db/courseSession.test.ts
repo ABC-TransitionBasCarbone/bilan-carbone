@@ -35,6 +35,7 @@ jest.mock('./client', () => {
     courseSessionTraineeRemoval: { upsert: jest.fn(), deleteMany: jest.fn() },
     attendance: { upsert: jest.fn(), deleteMany: jest.fn() },
     study: { findMany: jest.fn() },
+    organizationVersion: { findFirst: jest.fn(), findUnique: jest.fn(), create: jest.fn() },
   }
   return { prismaClient: { ...transaction, $transaction: jest.fn((operation) => operation(transaction)) } }
 })

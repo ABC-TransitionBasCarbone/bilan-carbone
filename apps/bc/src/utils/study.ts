@@ -29,7 +29,7 @@ import { Getter } from '@tanstack/react-table'
 import { UserSession } from 'next-auth'
 import { unique } from './array'
 import { getEmissionSourcesTotalCo2 } from './emissionSources'
-import { hasActiveLicence, isInOrgaOrParent } from './organization'
+import { type CourseAccess, hasActiveLicence, isInOrgaOrParent } from './organization'
 
 export const getUserRoleOnPublicStudy = (
   user: Pick<UserSession, 'role' | 'level' | 'environment'>,
@@ -53,13 +53,12 @@ export type StudyWithRoleFields = Partial<StudyCourseAccess> & {
   level: Level
   isPublic: boolean
   simplified: boolean
-  organizationVersion: {
+  organizationVersion: CourseAccess & {
     id: string
     parentId: string | null
     environment: Environment
     activatedLicence: number[]
-    parent: { activatedLicence: number[] } | null
-    traineeCourseSessions?: NonNullable<FullStudy['organizationVersion']>['traineeCourseSessions']
+    parent: ({ activatedLicence: number[] } & CourseAccess) | null
   }
   allowedUsers: { role: StudyRole; account: { id: string; user: { email: string } } }[]
 }

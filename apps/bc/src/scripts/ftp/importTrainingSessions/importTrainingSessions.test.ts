@@ -1,5 +1,6 @@
 import { prismaClient } from '@/db/client'
 import { createUsersWithAccount } from '@/db/user'
+import { ensureCourseProfessorCorrections } from '@/services/trainingCorrection'
 import type { CourseSession, CourseSessionTraineeOrganization, Prisma } from '@abc-transitionbascarbone/common/db'
 import {
   CourseSessionTraineeOrganizationStatus,
@@ -41,6 +42,7 @@ jest.mock('@/db/client', () => {
 })
 
 jest.mock('@/db/user', () => ({ createUsersWithAccount: jest.fn() }))
+jest.mock('@/services/trainingCorrection', () => ({ ensureCourseProfessorCorrections: jest.fn() }))
 
 jest.mock('@abc-transitionbascarbone/common/services/email/email', () => ({
   sendCourseSessionsCreatedEmail: jest.fn(),
@@ -77,6 +79,7 @@ const mockFindRegistrations = jest.mocked<
 const mockFindTraineeRemovals = jest.mocked(prismaClient.courseSessionTraineeRemoval.findMany)
 const mockCreateUsersWithAccount = jest.mocked(createUsersWithAccount)
 const mockSendCourseSessionsCreatedEmail = jest.mocked(sendCourseSessionsCreatedEmail)
+const mockEnsureProfessorCorrections = jest.mocked(ensureCourseProfessorCorrections)
 const savedSessions: CourseSession[] = [
   {
     id: 'session-1',
@@ -202,6 +205,7 @@ describe('getCourseSessionsFromFTP', () => {
     jest.useFakeTimers({ doNotFake: ['nextTick', 'setImmediate'] }).setSystemTime(new Date('2026-01-01'))
     jest.clearAllMocks()
     process.env.COURSE_SESSION_ACCESS_DAYS = '7'
+    mockEnsureProfessorCorrections.mockReset().mockResolvedValue(undefined)
     process.env.FTP_HOST = 'host'
     process.env.FTP_USER = 'user'
     process.env.FTP_PASSWORD = 'password'
@@ -255,6 +259,54 @@ describe('getCourseSessionsFromFTP', () => {
 
   afterEach(() => {
     jest.useRealTimers()
+  })
+
+  it('repairs professor corrections after importing sessions', async () => {
+    await importCourseSessionsFromFTP()
+
+    expect(prismaClient.$transaction).toHaveBeenCalledTimes(2)
+    expect(mockEnsureProfessorCorrections).toHaveBeenCalledTimes(1)
+    expect(mockEnsureProfessorCorrections).toHaveBeenCalledWith()
+    expect(mockEnsureProfessorCorrections.mock.invocationCallOrder[0]).toBeGreaterThan(
+      mockUpsertCourseSession.mock.invocationCallOrder[1],
+    )
+  })
+
+  it('still repairs linked professors when the FTP workbook is empty', async () => {
+    jest.mocked(xlsx.parse).mockReturnValue(workbook.map((sheet) => ({ ...sheet, data: sheet.data.slice(0, 1) })))
+    await importCourseSessionsFromFTP()
+    expect(mockUpsertCourseSession).not.toHaveBeenCalled()
+    expect(mockEnsureProfessorCorrections).toHaveBeenCalledTimes(1)
+  })
+
+  it('repairs corrections after replacing the professor of an existing session', async () => {
+    const previousSession = {
+      ...withParticipants({ ...savedSessions[0], professorOrganizationVersionId: 'previous-organization' }),
+      professorOrganization: {
+        userAccounts: [{ user: { email: 'previous@example.org', firstName: 'Previous', lastName: 'Professor' } }],
+      },
+    }
+    mockFindCourseSessions.mockResolvedValueOnce([previousSession])
+    await importCourseSessionsFromFTP()
+    expect(mockUpsertCourseSession.mock.calls[0][0].update.professorOrganizationVersionId).toBe('organization-2')
+    expect(mockEnsureProfessorCorrections).toHaveBeenCalledTimes(1)
+    expect(mockEnsureProfessorCorrections.mock.invocationCallOrder[0]).toBeGreaterThan(
+      mockUpsertCourseSession.mock.invocationCallOrder[0],
+    )
+  })
+
+  it('continues the import when correction processing fails', async () => {
+    const error = new Error('Cannot copy correction')
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined)
+    mockEnsureProfessorCorrections.mockRejectedValue(error)
+    try {
+      await expect(importCourseSessionsFromFTP()).resolves.toEqual(expect.objectContaining({ importedSessions: 2 }))
+      expect(prismaClient.$transaction).toHaveBeenCalledTimes(2)
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Error creating correction studies for professors:', error)
+      expect(mockSendCourseSessionsCreatedEmail).toHaveBeenCalled()
+    } finally {
+      consoleErrorSpy.mockRestore()
+    }
   })
 
   it.each([
@@ -370,6 +422,7 @@ describe('getCourseSessionsFromFTP', () => {
     await importCourseSessionsFromFTP()
 
     expect(mockUpsertCourseSession).not.toHaveBeenCalled()
+    expect(mockEnsureProfessorCorrections).toHaveBeenCalledTimes(1)
   })
 
   it('reads and maps all three sheets from the organism FTP path', async () => {
@@ -438,6 +491,7 @@ describe('getCourseSessionsFromFTP', () => {
       deletedTrainees: 0,
       deletedProfessors: 0,
     })
+    expect(mockEnsureProfessorCorrections).toHaveBeenCalledTimes(1)
 
     expect(mockCreateUsersWithAccount).toHaveBeenCalledWith(
       [

@@ -57,6 +57,7 @@ export const TEST_EMAILS = {
 export const mockedStudy = {
   id: 'mocked-study-id',
   courseSessionType: null,
+  sourceTemplateStudyId: null,
   name: 'Mocked Study',
   startDate: new Date('2025-01-01T00:00:00.000Z'),
   endDate: new Date('2025-01-01T00:00:00.000Z'),
@@ -370,6 +371,7 @@ export const getMockeFullStudy = (overrides = {}): FullStudy => ({
   id: TEST_IDS.sourceStudy,
   createdBy: mockedFullStudy.createdBy,
   courseSessionType: null,
+  sourceTemplateStudyId: null,
   name: 'Source Study',
   simplified: false,
   subPostsConfigVersion: null,
