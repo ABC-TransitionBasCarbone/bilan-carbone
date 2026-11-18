@@ -126,7 +126,7 @@ const getRootMissingVariables = (engine: Engine, root: string): MissingVariables
 
 const isApplicable = (engine: Engine, ruleName: string, mosaicChildren: string[]): boolean => {
   const situation = engine.getSituation()
-  // A "non" mosaic choice also hides every question under that choice.
+  // A "non" mosaic choice suppresses its whole branch, including nested follow-up questions.
   if (
     mosaicChildren.some((child) => {
       const branch = child.split(' . ').slice(0, -1).join(' . ')
@@ -147,7 +147,7 @@ const getEngineWithFoldedDefaults = (engine: Engine, foldedSteps: string[]): Eng
   const situation = engine.getSituation()
   const rules = getParsedRules(engine)
   const defaults: Situation<string> = {}
-  // Folded defaults are absent from getSituation, so materialize them for dependent questions.
+  // Copy implicit defaults for skipped questions into a temporary situation so dependent questions see them.
   for (const step of foldedSteps) {
     if (situation[step] !== undefined || !Object.hasOwn(rules[step]?.rawNode ?? {}, 'par défaut')) {
       continue
@@ -208,7 +208,7 @@ export const hasRuleAnswer = (
   })
 }
 
-// The UI asks for a mosaic parent, so use the maximum missing child score for it.
+// The form shows one mosaic parent, so combine missing child scores into it using the highest score.
 const getMissingVariables = (
   engine: Engine,
   meta: MipRulesMeta,
