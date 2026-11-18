@@ -1,9 +1,19 @@
 import { createEmissionSourcesWithReturn, getFamilyTagsForStudy } from '@/db/emissionSource'
 import { getOrganizationWithSitesById } from '@/db/organization'
 import { createEmissionSourceTags, createStudy, FullStudy, getStudyById } from '@/db/study'
+import {
+  createAction,
+  createExternalStudy,
+  createTrajectoryWithObjectives,
+  createTransitionPlan,
+  getActions,
+  getExternalStudiesForTransitionPlan,
+  getTrajectoriesByTransitionPlanId,
+  getTransitionPlanByStudyId,
+} from '@/db/transitionPlan'
 import { mapCncToStudySite } from '@/utils/cnc'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
-import { Environment, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
+import { Environment, StudyRole, SubPost } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { getEnvironmentHandlingGenericEnvs } from '@abc-transitionbascarbone/common/utils/environments'
 import { v4 as uuidv4 } from 'uuid'
@@ -193,6 +203,127 @@ export const buildStudyForDuplication = (
   },
 })
 
+const getCopiedTransitionPlanScope = (
+  scope: {
+    sites: { studySite: { siteId: string } }[]
+    tags: { studyTag: { id: string; familyId: string; name: string } }[]
+    subPosts: { subPost: SubPost }[]
+  },
+  sourceStudy: FullStudy,
+  targetStudy: FullStudy,
+  context: string,
+  siteIds?: ReadonlyMap<string, string>,
+) => ({
+  sites: {
+    create: scope.sites.map(({ studySite }) => {
+      const targetSiteId = siteIds ? siteIds.get(studySite.siteId) : studySite.siteId
+      const targetStudySite = targetStudy.sites.find((site) => site.site.id === targetSiteId)
+      if (!targetStudySite) {
+        throw new Error(`Missing copied site ${studySite.siteId} for ${context}`)
+      }
+      return { studySiteId: targetStudySite.id }
+    }),
+  },
+  tags: {
+    create: scope.tags.map(({ studyTag }) => {
+      const sourceFamily = sourceStudy.tagFamilies.find((family) => family.id === studyTag.familyId)
+      const targetFamily = targetStudy.tagFamilies.find((family) => family.name === sourceFamily?.name)
+      const targetTag = targetFamily?.tags.find((tag) => tag.name === studyTag.name)
+      if (!targetTag) {
+        throw new Error(`Missing copied tag ${studyTag.id} for ${context}`)
+      }
+      return { studyTagId: targetTag.id }
+    }),
+  },
+  subPosts: {
+    create: scope.subPosts.map(({ subPost }) => {
+      const targetSubPost = getTransEnvironmentSubPost(
+        getEnvironmentHandlingGenericEnvs(sourceStudy.organizationVersion.environment),
+        getEnvironmentHandlingGenericEnvs(targetStudy.organizationVersion.environment),
+        subPost,
+      )
+      if (!targetSubPost) {
+        throw new Error(`Cannot copy subpost ${subPost} for ${context}`)
+      }
+      return { subPost: targetSubPost }
+    }),
+  },
+})
+
+const duplicateTrainingTransitionPlan = async (
+  sourceStudy: FullStudy,
+  targetStudy: FullStudy,
+  tx: Prisma.TransactionClient,
+  siteIds?: ReadonlyMap<string, string>,
+) => {
+  const sourceTransitionPlan = await getTransitionPlanByStudyId(sourceStudy.id, tx)
+  if (!sourceTransitionPlan) {
+    return
+  }
+  const trajectories = await getTrajectoriesByTransitionPlanId(sourceTransitionPlan.id, tx)
+  const targetTransitionPlan = await createTransitionPlan(
+    targetStudy.id,
+    sourceTransitionPlan.sectenVersionId ?? undefined,
+    tx,
+  )
+  const externalStudies = await getExternalStudiesForTransitionPlan(sourceTransitionPlan.id, tx)
+  for (const study of externalStudies) {
+    await createExternalStudy(
+      { transitionPlanId: targetTransitionPlan.id, name: study.name, date: study.date, totalCo2Kg: study.totalCo2Kg },
+      tx,
+    )
+  }
+  for (const trajectory of trajectories) {
+    await createTrajectoryWithObjectives(
+      {
+        transitionPlan: { connect: { id: targetTransitionPlan.id } },
+        name: trajectory.name,
+        description: trajectory.description,
+        type: trajectory.type,
+        referenceYear: trajectory.referenceYear,
+        sectorPercentages: trajectory.sectorPercentages ?? undefined,
+        isDefault: trajectory.isDefault,
+        objectives: {
+          create: trajectory.objectives.map((objective) => ({
+            name: objective.name,
+            startYear: objective.startYear,
+            targetYear: objective.targetYear,
+            reductionRate: objective.reductionRate,
+            isDefault: objective.isDefault,
+            ...getCopiedTransitionPlanScope(objective, sourceStudy, targetStudy, `objective ${objective.id}`, siteIds),
+          })),
+        },
+      },
+      tx,
+    )
+  }
+  const actions = await getActions(sourceTransitionPlan.id, tx)
+  for (const action of actions) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, transitionPlanId, createdAt, updatedAt, indicators, steps, sites, tags, subPosts, ...data } = action
+    await createAction(
+      {
+        ...data,
+        transitionPlanId: targetTransitionPlan.id,
+        indicators: {
+          create: indicators.map((indicator) => ({ type: indicator.type, description: indicator.description })),
+        },
+        steps: {
+          create: steps.map((step) => ({ title: step.title, order: step.order })),
+        },
+        ...getCopiedTransitionPlanScope(
+          { sites, tags, subPosts },
+          sourceStudy,
+          targetStudy,
+          `action ${action.id}`,
+          siteIds,
+        ),
+      },
+      tx,
+    )
+  }
+}
+
 export const duplicateTrainingStudy = async (
   study: FullStudy,
   accounts: { id: string; environment: Environment }[],
@@ -250,5 +381,6 @@ export const duplicateTrainingStudy = async (
     environment,
     target?.siteIds,
   )
+  await duplicateTrainingTransitionPlan(study, createdStudyWithSites, tx, target?.siteIds)
   return createdStudy
 }
