@@ -25,16 +25,16 @@ describe('Duplicate study', () => {
     cy.getByTestId('duplication-modale-text').invoke('text').should('contain', 'Vous serez redirigé vers la page')
 
     cy.getByTestId('environment-selector').should('be.visible').click()
-    cy.get('[data-value="TILT"]').click()
+    cy.get('[data-value="BC+ associatif"]').click()
 
-    cy.getByTestId('duplication-modale-text').invoke('text').should('contain', 'Tilt')
+    cy.getByTestId('duplication-modale-text').invoke('text').should('contain', 'BC+ associatif')
     cy.getByTestId('duplicate-study-confirm').click()
 
     cy.get('#duplicate-study-modal-title', { timeout: 15000 }).should('not.exist') // wait for duplication to be finished
 
     cy.visit('/selection-du-compte')
     cy.url({ timeout: 10000 }).should('eq', `${Cypress.config().baseUrl}/selection-du-compte`)
-    cy.contains('li', 'Tilt').click()
+    cy.contains('li', 'BC+ associatif').click()
     cy.url({ timeout: 10000 }).should('eq', `${Cypress.config().baseUrl}/`)
 
     cy.getByTestId('study').contains('BC V8.10').scrollIntoView().should('be.visible')

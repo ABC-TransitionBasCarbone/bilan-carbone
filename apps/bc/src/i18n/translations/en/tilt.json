@@ -133,9 +133,6 @@
     "export": {
       "export": "Export my results"
     },
-    "ressources": {
-      "supportTools": "This tool has been developed by the Association for the Low Carbon Transition in partnership with :"
-    },
     "results": {
       "reportName": "{studyName} - Bilan Carbone® - Associative sphere",
       "feedback": {
@@ -219,6 +216,9 @@
         "EquipementsEtImmobilisationsSimplified": "To collect the data required to complete this category, we encourage you to circulate a questionnaire within your association. Here is <exemplequestionnairetorefacto>an example</exemplequestionnairetorefacto>, to be implemented in the survey tool of your choice."
       }
     }
+  },
+  "ressources": {
+    "supportTools": "This tool has been developed by the Association for the Low Carbon Transition in partnership with :"
   },
   "navigation": {
     "footprints": "My Footprints",
