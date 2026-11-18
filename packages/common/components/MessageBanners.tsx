@@ -15,15 +15,15 @@ import styles from './MessageBanners.module.css'
 interface MessageBanner {
   id: string
   message: string
-  endAt: Date
+  endDate: Date
 }
 
-const MessageBannerItem = ({ id, message, endAt }: MessageBanner) => {
+const MessageBannerItem = ({ id, message, endDate }: MessageBanner) => {
   const storageKey = `message-banner-dismissed-${id}`
   const [dismissedAt, setDismissedAt] = useState<number | null>(null)
   const [dismissalLoaded, setDismissalLoaded] = useState(false)
   const [now, setNow] = useState(Date.now)
-  const expiresAt = endAt.getTime()
+  const expiresAt = endDate.getTime()
 
   useEffect(() => {
     setDismissedAt(readMessageBannerDismissal(storageKey))

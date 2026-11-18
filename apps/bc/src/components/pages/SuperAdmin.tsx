@@ -23,19 +23,21 @@ const SuperAdminPage = async ({ environment }: Props) => {
     getMessageBannersForManagement(),
   ])
   if (!messageBanners.success) {
-    throw new Error(messageBanners.errorMessage)
+    console.error('SuperAdminPage: failed to load message banners', { error: messageBanners.errorMessage })
   }
 
   return (
     <>
       <Block title={t('title')} as="h1">
         <SuperAdminImport environment={environment} />
-        <MessageBannerManagement
-          banners={messageBanners.data}
-          environments={bcEnvironments}
-          saveBanner={saveMessageBannerForManagement}
-          deleteBanner={deleteMessageBannerForManagement}
-        />
+        {messageBanners.success && (
+          <MessageBannerManagement
+            banners={messageBanners.data}
+            environments={bcEnvironments}
+            saveBanner={saveMessageBannerForManagement}
+            deleteBanner={deleteMessageBannerForManagement}
+          />
+        )}
         {deactivatedFeaturesRestrictions.success && (
           <DeactivableFeatures restrictions={deactivatedFeaturesRestrictions.data} />
         )}

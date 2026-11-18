@@ -1,27 +1,27 @@
-import { getMessageBannerManagementWhere } from '@abc-transitionbascarbone/common/db/db'
+import { getMessageBannerManagementWhereCondition } from '@abc-transitionbascarbone/common/db/db'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { expect, it } from '@jest/globals'
 import { prismaClient } from './client'
-import { deleteMessageBanner, getMessageBannersForAdmin, saveMessageBanner } from './messageBanner'
+import { dbDeleteMessageBanner, dbGetMessageBannersForManagement, dbSaveMessageBanner } from './messageBanner'
 
 jest.mock('./client', () => ({
   prismaClient: { messageBanner: { findMany: jest.fn(), create: jest.fn(), update: jest.fn(), delete: jest.fn() } },
 }))
 
 it('scopes MIP reads and ID-based mutations to MIP-only records', async () => {
-  const where = getMessageBannerManagementWhere([Environment.MIP])
+  const where = getMessageBannerManagementWhereCondition([Environment.MIP])
   const command = {
     message: 'Maintenance',
     environments: [Environment.MIP],
-    startAt: new Date('2026-11-17T10:00:00Z'),
-    endAt: new Date('2026-11-18T10:00:00Z'),
+    startDate: new Date('2026-11-17T10:00:00Z'),
+    endDate: new Date('2026-11-18T10:00:00Z'),
     active: true,
   }
-  await getMessageBannersForAdmin()
-  await saveMessageBanner(command)
-  await saveMessageBanner({ ...command, id: 'banner-id' })
-  await deleteMessageBanner('banner-id')
-  expect(prismaClient.messageBanner.findMany).toHaveBeenCalledWith({ where, orderBy: { startAt: 'desc' } })
+  await dbGetMessageBannersForManagement()
+  await dbSaveMessageBanner(command)
+  await dbSaveMessageBanner({ ...command, id: 'banner-id' })
+  await dbDeleteMessageBanner('banner-id')
+  expect(prismaClient.messageBanner.findMany).toHaveBeenCalledWith({ where, orderBy: { startDate: 'desc' } })
   expect(prismaClient.messageBanner.create).toHaveBeenCalledWith({ data: command })
   expect(prismaClient.messageBanner.update).toHaveBeenCalledWith({
     where: { ...where, id: 'banner-id' },

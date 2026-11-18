@@ -1,8 +1,8 @@
 import {
-  deleteMessageBanner,
-  getMessageBannersForAdmin,
-  getMessageBannersForEnvironment,
-  saveMessageBanner,
+  dbDeleteMessageBanner,
+  dbGetMessageBannersForEnvironment,
+  dbGetMessageBannersForManagement,
+  dbSaveMessageBanner,
 } from '@/db/messageBanner'
 import { dbActualizedAuth } from '@/services/auth'
 import { Environment, Role } from '@abc-transitionbascarbone/common/db/enums'
@@ -15,18 +15,18 @@ import {
 } from './messageBanner'
 
 jest.mock('@/db/messageBanner', () => ({
-  deleteMessageBanner: jest.fn(),
-  getMessageBannersForAdmin: jest.fn(),
-  getMessageBannersForEnvironment: jest.fn(),
-  saveMessageBanner: jest.fn(),
+  dbGetMessageBannersForManagement: jest.fn(),
+  dbGetMessageBannersForEnvironment: jest.fn(),
+  dbSaveMessageBanner: jest.fn(),
+  dbDeleteMessageBanner: jest.fn(),
 }))
 jest.mock('@/services/auth', () => ({ dbActualizedAuth: jest.fn(), auth: jest.fn() }))
 
 const command = {
   message: ' Maintenance ',
   environments: [Environment.BC],
-  startAt: new Date('2026-11-16T10:00:00Z'),
-  endAt: new Date('2026-11-17T10:00:00Z'),
+  startDate: new Date('2026-11-16T10:00:00Z'),
+  endDate: new Date('2026-11-17T10:00:00Z'),
   active: true,
 }
 const id = '97fcde8c-3702-4c5d-bd29-73277c339676'
@@ -51,9 +51,9 @@ it.each([null, { user: { id: 'user', role: Role.ADMIN } }])(
     ]) {
       expect(result).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
     }
-    expect(getMessageBannersForAdmin).not.toHaveBeenCalled()
-    expect(saveMessageBanner).not.toHaveBeenCalled()
-    expect(deleteMessageBanner).not.toHaveBeenCalled()
+    expect(dbGetMessageBannersForManagement).not.toHaveBeenCalled()
+    expect(dbSaveMessageBanner).not.toHaveBeenCalled()
+    expect(dbDeleteMessageBanner).not.toHaveBeenCalled()
     expect(console.error).toHaveBeenCalledTimes(3)
   },
 )
@@ -62,15 +62,15 @@ it('allows super admins to list, create, update and delete banners', async () =>
   jest.mocked(dbActualizedAuth).mockResolvedValue({
     user: { id: 'super-admin', role: Role.SUPER_ADMIN },
   } as Awaited<ReturnType<typeof dbActualizedAuth>>)
-  jest.mocked(getMessageBannersForAdmin).mockResolvedValue([])
+  jest.mocked(dbGetMessageBannersForManagement).mockResolvedValue([])
 
   expect(await getMessageBannersForManagement()).toEqual({ success: true, data: [] })
   expect((await saveMessageBannerForManagement(command)).success).toBe(true)
-  expect(saveMessageBanner).toHaveBeenLastCalledWith({ ...command, message: 'Maintenance' })
+  expect(dbSaveMessageBanner).toHaveBeenLastCalledWith({ ...command, message: 'Maintenance' })
   expect((await saveMessageBannerForManagement({ ...command, id })).success).toBe(true)
-  expect(saveMessageBanner).toHaveBeenLastCalledWith({ ...command, id, message: 'Maintenance' })
+  expect(dbSaveMessageBanner).toHaveBeenLastCalledWith({ ...command, id, message: 'Maintenance' })
   expect((await deleteMessageBannerForManagement(id)).success).toBe(true)
-  expect(deleteMessageBanner).toHaveBeenCalledWith(id)
+  expect(dbDeleteMessageBanner).toHaveBeenCalledWith(id)
 })
 
 it('rejects invalid input before writing and reports database errors', async () => {
@@ -78,14 +78,14 @@ it('rejects invalid input before writing and reports database errors', async () 
     user: { id: 'super-admin', role: Role.SUPER_ADMIN },
   } as Awaited<ReturnType<typeof dbActualizedAuth>>)
 
-  expect((await saveMessageBannerForManagement({ ...command, endAt: command.startAt })).success).toBe(false)
+  expect((await saveMessageBannerForManagement({ ...command, endDate: command.startDate })).success).toBe(false)
   expect((await saveMessageBannerForManagement({ ...command, environments: [Environment.MIP] })).success).toBe(false)
   expect(
     (await saveMessageBannerForManagement({ ...command, environments: [Environment.BC, Environment.MIP] })).success,
   ).toBe(false)
-  expect(saveMessageBanner).not.toHaveBeenCalled()
+  expect(dbSaveMessageBanner).not.toHaveBeenCalled()
 
-  jest.mocked(saveMessageBanner).mockRejectedValue(new Error('database unavailable'))
+  jest.mocked(dbSaveMessageBanner).mockRejectedValue(new Error('database unavailable'))
   expect(await saveMessageBannerForManagement(command)).toEqual({
     success: false,
     errorMessage: 'database unavailable',
@@ -94,12 +94,12 @@ it('rejects invalid input before writing and reports database errors', async () 
 
 it('only reads banners for the authenticated environment', async () => {
   expect(await getCurrentMessageBanners()).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
-  expect(getMessageBannersForEnvironment).not.toHaveBeenCalled()
+  expect(dbGetMessageBannersForEnvironment).not.toHaveBeenCalled()
 
   jest.mocked(dbActualizedAuth).mockResolvedValue({
     user: { id: 'user', environment: Environment.TILT },
   } as Awaited<ReturnType<typeof dbActualizedAuth>>)
-  jest.mocked(getMessageBannersForEnvironment).mockResolvedValue([])
+  jest.mocked(dbGetMessageBannersForEnvironment).mockResolvedValue([])
   expect(await getCurrentMessageBanners()).toEqual({ success: true, data: [] })
-  expect(getMessageBannersForEnvironment).toHaveBeenCalledWith(Environment.TILT)
+  expect(dbGetMessageBannersForEnvironment).toHaveBeenCalledWith(Environment.TILT)
 })

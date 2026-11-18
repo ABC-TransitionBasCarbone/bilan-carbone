@@ -9,16 +9,16 @@ import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { bcEnvironments } from '@abc-transitionbascarbone/common/utils/environments'
 import { prismaClient } from './client'
 
-export const getMessageBannersForAdmin = () => getManagedMessageBanners(prismaClient, bcEnvironments)
+export const dbGetMessageBannersForManagement = () => getManagedMessageBanners(prismaClient, bcEnvironments)
 
-export const getMessageBannersForEnvironment = (environment: Environment) =>
+export const dbGetMessageBannersForEnvironment = (environment: Environment) =>
   prismaClient.messageBanner.findMany({
     where: getActiveMessageBannerWhere(environment),
-    orderBy: { startAt: 'asc' },
+    orderBy: { startDate: 'asc' },
   })
 
-export const saveMessageBanner = (data: Prisma.MessageBannerUncheckedCreateInput) =>
+export const dbSaveMessageBanner = (data: Prisma.MessageBannerUncheckedCreateInput) =>
   saveManagedMessageBanner(prismaClient, bcEnvironments, data)
 
-export const deleteMessageBanner = (id: MessageBanner['id']) =>
+export const dbDeleteMessageBanner = (id: MessageBanner['id']) =>
   deleteManagedMessageBanner(prismaClient, bcEnvironments, id)

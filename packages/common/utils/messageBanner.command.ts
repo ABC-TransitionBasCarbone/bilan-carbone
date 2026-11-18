@@ -3,18 +3,18 @@ import { z } from 'zod'
 
 export const mipMessageBannerEnvironments: Environment[] = [Environment.MIP]
 
-export const MessageBannerCommandValidation = z
+export const CommonMessageBannerCommandValidation = z
   .object({
     id: z.uuid().optional(),
     message: z.string().trim().min(1),
     environments: z.array(z.enum(Environment)).min(1),
-    startAt: z.date(),
-    endAt: z.date(),
+    startDate: z.date(),
+    endDate: z.date(),
     active: z.boolean(),
   })
-  .refine((data) => data.endAt > data.startAt, {
-    path: ['endAt'],
+  .refine((data) => data.endDate > data.startDate, {
+    path: ['endDate'],
     message: 'endDateBeforeStartDate',
   })
 
-export type MessageBannerCommand = z.infer<typeof MessageBannerCommandValidation>
+export type MessageBannerCommand = z.infer<typeof CommonMessageBannerCommandValidation>
