@@ -104,7 +104,7 @@ export const shouldImportCourseSessionTrainee = (
 }
 
 export const normalizeEmail = (record: Record<string, unknown>) => {
-  return getRequiredText(record, 'Email')?.toLowerCase()
+  return getRequiredText(record, 'E-mail')?.toLowerCase()
 }
 
 export const getParticipant = (record: Record<string, unknown>): CourseParticipant | null => {
@@ -124,7 +124,7 @@ export const getParticipant = (record: Record<string, unknown>): CourseParticipa
 }
 
 export const getSession = (sessions: Map<string, CourseSession>, record: Record<string, unknown>) => {
-  const name = getRequiredText(record, 'Nom de la session')
+  const name = getRequiredText(record, 'ParcoursProg')
   const session = name ? sessions.get(name) : null
   if (!session) {
     console.error(`Unknown training session: ${name}`)
