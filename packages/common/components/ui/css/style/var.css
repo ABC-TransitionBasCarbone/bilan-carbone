@@ -246,6 +246,10 @@
   width: 50% !important;
 }
 
+.w33 {
+  width: 33% !important;
+}
+
 .gapped025 {
   gap: 0.25rem;
 }
