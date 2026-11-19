@@ -240,6 +240,7 @@
     "loading": "Učitavanje"
   },
   "error": {
+    "invalidForm": "Obrazac sadrži podatke koji nedostaju ili nisu valjani. Provjerite polja. Ako se problem nastavi, obratite se podršci.",
     "Not authorized": "Nemate ovlasti za izvođenje ove radnje",
     "Not found": "Traženi resurs nije pronađen",
     "Server error": "Došlo je do pogreške poslužitelja, obratite se podršci",

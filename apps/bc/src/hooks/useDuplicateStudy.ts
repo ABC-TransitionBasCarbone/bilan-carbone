@@ -9,7 +9,7 @@ import { SiteCAUnit } from '@abc-transitionbascarbone/common/db/enums'
 import dayjs from 'dayjs'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 
 interface UseDuplicateStudyProps {
@@ -25,32 +25,39 @@ export const useDuplicateStudy = ({ duplicateStudyId, form, user, caUnit }: UseD
   const [isLoading, setIsLoading] = useState(true)
   const [sourceStudy, setSourceStudy] = useState<FullStudy | null>(null)
 
-  const getOriginalStudy = useCallback(async () => {
+  useEffect(() => {
     if (!duplicateStudyId) {
       return
     }
 
-    await callServerFunction(() => getStudy(duplicateStudyId), {
-      onSuccess: (sourceStudy) => {
-        if (!sourceStudy) {
-          return
-        }
+    let cancelled = false
+    const getOriginalStudy = async () => {
+      await callServerFunction(() => getStudy(duplicateStudyId), {
+        onSuccess: (sourceStudy) => {
+          if (!sourceStudy || cancelled) {
+            return
+          }
 
-        setSourceStudy(sourceStudy)
+          setSourceStudy(sourceStudy)
 
-        const currentSites = form.getValues('sites')
-        const updatedSites = updateSitesFromSourceStudy(currentSites, sourceStudy, caUnit)
-        const formData = createDuplicateFormData(sourceStudy, user, tStudy, updatedSites)
+          const currentSites = form.getValues('sites')
+          const updatedSites = updateSitesFromSourceStudy(currentSites, sourceStudy, caUnit)
+          const formData = createDuplicateFormData(sourceStudy, user, tStudy, updatedSites)
 
-        form.reset(formData)
-      },
-    })
-    setIsLoading(false)
-  }, [duplicateStudyId, callServerFunction, form, caUnit, user, tStudy])
+          form.reset(formData)
+        },
+      })
+      if (!cancelled) {
+        setIsLoading(false)
+      }
+    }
 
-  useEffect(() => {
     getOriginalStudy()
-  }, [getOriginalStudy])
+
+    return () => {
+      cancelled = true
+    }
+  }, [duplicateStudyId, callServerFunction, form, caUnit, user, tStudy])
 
   if (!duplicateStudyId) {
     return { isLoading: false, sourceStudy: null }
@@ -109,7 +116,7 @@ export const createDuplicateFormData = (
     resultsUnit: sourceStudy.resultsUnit,
     organizationVersionId: sourceStudy.organizationVersionId,
     sites: mergedSites,
-    exports: sourceStudy.exports?.types,
+    exports: sourceStudy.exports?.types ?? [],
     controlMode: sourceStudy.exports?.control,
-  }
+  } satisfies CreateStudyCommand & Pick<FullStudy, 'resultsUnit'>
 }

@@ -1,4 +1,5 @@
 import type { FullStudy } from '@/db/study'
+import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
 import {
   COMMON_DATES,
   getMockedDetailedFullStudySite,
@@ -7,8 +8,10 @@ import {
 } from '@/tests/utils/models/study'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import { ControlMode, Export, Level, SiteCAUnit, StudyResultUnit } from '@abc-transitionbascarbone/common/db/enums'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { expect } from '@jest/globals'
 import dayjs from 'dayjs'
+import { createFormControl } from 'react-hook-form'
 import { createDuplicateFormData, updateSitesFromSourceStudy } from './useDuplicateStudy'
 
 jest.mock('next-intl', () => ({
@@ -131,6 +134,34 @@ describe('useDuplicateStudy utility functions', () => {
   })
 
   describe('createDuplicateFormData', () => {
+    it.each([
+      null,
+      { types: [], control: ControlMode.Operational },
+      { types: [Export.GHGP], control: ControlMode.Operational },
+    ])('should produce valid submission data with exports %j', async (exports) => {
+      const sourceStudy = getMockedFullStudy({ ...COMMON_DATES, exports })
+      const sites = [getMockedFormSite('site-1', 'Site A', { selected: true })]
+      const formData = createDuplicateFormData(sourceStudy, MOCK_USER, MOCK_TRANSLATION, sites)
+      const form = createFormControl<CreateStudyCommand>({
+        resolver: zodResolver(CreateStudyCommandValidation),
+        defaultValues: { exports: [] },
+      })
+      const onSubmit = jest.fn()
+      const onInvalid = jest.fn()
+
+      form.reset(formData)
+      await form.handleSubmit(onSubmit, onInvalid)()
+
+      expect(formData.exports).toEqual(exports?.types ?? [])
+      expect(formData.controlMode).toBe(exports?.control)
+      expect(CreateStudyCommandValidation.safeParse(formData).success).toBe(true)
+      expect(onInvalid).not.toHaveBeenCalled()
+      expect(onSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({ exports: exports?.types ?? [], sites }),
+        undefined,
+      )
+    })
+
     it('should populate all form fields from source study', () => {
       const sourceStudy = getMockedFullStudy({
         name: 'Original Study Name',

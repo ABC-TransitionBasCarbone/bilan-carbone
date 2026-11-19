@@ -2,17 +2,14 @@
 
 import { duplicateStudyInOtherEnvironment } from '@/services/serverFunctions/study'
 import { Select } from '@abc-transitionbascarbone/common/components/base/Select'
+import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
 import Modal from '@abc-transitionbascarbone/common/components/modals/Modal'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
-import { Toast, ToastColors } from '@abc-transitionbascarbone/common/ui'
 import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import { MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
-
-const emptyToast = { text: '', color: 'info' } as const
-const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
 
 interface Props {
   studyId: string
@@ -34,8 +31,8 @@ const DuplicateStudyModal = ({
   const t = useTranslations('study.duplicateDialog')
   const tEnv = useTranslations('environment')
   const [targetEnvironment, setTargetEnvironment] = useState<Environment>(environments[0])
-  const [toast, setToast] = useState<{ text: string; color: ToastColors }>(emptyToast)
   const [duplicating, setDuplicating] = useState(false)
+  const { callServerFunction } = useServerFunction()
   const router = useRouter()
 
   const isOtherEnvironment = useMemo(
@@ -46,11 +43,18 @@ const DuplicateStudyModal = ({
   const handleDuplicate = async () => {
     if (isOtherEnvironment) {
       setDuplicating(true)
-      const res = await duplicateStudyInOtherEnvironment(studyId, targetEnvironment)
-      if (res.success) {
+      try {
+        await callServerFunction(() => duplicateStudyInOtherEnvironment(studyId, targetEnvironment), {
+          getSuccessMessage: () => t('duplicatedDescription', { environment: tEnv(targetEnvironment) }),
+          onError: () => setDuplicating(false),
+          onSuccess: () => {
+            setDuplicating(false)
+            onClose()
+          },
+        })
+      } catch (error) {
         setDuplicating(false)
-        onClose()
-        setToast({ text: t('duplicatedDescription', { environment: tEnv(targetEnvironment) }), color: 'success' })
+        throw error
       }
     } else {
       if (organizationVersionId) {
@@ -104,16 +108,6 @@ const DuplicateStudyModal = ({
           )}
         </>
       </Modal>
-      {toast.text && (
-        <Toast
-          position={toastPosition}
-          onClose={() => setToast(emptyToast)}
-          message={toast.text}
-          color={toast.color}
-          toastKey="duplicate-study-toast"
-          open
-        />
-      )}
     </>
   )
 }

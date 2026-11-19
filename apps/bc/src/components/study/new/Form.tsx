@@ -11,6 +11,7 @@ import LoadingButton from '@abc-transitionbascarbone/common/components/base/Load
 import { FormTextField } from '@abc-transitionbascarbone/common/components/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
 import GlossaryModal from '@abc-transitionbascarbone/common/components/modals/GlossaryModal'
+import { Toast } from '@abc-transitionbascarbone/common/ui'
 import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
@@ -18,6 +19,8 @@ import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import styles from './Form.module.css'
+
+const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
 
 interface Props {
   form: UseFormReturn<CreateStudyCommand>
@@ -45,10 +48,12 @@ const NewStudyForm = ({
   const router = useRouter()
   const tLabel = useTranslations('common.label')
   const tError = useTranslations('study.new.error')
+  const tGeneralError = useTranslations('error')
   const tGlossary = useTranslations('study.new.glossary')
   const tStudyNewSuggestion = useTranslations('study.new.suggestion')
   const tDocumentation = useTranslations('documentationUrl')
   const { callServerFunction } = useServerFunction()
+  const [showValidationError, setShowValidationError] = useState(false)
   const [inviteOptions, setInviteOptions] = useState<InviteOptions>({
     team: true,
     contributors: true,
@@ -56,6 +61,7 @@ const NewStudyForm = ({
   const [loading, setLoading] = useState(false)
 
   const onSubmit = async (command: CreateStudyCommand) => {
+    setShowValidationError(false)
     setLoading(true)
     if (beforeSubmit) {
       command = beforeSubmit(command)
@@ -90,7 +96,7 @@ const NewStudyForm = ({
 
   return (
     <>
-      <Form onSubmit={form.handleSubmit(onSubmit)}>
+      <Form onSubmit={form.handleSubmit(onSubmit, () => setShowValidationError(true))}>
         <FormTextField
           data-testid="new-study-name"
           control={form.control}
@@ -126,6 +132,16 @@ const NewStudyForm = ({
           {duplicateStudyId ? t('duplicate') : t('create')}
         </LoadingButton>
       </Form>
+      {showValidationError && (
+        <Toast
+          position={toastPosition}
+          onClose={() => setShowValidationError(false)}
+          message={tGeneralError('invalidForm')}
+          color="error"
+          toastKey="study-validation-error"
+          open
+        />
+      )}
       {glossary && (
         <GlossaryModal
           glossary={glossary}
