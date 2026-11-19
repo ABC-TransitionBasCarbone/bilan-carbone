@@ -12,6 +12,7 @@ import {
   Environment,
   Import,
   StudyRole,
+  SubPost,
 } from '@abc-transitionbascarbone/common/db/enums'
 import { duplicateTrainingStudy } from './studyDuplication'
 import { ensureCourseProfessorCorrections, ensureProfessorCorrectionClient } from './trainingCorrection'
@@ -170,7 +171,12 @@ describe('professor correction client', () => {
     await ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)
 
     expect(findFactors).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { id: { in: [TEST_IDS.emissionFactor] }, importedFrom: Import.Manual } }),
+      expect.objectContaining({
+        where: {
+          importedFrom: Import.Manual,
+          OR: [{ id: { in: [TEST_IDS.emissionFactor] } }, { organizationId: 'professor-organization' }],
+        },
+      }),
     )
     expect(createFactor).toHaveBeenCalledTimes(1)
     expect(createFactor).toHaveBeenCalledWith({
@@ -188,12 +194,65 @@ describe('professor correction client', () => {
     ])
   })
 
+  it.each([
+    ['identical content', 'existing-manual-factor'],
+    ['different gas breakdown', 'new-manual-factor'],
+    ['different translation', 'new-manual-factor'],
+    ['different component breakdown', 'new-manual-factor'],
+  ])('links to the correct manual factor for %s', async (scenario, expectedId) => {
+    mockStudy.mockResolvedValue(getMockeFullStudy())
+    const metaData = [
+      { language: 'fr', title: 'Facteur' },
+      { language: 'en', title: 'Factor' },
+    ]
+    const part = { type: EmissionFactorPartType.Amont, totalCo2: 12, metaData }
+    const otherPart = { ...part, totalCo2: 30 }
+    const source = {
+      id: TEST_IDS.emissionFactor,
+      organizationId: 'source-organization',
+      importedFrom: Import.Manual,
+      subPosts: [SubPost.Achats, SubPost.EquipementsDesSalaries],
+      totalCo2: 42,
+      co2f: 42,
+      metaData,
+      emissionFactorParts: [part, otherPart],
+    }
+    const candidate = {
+      ...source,
+      id: 'existing-manual-factor',
+      organizationId: 'professor-organization',
+      subPosts: [...source.subPosts].reverse(),
+      co2f: scenario === 'different gas breakdown' ? 41 : source.co2f,
+      metaData: [
+        metaData[1],
+        { ...metaData[0], title: scenario === 'different translation' ? 'Autre facteur' : metaData[0].title },
+      ],
+      emissionFactorParts: [
+        otherPart,
+        {
+          ...part,
+          totalCo2: scenario === 'different component breakdown' ? 90 : part.totalCo2,
+          metaData: [...metaData].reverse(),
+        },
+      ],
+    }
+    const findFactors = prismaClient.emissionFactor.findMany as jest.Mock
+    const createFactor = prismaClient.emissionFactor.create as jest.Mock
+    findFactors.mockResolvedValue([candidate, source, { ...source, id: 'other-organization-factor' }])
+    createFactor.mockResolvedValue({ id: 'new-manual-factor' })
+
+    await ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)
+
+    expect(createFactor).toHaveBeenCalledTimes(expectedId === candidate.id ? 0 : 1)
+    expect(mockDuplicate.mock.calls[0][5]?.emissionFactorIds?.get(source.id)).toBe(expectedId)
+  })
+
   it('does not duplicate corrections if a required manual factor cannot be copied', async () => {
     mockStudy.mockResolvedValue(getMockeFullStudy())
     jest.mocked(prismaClient.emissionFactor.findMany).mockResolvedValue([])
 
     await expect(ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)).rejects.toThrow(
-      'Missing manual emission factors',
+      'Missing manual emission factor',
     )
     expect(mockDuplicate).not.toHaveBeenCalled()
   })
