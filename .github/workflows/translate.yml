@@ -52,16 +52,16 @@ jobs:
         run: yarn install --immutable
 
       - name: Run translation script
-        working-directory: packages/common/i18n
+        working-directory: packages/common
         run: |
           if [ "${{ github.event_name }}" = "push" ]; then
             # Incremental: only keys changed in this push → keeps API usage minimal.
-            yarn tsx scripts/translate-missing.ts --all-locales --changed-only --file all
+            yarn tsx i18n/scripts/translate-missing.ts --all-locales --changed-only --file all
           elif [ -z "${{ inputs.locale }}" ]; then
             # Manual, all locales: fills whatever is missing for the chosen file(s).
-            yarn tsx scripts/translate-missing.ts --all-locales --file ${{ inputs.file || 'all' }}
+            yarn tsx i18n/scripts/translate-missing.ts --all-locales --file ${{ inputs.file || 'all' }}
           else
-            yarn tsx scripts/translate-missing.ts --locale ${{ inputs.locale }} --file ${{ inputs.file || 'all' }}
+            yarn tsx i18n/scripts/translate-missing.ts --locale ${{ inputs.locale }} --file ${{ inputs.file || 'all' }}
           fi
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
