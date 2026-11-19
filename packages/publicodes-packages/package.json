@@ -1,7 +1,6 @@
 {
     "name": "@abc-transitionbascarbone/publicodes-packages",
     "version": "0.0.0",
-    "private": false,
     "type": "module",
     "exports": {
         "./package.json": "./package.json",

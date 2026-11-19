@@ -1,6 +1,5 @@
 {
   "name": "bilan-carbone-monorepo",
-  "private": true,
   "packageManager": "yarn@1.22.22",
   "workspaces": {
     "packages": [
