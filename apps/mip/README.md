@@ -35,9 +35,6 @@ yarn dev
 yarn workspace mip dev
 ```
 
-The development/test seed creates 15 sample responses for the admin campaign. It deletes existing MIP data before
-recreating it and must not be used to populate staging.
-
 ### Build
 
 ```bash
