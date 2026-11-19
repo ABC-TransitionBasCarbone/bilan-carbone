@@ -4,6 +4,7 @@ import {
   getCourseSessionForProfessor,
   getCourseSessionStudies,
   getCourseSessionTrainees,
+  getProfessorCourseSessions,
   registerCourseSessionTrainee,
   removeCourseSessionTrainee,
   saveCourseSessionAttendance,
@@ -20,6 +21,17 @@ import {
   SaveCourseSessionAttendanceCommand,
   SaveCourseSessionAttendanceCommandValidation,
 } from './courseSession.command'
+
+export const getCourseSessionsForCorrectionSharing = async () =>
+  withServerResponse('getCourseSessionsForCorrectionSharing', async () => {
+    const account = (await dbActualizedAuth())?.user
+    if (!account?.organizationVersionId || !isCourseEnvironment(account.environment)) {
+      console.error('getCourseSessionsForCorrectionSharing: user not authorized', { accountId: account?.accountId })
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return getProfessorCourseSessions(account, new Date())
+  })
 
 export const getProfessorCourseSession = async (id: string) =>
   withServerResponse('getProfessorCourseSession', async () => {

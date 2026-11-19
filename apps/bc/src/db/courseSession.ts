@@ -4,12 +4,14 @@ import type { AddCourseSessionTraineeCommand } from '@/services/serverFunctions/
 import type { CourseSession, Environment, Prisma } from '@abc-transitionbascarbone/common/db'
 import { Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
+import { DAY, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils'
 import { UserSession } from 'next-auth'
 import { prismaClient } from './client'
 import { createUsersWithAccount } from './user'
 
 export const getProfessorCourseSessions = async (
   account: Pick<UserSession, 'organizationVersionId' | 'environment'>,
+  correctionShareDate?: Date,
 ) => {
   if (!account.organizationVersionId) {
     return []
@@ -19,6 +21,10 @@ export const getProfessorCourseSessions = async (
     where: {
       professorOrganizationVersionId: account.organizationVersionId,
       environment: account.environment,
+      ...(correctionShareDate && {
+        startDate: { lte: correctionShareDate },
+        endDate: { gt: new Date(correctionShareDate.getTime() - 14 * DAY * TIME_IN_MS) },
+      }),
     },
     select: { id: true, name: true, startDate: true, endDate: true },
     orderBy: [{ startDate: 'desc' }, { name: 'asc' }],

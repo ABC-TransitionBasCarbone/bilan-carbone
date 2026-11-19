@@ -383,6 +383,8 @@
     "duplicateEnvironment": "Duplicate study in another environment",
     "deleteStudy": "Delete study",
     "shareCorrection": "Share the correction with students",
+    "correctionSession": "Select a session",
+    "noCorrectionSessions": "You have no ongoing sessions or sessions that ended less than 14 days ago.",
     "duplicateCopy": " - Copy",
     "duplicateDialog": {
       "title": "Study duplication",
