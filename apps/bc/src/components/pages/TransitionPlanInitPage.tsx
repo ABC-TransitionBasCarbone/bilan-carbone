@@ -97,7 +97,7 @@ const TransitionPlanInitPage = ({
   const [isSectenUpdateLoading, setIsSectenUpdateLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [currentStep, setCurrentStep] = useState<number | 'complete'>(() =>
-    getInitialCurrentStep(`transition-init-step-${study.id}`, trajectories.length),
+    canEdit ? getInitialCurrentStep(`transition-init-step-${study.id}`, trajectories.length) : 0,
   )
   const [selectedSnbcTrajectories, setSelectedSnbcTrajectories] = useState<string[]>(
     () => readStoredStringArray(`trajectory-snbc-selected-${study.id}`) ?? [TRAJECTORY_SNBC_GENERAL_ID],
@@ -121,7 +121,7 @@ const TransitionPlanInitPage = ({
   const storageKey = `transition-init-step-${study.id}`
   const snbcStorageKey = `trajectory-snbc-selected-${study.id}`
   const sbtiStorageKey = `trajectory-sbti-selected-${study.id}`
-  const isComplete = currentStep === 'complete'
+  const isComplete = canEdit ? currentStep === 'complete' : transitionPlan !== null
   const defaultSnbcSectoralTrajectory = getDefaultSnbcSectoralTrajectory(trajectories)
   const validSnbcIds = new Set([
     TRAJECTORY_SNBC_GENERAL_ID,
@@ -256,7 +256,7 @@ const TransitionPlanInitPage = ({
   }
 
   const handleSaveTrajectory = async (sectorPercentages: SectorPercentages) => {
-    if (!transitionPlan) {
+    if (!transitionPlan || !canEdit) {
       return
     }
 

@@ -18,7 +18,7 @@ interface Props {
   studyName: string
   studySimplified: boolean
   isTransitionPlanActive: boolean
-  hasObjectives: boolean
+  canAccessPlanSections: boolean
   userRole: StudyRole | null
 }
 
@@ -28,7 +28,7 @@ const StudyNavbar = ({
   studyName,
   studySimplified,
   isTransitionPlanActive,
-  hasObjectives,
+  canAccessPlanSections,
   userRole,
 }: Props) => {
   const t = useTranslations('study.navigation')
@@ -68,7 +68,7 @@ const StudyNavbar = ({
           userRole={userRole}
           environment={environment}
           isTransitionPlanActive={isTransitionPlanActive}
-          hasObjectives={hasObjectives}
+          canAccessPlanSections={canAccessPlanSections}
         />
       </Drawer>
     </>

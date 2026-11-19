@@ -136,7 +136,7 @@ const TrajectoryPage = ({
             />
           </div>
 
-          {showTrajectoryModal && (
+          {canCreateTrajectory && showTrajectoryModal && (
             <TrajectoryCreationModal
               open={showTrajectoryModal}
               onClose={() => setShowTrajectoryModal(false)}
