@@ -366,30 +366,36 @@ export const removeCourseSessionTrainee = (
     { isolationLevel: 'Serializable' },
   )
 
+export const courseSessionStudyFilter = (
+  session: Pick<CourseSession, 'id' | 'type'>,
+  professorOrganizationVersionId: string | null,
+  environment: Environment,
+): Prisma.StudyWhereInput => ({
+  courseSessionType: session.type,
+  organizationVersion: { environment },
+  createdBy: {
+    environment,
+    organizationVersion: {
+      traineeCourseSessions: {
+        some: {
+          courseSessionId: session.id,
+          courseSession: {
+            professorOrganizationVersionId,
+            environment,
+          },
+        },
+      },
+    },
+  },
+})
+
 export const getCourseSessionStudies = (
   session: Pick<CourseSession, 'id' | 'type'>,
   professorOrganizationVersionId: string,
   environment: Environment,
 ) =>
   prismaClient.study.findMany({
-    where: {
-      courseSessionType: session.type,
-      organizationVersion: { environment },
-      createdBy: {
-        environment,
-        organizationVersion: {
-          traineeCourseSessions: {
-            some: {
-              courseSessionId: session.id,
-              courseSession: {
-                professorOrganizationVersionId,
-                environment,
-              },
-            },
-          },
-        },
-      },
-    },
+    where: courseSessionStudyFilter(session, professorOrganizationVersionId, environment),
     select: { id: true },
     orderBy: [
       { createdBy: { user: { lastName: 'asc' } } },
