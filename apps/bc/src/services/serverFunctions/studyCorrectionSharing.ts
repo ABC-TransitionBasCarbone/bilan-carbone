@@ -12,26 +12,17 @@ import {
 } from '@/services/studyCorrectionSharing'
 import { withServerResponse } from '@/utils/serverResponse'
 import { getAccountRoleOnStudy } from '@/utils/study'
+import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import type { UserSession } from 'next-auth'
-import { dbActualizedAuth } from '../auth'
+import { getAuthenticatedAccountWithOrga } from '../auth'
 import {
   CorrectionSharingSelectionValidation,
   RecordCorrectionSharingValidation,
   type CorrectionSharingSelection,
   type RecordCorrectionSharingCommand,
 } from './studyCorrectionSharing.command'
-
-const getCorrectionSharingAccount = async () => {
-  const account = (await dbActualizedAuth())?.user
-  const organizationVersionId = account?.organizationVersionId
-  if (!account || !organizationVersionId) {
-    console.error('getCorrectionSharingAccount: user not authorized', { accountId: account?.accountId })
-    throw new Error(NOT_AUTHORIZED)
-  }
-  return { ...account, organizationVersionId }
-}
 
 const getCorrectionSharingPreview = async (
   tx: Prisma.TransactionClient,
@@ -70,13 +61,14 @@ const getCorrectionSharingPreview = async (
 export const previewCorrectionSharing = async (input: CorrectionSharingSelection) =>
   withServerResponse('previewCorrectionSharing', async () => {
     const selection = CorrectionSharingSelectionValidation.parse(input)
-    return getCorrectionSharingPreview(prismaClient, await getCorrectionSharingAccount(), selection)
+    const account = await getAuthenticatedAccountWithOrga()
+    return getCorrectionSharingPreview(prismaClient, accountWithUserToUserSession(account), selection)
   })
 
 export const getCorrectionStudiesForSession = async (input: string) =>
   withServerResponse('getCorrectionStudiesForSession', async () => {
     const courseSessionId = CorrectionSharingSelectionValidation.shape.courseSessionId.parse(input)
-    const account = await getCorrectionSharingAccount()
+    const account = await getAuthenticatedAccountWithOrga()
     const session = await getCourseSessionForProfessor(
       account.organizationVersionId,
       account.environment,
@@ -86,24 +78,26 @@ export const getCorrectionStudiesForSession = async (input: string) =>
     if (!session) {
       console.error('getCorrectionStudiesForSession: session not authorized or ineligible', {
         courseSessionId,
-        accountId: account.accountId,
+        accountId: account.id,
       })
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const studies = await getStudiesForCorrectionSharing(account)
+    const user = accountWithUserToUserSession(account)
+    const studies = await getStudiesForCorrectionSharing(user)
     return studies
-      .filter((study) => canShareStudyCorrection(account, study) && getAccountRoleOnStudy(account, study))
+      .filter((study) => canShareStudyCorrection(user, study) && getAccountRoleOnStudy(user, study))
       .map(({ id, name }) => ({ id, name }))
   })
 
 export const recordCorrectionSharing = async (input: RecordCorrectionSharingCommand) =>
   withServerResponse('recordCorrectionSharing', async () => {
     const command = RecordCorrectionSharingValidation.parse(input)
-    const account = await getCorrectionSharingAccount()
+    const account = await getAuthenticatedAccountWithOrga()
+    const user = accountWithUserToUserSession(account)
     return prismaClient.$transaction(
       async (tx) => {
-        const preview = await getCorrectionSharingPreview(tx, account, command)
+        const preview = await getCorrectionSharingPreview(tx, user, command)
         const targets = getCorrectionTargets(preview.recipients, command.includePlan)
         if (
           command.confirmationName.trim() !== preview.name.trim() ||

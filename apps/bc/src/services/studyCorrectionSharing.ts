@@ -20,12 +20,14 @@ export const getCorrectionTargetSnapshot = (recipients: CorrectionRecipient[]) =
       .sort(),
   )
 
-export const correctionShareSessionDates = (now: Date) => ({
-  startDate: { lte: now },
-  endDate: { gt: new Date(now.getTime() - 14 * DAY * TIME_IN_MS) },
-})
-
-export const isCorrectionShareSessionEligible = (session: { startDate: Date; endDate: Date }, now: Date) => {
-  const { startDate, endDate } = correctionShareSessionDates(now)
+export const correctionShareSessionDates = () => {
+  const now = new Date()
+  return {
+    startDate: { lte: now },
+    endDate: { gt: new Date(now.getTime() - 14 * DAY * TIME_IN_MS) },
+  }
+}
+export const isCorrectionShareSessionEligible = (session: { startDate: Date; endDate: Date }) => {
+  const { startDate, endDate } = correctionShareSessionDates()
   return session.startDate <= startDate.lte && session.endDate > endDate.gt
 }

@@ -77,7 +77,7 @@ export const getCourseSessionDetails = async (courseSessionId: string) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    return { ...courseSession, canShareCorrection: isCorrectionShareSessionEligible(courseSession, new Date()) }
+    return { ...courseSession, canShareCorrection: isCorrectionShareSessionEligible(courseSession) }
   })
 
 export const getProfessorCourseSessionTrainees = async (courseSessionId: string) =>
