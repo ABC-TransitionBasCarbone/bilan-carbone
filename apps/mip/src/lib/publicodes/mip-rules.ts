@@ -147,7 +147,7 @@ const getEngineWithFoldedDefaults = (engine: Engine, foldedSteps: string[]): Eng
   const situation = engine.getSituation()
   const rules = getParsedRules(engine)
   const defaults: Situation<string> = {}
-  // Copy implicit defaults for skipped questions into a temporary situation so dependent questions see them.
+  // Use model defaults for skipped questions only while determining which follow-up questions apply.
   for (const step of foldedSteps) {
     if (situation[step] !== undefined || !Object.hasOwn(rules[step]?.rawNode ?? {}, 'par défaut')) {
       continue
@@ -221,7 +221,7 @@ const getMissingVariables = (
     ),
   )
 
-  // Publicodes automatically resolves single-choice rules, but their questions still need confirmation.
+  // Keep one-option "une possibilité" questions visible for confirmation even if Publicodes omits them from missingVariables.
   for (const question of meta.everyQuestions) {
     const choice = getChoiceOption(rules[question]?.rawNode)
     const possibilities =
