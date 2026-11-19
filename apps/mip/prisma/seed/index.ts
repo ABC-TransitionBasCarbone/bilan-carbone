@@ -2,7 +2,7 @@ import { PrismaClient } from '@abc-transitionbascarbone/common/db'
 import { RoleMip, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { signPassword } from '@abc-transitionbascarbone/common/utils/auth'
 import { PrismaPg } from '@prisma/adapter-pg'
-import mipModel from './co2-model.FR-lang.fr-opti.json'
+import mipModel, { mipSeedResponses } from '../../src/lib/publicodes/mip-model-seed'
 
 const adapter = new PrismaPg({
   connectionString: process.env.POSTGRES_PRISMA_URL,
@@ -92,6 +92,9 @@ const main = async () => {
       name: 'Campaign admin',
       modelCampaignId: modelCampaign.id,
       createdById: adminAccount.id,
+      responses: {
+        create: mipSeedResponses.map((response) => ({ answers: JSON.stringify(response) })),
+      },
     },
   })
 
