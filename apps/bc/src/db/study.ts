@@ -334,6 +334,7 @@ const fullStudyInclude = {
           familyId: true,
           name: true,
           color: true,
+          sourceStudyTagId: true,
           createdAt: true,
           updatedAt: true,
         },

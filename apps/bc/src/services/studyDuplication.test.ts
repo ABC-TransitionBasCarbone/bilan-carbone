@@ -38,6 +38,7 @@ import {
   buildStudyForDuplication,
   duplicateEmissionSources,
   duplicateTrainingStudy,
+  duplicateTrainingTransitionPlan,
   getSitesForDuplication,
 } from './studyDuplication'
 
@@ -90,6 +91,7 @@ const tagFamily = {
     {
       id: 'source-tag',
       familyId: 'source-family',
+      sourceStudyTagId: null,
       name: 'Tag',
       color: null,
       createdAt: new Date('2026-01-01'),
@@ -493,6 +495,47 @@ describe('shared training study duplication', () => {
       },
       prismaClient,
     )
+
+    await duplicateTrainingStudy(
+      sourceStudy,
+      [{ id: 'learner', environment: Environment.COURSE_BC }],
+      StudyRole.Reader,
+      prismaClient,
+      undefined,
+      {
+        organizationVersionId: 'learner-organization',
+        siteIds,
+        correction: { name: 'Correction', creatorId: 'professor', includePlan: false },
+      },
+    )
+    expect(mockCreateStudy.mock.lastCall?.[0].tagFamilies.create[0].tags.createMany.data).toEqual([
+      { name: 'Tag', color: null, sourceStudyTagId: 'source-tag' },
+    ])
+    expect(createTrajectoryWithObjectives).toHaveBeenCalledTimes(2)
+    expect(createAction).toHaveBeenCalledTimes(1)
+
+    await duplicateTrainingTransitionPlan(
+      sourceStudy,
+      {
+        ...copiedStudy,
+        sites: copiedStudy.sites.map((site) => ({ ...site, sourceStudySiteId: sourceSite.id })),
+        tagFamilies: copiedStudy.tagFamilies.map((family) => ({
+          ...family,
+          name: 'Former family name',
+          tags: family.tags.map((tag) => ({ ...tag, name: 'Former tag name', sourceStudyTagId: 'source-tag' })),
+        })),
+      },
+      prismaClient,
+      'correction',
+    )
+    expect(createTrajectoryWithObjectives).toHaveBeenLastCalledWith(
+      expect.objectContaining({ objectives: { create: copiedObjectives } }),
+      prismaClient,
+    )
+    expect(createAction).toHaveBeenLastCalledWith(
+      expect.objectContaining({ tags: { create: [{ studyTagId: 'copied-tag' }] } }),
+      prismaClient,
+    )
   })
 
   it('preserves the legacy destination, shared sites, suffix and multiple learner rights', async () => {
@@ -642,6 +685,7 @@ describe('shared training study duplication', () => {
               name: 'Tag',
               color: null,
               familyId: 'family',
+              sourceStudyTagId: null,
               createdAt: new Date('2026-01-01'),
               updatedAt: new Date('2026-01-01'),
             },
@@ -660,6 +704,7 @@ describe('shared training study duplication', () => {
                 id: 'old-tag',
                 name: 'Tag',
                 familyId: 'old-family',
+                sourceStudyTagId: null,
                 color: null,
                 createdAt: new Date('2026-01-01'),
                 updatedAt: new Date('2026-01-01'),

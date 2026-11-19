@@ -192,6 +192,7 @@ export const buildStudyForDuplication = (
   users: { accountId: string; role: StudyRole }[],
   contributors: { accountId: string; subPost: FullStudy['contributors'][number]['subPost'] }[],
   sites: Prisma.StudySiteCreateManyStudyInput[],
+  linkCorrectionTags = false,
 ) => ({
   ...study,
   createdBy: { connect: { id: userAccountId } },
@@ -212,7 +213,15 @@ export const buildStudyForDuplication = (
   tagFamilies: {
     create: study.tagFamilies.map((tagFamily) => ({
       name: tagFamily.name,
-      tags: { createMany: { data: tagFamily.tags.map((tag) => ({ name: tag.name, color: tag.color })) } },
+      tags: {
+        createMany: {
+          data: tagFamily.tags.map((tag) => ({
+            name: tag.name,
+            color: tag.color,
+            ...(linkCorrectionTags ? { sourceStudyTagId: tag.id } : {}),
+          })),
+        },
+      },
     })),
   },
 })
@@ -226,15 +235,15 @@ const getCopiedTransitionPlanScope = (
   sourceStudy: FullStudy,
   targetStudy: FullStudy,
   context: string,
-  siteMapping?: ReadonlyMap<string, string> | 'sourceStudySiteId',
+  mapping?: ReadonlyMap<string, string> | 'correction',
 ) => ({
   sites: {
     create: scope.sites.map(({ studySite }) => {
       const targetStudySite =
-        siteMapping === 'sourceStudySiteId'
+        mapping === 'correction'
           ? targetStudy.sites.find((site) => site.sourceStudySiteId === studySite.id)
           : targetStudy.sites.find(
-              (site) => site.site.id === (siteMapping ? siteMapping.get(studySite.siteId) : studySite.siteId),
+              (site) => site.site.id === (mapping ? mapping.get(studySite.siteId) : studySite.siteId),
             )
       if (!targetStudySite) {
         throw new Error(`Missing copied site ${studySite.siteId} for ${context}`)
@@ -245,8 +254,12 @@ const getCopiedTransitionPlanScope = (
   tags: {
     create: scope.tags.map(({ studyTag }) => {
       const sourceFamily = sourceStudy.tagFamilies.find((family) => family.id === studyTag.familyId)
-      const targetFamily = targetStudy.tagFamilies.find((family) => family.name === sourceFamily?.name)
-      const targetTag = targetFamily?.tags.find((tag) => tag.name === studyTag.name)
+      const targetTag =
+        mapping === 'correction'
+          ? targetStudy.tagFamilies.flatMap((family) => family.tags).find((tag) => tag.sourceStudyTagId === studyTag.id)
+          : targetStudy.tagFamilies
+              .find((family) => family.name === sourceFamily?.name)
+              ?.tags.find((tag) => tag.name === studyTag.name)
       if (!targetTag) {
         throw new Error(`Missing copied tag ${studyTag.id} for ${context}`)
       }
@@ -272,7 +285,7 @@ export const duplicateTrainingTransitionPlan = async (
   sourceStudy: FullStudy,
   targetStudy: FullStudy,
   tx: Prisma.TransactionClient,
-  siteMapping?: ReadonlyMap<string, string> | 'sourceStudySiteId',
+  mapping?: ReadonlyMap<string, string> | 'correction',
 ) => {
   const sourceTransitionPlan = await getTransitionPlanByStudyId(sourceStudy.id, tx)
   if (!sourceTransitionPlan) {
@@ -308,13 +321,7 @@ export const duplicateTrainingTransitionPlan = async (
             targetYear: objective.targetYear,
             reductionRate: objective.reductionRate,
             isDefault: objective.isDefault,
-            ...getCopiedTransitionPlanScope(
-              objective,
-              sourceStudy,
-              targetStudy,
-              `objective ${objective.id}`,
-              siteMapping,
-            ),
+            ...getCopiedTransitionPlanScope(objective, sourceStudy, targetStudy, `objective ${objective.id}`, mapping),
           })),
         },
       },
@@ -340,7 +347,7 @@ export const duplicateTrainingTransitionPlan = async (
           sourceStudy,
           targetStudy,
           `action ${action.id}`,
-          siteMapping,
+          mapping,
         ),
       },
       tx,
@@ -406,6 +413,7 @@ export const duplicateTrainingStudy = async (
     accounts.map((account) => ({ accountId: account.id, role })),
     [],
     sites,
+    !!target?.correction,
   )
   if (target && !target.correction) {
     command.sourceTemplateStudy = { connect: { id: study.id } }
@@ -458,7 +466,7 @@ export const duplicateTrainingStudy = async (
       study,
       createdStudyWithSites,
       tx,
-      target?.correction ? 'sourceStudySiteId' : target?.siteIds,
+      target?.correction ? 'correction' : target?.siteIds,
     )
   }
   return createdStudy

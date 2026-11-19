@@ -339,7 +339,7 @@ export const addPlanToStudyCorrection = async (
   if (!copy || copy.organizationVersionId !== organizationVersionId) {
     throw new Error(`Missing copied correction ${copiedStudyId} for organization ${organizationVersionId}`)
   }
-  await duplicateTrainingTransitionPlan(source, copy, tx, 'sourceStudySiteId')
+  await duplicateTrainingTransitionPlan(source, copy, tx, 'correction')
 }
 
 export const ensureCourseProfessorCorrections = async () => {
