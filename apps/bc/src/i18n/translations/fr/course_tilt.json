@@ -8,9 +8,13 @@
     "validation": {
       "sessionCode": "Veuillez entrer le code de session",
       "consent": "Vous devez accepter cette condition pour activer votre compte"
-    },
-    "accountActivated": {
-      "content": "Vous venez d'activer votre compte sur le BC+ de formation pour les associations."
+    }
+  },
+  "email": {
+    "body": {
+      "accountActivated": {
+        "content": "Vous venez d'activer votre compte sur le BC+ de formation pour les associations."
+      }
     }
   }
 }
