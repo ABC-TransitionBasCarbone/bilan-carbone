@@ -1,7 +1,7 @@
 import { prismaClient } from '@/db/client'
 import { FullStudy, getStudyById, getStudyTemplates } from '@/db/study'
 import type { Prisma, Site } from '@abc-transitionbascarbone/common/db'
-import { DuplicableStudy, Environment, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
+import { DuplicableStudy, Environment, Import, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
 import { DAY, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils'
 import {
   getEnvironmentHandlingGenericEnvs,
@@ -10,6 +10,61 @@ import {
 import { normalizeString } from '@abc-transitionbascarbone/common/utils/parsing'
 import { v4 as uuidv4 } from 'uuid'
 import { duplicateTrainingStudy } from './studyDuplication'
+
+const copyCorrectionManualEmissionFactors = async (
+  studies: FullStudy[],
+  organizationId: string,
+  transaction: Prisma.TransactionClient,
+) => {
+  const ids = [
+    ...new Set(
+      studies.flatMap(({ emissionSources }) =>
+        emissionSources.flatMap(({ emissionFactor }) =>
+          emissionFactor?.importedFrom === Import.Manual ? [emissionFactor.id] : [],
+        ),
+      ),
+    ),
+  ]
+  const copies = new Map<string, string>()
+  if (ids.length === 0) {
+    return copies
+  }
+
+  const factors = await transaction.emissionFactor.findMany({
+    where: { id: { in: ids }, importedFrom: Import.Manual },
+    omit: { createdAt: true, updatedAt: true, oldBCId: true, importedId: true },
+    include: {
+      metaData: { omit: { emissionFactorId: true, createdAt: true, updatedAt: true } },
+      emissionFactorParts: {
+        omit: { id: true, emissionFactorId: true, createdAt: true, updatedAt: true, oldBCId: true },
+        include: {
+          metaData: { omit: { emissionFactorPartId: true, createdAt: true, updatedAt: true } },
+        },
+      },
+    },
+  })
+  if (factors.length !== ids.length) {
+    throw new Error(`Missing manual emission factors while copying corrections for organization ${organizationId}`)
+  }
+  for (const { id, organizationId: sourceOrganizationId, metaData, emissionFactorParts, ...factor } of factors) {
+    if (sourceOrganizationId === organizationId) {
+      continue
+    }
+    const copy = await transaction.emissionFactor.create({
+      data: {
+        ...factor,
+        organizationId,
+        metaData: { create: metaData },
+        emissionFactorParts: {
+          create: emissionFactorParts.map(({ metaData, ...part }) => ({ ...part, metaData: { create: metaData } })),
+        },
+      },
+      select: { id: true },
+    })
+    copies.set(id, copy.id)
+  }
+  return copies
+}
 
 export const ensureProfessorCorrectionClient = async (
   professorOrganizationVersionId: string,
@@ -47,10 +102,10 @@ export const ensureProfessorCorrectionClient = async (
   }
   const account = await transaction.account.findFirst({
     where: { organizationVersionId: professorOrganizationVersionId, environment },
-    select: { id: true },
+    select: { id: true, organizationVersion: { select: { organizationId: true } } },
     orderBy: { createdAt: 'asc' },
   })
-  if (!account) {
+  if (!account?.organizationVersion) {
     console.error(`Professor account not found for organization ${professorOrganizationVersionId} in ${environment}`)
     return
   }
@@ -129,6 +184,11 @@ export const ensureProfessorCorrectionClient = async (
       data: copiedSites.map((site) => ({ ...site, organizationId: existingClient.organizationId })),
     })
   }
+  const emissionFactorIds = await copyCorrectionManualEmissionFactors(
+    studies,
+    account.organizationVersion.organizationId,
+    transaction,
+  )
   for (const study of studies) {
     await duplicateTrainingStudy(
       study,
@@ -139,6 +199,7 @@ export const ensureProfessorCorrectionClient = async (
       {
         organizationVersionId: client.id,
         siteIds,
+        emissionFactorIds,
       },
     )
   }

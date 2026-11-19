@@ -10,12 +10,19 @@ import {
   getTrajectoriesByTransitionPlanId,
   getTransitionPlanByStudyId,
 } from '@/db/transitionPlan'
-import { getMockedFullStudy, getMockedFullStudySite, getMockeFullStudy, TEST_IDS } from '@/tests/utils/models/study'
+import {
+  getMockedFullStudy,
+  getMockedFullStudySite,
+  getMockeFullStudy,
+  mockedEmissionSourceEmissionFactor,
+  TEST_IDS,
+} from '@/tests/utils/models/study'
 import type { ActionWithRelations } from '@/types/trajectory.types'
 import {
   ActionIndicatorType,
   ActionPotentialDeduction,
   Environment,
+  Import,
   StudyRole,
   SubPost,
   TrajectoryType,
@@ -440,6 +447,42 @@ describe('shared training study duplication', () => {
       siteIds,
     )
     expect(mockCreateEmissions.mock.calls[0][0][0].subPost).toBe(SubPost.EquipementsDesSalaries)
+  })
+
+  it('links correction sources to copied manual factors and keeps base factors', async () => {
+    const emission = sourceStudy.emissionSources[0]
+    await duplicateTrainingStudy(
+      {
+        ...sourceStudy,
+        emissionSources: [
+          emission,
+          {
+            ...emission,
+            emissionFactor: {
+              ...mockedEmissionSourceEmissionFactor,
+              id: 'base-factor',
+              importedFrom: Import.BaseEmpreinte,
+            },
+          },
+          { ...emission, emissionFactor: null },
+        ],
+      },
+      [{ id: 'professor', environment: Environment.COURSE_BC }],
+      StudyRole.Validator,
+      prismaClient,
+      undefined,
+      {
+        organizationVersionId: 'correction-client',
+        siteIds,
+        emissionFactorIds: new Map([[TEST_IDS.emissionFactor, 'copied-manual-factor']]),
+      },
+    )
+    expect(mockCreateEmissions).toHaveBeenCalledWith(
+      ['copied-manual-factor', 'base-factor', null].map((emissionFactorId) =>
+        expect.objectContaining({ emissionFactorId }),
+      ),
+      prismaClient,
+    )
   })
 
   it('fails explicitly when an emission has no matching copied site', async () => {
