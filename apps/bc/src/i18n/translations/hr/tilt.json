@@ -221,5 +221,8 @@
     "tiltABCPage": "https://abc-transitionbascarbone.fr/transition-association-abc-tilt/#",
     "GuideEcoResponsableBureau": "https://associationbilancarbone.sharepoint.com/:b:/s/AssociationBilanCarbone/IQDSk3R5vX9eQYAsjwE3LWPoAY3Gyp9pEStVl1MBejc0E6Y?e=tJFSFc",
     "LeCompteAsso": "https://lecompteasso.associations.gouv.fr/client/login"
+  },
+  "ressources": {
+    "supportTools": "Ovaj alat razvila je <abcAssociation>Association pour la transition Bas Carbone</abcAssociation> u partnerstvu s:"
   }
 }
