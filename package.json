@@ -48,7 +48,7 @@
     "publicodes:compile-windows": "yarn workspace @abc-transitionbascarbone/publicodes-packages compile"
   },
   "dependencies": {
-    "next": "16.4.3"
+    "next": "16.4.5"
   },
   "devDependencies": {
     "turbo": "^2.11.6"
