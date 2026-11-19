@@ -4187,6 +4187,7 @@
     "question": "Allez-vous réserver une chambre d'hôtel ?"
   },
   "transport . hébergement . nuitées . hotel . nombre de nuitées": {
+    "non applicable si": "hotel . présent = non",
     "question": "Combien de nuits avez-vous passé à l'hôtel lors de vos déplacements professionnels l'année passée ?",
     "unité": "nuit",
     "description": "Renseignez ici les nuits passées dans un hôtel dans le cadre de vos déplacements professionnels.\n",
@@ -4214,6 +4215,7 @@
     "description": "💡 Déclarez ici les nuits passées en locations meublées de type Airbnb ou Abritel.\n"
   },
   "transport . hébergement . nuitées . locations . nombre de nuitées": {
+    "non applicable si": "locations . présent = non",
     "question": "Combien de nuits avez-vous passé dans des locations meublées lors de vos déplacements professionnels l'année passée ?",
     "unité": "nuit",
     "description": "Renseignez ici les nuits passées en location meublée (Airbnb, Abritel...).\n",

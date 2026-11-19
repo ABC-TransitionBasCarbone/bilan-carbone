@@ -341,8 +341,78 @@ describe('mip-rules', () => {
 
     const { remainingQuestions } = getFormQuestions(engine, meta, [])
 
+    expect(engine.evaluate({ 'est applicable': 'transport . transports commun . type . bus . heures' }).nodeValue).toBe(
+      false,
+    )
+    expect(
+      engine.evaluate({ 'est applicable': 'transport . transports commun . type . métro ou tram . heures' }).nodeValue,
+    ).toBe(true)
     expect(remainingQuestions).not.toContain('transport . transports commun . type . bus . heures')
     expect(remainingQuestions).toContain('transport . transports commun . type . métro ou tram . heures')
+  })
+
+  it.each(['hotel', 'locations'])('hides %s night questions when not selected, including saved answers', (lodging) => {
+    const engine = createMipEngine(seedModel)
+    const meta = getRulesMeta(engine)
+    const prefix = `transport . hébergement . nuitées . ${lodging}`
+    const question = `${prefix} . nombre de nuitées`
+
+    engine.setSituation({ [`${prefix} . présent`]: 'oui' })
+    expect(getFormQuestions(engine, meta, []).remainingQuestions).toContain(question)
+
+    engine.setSituation({ [`${prefix} . présent`]: 'non', [question]: 2 })
+    expect(engine.evaluate({ 'est applicable': question }).nodeValue).toBe(false)
+    expect(getFormQuestions(engine, meta, [question]).relevantQuestions).not.toContain(question)
+  })
+
+  it.each([
+    ['DT . train . présent', 'DT . train . heure'],
+    ['DT . voiture . présent', 'DT . voiture . km'],
+    ['transport . train . présent', 'transport . train . heure'],
+    ['transport . voiture . présent', 'transport . voiture . km'],
+    ['transport . transports commun . type . bus . présent', 'transport . transports commun . type . bus . heures'],
+    ['transport . mobilité douce . type . vae . présent', 'transport . mobilité douce . type . vae . km'],
+  ])('hides %s follow-ups after deselection', (choice, question) => {
+    const engine = createMipEngine(seedModel)
+    const meta = getRulesMeta(engine)
+    engine.setSituation({
+      'DT . filtrage': 1,
+      'DT . congé': 25,
+      'DT . TT': 2,
+      'transport . transports commun . présent': 'oui',
+      'transport . mobilité douce . présent': 'oui',
+      [choice]: 'non',
+      [question]: 2,
+    })
+
+    expect(engine.evaluate({ 'est applicable': question }).nodeValue).toBe(false)
+    expect(getFormQuestions(engine, meta, [question]).relevantQuestions).not.toContain(question)
+  })
+
+  it('keeps accommodation emissions unchanged when a lodging choice is selected or deselected', () => {
+    const { 'non applicable si': hotelCondition, ...hotel } =
+      seedModel['transport . hébergement . nuitées . hotel . nombre de nuitées']
+    const { 'non applicable si': locationsCondition, ...locations } =
+      seedModel['transport . hébergement . nuitées . locations . nombre de nuitées']
+    expect([hotelCondition, locationsCondition]).toEqual(['hotel . présent = non', 'locations . présent = non'])
+    const baselineModel = {
+      ...seedModel,
+      'transport . hébergement . nuitées . hotel . nombre de nuitées': hotel,
+      'transport . hébergement . nuitées . locations . nombre de nuitées': locations,
+    }
+    const before = createMipEngineWithoutDefaults(baselineModel)
+    const after = createMipEngineWithoutDefaults(seedModel)
+    for (const choice of ['oui', 'non']) {
+      const situation = {
+        'transport . hébergement . nuitées . hotel . présent': choice,
+        'transport . hébergement . nuitées . hotel . nombre de nuitées': 2,
+        'transport . hébergement . nuitées . locations . présent': choice,
+        'transport . hébergement . nuitées . locations . nombre de nuitées': 3,
+      }
+      expect(after.setSituation(situation).evaluate('transport . hébergement').nodeValue).toEqual(
+        before.setSituation(situation).evaluate('transport . hébergement').nodeValue,
+      )
+    }
   })
 
   it('orders the active DT car flow before consumption', () => {

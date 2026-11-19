@@ -124,18 +124,7 @@ const getRootMissingVariables = (engine: Engine, root: string): MissingVariables
   }
 }
 
-const isApplicable = (engine: Engine, ruleName: string, mosaicChildren: string[]): boolean => {
-  const situation = engine.getSituation()
-  // A "non" mosaic choice suppresses its whole branch, including nested follow-up questions.
-  if (
-    mosaicChildren.some((child) => {
-      const branch = child.split(' . ').slice(0, -1).join(' . ')
-      return ruleName.startsWith(`${branch} . `) && situation[child] === 'non'
-    })
-  ) {
-    return false
-  }
-
+const isApplicable = (engine: Engine, ruleName: string): boolean => {
   try {
     return engine.evaluate({ 'est applicable': ruleName }).nodeValue === true
   } catch {
@@ -147,7 +136,7 @@ const getEngineWithFoldedDefaults = (engine: Engine, foldedSteps: string[]): Eng
   const situation = engine.getSituation()
   const rules = getParsedRules(engine)
   const defaults: Situation<string> = {}
-  // Use model defaults for skipped questions only while determining which follow-up questions apply.
+  // Use skipped questions' model defaults to evaluate follow-ups without adding them to the real situation.
   for (const step of foldedSteps) {
     if (situation[step] !== undefined || !Object.hasOwn(rules[step]?.rawNode ?? {}, 'par défaut')) {
       continue
@@ -221,7 +210,7 @@ const getMissingVariables = (
     ),
   )
 
-  // Keep one-option "une possibilité" questions visible for confirmation even if Publicodes omits them from missingVariables.
+  // Keep single-option questions visible when missingVariables omits them; mosaic children are handled below.
   for (const question of meta.everyQuestions) {
     const choice = getChoiceOption(rules[question]?.rawNode)
     const possibilities =
@@ -297,14 +286,12 @@ export const getFormQuestions = (engine: Engine, meta: MipRulesMeta, foldedSteps
       return cached
     }
 
-    const result = isApplicable(questionEngine, question, mosaicChildren)
+    const result = isApplicable(questionEngine, question)
     applicability.set(question, result)
     return result
   }
   const isAnswerApplicable =
-    questionEngine === engine
-      ? isQuestionApplicable
-      : (question: string) => isApplicable(engine, question, mosaicChildren)
+    questionEngine === engine ? isQuestionApplicable : (question: string) => isApplicable(engine, question)
   const missingVariables = getMissingVariables(questionEngine, meta, isQuestionApplicable)
 
   const remainingQuestions = sortQuestions(
