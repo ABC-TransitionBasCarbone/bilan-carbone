@@ -57,6 +57,6 @@
     "**/@tailwindcss/typography/postcss-selector-parser": "^7.1.7",
     "@swc/core": "1.16.1",
     "mysql2": "^3.23.1",
-    "vite": "^6.4.3"
+    "vite": "^6.4.6"
   }
 }
