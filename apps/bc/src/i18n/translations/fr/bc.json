@@ -1080,7 +1080,8 @@
       "name": "Nom de l'étude",
       "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
       "title": "Suppression d'une étude",
-      "wrongName": "Le nom de l'étude ne correspond pas"
+      "wrongName": "Le nom de l'étude ne correspond pas",
+      "correctionAlreadySent": "Corrigé déjà envoyé : impossible de le supprimer."
     },
     "transitionPlan": {
       "notInitialized": "Le plan de transition de cette étude n'a pas encore été initialisé.",

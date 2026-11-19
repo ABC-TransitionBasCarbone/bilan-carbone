@@ -58,7 +58,7 @@ import {
   getStudyCommentsCountFromOrganizationVersionId,
   getStudyCommentsFromOrganizationVersionId,
   getStudyCommentsWithStudyIdAndSubPost,
-  getStudyNameById,
+  getStudyForDeletion,
   getStudySites,
   getStudySitesWithName,
   getStudyTemplates,
@@ -1195,14 +1195,20 @@ export const newStudyContributor = async (
 export const deleteStudyCommand = async ({ id, name }: DeleteCommand) =>
   withServerResponse('deleteStudyCommand', async () => {
     if (!(await canDeleteStudy(id))) {
+      console.error('deleteStudyCommand: study not deletable', { studyId: id })
       throw new Error(NOT_AUTHORIZED)
     }
-    const studyName = await getStudyNameById(id)
-    if (!studyName) {
+    const study = await getStudyForDeletion(id)
+    if (!study?.name) {
+      console.error('deleteStudyCommand: study name unavailable', { studyId: id })
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (studyName.toLowerCase() !== name.toLowerCase()) {
+    if (study.correctionDeliveries.length > 0) {
+      throw new Error('correctionAlreadySent')
+    }
+
+    if (study.name.toLowerCase() !== name.toLowerCase()) {
       throw new Error('wrongName')
     }
     await deleteStudy(id)

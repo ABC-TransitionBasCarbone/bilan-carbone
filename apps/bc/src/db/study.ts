@@ -687,16 +687,14 @@ export const getStudyByIds = async (ids: string[]) => {
 }
 export type FullStudy = Exclude<AsyncReturnType<typeof getStudyById>, null>
 
-export const getStudyNameById = async (id: string) => {
-  const study = await prismaClient.study.findUnique({
+export const getStudyForDeletion = (id: string) =>
+  prismaClient.study.findUnique({
     where: { id },
-    select: { name: true },
+    select: {
+      name: true,
+      correctionDeliveries: { take: 1, select: { id: true } },
+    },
   })
-  if (!study) {
-    return null
-  }
-  return study.name
-}
 
 export const getStudyStartDate = async (id: string) => {
   const study = await prismaClient.study.findUnique({
