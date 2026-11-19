@@ -560,8 +560,11 @@ type StudyForNavbar = StudyWithRoleFields & {
   simplified: boolean
 }
 
-export const getStudyForNavbar = async (id: string): Promise<StudyForNavbar | null> => {
-  return prismaClient.study.findUnique({
+export const getStudyForNavbar = async (
+  id: string,
+  tx: Prisma.TransactionClient = prismaClient,
+): Promise<StudyForNavbar | null> => {
+  return tx.study.findUnique({
     where: { id },
     select: {
       ...StudyCourseAccessSelect,

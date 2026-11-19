@@ -9,6 +9,11 @@ import { UserSession } from 'next-auth'
 import { prismaClient } from './client'
 import { createUsersWithAccount } from './user'
 
+export const correctionShareSessionDates = (now: Date) => ({
+  startDate: { lte: now },
+  endDate: { gt: new Date(now.getTime() - 14 * DAY * TIME_IN_MS) },
+})
+
 export const getProfessorCourseSessions = async (
   account: Pick<UserSession, 'organizationVersionId' | 'environment'>,
   correctionShareDate?: Date,
@@ -21,10 +26,7 @@ export const getProfessorCourseSessions = async (
     where: {
       professorOrganizationVersionId: account.organizationVersionId,
       environment: account.environment,
-      ...(correctionShareDate && {
-        startDate: { lte: correctionShareDate },
-        endDate: { gt: new Date(correctionShareDate.getTime() - 14 * DAY * TIME_IN_MS) },
-      }),
+      ...(correctionShareDate && correctionShareSessionDates(correctionShareDate)),
     },
     select: { id: true, name: true, startDate: true, endDate: true },
     orderBy: [{ startDate: 'desc' }, { name: 'asc' }],

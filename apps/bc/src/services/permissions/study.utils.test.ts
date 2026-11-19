@@ -1,3 +1,8 @@
+import {
+  getCorrectionTargets,
+  getCorrectionTargetSnapshot,
+  type CorrectionRecipient,
+} from '@/services/studyCorrectionSharing'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { canShareStudyCorrection } from './study.utils'
 
@@ -11,8 +16,22 @@ const correction = {
 }
 
 describe('canShareStudyCorrection', () => {
-  it('allows the professor organization to share its own correction', () => {
+  it('allows the professor organization to share its own correction with remaining recipients', () => {
     expect(canShareStudyCorrection(professor, correction)).toBe(true)
+
+    const recipients: CorrectionRecipient[] = (['notSent', 'withoutPlan', 'withPlan'] as const).map((status) => ({
+      id: status,
+      organizationVersionId: `org-${status}`,
+      firstName: 'Camille',
+      lastName: 'Martin',
+      status,
+    }))
+    const withoutPlan = getCorrectionTargets(recipients, false)
+    const withPlan = getCorrectionTargets(recipients, true)
+    expect(withoutPlan.map(({ id }) => id)).toEqual(['notSent'])
+    expect(withPlan.map(({ id }) => id)).toEqual(['notSent', 'withoutPlan'])
+    expect(getCorrectionTargetSnapshot(withPlan)).toBe(getCorrectionTargetSnapshot([...withPlan].reverse()))
+    expect(getCorrectionTargetSnapshot(withPlan)).not.toBe(getCorrectionTargetSnapshot(withoutPlan))
   })
 
   it('does not allow another organization or training environment to share it', () => {

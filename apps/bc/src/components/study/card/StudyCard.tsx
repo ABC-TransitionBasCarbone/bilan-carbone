@@ -42,7 +42,7 @@ const StudyCard = async ({ study, user, simplified }: Props) => {
       <Box className={classNames(styles.card, 'flex-col grow w100')}>
         <div className={showShareCorrection ? styles.shareHeader : 'justify-center'}>
           <StudyName studyId={id} name={name} role={showRoleInChip ? accountRoleOnStudy : null} clickable />
-          {showShareCorrection && <ShareStudyCorrectionButton compact />}
+          {showShareCorrection && <ShareStudyCorrectionButton studyId={id} compact />}
         </div>
         <p className={classNames(styles.student, 'align-center')} data-testid="study-student">
           <PersonOutlineIcon aria-hidden="true" />

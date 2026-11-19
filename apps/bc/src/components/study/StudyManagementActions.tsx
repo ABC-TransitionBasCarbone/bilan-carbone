@@ -122,7 +122,7 @@ const StudyManagementActions = ({
       : []
 
   const shareCorrectionAction: BlockProps['actions'] = showShareCorrection
-    ? [{ actionType: 'node', node: <ShareStudyCorrectionButton /> }]
+    ? [{ actionType: 'node', node: <ShareStudyCorrectionButton studyId={study.id} /> }]
     : []
 
   return (
