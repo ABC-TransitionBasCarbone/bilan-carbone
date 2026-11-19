@@ -50,6 +50,9 @@
       "2": "Identifier des priorités d'action en fonction de vos émissions, et commencer à construire une trajectoire de réduction"
     }
   },
+  "ressources": {
+    "supportTools": "Cet outil a été développé par l’Association pour la transition Bas Carbone en partenariat avec :"
+  },
   "exports": {
     "env_specific_export": "Bilan Carbone® - Sphère associative",
     "exportFilename": "Bilan Carbone® - Sphère associative - {studyName}",
