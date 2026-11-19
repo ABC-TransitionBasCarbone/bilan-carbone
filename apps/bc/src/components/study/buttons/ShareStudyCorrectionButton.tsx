@@ -31,6 +31,20 @@ import styles from './ShareStudyCorrectionButton.module.css'
 
 type Preview = Extract<Awaited<ReturnType<typeof previewCorrectionSharing>>, { success: true }>['data']
 
+const initialForm: {
+  selectionId: string
+  preview: Preview | null
+  includePlan: boolean
+  confirmationName: string | null
+  feedback: 'changed' | 'error' | null
+} = {
+  selectionId: '',
+  preview: null,
+  includePlan: false,
+  confirmationName: null,
+  feedback: null,
+}
+
 const statusIcons = {
   notSent: <CloseIcon color="error" fontSize="small" />,
   withoutPlan: <DescriptionOutlinedIcon color="warning" fontSize="small" />,
@@ -42,26 +56,20 @@ type Props = { compact?: boolean } & (
 )
 
 const ShareStudyCorrectionButton = ({ studyId, courseSessionId, compact = false }: Props) => {
-  const t = useTranslations('study')
+  const t = useTranslations()
   const tSharing = useTranslations('study.correctionSharing')
-  const tAction = useTranslations('common.action')
-  const tCommon = useTranslations('common')
-  const tSpinner = useTranslations('spinner')
   const format = useFormatter()
   const router = useRouter()
   const { showSuccessToast } = useToast()
   const [open, setOpen] = useState(false)
   const [loading, startTransition] = useTransition()
   const [options, setOptions] = useState<Pick<ProfessorCourseSession, 'id' | 'name'>[] | null>(null)
-  const [selectionId, setSelectionId] = useState('')
-  const [preview, setPreview] = useState<Preview | null>(null)
-  const [includePlan, setIncludePlan] = useState(false)
-  const [confirming, setConfirming] = useState(false)
-  const [confirmationName, setConfirmationName] = useState('')
-  const [feedback, setFeedback] = useState<'changed' | 'error' | null>(null)
+  const [form, setForm] = useState(initialForm)
+  const { selectionId, preview, includePlan, confirmationName, feedback } = form
+  const confirming = confirmationName !== null
   const selectId = useId()
   const confirmationId = useId()
-  const label = t('shareCorrection')
+  const label = t('study.shareCorrection')
   const recipients = preview?.recipients ?? []
   const hasMissing = recipients.some(({ status }) => status === 'notSent')
   const hasUpgrade = recipients.some(({ status }) => status === 'withoutPlan')
@@ -70,10 +78,7 @@ const ShareStudyCorrectionButton = ({ studyId, courseSessionId, compact = false 
 
   const openDialog = () => {
     setOpen(true)
-    setSelectionId('')
-    setPreview(null)
-    setConfirming(false)
-    setFeedback(null)
+    setForm(initialForm)
     if (!loading) {
       setOptions(null)
       startTransition(async () => {
@@ -102,29 +107,24 @@ const ShareStudyCorrectionButton = ({ studyId, courseSessionId, compact = false 
   }
 
   const selectOption = (id: string) => {
-    setSelectionId(id)
-    setIncludePlan(false)
-    setPreview(null)
-    setFeedback(null)
+    setForm({ ...initialForm, selectionId: id })
     startTransition(async () => {
       try {
         const result = await previewCorrectionSharing({
           studyId: studyId ?? id,
           courseSessionId: courseSessionId ?? id,
         })
-        if (result.success) {
-          setPreview(result.data)
-        } else {
-          setFeedback('error')
-        }
+        setForm((current) =>
+          result.success ? { ...current, preview: result.data } : { ...current, feedback: 'error' },
+        )
       } catch (error) {
         console.error('Could not preview correction sharing', error)
-        setFeedback('error')
+        setForm((current) => ({ ...current, feedback: 'error' }))
       }
     })
   }
 
-  const confirm = () => {
+  const confirm = (confirmationName: string) => {
     startTransition(async () => {
       try {
         const result = await recordCorrectionSharing({
@@ -135,14 +135,14 @@ const ShareStudyCorrectionButton = ({ studyId, courseSessionId, compact = false 
           targetSnapshot: getCorrectionTargetSnapshot(targets),
         })
         if (!result.success) {
-          setFeedback('error')
+          setForm((current) => ({ ...current, feedback: 'error' }))
           return
         }
-        setConfirming(false)
         if (result.data.status === 'changed') {
-          setPreview(result.data.preview)
-          setFeedback('changed')
+          const { preview } = result.data
+          setForm((current) => ({ ...current, preview, confirmationName: null, feedback: 'changed' }))
         } else {
+          setForm((current) => ({ ...current, confirmationName: null }))
           setOpen(false)
           showSuccessToast(tSharing('recorded'))
           if (courseSessionId) {
@@ -151,7 +151,7 @@ const ShareStudyCorrectionButton = ({ studyId, courseSessionId, compact = false 
         }
       } catch (error) {
         console.error('Could not record correction sharing', error)
-        setFeedback('error')
+        setForm((current) => ({ ...current, feedback: 'error' }))
       }
     })
   }
@@ -159,24 +159,25 @@ const ShareStudyCorrectionButton = ({ studyId, courseSessionId, compact = false 
   const actions: ModalProps['actions'] =
     confirming && preview
       ? [
-          { children: tAction('back'), variant: 'outlined', disabled: loading, onClick: () => setConfirming(false) },
+          {
+            children: t('common.action.back'),
+            variant: 'outlined',
+            disabled: loading,
+            onClick: () => setForm((current) => ({ ...current, confirmationName: null })),
+          },
           {
             children: tSharing('confirmSharing'),
             variant: 'contained',
             disabled: loading || confirmationName.trim() !== preview.name.trim(),
-            onClick: confirm,
+            onClick: () => confirm(confirmationName),
           },
         ]
       : targets.length > 0
         ? [
             {
-              children: tAction('continue'),
+              children: t('common.action.continue'),
               variant: 'contained',
-              onClick: () => {
-                setConfirmationName('')
-                setFeedback(null)
-                setConfirming(true)
-              },
+              onClick: () => setForm((current) => ({ ...current, confirmationName: '', feedback: null })),
             },
           ]
         : undefined
@@ -206,13 +207,13 @@ const ShareStudyCorrectionButton = ({ studyId, courseSessionId, compact = false 
         title={label}
         open={open}
         onClose={() => setOpen(false)}
-        closeLabel={tAction('close')}
+        closeLabel={t('common.action.close')}
         closeDisabled={loading}
         className={styles.modal}
         actions={actions}
       >
         <Stack spacing={2} useFlexGap className={styles.fields}>
-          {feedback === 'error' && <Alert severity="error">{tCommon('error')}</Alert>}
+          {feedback === 'error' && <Alert severity="error">{t('common.error')}</Alert>}
           {feedback === 'changed' && <Alert severity="warning">{tSharing('changed')}</Alert>}
           {options?.length ? (
             <TextField
@@ -221,7 +222,7 @@ const ShareStudyCorrectionButton = ({ studyId, courseSessionId, compact = false 
               fullWidth
               size="small"
               disabled={loading || confirming}
-              label={courseSessionId ? tSharing('selectCorrection') : t('correctionSession')}
+              label={courseSessionId ? tSharing('selectCorrection') : t('study.correctionSession')}
               value={selectionId}
               onChange={(event) => selectOption(event.target.value)}
             >
@@ -233,12 +234,12 @@ const ShareStudyCorrectionButton = ({ studyId, courseSessionId, compact = false 
             </TextField>
           ) : !loading ? (
             options ? (
-              <p role="status">{courseSessionId ? tSharing('noCorrections') : t('noCorrectionSessions')}</p>
+              <p role="status">{courseSessionId ? tSharing('noCorrections') : t('study.noCorrectionSessions')}</p>
             ) : (
-              <p role="alert">{tCommon('error')}</p>
+              <p role="alert">{t('common.error')}</p>
             )
           ) : null}
-          {loading && <p role="status">{tSpinner('loading')}</p>}
+          {loading && <p role="status">{t('spinner.loading')}</p>}
           {preview && (
             <>
               {recipients.length ? (
@@ -267,7 +268,12 @@ const ShareStudyCorrectionButton = ({ studyId, courseSessionId, compact = false 
               {recipients.length > 0 && !hasMissing && !hasUpgrade && <p>{tSharing('alreadySent')}</p>}
               {(hasMissing || hasUpgrade) && (
                 <FormControlLabel
-                  control={<Checkbox checked={includePlan} onChange={(_, checked) => setIncludePlan(checked)} />}
+                  control={
+                    <Checkbox
+                      checked={includePlan}
+                      onChange={(_, checked) => setForm((current) => ({ ...current, includePlan: checked }))}
+                    />
+                  }
                   disabled={loading || confirming}
                   label={tSharing('withPlanChoice')}
                 />
@@ -288,7 +294,10 @@ const ShareStudyCorrectionButton = ({ studyId, courseSessionId, compact = false 
                     label={tSharing('sessionName')}
                     value={confirmationName}
                     disabled={loading}
-                    onChange={(event) => setConfirmationName(event.target.value)}
+                    onChange={(event) => {
+                      const confirmationName = event.target.value
+                      setForm((current) => ({ ...current, confirmationName }))
+                    }}
                   />
                 </Stack>
               )}
