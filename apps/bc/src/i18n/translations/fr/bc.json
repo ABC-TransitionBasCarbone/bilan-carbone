@@ -382,6 +382,7 @@
     "duplicate": "Dupliquer l'étude",
     "duplicateEnvironment": "Dupliquer l'étude dans un autre environnement",
     "deleteStudy": "Supprimer l'étude",
+    "shareCorrection": "Partager le corrigé aux élèves",
     "duplicateCopy": " - Copie",
     "duplicateDialog": {
       "title": "Duplication de l'étude",

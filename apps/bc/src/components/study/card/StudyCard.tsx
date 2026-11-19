@@ -1,6 +1,7 @@
 import ProgressBar from '@/components/base/ProgressBar'
 import { StudyCardItem } from '@/db/study'
 import { hasAccessToEmissionSourceValidation, hasRoleOnStudy } from '@/services/permissions/environment'
+import { canShareStudyCorrection } from '@/services/permissions/study.utils'
 import { getDisplayedRoleOnStudy } from '@/utils/study'
 import Box from '@abc-transitionbascarbone/common/components/base/Box'
 import { Button } from '@abc-transitionbascarbone/common/ui'
@@ -10,6 +11,7 @@ import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import GlossaryIconModal from '../../modals/GlossaryIconModal'
+import ShareStudyCorrectionButton from '../buttons/ShareStudyCorrectionButton'
 import styles from './StudyCard.module.css'
 import StudyName from './StudyName'
 
@@ -73,7 +75,8 @@ const StudyCard = async ({ study, user, simplified }: Props) => {
             />
           </Box>
         )}
-        <div className="justify-end">
+        <div className="justify-end align-center gapped">
+          {canShareStudyCorrection(user, study) && <ShareStudyCorrectionButton compact />}
           <Button
             href={`/etudes/${id}${accountRoleOnStudy === 'Contributor' ? '/contributeur' : ''}`}
             data-testid="study-link"

@@ -1,6 +1,7 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
+import { canShareStudyCorrection } from '@/services/permissions/study.utils'
 import { getAccountRoleOnStudy } from '@/utils/study'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
@@ -47,6 +48,7 @@ const StudyDetailsHeader = ({
       organizationVersionId={organizationVersionId}
       canDeleteStudy={canDeleteStudy}
       canDuplicateStudy={canDuplicateStudy}
+      showShareCorrection={canShareStudyCorrection(user, study)}
       duplicableEnvironments={duplicableEnvironments}
       userRole={userRole}
       siteId={studySite}
