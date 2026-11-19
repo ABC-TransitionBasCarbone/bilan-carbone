@@ -22,23 +22,24 @@ const ShareStudyCorrectionButton = ({ compact = false }: Props) => {
 
   return (
     <>
-      {compact ? (
-        <Tooltip title={label}>
+      <Tooltip title={label}>
+        {compact ? (
           <IconButton color="primary" aria-label={label} aria-haspopup="dialog" onClick={() => setOpen(true)}>
             <ShareOutlinedIcon />
           </IconButton>
-        </Tooltip>
-      ) : (
-        <Button
-          variant="outlined"
-          color="secondary"
-          startIcon={<ShareOutlinedIcon />}
-          aria-haspopup="dialog"
-          onClick={() => setOpen(true)}
-        >
-          {label}
-        </Button>
-      )}
+        ) : (
+          <Button
+            className="h100"
+            variant="outlined"
+            color="secondary"
+            aria-label={label}
+            aria-haspopup="dialog"
+            onClick={() => setOpen(true)}
+          >
+            <ShareOutlinedIcon />
+          </Button>
+        )}
+      </Tooltip>
       <Dialog open={open} onClose={() => setOpen(false)} maxWidth="xs" fullWidth>
         <DialogTitle className="justify-between align-center gapped">
           {label}

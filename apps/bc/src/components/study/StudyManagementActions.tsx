@@ -127,7 +127,7 @@ const StudyManagementActions = ({
 
   return (
     <>
-      {children([...duplicateAction, ...deleteAction, ...shareCorrectionAction, ...downloadEmissionSourceAction])}
+      {children([...shareCorrectionAction, ...duplicateAction, ...deleteAction, ...downloadEmissionSourceAction])}
       {deleting && (
         <DeletionModal
           form={form}
