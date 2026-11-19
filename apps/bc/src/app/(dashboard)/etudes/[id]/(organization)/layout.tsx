@@ -7,7 +7,7 @@ import { isDeactivableFeatureActiveForEnvironment } from '@/services/serverFunct
 import { checkStudyHasObjectives } from '@/services/serverFunctions/trajectory.serverFunction'
 import { getAccountRoleOnStudy } from '@/utils/study'
 import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
-import { DeactivatableFeature } from '@abc-transitionbascarbone/common/db/enums'
+import { DeactivatableFeature, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
 import { UUID } from 'crypto'
 import { redirect } from 'next/navigation'
 import styles from './layout.module.css'
@@ -34,15 +34,16 @@ const NavLayout = async ({ children, params, user }: Props & UserSessionProps) =
 
   const environment = study.organizationVersion.environment
 
-  const [transitionPlanFeature, objectivesResponse, userRole] = await Promise.all([
+  const userRole = getAccountRoleOnStudy(user, study)
+  const [transitionPlanFeature, objectivesResponse] = await Promise.all([
     isDeactivableFeatureActiveForEnvironment(DeactivatableFeature.TransitionPlan, environment),
-    checkStudyHasObjectives(id),
-    getAccountRoleOnStudy(user, study),
+    userRole === StudyRole.Reader ? null : checkStudyHasObjectives(id),
   ])
 
   const showRoleInChip = user && hasRoleOnStudy(user.environment)
   const isTransitionPlanActive = transitionPlanFeature.success && transitionPlanFeature.data
-  const hasObjectives = objectivesResponse.success ? objectivesResponse.data : false
+  const canAccessPlanSections =
+    userRole === StudyRole.Reader ? !!study.transitionPlan : objectivesResponse?.success && objectivesResponse.data
 
   return (
     <>
@@ -53,7 +54,7 @@ const NavLayout = async ({ children, params, user }: Props & UserSessionProps) =
           studyName={study.name}
           studySimplified={study.simplified}
           isTransitionPlanActive={isTransitionPlanActive}
-          hasObjectives={hasObjectives}
+          canAccessPlanSections={!!canAccessPlanSections}
           userRole={showRoleInChip ? userRole : null}
         />
         <div className={styles.children}>{children}</div>

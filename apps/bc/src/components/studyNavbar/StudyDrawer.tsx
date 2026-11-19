@@ -18,7 +18,7 @@ interface Props {
   studyName: string
   studySimplified: boolean
   isTransitionPlanActive: boolean
-  hasObjectives: boolean
+  canAccessPlanSections: boolean
 }
 
 const StudyDrawer = ({
@@ -28,7 +28,7 @@ const StudyDrawer = ({
   studyName,
   studySimplified,
   isTransitionPlanActive,
-  hasObjectives,
+  canAccessPlanSections,
 }: Props) => {
   const pathName = usePathname()
   const [glossaryInfo, setGlossaryInfo] = useState<{ id: string; label: string; info: string } | null>(null)
@@ -42,7 +42,7 @@ const StudyDrawer = ({
     studyId,
     studyName,
     isTransitionPlanActive,
-    hasObjectives,
+    canAccessPlanSections,
     studySimplified,
   )
   return (
