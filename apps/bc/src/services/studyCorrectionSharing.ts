@@ -29,4 +29,3 @@ export const isCorrectionShareSessionEligible = (session: { startDate: Date; end
   const { startDate, endDate } = correctionShareSessionDates(now)
   return session.startDate <= startDate.lte && session.endDate > endDate.gt
 }
-
