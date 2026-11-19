@@ -53,7 +53,7 @@
     "bcryptjs": "^3.0.3",
     "big.js": "^7.0.1",
     "classnames": "^2.5.1",
-    "commander": "^15.0.0",
+    "commander": "^15.1.0",
     "dayjs": "^1.11.23",
     "docx-templates": "^4.15.0",
     "dompurify": "^3.4.16",
