@@ -1,6 +1,13 @@
 import { createEmissionSourcesWithReturn, getFamilyTagsForStudy } from '@/db/emissionSource'
 import { getOrganizationWithSitesById } from '@/db/organization'
-import { createEmissionSourceTags, createStudy, FullStudy, getStudyById } from '@/db/study'
+import {
+  createEmissionSourceTags,
+  createEngagementAction,
+  createStudy,
+  FullStudy,
+  getEngagementActions,
+  getStudyById,
+} from '@/db/study'
 import {
   createAction,
   createExternalStudy,
@@ -389,5 +396,29 @@ export const duplicateTrainingStudy = async (
     target?.emissionFactorIds,
   )
   await duplicateTrainingTransitionPlan(study, createdStudyWithSites, tx, target?.siteIds)
+  const engagementActions = await getEngagementActions(study.id, tx)
+  for (const action of engagementActions) {
+    const sites = action.sites.map((site) => {
+      const targetSiteId = target ? target.siteIds.get(site.siteId) : site.siteId
+      const copiedSite = createdStudyWithSites.sites.find((site) => site.site.id === targetSiteId)
+      if (!copiedSite) {
+        throw new Error(`Missing copied site ${site.siteId} for engagement action ${action.id}`)
+      }
+      return { id: copiedSite.id }
+    })
+    await createEngagementAction(
+      {
+        name: action.name,
+        date: action.date,
+        targets: action.targets,
+        steps: action.steps,
+        phase: action.phase,
+        description: action.description,
+        study: { connect: { id: createdStudy.id } },
+        sites: { connect: sites },
+      },
+      tx,
+    )
+  }
   return createdStudy
 }
