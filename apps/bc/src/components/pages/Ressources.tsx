@@ -17,6 +17,7 @@ interface Props {
 
 const RessourcesPage = async ({ environment }: Props) => {
   const t = await getTranslations('ressources')
+  const tRoot = await getTranslations()
 
   const ressources = await getEnvironnementRessources(environment, t)
 
@@ -36,7 +37,7 @@ const RessourcesPage = async ({ environment }: Props) => {
       </div>
       {isTilt(environment) && (
         <div className={classNames('gapped1', 'mt2')}>
-          <h4 className={styles.partnersTitle}>{t('supportTools')}</h4>
+          <h4 className={styles.partnersTitle}>{customRich(tRoot, 'ressources.supportTools', {}, environment)}</h4>
           <div className={styles.partners}>
             <Card component="article" className={styles.partnerCard}>
               <div className={styles.partnerLogo}>
