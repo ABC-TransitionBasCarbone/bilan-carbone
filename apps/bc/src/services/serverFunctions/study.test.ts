@@ -1,4 +1,3 @@
-import { prismaClient } from '@/db/client'
 import * as studyUtilsModule from '@/utils/study'
 import {
   CourseSessionType,
@@ -234,35 +233,14 @@ const {
   changeStudyEstablishment,
   duplicateStudyInOtherEnvironment,
   newStudyContributor,
-  assignTrainingExerciseStudy,
-  assignTrainingCorrectionExerciseStudy,
 } = jest.requireActual('./study')
 
-describe('paused historical TILT learner assignments', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-    jest.mocked(prismaClient.account.findMany).mockResolvedValue([])
-  })
-
-  it('excludes TILT from the beginning-of-training exercise job', async () => {
-    expect(await assignTrainingExerciseStudy()).toEqual({ created: 0, error: 0 })
-    expect(prismaClient.account.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: expect.objectContaining({ environment: { not: Environment.TILT } }),
-      }),
-    )
-    expect(studyDbModule.getStudyTemplates).not.toHaveBeenCalled()
-  })
-
-  it('excludes TILT from the end-of-training correction job', async () => {
-    expect(await assignTrainingCorrectionExerciseStudy()).toEqual([])
-    expect(prismaClient.account.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: expect.objectContaining({ environment: { not: Environment.TILT } }),
-      }),
-    )
-    expect(studyDbModule.getStudyTemplates).not.toHaveBeenCalled()
-  })
+it('does not expose training jobs or template administration as Server Actions', () => {
+  const actions = jest.requireActual('./study')
+  expect(actions).not.toHaveProperty('assignTrainingExerciseStudy')
+  expect(actions).not.toHaveProperty('assignTrainingCorrectionExerciseStudy')
+  expect(actions).not.toHaveProperty('duplicateStudyTemplateForAccounts')
+  expect(actions).not.toHaveProperty('setStudyTemplate')
 })
 
 const mockedSessionValidator = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.validator })
