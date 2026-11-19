@@ -280,17 +280,25 @@ const getRoleIfHasAccess = (user: UserSession, minimalStudy: MinimalStudyForRigh
 }
 
 export const NEWGetAccountRoleOnStudy = (user: UserSession, minimalStudy: MinimalStudyForRights): StudyRole | null => {
+  if (isProfessorOnStudy(user, minimalStudy)) {
+    return StudyRole.Validator
+  }
+
+  const right = minimalStudy.allowedUsers.find((right) => right.account.id === user.accountId)
+
+  if (
+    isTiltSimplified(minimalStudy.organizationVersion.environment, minimalStudy.simplified) &&
+    (isInOrgaOrParent(user.organizationVersionId, minimalStudy.organizationVersion) || right)
+  ) {
+    return StudyRole.Editor
+  }
+
   if (isAdminOnStudyOrga(user, minimalStudy.organizationVersion)) {
     return getRoleIfHasAccess(user, minimalStudy)
   }
 
-  const right = minimalStudy.allowedUsers.find((right) => right.account.id === user.accountId)
   if (right) {
     return getRoleIfHasAccess(user, minimalStudy, right.role)
-  }
-
-  if (isProfessorOnStudy(user, minimalStudy)) {
-    return StudyRole.Reader
   }
 
   if (minimalStudy.isPublic && isInOrgaOrParent(user.organizationVersionId, minimalStudy.organizationVersion)) {

@@ -66,6 +66,7 @@ const courseSession = {
   type: CourseSessionType.INITIAL,
   startDate: new Date('2026-11-01'),
   endDate: new Date('2026-11-05'),
+  code: '123456',
 }
 
 describe('course session trainee input', () => {

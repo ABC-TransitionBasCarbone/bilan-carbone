@@ -122,9 +122,9 @@ describe('professor study permissions', () => {
     ).toBe(StudyRole.Reader)
   })
 
-  it('grants only Reader to the current session professor', () => {
+  it('grants only Validator to the current session professor', () => {
     expect(isProfessorOnStudy(professor, study)).toBe(true)
-    expect(getAccountRoleOnStudy(professor, study)).toBe(StudyRole.Reader)
+    expect(getAccountRoleOnStudy(professor, study)).toBe(StudyRole.Validator)
   })
 
   it('does not grant access to another professor or an account without an organization', () => {
@@ -169,7 +169,7 @@ describe('professor study permissions', () => {
     ).toBe(false)
   })
 
-  it('does not grant Editor on simplified COURSE_TILT studies', () => {
+  it('grant validator role on tilt simplified studies for course_tilt', () => {
     const tiltStudy = {
       ...study,
       simplified: true,
@@ -192,7 +192,7 @@ describe('professor study permissions', () => {
     }
 
     expect(getAccountRoleOnStudy({ ...professor, environment: Environment.COURSE_TILT }, tiltStudy)).toBe(
-      StudyRole.Reader,
+      StudyRole.Validator,
     )
   })
 })
