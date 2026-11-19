@@ -6,14 +6,18 @@ import tableStyles from '@abc-transitionbascarbone/common/components/base/Table.
 import { TableActionButton } from '@abc-transitionbascarbone/common/components/base/TableActionButton'
 import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
 import Modal from '@abc-transitionbascarbone/common/components/modals/Modal'
+import BarChartIcon from '@mui/icons-material/BarChart'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
+import CloseIcon from '@mui/icons-material/Close'
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
-import { Chip, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
+import { Chip, Stack, Table, TableBody, TableCell, TableHead, TableRow, Tooltip } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import styles from './CourseSessionTraineesTable.module.css'
 
 interface Props {
   sessionId: string
@@ -24,6 +28,7 @@ const CourseSessionTraineesTable = ({ sessionId, trainees }: Props) => {
   const t = useTranslations('courseSessions')
   const tTeam = useTranslations('team.table')
   const tAction = useTranslations('common.action')
+  const tSharing = useTranslations('study.correctionSharing')
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
   const [deletingTrainee, setDeletingTrainee] = useState<CourseSessionTrainee | null>(null)
@@ -65,6 +70,7 @@ const CourseSessionTraineesTable = ({ sessionId, trainees }: Props) => {
               <TableCell scope="col">{tTeam('firstName')}</TableCell>
               <TableCell scope="col">{tTeam('email')}</TableCell>
               <TableCell scope="col">{t('attendance')}</TableCell>
+              <TableCell scope="col">{tSharing('sentCorrections')}</TableCell>
               <TableCell scope="col" className={tableStyles.actionsColumn} />
             </TableRow>
           </TableHead>
@@ -99,6 +105,39 @@ const CourseSessionTraineesTable = ({ sessionId, trainees }: Props) => {
                       label={t('attendanceMissing')}
                     />
                   )}
+                </TableCell>
+                <TableCell>
+                  <Stack direction="row" spacing={0.5} useFlexGap className="wrap justify-center">
+                    {trainee.corrections.length ? (
+                      trainee.corrections.map(({ sourceStudy, transitionPlanSentAt }) => {
+                        const label = tSharing(transitionPlanSentAt ? 'studyWithPlan' : 'studyWithoutPlan', {
+                          study: sourceStudy.name,
+                        })
+                        return (
+                          <Tooltip key={sourceStudy.id} title={label}>
+                            <span
+                              role="img"
+                              aria-label={label}
+                              tabIndex={0}
+                              className={classNames('align-center', { [styles.withPlan]: transitionPlanSentAt })}
+                            >
+                              {transitionPlanSentAt ? (
+                                <BarChartIcon fontSize="small" />
+                              ) : (
+                                <DescriptionOutlinedIcon className={styles.withoutPlan} fontSize="small" />
+                              )}
+                            </span>
+                          </Tooltip>
+                        )
+                      })
+                    ) : (
+                      <Tooltip title={tSharing('notSent')}>
+                        <span role="img" aria-label={tSharing('notSent')} tabIndex={0} className="align-center">
+                          <CloseIcon className={styles.notSent} fontSize="small" />
+                        </span>
+                      </Tooltip>
+                    )}
+                  </Stack>
                 </TableCell>
                 <TableCell className={tableStyles.actionsColumn} data-testid="course-session-trainees-actions">
                   <TableActionButton

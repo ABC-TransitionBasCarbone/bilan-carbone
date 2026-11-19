@@ -4,11 +4,13 @@ import {
   getCourseSessionForProfessor,
   getCourseSessionStudies,
   getCourseSessionTrainees,
+  getProfessorCourseSessions,
   registerCourseSessionTrainee,
   removeCourseSessionTrainee,
   saveCourseSessionAttendance,
 } from '@/db/courseSession'
 import { canAddCourseSessionTrainee, canManageCourseSession } from '@/services/permissions/courseSession'
+import { isCorrectionShareSessionEligible } from '@/services/studyCorrectionSharing'
 import { withServerResponse } from '@/utils/serverResponse'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
@@ -20,6 +22,17 @@ import {
   SaveCourseSessionAttendanceCommand,
   SaveCourseSessionAttendanceCommandValidation,
 } from './courseSession.command'
+
+export const getCourseSessionsForCorrectionSharing = async () =>
+  withServerResponse('getCourseSessionsForCorrectionSharing', async () => {
+    const account = (await dbActualizedAuth())?.user
+    if (!account?.organizationVersionId || !isCourseEnvironment(account.environment)) {
+      console.error('getCourseSessionsForCorrectionSharing: user not authorized', { accountId: account?.accountId })
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    return getProfessorCourseSessions(account, new Date())
+  })
 
 export const getProfessorCourseSession = async (id: string) =>
   withServerResponse('getProfessorCourseSession', async () => {
@@ -64,7 +77,7 @@ export const getCourseSessionDetails = async (courseSessionId: string) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    return courseSession
+    return { ...courseSession, canShareCorrection: isCorrectionShareSessionEligible(courseSession) }
   })
 
 export const getProfessorCourseSessionTrainees = async (courseSessionId: string) =>
