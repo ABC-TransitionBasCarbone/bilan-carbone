@@ -96,6 +96,7 @@ export const createStudy = async (
 
 const fullStudyInclude = {
   createdBy: StudyCourseAccessSelect.createdBy,
+  receivedCorrectionDelivery: StudyCourseAccessSelect.receivedCorrectionDelivery,
   emissionSources: {
     select: {
       id: true,
@@ -241,6 +242,7 @@ const fullStudyInclude = {
   sites: {
     select: {
       id: true,
+      sourceStudySiteId: true,
       etp: true,
       ca: true,
       openingHours: true,
@@ -559,6 +561,7 @@ const studyForNavbarSelect = {
   ...StudyCourseAccessSelect,
   id: true,
   name: true,
+  transitionPlan: { select: { id: true } },
   simplified: true,
   level: true,
   isPublic: true,
@@ -580,7 +583,7 @@ const studyForNavbarSelect = {
   },
 } satisfies Prisma.StudySelect
 
-type StudyForNavbar = StudyWithRoleFields & { name: string }
+type StudyForNavbar = StudyWithRoleFields & { name: string; transitionPlan: { id: string } | null }
 
 export const getStudyForNavbar = (
   id: string,

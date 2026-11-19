@@ -1,5 +1,10 @@
 import { prismaClient } from '@/db/client'
-import { createCourseParticipantAccounts, prepareCourseSessionTraineeRegistrations } from '@/db/courseSession'
+import {
+  courseSessionStudyFilter,
+  createCourseParticipantAccounts,
+  prepareCourseSessionTraineeRegistrations,
+} from '@/db/courseSession'
+import { correctionShareSessionDates } from '@/services/studyCorrectionSharing'
 import { ensureCourseProfessorCorrections } from '@/services/trainingCorrection'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
@@ -125,6 +130,9 @@ export const importCourseSessionsFromFTP = async () => {
 
   const today = new Date()
   today.setUTCHours(0, 0, 0, 0)
+  const closedEndDate = correctionShareSessionDates(today).endDate.gt
+  const closedStartDate = new Date(closedEndDate)
+  closedStartDate.setUTCDate(closedStartDate.getUTCDate() - 1)
   const notFinishedSessions = sessions.filter(({ endDate }) => endDate >= today)
 
   const userAccountInSession = notFinishedSessions.flatMap(({ trainees, professor, environment }) =>
@@ -161,6 +169,7 @@ export const importCourseSessionsFromFTP = async () => {
     ...deletions.map(({ courseOrganismId, name }) => ({ courseOrganismId, name })),
   ]
   const deletedCounts = { deletedSessions: 0, deletedTrainees: 0, deletedProfessors: 0 }
+  const closedSessionIds = new Set<string>()
   const existingSessions = await prismaClient.courseSession.findMany({
     where: {
       OR: affectedSessionsSQLRequest,
@@ -197,7 +206,62 @@ export const importCourseSessionsFromFTP = async () => {
       for (const deletion of deletions) {
         const where = { courseOrganismId: deletion.courseOrganismId, name: deletion.name }
         if (deletion.type === 'session') {
-          deletedCounts.deletedSessions += (await transaction.courseSession.deleteMany({ where })).count
+          const sessions = await transaction.courseSession.findMany({
+            where,
+            select: {
+              id: true,
+              startDate: true,
+              endDate: true,
+              type: true,
+              environment: true,
+              professorOrganizationVersionId: true,
+              _count: {
+                select: {
+                  traineeOrganizations: { where: { attendance: { isNot: null } } },
+                  traineeRemovals: true,
+                  correctionDeliveries: true,
+                },
+              },
+            },
+          })
+          for (const session of sessions) {
+            const { id, startDate, endDate, _count } = session
+            const hasData =
+              _count.traineeOrganizations > 0 ||
+              _count.traineeRemovals > 0 ||
+              _count.correctionDeliveries > 0 ||
+              (await transaction.study.findFirst({
+                where: courseSessionStudyFilter(session, session.professorOrganizationVersionId, session.environment),
+                select: { id: true },
+              }))
+            if (!hasData) {
+              deletedCounts.deletedSessions += (await transaction.courseSession.deleteMany({ where: { id } })).count
+              continue
+            }
+            if (endDate <= closedEndDate) {
+              continue
+            }
+            const closed = await transaction.courseSession.updateMany({
+              where: { id, endDate: { gt: closedEndDate } },
+              data: {
+                endDate: closedEndDate,
+                ...(startDate > closedEndDate && { startDate: closedStartDate }),
+              },
+            })
+            if (closed.count > 0) {
+              closedSessionIds.add(id)
+              deletedCounts.deletedSessions += closed.count
+            }
+          }
+        } else if (
+          deletions.some(
+            (entry) =>
+              entry.type === 'session' &&
+              entry.courseOrganismId === deletion.courseOrganismId &&
+              entry.name === deletion.name,
+          )
+        ) {
+          continue
         } else if (deletion.type === 'stagiaire') {
           deletedCounts.deletedTrainees += (
             await transaction.courseSessionTraineeOrganization.deleteMany({
@@ -327,6 +391,9 @@ export const importCourseSessionsFromFTP = async () => {
   const existingSessionIds = new Set(existingSessions.map(({ id }) => id))
   const previousSessionsById = new Map(existingSessions.map((session) => [session.id, session]))
   const updatedSessions = importedSessions.flatMap((session) => {
+    if (closedSessionIds.has(session.id)) {
+      return []
+    }
     const previous = previousSessionsById.get(session.id)
     const update = previous ? getSessionUpdate(previous, session) : null
     return update ? [update] : []

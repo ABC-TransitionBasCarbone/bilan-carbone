@@ -10,7 +10,39 @@ import {
 import { normalizeString } from '@abc-transitionbascarbone/common/utils/parsing'
 import { isDeepStrictEqual } from 'node:util'
 import { v4 as uuidv4 } from 'uuid'
-import { duplicateTrainingStudy } from './studyDuplication'
+import { duplicateTrainingStudy, duplicateTrainingTransitionPlan } from './studyDuplication'
+
+type MatchableSite = Pick<Site, 'id' | 'name'> & Partial<Pick<Site, 'ca' | 'etp'>>
+
+const normalizeCorrectionSiteName = (name: string, forTrainee: boolean) => {
+  const normalizedName = normalizeString(name)
+  return forTrainee ? normalizedName.replace(/[^\p{L}\p{N}]+/gu, ' ').trim() : normalizedName
+}
+
+const prepareCorrectionSites = (sources: Site[], existingSites: MatchableSite[], forTrainee = false) => {
+  const siteIds = new Map<string, string>()
+  const taken = new Set<string>()
+  const copiedSites = sources.flatMap((source) => {
+    const name = normalizeCorrectionSiteName(source.name, forTrainee)
+    const matches = existingSites.filter(
+      (site) =>
+        (!forTrainee || (name && site.ca === source.ca && site.etp === source.etp)) &&
+        normalizeCorrectionSiteName(site.name, forTrainee) === name,
+    )
+    if (matches.length === 1 && !taken.has(matches[0].id)) {
+      siteIds.set(source.id, matches[0].id)
+      taken.add(matches[0].id)
+      return []
+    }
+
+    const copyId = uuidv4()
+    siteIds.set(source.id, copyId)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, organizationId, oldBCId, createdAt, updatedAt, ...data } = source
+    return [{ ...data, id: copyId, name: forTrainee ? `${source.name} [CORRECTION]` : source.name }]
+  })
+  return { siteIds, copiedSites }
+}
 
 const correctionFactorFields = {
   omit: { createdAt: true, updatedAt: true, oldBCId: true, importedId: true },
@@ -205,19 +237,7 @@ export const ensureProfessorCorrectionClient = async (
     console.error('ensureProfessorCorrectionClient: ambiguous site names', { professorOrganizationVersionId })
     throw new Error('Ambiguous correction site names')
   }
-  const siteIds = new Map(
-    sourceSites.map((site) => [
-      site.id,
-      existingSites.find((copy) => normalizeString(copy.name) === normalizeString(site.name))?.id ?? uuidv4(),
-    ]),
-  )
-  const copiedSites = sourceSites
-    .filter((site) => !existingSites.some((copy) => normalizeString(copy.name) === normalizeString(site.name)))
-    .map((site) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { id, organizationId, oldBCId, createdAt, updatedAt, ...data } = site
-      return { ...data, id: siteIds.get(id) }
-    })
+  const { siteIds, copiedSites } = prepareCorrectionSites(sourceSites, existingSites)
   const client =
     existingClient ??
     (await transaction.organizationVersion.create({
@@ -262,6 +282,64 @@ export const ensureProfessorCorrectionClient = async (
     )
   }
   return { id: client.id }
+}
+
+export const copyStudyCorrection = async (
+  tx: Prisma.TransactionClient,
+  source: FullStudy,
+  sessionName: string,
+  trainer: { accountId: string; environment: Environment },
+  organizationVersionId: string,
+  accountIds: string[],
+  includePlan: boolean,
+) => {
+  const { organization } = await tx.organizationVersion.findUniqueOrThrow({
+    where: { id: organizationVersionId },
+    select: {
+      organization: { select: { id: true, sites: { select: { id: true, name: true, ca: true, etp: true } } } },
+    },
+  })
+  const sourceSites = await tx.site.findMany({
+    where: { id: { in: source.sites.map(({ site }) => site.id) } },
+  })
+  const sitesById = new Map(sourceSites.map((site) => [site.id, site]))
+  const sites = source.sites.map(({ site, ca, etp }) => {
+    const sourceSite = sitesById.get(site.id)
+    if (!sourceSite) {
+      throw new Error(`Missing site ${site.id} in study ${source.id}`)
+    }
+    return { ...sourceSite, ca, etp }
+  })
+  const { siteIds, copiedSites } = prepareCorrectionSites(sites, organization.sites, true)
+  if (copiedSites.length > 0) {
+    await tx.site.createMany({ data: copiedSites.map((site) => ({ ...site, organizationId: organization.id })) })
+  }
+
+  return duplicateTrainingStudy(
+    source,
+    accountIds.map((id) => ({ id, environment: trainer.environment })),
+    StudyRole.Reader,
+    tx,
+    undefined,
+    {
+      organizationVersionId,
+      siteIds,
+      correction: { name: `[CORRECTION - ${sessionName} - ${source.name}]`, creatorId: trainer.accountId, includePlan },
+    },
+  )
+}
+
+export const addPlanToStudyCorrection = async (
+  tx: Prisma.TransactionClient,
+  source: FullStudy,
+  copiedStudyId: string,
+  organizationVersionId: string,
+) => {
+  const copy = await getStudyById(copiedStudyId, organizationVersionId, tx)
+  if (!copy || copy.organizationVersionId !== organizationVersionId) {
+    throw new Error(`Missing copied correction ${copiedStudyId} for organization ${organizationVersionId}`)
+  }
+  await duplicateTrainingTransitionPlan(source, copy, tx, 'sourceStudySiteId')
 }
 
 export const ensureCourseProfessorCorrections = async () => {

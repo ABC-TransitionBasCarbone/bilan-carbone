@@ -408,6 +408,7 @@
       "sessionName": "Enter the session name to confirm",
       "confirmSharing": "Confirm delivery",
       "changed": "The recipients or the session have changed. Check the list before confirming again.",
+      "noTransitionPlan": "This study has no transition plan.",
       "recorded": "Delivery recorded."
     },
     "duplicateCopy": " - Copy",

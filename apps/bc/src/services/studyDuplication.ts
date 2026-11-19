@@ -180,8 +180,13 @@ export const getSitesForDuplication = async (study: FullStudy, tx?: Prisma.Trans
 }
 
 export const buildStudyForDuplication = (
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  { sourceTemplateStudyId, ...study }: Omit<FullStudy, 'id' | 'createdById' | 'organizationVersionId' | 'allowedUsers'>,
+  {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    sourceTemplateStudyId,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    receivedCorrectionDelivery,
+    ...study
+  }: Omit<FullStudy, 'id' | 'createdById' | 'organizationVersionId' | 'allowedUsers'>,
   userAccountId: string,
   organizationId: string,
   users: { accountId: string; role: StudyRole }[],
@@ -214,19 +219,23 @@ export const buildStudyForDuplication = (
 
 const getCopiedTransitionPlanScope = (
   scope: {
-    sites: { studySite: { siteId: string } }[]
+    sites: { studySite: { id: string; siteId: string } }[]
     tags: { studyTag: { id: string; familyId: string; name: string } }[]
     subPosts: { subPost: SubPost }[]
   },
   sourceStudy: FullStudy,
   targetStudy: FullStudy,
   context: string,
-  siteIds?: ReadonlyMap<string, string>,
+  siteMapping?: ReadonlyMap<string, string> | 'sourceStudySiteId',
 ) => ({
   sites: {
     create: scope.sites.map(({ studySite }) => {
-      const targetSiteId = siteIds ? siteIds.get(studySite.siteId) : studySite.siteId
-      const targetStudySite = targetStudy.sites.find((site) => site.site.id === targetSiteId)
+      const targetStudySite =
+        siteMapping === 'sourceStudySiteId'
+          ? targetStudy.sites.find((site) => site.sourceStudySiteId === studySite.id)
+          : targetStudy.sites.find(
+              (site) => site.site.id === (siteMapping ? siteMapping.get(studySite.siteId) : studySite.siteId),
+            )
       if (!targetStudySite) {
         throw new Error(`Missing copied site ${studySite.siteId} for ${context}`)
       }
@@ -259,11 +268,11 @@ const getCopiedTransitionPlanScope = (
   },
 })
 
-const duplicateTrainingTransitionPlan = async (
+export const duplicateTrainingTransitionPlan = async (
   sourceStudy: FullStudy,
   targetStudy: FullStudy,
   tx: Prisma.TransactionClient,
-  siteIds?: ReadonlyMap<string, string>,
+  siteMapping?: ReadonlyMap<string, string> | 'sourceStudySiteId',
 ) => {
   const sourceTransitionPlan = await getTransitionPlanByStudyId(sourceStudy.id, tx)
   if (!sourceTransitionPlan) {
@@ -299,7 +308,13 @@ const duplicateTrainingTransitionPlan = async (
             targetYear: objective.targetYear,
             reductionRate: objective.reductionRate,
             isDefault: objective.isDefault,
-            ...getCopiedTransitionPlanScope(objective, sourceStudy, targetStudy, `objective ${objective.id}`, siteIds),
+            ...getCopiedTransitionPlanScope(
+              objective,
+              sourceStudy,
+              targetStudy,
+              `objective ${objective.id}`,
+              siteMapping,
+            ),
           })),
         },
       },
@@ -325,7 +340,7 @@ const duplicateTrainingTransitionPlan = async (
           sourceStudy,
           targetStudy,
           `action ${action.id}`,
-          siteIds,
+          siteMapping,
         ),
       },
       tx,
@@ -343,6 +358,7 @@ export const duplicateTrainingStudy = async (
     organizationVersionId: string
     siteIds: ReadonlyMap<string, string>
     emissionFactorIds?: ReadonlyMap<string, string>
+    correction?: { name: string; creatorId: string; includePlan: boolean }
   },
 ) => {
   const environment = accounts[0].environment
@@ -355,6 +371,19 @@ export const duplicateTrainingStudy = async (
     if (!siteId) {
       throw new Error(`Missing copied site ${site.siteId} for study ${study.id}`)
     }
+    if (target.correction) {
+      const sourceStudySite = study.sites.find((source) => source.site.id === site.siteId)
+      if (!sourceStudySite) {
+        throw new Error(`Missing source study site ${site.siteId} for study ${study.id}`)
+      }
+      return {
+        ...site,
+        siteId,
+        sourceStudySiteId: sourceStudySite.id,
+        etp: sourceStudySite.etp,
+        ca: sourceStudySite.ca,
+      }
+    }
     return { ...site, siteId }
   })
   if (target && sites.length !== study.sites.length) {
@@ -362,10 +391,13 @@ export const duplicateTrainingStudy = async (
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { id, createdById, organizationVersionId, ...restStudy } = study
-  if (nameSuffix) {
+  if (target?.correction) {
+    restStudy.name = target.correction.name
+    restStudy.isPublic = false
+  } else if (nameSuffix) {
     restStudy.name += nameSuffix
   }
-  const creator = accounts.length === 1 ? accounts[0].id : createdById
+  const creator = target?.correction?.creatorId ?? (accounts.length === 1 ? accounts[0].id : createdById)
   const targetOrganizationVersionId = target?.organizationVersionId ?? study.organizationVersion.id
   const command: Prisma.StudyCreateInput = buildStudyForDuplication(
     restStudy,
@@ -375,7 +407,7 @@ export const duplicateTrainingStudy = async (
     [],
     sites,
   )
-  if (target) {
+  if (target && !target.correction) {
     command.sourceTemplateStudy = { connect: { id: study.id } }
   }
   const createdStudy = await createStudy(command, environment, false, tx)
@@ -418,6 +450,15 @@ export const duplicateTrainingStudy = async (
         sites: { connect: sites },
       },
       tx,
+    )
+  }
+
+  if (!target?.correction || target.correction.includePlan) {
+    await duplicateTrainingTransitionPlan(
+      study,
+      createdStudyWithSites,
+      tx,
+      target?.correction ? 'sourceStudySiteId' : target?.siteIds,
     )
   }
   return createdStudy

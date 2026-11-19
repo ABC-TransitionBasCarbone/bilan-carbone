@@ -1312,7 +1312,7 @@ export const deleteStudyContributor = async (contributor: StudyContributorDelete
     await deleteContributor(studyId, contributor)
   })
 
-export const deleteStudyContributors = async (studyId: string, contributors: StudyContributorDeleteParams[]) => {
+const deleteStudyContributors = async (studyId: string, contributors: StudyContributorDeleteParams[]) => {
   const promises = contributors.map((contributor) => deleteContributor(studyId, contributor))
   return Promise.all(promises)
 }
@@ -2167,7 +2167,8 @@ export const changeStudyEstablishment = async (studySiteId: string, data: Change
     }
 
     const study = studySites[0].study
-    if (!study) {
+    if (!study || study.receivedCorrectionDelivery) {
+      console.error('changeStudyEstablishment: study not editable', { studySiteId })
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -2194,7 +2195,8 @@ export const changeStudySiteTiltSimplified = async (studyId: string, data?: Chan
 
     const study = studyInfo.data
 
-    if (!study) {
+    if (!study || study.receivedCorrectionDelivery) {
+      console.error('changeStudySiteTiltSimplified: study not editable', { studyId })
       throw new Error(NOT_AUTHORIZED)
     }
 

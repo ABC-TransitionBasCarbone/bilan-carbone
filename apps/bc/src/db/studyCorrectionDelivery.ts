@@ -1,4 +1,4 @@
-import { correctionShareSessionDates, type CorrectionRecipient } from '@/services/studyCorrectionSharing'
+import { correctionShareSessionDates } from '@/services/studyCorrectionSharing'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import type { UserSession } from 'next-auth'
 
@@ -33,50 +33,24 @@ export const getCorrectionDeliverySession = (
       },
       correctionDeliveries: {
         where: { sourceStudyId: studyId },
-        select: { recipientOrganizationVersionId: true, transitionPlanSentAt: true },
+        select: { recipientOrganizationVersionId: true, copiedStudyId: true, transitionPlanSentAt: true },
       },
     },
   })
 
-export const recordCorrectionDelivery = async (
+export const recordCorrectionDelivery = (
   tx: Prisma.TransactionClient,
   sourceStudyId: string,
   courseSessionId: string,
-  targets: CorrectionRecipient[],
+  recipientOrganizationVersionId: string,
+  copiedStudyId: string,
   includePlan: boolean,
 ) => {
-  const missing = new Set(
-    targets.filter(({ status }) => status === 'notSent').map(({ organizationVersionId }) => organizationVersionId),
-  )
+  const recipient = { sourceStudyId, courseSessionId, recipientOrganizationVersionId }
   const transitionPlanSentAt = includePlan ? new Date() : null
-  if (missing.size > 0) {
-    await tx.studyCorrectionDelivery.createMany({
-      data: [...missing].map((recipientOrganizationVersionId) => ({
-        sourceStudyId,
-        courseSessionId,
-        recipientOrganizationVersionId,
-        transitionPlanSentAt,
-      })),
-    })
-  }
-  if (includePlan) {
-    const upgrades = [
-      ...new Set(
-        targets
-          .filter(({ status }) => status === 'withoutPlan')
-          .map(({ organizationVersionId }) => organizationVersionId),
-      ),
-    ]
-    if (upgrades.length > 0) {
-      await tx.studyCorrectionDelivery.updateMany({
-        where: {
-          sourceStudyId,
-          courseSessionId,
-          recipientOrganizationVersionId: { in: upgrades },
-          transitionPlanSentAt: null,
-        },
-        data: { transitionPlanSentAt },
-      })
-    }
-  }
+  return tx.studyCorrectionDelivery.upsert({
+    where: { sourceStudyId_courseSessionId_recipientOrganizationVersionId: recipient },
+    create: { ...recipient, copiedStudyId, transitionPlanSentAt },
+    update: { transitionPlanSentAt },
+  })
 }

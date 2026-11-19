@@ -204,6 +204,10 @@ export const canCreateSpecificStudy = async (
 }
 
 const canEditStudy = async (user: UserSession, study: FullStudy) => {
+  if (study.receivedCorrectionDelivery) {
+    return false
+  }
+
   const organizationVersion = await getOrganizationVersionForRightsCheck(
     study.organizationVersion.parentId ? study.organizationVersion.parentId : study.organizationVersionId,
   )
@@ -293,6 +297,10 @@ export const NEWGetAccountRoleOnStudy = (user: UserSession, minimalStudy: Minima
     return StudyRole.Editor
   }
 
+  if (minimalStudy.receivedCorrectionDelivery) {
+    return getAccountRoleOnStudy(user, minimalStudy)
+  }
+
   if (isAdminOnStudyOrga(user, minimalStudy.organizationVersion)) {
     return getRoleIfHasAccess(user, minimalStudy)
   }
@@ -336,6 +344,10 @@ export const canAddRightOnStudy = (
 }
 
 export const canAddContributorOnStudy = (user: UserSession, study: FullStudy) => {
+  if (study.receivedCorrectionDelivery) {
+    return false
+  }
+
   if (isAdminOnStudyOrga(user, study.organizationVersion)) {
     return true
   }
@@ -357,7 +369,7 @@ export const canDeleteStudy = async (studyId: string) => {
 
   const study = await getStudyById(studyId, session.user.organizationVersionId)
 
-  if (!study) {
+  if (!study || study.receivedCorrectionDelivery) {
     return false
   }
 
