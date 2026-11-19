@@ -188,6 +188,9 @@ model Study {
   sourceTemplateStudy      Study?  @relation("TrainingCorrectionCopies", fields: [sourceTemplateStudyId], references: [id], onDelete: SetNull)
   trainingCorrectionCopies Study[] @relation("TrainingCorrectionCopies")
 
+  correctionDeliveries StudyCorrectionDelivery[] @relation("CorrectionDeliverySource")
+  correctionDelivery   StudyCorrectionDelivery?  @relation("CorrectionDeliveryCopy")
+
   allowedUsers    UserOnStudy[]
   emissionSources StudyEmissionSource[]
   contributors    Contributors[]
@@ -210,6 +213,32 @@ model Study {
 
   @@unique([organizationVersionId, sourceTemplateStudyId])
   @@map("studies")
+  @@schema("bilan_carbone")
+}
+
+model StudyCorrectionDelivery {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  sourceStudyId String @map("source_study_id")
+  sourceStudy   Study  @relation("CorrectionDeliverySource", fields: [sourceStudyId], references: [id], onDelete: Restrict)
+
+  courseSessionId String        @map("course_session_id")
+  courseSession   CourseSession @relation(fields: [courseSessionId], references: [id], onDelete: Cascade)
+
+  recipientOrganizationVersionId String              @map("recipient_organization_version_id")
+  recipientOrganizationVersion   OrganizationVersion @relation(fields: [recipientOrganizationVersionId], references: [id], onDelete: Cascade, map: "study_correction_deliveries_recipient_organization_fkey")
+
+  copiedStudyId String @unique @map("copied_study_id")
+  copiedStudy   Study  @relation("CorrectionDeliveryCopy", fields: [copiedStudyId], references: [id], onDelete: Restrict)
+
+  transitionPlanSentAt DateTime? @map("transition_plan_sent_at")
+
+  @@unique([sourceStudyId, courseSessionId, recipientOrganizationVersionId], map: "study_correction_deliveries_source_session_recipient_key")
+  @@index([courseSessionId])
+  @@index([recipientOrganizationVersionId], map: "study_correction_deliveries_recipient_organization_idx")
+  @@map("study_correction_deliveries")
   @@schema("bilan_carbone")
 }
 
