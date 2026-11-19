@@ -2,7 +2,11 @@
 
 import type { ProfessorCourseSession } from '@/db/courseSession'
 import { getCourseSessionsForCorrectionSharing } from '@/services/serverFunctions/courseSession'
-import { previewCorrectionSharing, recordCorrectionSharing } from '@/services/serverFunctions/studyCorrectionSharing'
+import {
+  getCorrectionStudiesForSession,
+  previewCorrectionSharing,
+  recordCorrectionSharing,
+} from '@/services/serverFunctions/studyCorrectionSharing'
 import { getCorrectionTargets, getCorrectionTargetSnapshot } from '@/services/studyCorrectionSharing'
 import Modal, { type Props as ModalProps } from '@abc-transitionbascarbone/common/components/modals/Modal'
 import { useToast } from '@abc-transitionbascarbone/common/ui'
@@ -21,6 +25,7 @@ import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 import classNames from 'classnames'
 import { useFormatter, useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { useId, useState, useTransition } from 'react'
 import styles from './ShareStudyCorrectionButton.module.css'
 
@@ -32,23 +37,23 @@ const statusIcons = {
   withPlan: <BarChartIcon color="success" fontSize="small" />,
 }
 
-interface Props {
-  studyId: string
-  compact?: boolean
-}
+type Props = { compact?: boolean } & (
+  { studyId: string; courseSessionId?: never } | { courseSessionId: string; studyId?: never }
+)
 
-const ShareStudyCorrectionButton = ({ studyId, compact = false }: Props) => {
+const ShareStudyCorrectionButton = ({ studyId, courseSessionId, compact = false }: Props) => {
   const t = useTranslations('study')
   const tSharing = useTranslations('study.correctionSharing')
   const tAction = useTranslations('common.action')
   const tCommon = useTranslations('common')
   const tSpinner = useTranslations('spinner')
   const format = useFormatter()
+  const router = useRouter()
   const { showSuccessToast } = useToast()
   const [open, setOpen] = useState(false)
   const [loading, startTransition] = useTransition()
-  const [sessions, setSessions] = useState<ProfessorCourseSession[] | null>(null)
-  const [sessionId, setSessionId] = useState('')
+  const [options, setOptions] = useState<Pick<ProfessorCourseSession, 'id' | 'name'>[] | null>(null)
+  const [selectionId, setSelectionId] = useState('')
   const [preview, setPreview] = useState<Preview | null>(null)
   const [includePlan, setIncludePlan] = useState(false)
   const [confirming, setConfirming] = useState(false)
@@ -65,33 +70,48 @@ const ShareStudyCorrectionButton = ({ studyId, compact = false }: Props) => {
 
   const openDialog = () => {
     setOpen(true)
-    setSessionId('')
+    setSelectionId('')
     setPreview(null)
     setConfirming(false)
     setFeedback(null)
     if (!loading) {
-      setSessions(null)
+      setOptions(null)
       startTransition(async () => {
         try {
-          const result = await getCourseSessionsForCorrectionSharing()
-          if (result.success) {
-            setSessions(result.data)
+          if (courseSessionId) {
+            const result = await getCorrectionStudiesForSession(courseSessionId)
+            if (result.success) {
+              setOptions(result.data)
+            }
+          } else {
+            const result = await getCourseSessionsForCorrectionSharing()
+            if (result.success) {
+              setOptions(
+                result.data.map(({ id, name, startDate, endDate }) => ({
+                  id,
+                  name: `${name} (${format.dateTimeRange(startDate, endDate, { dateStyle: 'medium' })})`,
+                })),
+              )
+            }
           }
         } catch (error) {
-          console.error('Could not load course sessions for correction sharing', error)
+          console.error('Could not load options for correction sharing', error)
         }
       })
     }
   }
 
-  const selectSession = (courseSessionId: string) => {
-    setSessionId(courseSessionId)
+  const selectOption = (id: string) => {
+    setSelectionId(id)
     setIncludePlan(false)
     setPreview(null)
     setFeedback(null)
     startTransition(async () => {
       try {
-        const result = await previewCorrectionSharing({ studyId, courseSessionId })
+        const result = await previewCorrectionSharing({
+          studyId: studyId ?? id,
+          courseSessionId: courseSessionId ?? id,
+        })
         if (result.success) {
           setPreview(result.data)
         } else {
@@ -108,8 +128,8 @@ const ShareStudyCorrectionButton = ({ studyId, compact = false }: Props) => {
     startTransition(async () => {
       try {
         const result = await recordCorrectionSharing({
-          studyId,
-          courseSessionId: sessionId,
+          studyId: studyId ?? selectionId,
+          courseSessionId: courseSessionId ?? selectionId,
           includePlan,
           confirmationName,
           targetSnapshot: getCorrectionTargetSnapshot(targets),
@@ -125,6 +145,9 @@ const ShareStudyCorrectionButton = ({ studyId, compact = false }: Props) => {
         } else {
           setOpen(false)
           showSuccessToast(tSharing('recorded'))
+          if (courseSessionId) {
+            router.refresh()
+          }
         }
       } catch (error) {
         console.error('Could not record correction sharing', error)
@@ -191,26 +214,26 @@ const ShareStudyCorrectionButton = ({ studyId, compact = false }: Props) => {
         <Stack spacing={2} useFlexGap className={styles.fields}>
           {feedback === 'error' && <Alert severity="error">{tCommon('error')}</Alert>}
           {feedback === 'changed' && <Alert severity="warning">{tSharing('changed')}</Alert>}
-          {sessions?.length ? (
+          {options?.length ? (
             <TextField
               id={selectId}
               select
               fullWidth
               size="small"
               disabled={loading || confirming}
-              label={t('correctionSession')}
-              value={sessionId}
-              onChange={(event) => selectSession(event.target.value)}
+              label={courseSessionId ? tSharing('selectCorrection') : t('correctionSession')}
+              value={selectionId}
+              onChange={(event) => selectOption(event.target.value)}
             >
-              {sessions.map(({ id, name, startDate, endDate }) => (
+              {options.map(({ id, name }) => (
                 <MenuItem key={id} value={id}>
-                  {name} ({format.dateTimeRange(startDate, endDate, { dateStyle: 'medium' })})
+                  {name}
                 </MenuItem>
               ))}
             </TextField>
           ) : !loading ? (
-            sessions ? (
-              <p role="status">{t('noCorrectionSessions')}</p>
+            options ? (
+              <p role="status">{courseSessionId ? tSharing('noCorrections') : t('noCorrectionSessions')}</p>
             ) : (
               <p role="alert">{tCommon('error')}</p>
             )

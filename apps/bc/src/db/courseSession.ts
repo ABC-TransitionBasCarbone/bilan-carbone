@@ -1,18 +1,13 @@
 import { getCourseSessionTraineeOrganizationData } from '@/services/courseSessionTraineeOrganization'
 import { canRegisterForCourseSession } from '@/services/permissions/user'
 import type { AddCourseSessionTraineeCommand } from '@/services/serverFunctions/courseSession.command'
+import { correctionShareSessionDates } from '@/services/studyCorrectionSharing'
 import type { CourseSession, Environment, Prisma } from '@abc-transitionbascarbone/common/db'
 import { Role, UserSource, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
-import { DAY, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils'
 import { UserSession } from 'next-auth'
 import { prismaClient } from './client'
 import { createUsersWithAccount } from './user'
-
-export const correctionShareSessionDates = (now: Date) => ({
-  startDate: { lte: now },
-  endDate: { gt: new Date(now.getTime() - 14 * DAY * TIME_IN_MS) },
-})
 
 export const getProfessorCourseSessions = async (
   account: Pick<UserSession, 'organizationVersionId' | 'environment'>,
@@ -51,12 +46,18 @@ export const isCourseProfessor = async (
   return !!courseSession
 }
 
-export const getCourseSessionForProfessor = (organizationVersionId: string, environment: Environment, id: string) =>
+export const getCourseSessionForProfessor = (
+  organizationVersionId: string,
+  environment: Environment,
+  id: string,
+  correctionShareDate?: Date,
+) =>
   prismaClient.courseSession.findFirst({
     where: {
       id,
       professorOrganizationVersionId: organizationVersionId,
       environment,
+      ...(correctionShareDate && correctionShareSessionDates(correctionShareDate)),
     },
     select: { id: true, name: true, type: true, startDate: true, endDate: true },
   })
@@ -70,6 +71,11 @@ export const getCourseSessionTrainees = async (courseSessionId: string, environm
           attendance: { select: { id: true } },
           organizationVersion: {
             select: {
+              receivedStudyCorrections: {
+                where: { courseSessionId },
+                select: { sourceStudy: { select: { id: true, name: true } }, transitionPlanSentAt: true },
+                orderBy: [{ sourceStudy: { name: 'asc' } }, { sourceStudyId: 'asc' }],
+              },
               userAccounts: {
                 where: { environment },
                 select: {
@@ -86,7 +92,11 @@ export const getCourseSessionTrainees = async (courseSessionId: string, environm
   })
   return session.traineeOrganizations
     .flatMap(({ attendance, organizationVersion }) =>
-      organizationVersion.userAccounts.map((trainee) => ({ ...trainee, attendance })),
+      organizationVersion.userAccounts.map((trainee) => ({
+        ...trainee,
+        attendance,
+        corrections: organizationVersion.receivedStudyCorrections,
+      })),
     )
     .sort((a, b) => a.user.lastName.localeCompare(b.user.lastName) || a.user.firstName.localeCompare(b.user.firstName))
 }

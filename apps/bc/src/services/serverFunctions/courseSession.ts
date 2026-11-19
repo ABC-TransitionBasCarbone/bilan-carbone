@@ -10,6 +10,7 @@ import {
   saveCourseSessionAttendance,
 } from '@/db/courseSession'
 import { canAddCourseSessionTrainee, canManageCourseSession } from '@/services/permissions/courseSession'
+import { isCorrectionShareSessionEligible } from '@/services/studyCorrectionSharing'
 import { withServerResponse } from '@/utils/serverResponse'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
@@ -76,7 +77,7 @@ export const getCourseSessionDetails = async (courseSessionId: string) =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    return courseSession
+    return { ...courseSession, canShareCorrection: isCorrectionShareSessionEligible(courseSession, new Date()) }
   })
 
 export const getProfessorCourseSessionTrainees = async (courseSessionId: string) =>

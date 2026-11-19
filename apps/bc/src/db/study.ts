@@ -555,43 +555,44 @@ export const getStudyById = async (id: string, organizationVersionId: string | n
   return { ...study, allowedUsers: await normalizeAllowedUsers(study.allowedUsers, study.level) }
 }
 
-type StudyForNavbar = StudyWithRoleFields & {
-  name: string
-  simplified: boolean
-}
+const studyForNavbarSelect = {
+  ...StudyCourseAccessSelect,
+  id: true,
+  name: true,
+  simplified: true,
+  level: true,
+  isPublic: true,
+  organizationVersion: {
+    select: {
+      ...OrganizationVersionCourseAccessSelect,
+      id: true,
+      parentId: true,
+      environment: true,
+      activatedLicence: true,
+      parent: { select: { ...OrganizationVersionCourseAccessSelect, activatedLicence: true } },
+    },
+  },
+  allowedUsers: {
+    select: {
+      role: true,
+      account: { select: { id: true, user: { select: { email: true } } } },
+    },
+  },
+} satisfies Prisma.StudySelect
 
-export const getStudyForNavbar = async (
+type StudyForNavbar = StudyWithRoleFields & { name: string }
+
+export const getStudyForNavbar = (
   id: string,
   tx: Prisma.TransactionClient = prismaClient,
-): Promise<StudyForNavbar | null> => {
-  return tx.study.findUnique({
-    where: { id },
-    select: {
-      ...StudyCourseAccessSelect,
-      id: true,
-      name: true,
-      simplified: true,
-      level: true,
-      isPublic: true,
-      organizationVersion: {
-        select: {
-          ...OrganizationVersionCourseAccessSelect,
-          id: true,
-          parentId: true,
-          environment: true,
-          activatedLicence: true,
-          parent: { select: { ...OrganizationVersionCourseAccessSelect, activatedLicence: true } },
-        },
-      },
-      allowedUsers: {
-        select: {
-          role: true,
-          account: { select: { id: true, user: { select: { email: true } } } },
-        },
-      },
-    },
+): Promise<StudyForNavbar | null> => tx.study.findUnique({ where: { id }, select: studyForNavbarSelect })
+
+export const getStudiesForCorrectionSharing = (user: UserSession) =>
+  prismaClient.study.findMany({
+    where: { organizationVersion: { parentId: user.organizationVersionId, environment: user.environment } },
+    select: studyForNavbarSelect,
+    orderBy: [{ name: 'asc' }, { id: 'asc' }],
   })
-}
 
 export const getStudyOrganizationVersion = async (id: string) => {
   const study = await prismaClient.study.findUnique({

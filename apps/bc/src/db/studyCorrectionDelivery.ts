@@ -1,7 +1,6 @@
-import type { CorrectionRecipient } from '@/services/studyCorrectionSharing'
+import { correctionShareSessionDates, type CorrectionRecipient } from '@/services/studyCorrectionSharing'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import type { UserSession } from 'next-auth'
-import { correctionShareSessionDates } from './courseSession'
 
 export const getCorrectionDeliverySession = (
   tx: Prisma.TransactionClient,

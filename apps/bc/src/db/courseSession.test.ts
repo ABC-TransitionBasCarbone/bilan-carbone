@@ -181,19 +181,23 @@ describe('course session database queries', () => {
       ...getMockedAccount({ id: 'zoe', organizationVersionId: 'org-2' }),
       user: { firstName: 'Zoe', lastName: 'Albert', email: 'zoe@example.com' },
     }
+    const corrections = [{ sourceStudy: { id: 'correction', name: 'Corrigé' }, transitionPlanSentAt: null }]
     const result = {
       ...session,
       traineeOrganizations: [
-        { attendance: { id: 'attendance-1' }, organizationVersion: { userAccounts: [camille, alice] } },
-        { attendance: null, organizationVersion: { userAccounts: [zoe] } },
+        {
+          attendance: { id: 'attendance-1' },
+          organizationVersion: { userAccounts: [camille, alice], receivedStudyCorrections: corrections },
+        },
+        { attendance: null, organizationVersion: { userAccounts: [zoe], receivedStudyCorrections: [] } },
       ],
     }
     jest.mocked(prismaClient.courseSession.findUniqueOrThrow).mockResolvedValueOnce(result)
 
     expect(await getCourseSessionTrainees(session.id, professor.environment)).toEqual([
-      { ...zoe, attendance: null },
-      { ...alice, attendance: { id: 'attendance-1' } },
-      { ...camille, attendance: { id: 'attendance-1' } },
+      { ...zoe, attendance: null, corrections: [] },
+      { ...alice, attendance: { id: 'attendance-1' }, corrections },
+      { ...camille, attendance: { id: 'attendance-1' }, corrections },
     ])
     expect(prismaClient.courseSession.findUniqueOrThrow).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -203,6 +207,7 @@ describe('course session database queries', () => {
             select: expect.objectContaining({
               organizationVersion: {
                 select: {
+                  receivedStudyCorrections: expect.objectContaining({ where: { courseSessionId: session.id } }),
                   userAccounts: expect.objectContaining({ where: { environment: professor.environment } }),
                 },
               },

@@ -1,7 +1,8 @@
 'use server'
 
 import { prismaClient } from '@/db/client'
-import { getStudyForNavbar } from '@/db/study'
+import { getCourseSessionForProfessor } from '@/db/courseSession'
+import { getStudiesForCorrectionSharing, getStudyForNavbar } from '@/db/study'
 import { getCorrectionDeliverySession, recordCorrectionDelivery } from '@/db/studyCorrectionDelivery'
 import { canShareStudyCorrection } from '@/services/permissions/study.utils'
 import {
@@ -24,11 +25,12 @@ import {
 
 const getCorrectionSharingAccount = async () => {
   const account = (await dbActualizedAuth())?.user
-  if (!account?.organizationVersionId) {
+  const organizationVersionId = account?.organizationVersionId
+  if (!account || !organizationVersionId) {
     console.error('getCorrectionSharingAccount: user not authorized', { accountId: account?.accountId })
     throw new Error(NOT_AUTHORIZED)
   }
-  return account
+  return { ...account, organizationVersionId }
 }
 
 const getCorrectionSharingPreview = async (
@@ -69,6 +71,30 @@ export const previewCorrectionSharing = async (input: CorrectionSharingSelection
   withServerResponse('previewCorrectionSharing', async () => {
     const selection = CorrectionSharingSelectionValidation.parse(input)
     return getCorrectionSharingPreview(prismaClient, await getCorrectionSharingAccount(), selection)
+  })
+
+export const getCorrectionStudiesForSession = async (input: string) =>
+  withServerResponse('getCorrectionStudiesForSession', async () => {
+    const courseSessionId = CorrectionSharingSelectionValidation.shape.courseSessionId.parse(input)
+    const account = await getCorrectionSharingAccount()
+    const session = await getCourseSessionForProfessor(
+      account.organizationVersionId,
+      account.environment,
+      courseSessionId,
+      new Date(),
+    )
+    if (!session) {
+      console.error('getCorrectionStudiesForSession: session not authorized or ineligible', {
+        courseSessionId,
+        accountId: account.accountId,
+      })
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const studies = await getStudiesForCorrectionSharing(account)
+    return studies
+      .filter((study) => canShareStudyCorrection(account, study) && getAccountRoleOnStudy(account, study))
+      .map(({ id, name }) => ({ id, name }))
   })
 
 export const recordCorrectionSharing = async (input: RecordCorrectionSharingCommand) =>

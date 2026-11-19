@@ -386,6 +386,11 @@
     "correctionSession": "Sélectionner une session",
     "noCorrectionSessions": "Vous n’avez aucune session en cours ou terminée depuis moins de 14 jours.",
     "correctionSharing": {
+      "selectCorrection": "Sélectionner un corrigé",
+      "noCorrections": "Aucun corrigé disponible pour cette session.",
+      "sentCorrections": "Corrigés envoyés",
+      "studyWithPlan": "{study} — Avec plan de transition",
+      "studyWithoutPlan": "{study} — Sans plan de transition",
       "notSent": "Aucun corrigé envoyé",
       "withoutPlan": "Corrigé envoyé sans plan de transition",
       "withPlan": "Corrigé envoyé avec plan de transition",

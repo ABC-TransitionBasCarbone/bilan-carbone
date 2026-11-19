@@ -1,3 +1,5 @@
+import { DAY, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils'
+
 export interface CorrectionRecipient {
   id: string
   organizationVersionId: string
@@ -17,3 +19,14 @@ export const getCorrectionTargetSnapshot = (recipients: CorrectionRecipient[]) =
       )
       .sort(),
   )
+
+export const correctionShareSessionDates = (now: Date) => ({
+  startDate: { lte: now },
+  endDate: { gt: new Date(now.getTime() - 14 * DAY * TIME_IN_MS) },
+})
+
+export const isCorrectionShareSessionEligible = (session: { startDate: Date; endDate: Date }, now: Date) => {
+  const { startDate, endDate } = correctionShareSessionDates(now)
+  return session.startDate <= startDate.lte && session.endDate > endDate.gt
+}
+
