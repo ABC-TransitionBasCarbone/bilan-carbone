@@ -224,8 +224,8 @@ model StudyCorrectionDelivery {
   sourceStudyId String @map("source_study_id")
   sourceStudy   Study  @relation("CorrectionDeliverySourceStudy", fields: [sourceStudyId], references: [id], onDelete: Restrict)
 
-  copiedStudyId String? @unique @map("copied_study_id")
-  copiedStudy   Study?  @relation("CorrectionDeliveryCopiedStudy", fields: [copiedStudyId], references: [id], onDelete: SetNull)
+  copiedStudyId String @unique @map("copied_study_id")
+  copiedStudy   Study  @relation("CorrectionDeliveryCopiedStudy", fields: [copiedStudyId], references: [id], onDelete: Restrict)
 
   courseSessionId String        @map("course_session_id")
   courseSession   CourseSession @relation(fields: [courseSessionId], references: [id], onDelete: Cascade)

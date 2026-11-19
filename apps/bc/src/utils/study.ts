@@ -90,6 +90,9 @@ export const isProfessorOnStudy = (
 export const getAccountRoleOnStudy = (user: UserSession, study: StudyWithRoleFields) => {
   const isAdminOnOrganization = isAdminOnStudyOrga(user, study.organizationVersion)
   const right = study.allowedUsers.find((right) => right.account.id === user.accountId)
+  if (study.receivedCorrectionDelivery) {
+    return isAdminOnOrganization || right ? StudyRole.Reader : null
+  }
   if (!isAdminOnOrganization && !right && isProfessorOnStudy(user, study)) {
     return StudyRole.Reader
   }

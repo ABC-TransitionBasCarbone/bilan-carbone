@@ -2,6 +2,7 @@ import type { Prisma } from '@abc-transitionbascarbone/common/db'
 
 export const StudyCourseAccessSelect = {
   courseSessionType: true,
+  receivedCorrectionDelivery: { select: { id: true } },
   createdBy: {
     select: {
       environment: true,
