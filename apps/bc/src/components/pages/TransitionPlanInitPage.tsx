@@ -158,12 +158,7 @@ const TransitionPlanInitPage = ({
     }
   }
 
-  const isStepVisible = (step: number) => {
-    if (isComplete) {
-      return true
-    }
-    return step <= currentStep
-  }
+  const isStepVisible = (step: number) => isComplete || (typeof currentStep === 'number' && step <= currentStep)
 
   const isStepActive = (step: number) => {
     if (isComplete) {
