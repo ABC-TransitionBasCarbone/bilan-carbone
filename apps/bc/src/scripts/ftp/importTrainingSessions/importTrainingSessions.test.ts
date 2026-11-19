@@ -1855,7 +1855,10 @@ describe('getCourseSessionsFromFTP', () => {
         ],
       },
     ])
-    const empty = { ...savedSessions[0], _count: { traineeOrganizations: 0, traineeRemovals: 0, correctionDeliveries: 0 } }
+    const empty = {
+      ...savedSessions[0],
+      _count: { traineeOrganizations: 0, traineeRemovals: 0, correctionDeliveries: 0 },
+    }
     mockFindCourseSessions.mockResolvedValueOnce([]).mockResolvedValueOnce([empty])
     mockDeleteCourseSessions.mockRejectedValueOnce(new Error('Deletion failed'))
 
