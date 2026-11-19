@@ -218,7 +218,7 @@
     }
   },
   "ressources": {
-    "supportTools": "This tool has been developed by the Association for the Low Carbon Transition in partnership with :"
+    "supportTools": "This tool has been developed by the <abcAssociation>Association for the Low Carbon Transition</abcAssociation> in partnership with :"
   },
   "navigation": {
     "footprints": "My Footprints",

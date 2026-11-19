@@ -51,7 +51,7 @@
     }
   },
   "ressources": {
-    "supportTools": "Cet outil a été développé par l’Association pour la transition Bas Carbone en partenariat avec :"
+    "supportTools": "Cet outil a été développé par l’<abcAssociation>Association pour la transition Bas Carbone</abcAssociation> en partenariat avec :"
   },
   "exports": {
     "env_specific_export": "Bilan Carbone® - Sphère associative",
