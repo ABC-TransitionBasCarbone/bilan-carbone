@@ -1,5 +1,5 @@
 import { getRuleCategoryKey } from '@abc-transitionbascarbone/common/publicodes/form/utils'
-import { getFormQuestions, getNextQuestion } from './mip-rules'
+import { getFormQuestions, getNextQuestion, getStableQuestionOrder, sortQuestions } from './mip-rules'
 import { useMipPublicodes } from './MipPublicodesProvider'
 
 export const useMipForm = () => {
@@ -28,11 +28,22 @@ export const useMipForm = () => {
   const progression = currentIndex >= 0 ? Math.round(((currentIndex + 1) / relevantQuestions.length) * 100) : 0
 
   const goToNextQuestion = () => {
-    const nextQuestion = getNextQuestion(activeQuestion, relevantQuestions)
+    const foldedSteps = activeQuestion
+      ? [...new Set([...simulation.foldedSteps, activeQuestion])]
+      : simulation.foldedSteps
+    const questions = getFormQuestions(engine, meta, foldedSteps)
+    const availableQuestions = [...new Set([...questions.relevantQuestions, ...questions.remainingQuestions])]
+    const questionOrder = getStableQuestionOrder(
+      simulation.questionOrder,
+      activeQuestion,
+      availableQuestions,
+      sortQuestions(engine, availableQuestions, meta, questions.missingVariables),
+      meta.mosaicChildrenWithParent,
+    )
+    const nextQuestion = getNextQuestion(activeQuestion, questionOrder)
     if (nextQuestion) {
       setCurrentQuestion(nextQuestion)
       if (activeQuestion) {
-        const foldedSteps = [...new Set([...simulation.foldedSteps, activeQuestion])]
         updateSimulation({ foldedSteps, progression })
       }
     }
