@@ -6,3 +6,8 @@ updates:
       interval: weekly
     cooldown:
       default-days: 4
+    groups:
+      all-dependencies:
+        applies-to: version-updates
+        patterns:
+          - "*"
