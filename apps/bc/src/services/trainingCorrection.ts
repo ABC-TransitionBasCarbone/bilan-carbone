@@ -314,6 +314,7 @@ export const copyStudyCorrection = async (
   if (copiedSites.length > 0) {
     await tx.site.createMany({ data: copiedSites.map((site) => ({ ...site, organizationId: organization.id })) })
   }
+  const emissionFactorIds = await copyCorrectionManualEmissionFactors([source], organization.id, tx)
 
   return duplicateTrainingStudy(
     source,
@@ -324,7 +325,8 @@ export const copyStudyCorrection = async (
     {
       organizationVersionId,
       siteIds,
-      correction: { name: `[CORRECTION - ${sessionName} - ${source.name}]`, creatorId: trainer.accountId, includePlan },
+      emissionFactorIds,
+      correction: { name: source.name, creatorId: trainer.accountId, includePlan },
     },
   )
 }

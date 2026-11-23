@@ -461,7 +461,7 @@ export const duplicateTrainingStudy = async (
     )
   }
 
-  if (!target?.correction || target.correction.includePlan) {
+  if (target?.correction && target.correction.includePlan) {
     await duplicateTrainingTransitionPlan(
       study,
       createdStudyWithSites,

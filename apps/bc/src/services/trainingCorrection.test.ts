@@ -15,11 +15,20 @@ import {
   SubPost,
 } from '@abc-transitionbascarbone/common/db/enums'
 import { duplicateTrainingStudy } from './studyDuplication'
-import { ensureCourseProfessorCorrections, ensureProfessorCorrectionClient } from './trainingCorrection'
+import {
+  copyStudyCorrection,
+  ensureCourseProfessorCorrections,
+  ensureProfessorCorrectionClient,
+} from './trainingCorrection'
 
 jest.mock('@/db/client', () => {
   const prismaClient = {
-    organizationVersion: { findFirst: jest.fn(), findMany: jest.fn(), create: jest.fn() },
+    organizationVersion: {
+      findFirst: jest.fn(),
+      findMany: jest.fn(),
+      findUniqueOrThrow: jest.fn(),
+      create: jest.fn(),
+    },
     organization: { findUnique: jest.fn() },
     account: { findFirst: jest.fn() },
     study: { findMany: jest.fn() },
@@ -42,6 +51,9 @@ const mockTemplates = getStudyTemplates as jest.Mock
 const mockCopies = prismaClient.study.findMany as jest.Mock
 const mockFindCopiedSites = prismaClient.site.findMany as jest.Mock
 const mockProfessors = prismaClient.organizationVersion.findMany as jest.Mock
+const mockFindOrganizationVersion = prismaClient.organizationVersion.findUniqueOrThrow as jest.Mock
+const mockFindEmissionFactors = prismaClient.emissionFactor.findMany as jest.Mock
+const mockCreateEmissionFactor = prismaClient.emissionFactor.create as jest.Mock
 const mockStudy = jest.mocked(getStudyById)
 const mockDuplicate = jest.mocked(duplicateTrainingStudy)
 const sourceSite = {
@@ -295,6 +307,91 @@ describe('professor correction client', () => {
     expect(mockDuplicate.mock.calls[0][5]?.organizationVersionId).toBe('existing-child')
     expect(prismaClient.site.createMany).toHaveBeenCalledWith({
       data: [expect.objectContaining({ id: 'copied-site', organizationId: 'client-org', name: sourceSite.name })],
+    })
+  })
+
+  describe('copy study correction', () => {
+    beforeEach(() => {
+      jest.clearAllMocks()
+      mockFindOrganizationVersion.mockResolvedValue({
+        organization: { id: 'trainee-organization', sites: [] },
+      })
+      mockFindCopiedSites.mockResolvedValue([])
+    })
+
+    it('copies manual emission factors into the recipient organization and maps them to the duplicated study', async () => {
+      const source = getMockeFullStudy()
+      const manualEmission = {
+        ...source.emissionSources[0],
+        emissionFactorId: TEST_IDS.emissionFactor,
+      }
+      const baseEmission = {
+        ...manualEmission,
+        id: 'base-emission-source',
+        emissionFactorId: 'base-factor',
+        emissionFactor: {
+          ...mockedEmissionSourceEmissionFactor,
+          id: 'base-factor',
+          importedFrom: Import.BaseEmpreinte,
+        },
+      }
+      const factor = {
+        importedFrom: Import.Manual,
+        totalCo2: 42,
+        co2f: 12,
+      }
+      const translations = [{ language: 'fr', title: 'Facteur' }]
+      mockFindEmissionFactors.mockResolvedValue([
+        {
+          ...factor,
+          id: TEST_IDS.emissionFactor,
+          organizationId: 'trainer-organization',
+          metaData: translations,
+          emissionFactorParts: [],
+        },
+      ])
+      mockCreateEmissionFactor.mockResolvedValue({ id: 'trainee-manual-factor' })
+
+      await copyStudyCorrection(
+        prismaClient,
+        { ...source, emissionSources: [manualEmission, baseEmission] },
+        'session',
+        { accountId: 'trainer-account', environment: Environment.COURSE_BC },
+        'trainee-organization-version',
+        ['trainee-account'],
+        false,
+      )
+
+      expect(mockFindEmissionFactors).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            importedFrom: Import.Manual,
+            OR: [{ id: { in: [TEST_IDS.emissionFactor] } }, { organizationId: 'trainee-organization' }],
+          },
+        }),
+      )
+      expect(mockCreateEmissionFactor).toHaveBeenCalledWith({
+        data: {
+          ...factor,
+          organizationId: 'trainee-organization',
+          metaData: { create: translations },
+          emissionFactorParts: { create: [] },
+        },
+        select: { id: true },
+      })
+      expect(mockDuplicate).toHaveBeenCalledWith(
+        expect.objectContaining({ id: source.id }),
+        [{ id: 'trainee-account', environment: Environment.COURSE_BC }],
+        StudyRole.Reader,
+        prismaClient,
+        undefined,
+        {
+          organizationVersionId: 'trainee-organization-version',
+          siteIds: new Map(),
+          emissionFactorIds: new Map([[TEST_IDS.emissionFactor, 'trainee-manual-factor']]),
+          correction: { name: source.name, creatorId: 'trainer-account', includePlan: false },
+        },
+      )
     })
   })
 
