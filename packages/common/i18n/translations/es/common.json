@@ -240,7 +240,7 @@
     "loading": "Cargando"
   },
   "error": {
-    "invalidForm": "El formulario contiene datos incompletos o no válidos. Revise los campos. Si el problema persiste, contacte con el soporte.",
+    "invalidForm": "El formulario contiene datos faltantes o no válidos. Verifique los campos. Si el problema persiste, contacte con el soporte.",
     "Not authorized": "No tiene permisos para realizar esta acción",
     "Not found": "No se ha encontrado el recurso solicitado",
     "Server error": "Se ha producido un error del servidor, póngase en contacto con el soporte",
