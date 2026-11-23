@@ -9,7 +9,9 @@ export const parseExcelSheet = (
     rowFilter?: (row: unknown[], cellIndex: number, value: string) => boolean
     ignoredColumns?: number[]
   },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): { success: false; errors: ParseSheetError[] } | { success: true; dataRows: any[][]; headerRowIndex: number } => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let workbook: ReturnType<typeof xlsx.parse<any[]>>
   try {
     workbook = xlsx.parse(buffer, { raw: true })

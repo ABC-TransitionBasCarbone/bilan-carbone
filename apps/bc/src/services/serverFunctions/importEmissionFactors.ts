@@ -69,6 +69,7 @@ export async function previewEmissionFactorsFromFile(file: File): Promise<Previe
 }
 
 function buildCreateInput(row: ParsedRow, organizationId: string, locale: LocaleType) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { name, attribute, comment, subPosts, parts, rawPostsAndSubPosts, rawUnit, ...command } = row
   return {
     data: {

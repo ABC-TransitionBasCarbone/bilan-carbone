@@ -181,7 +181,9 @@ export const getSitesForDuplication = async (study: FullStudy, tx?: Prisma.Trans
 
 export const buildStudyForDuplication = (
   {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     sourceTemplateStudyId,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     receivedCorrectionDelivery,
     ...study
   }: Omit<FullStudy, 'id' | 'createdById' | 'organizationVersionId' | 'allowedUsers'>,
@@ -328,6 +330,7 @@ export const duplicateTrainingTransitionPlan = async (
   }
   const actions = await getActions(sourceTransitionPlan.id, tx)
   for (const action of actions) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, transitionPlanId, createdAt, updatedAt, indicators, steps, sites, tags, subPosts, ...data } = action
     await createAction(
       {
@@ -393,6 +396,7 @@ export const duplicateTrainingStudy = async (
   if (target && sites.length !== study.sites.length) {
     throw new Error(`Missing organization sites for study ${study.id}`)
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { id, createdById, organizationVersionId, ...restStudy } = study
   if (target?.correction) {
     restStudy.name = target.correction.name

@@ -13,7 +13,9 @@ interface Props {
 export type NEWStudyProps = {
   minimalStudy: MinimalStudyForRights
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const NEWWithStudyDetails = (WrappedComponent: React.ComponentType<any & UserSessionProps & NEWStudyProps>) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Component = async (props: any & Props & UserSessionProps) => {
     const params = await props.params
     const id = params.id

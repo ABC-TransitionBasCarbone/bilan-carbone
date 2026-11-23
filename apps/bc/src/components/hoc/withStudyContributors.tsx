@@ -13,7 +13,9 @@ export type StudyProps = {
   study: FullStudy
   studyId: string
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const WithStudyContributors = (WrappedComponent: React.ComponentType<any & UserSessionProps & StudyProps>) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Component = async (props: any & Props & UserSessionProps) => {
     const params = await props.params
     const id = params.id

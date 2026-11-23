@@ -259,6 +259,7 @@ export const createUsersWithAccount = async (
   }
 
   const newUsers = await transaction.user.createMany({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     data: filteredUsers.map(({ account, ...user }) => user),
     skipDuplicates: true,
   })

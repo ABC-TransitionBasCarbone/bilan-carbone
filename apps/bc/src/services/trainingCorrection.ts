@@ -58,12 +58,14 @@ const correctionFactorFields = {
 
 type CorrectionFactor = Prisma.EmissionFactorGetPayload<typeof correctionFactorFields>
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const factorData = ({ id, organizationId, ...data }: CorrectionFactor) => data
 
 const translationsByLanguage = <T extends { language: string }>(translations: T[]) =>
   Object.fromEntries(translations.map((translation) => [translation.language, translation]))
 
 const sameFactorContent = (left: CorrectionFactor, right: CorrectionFactor) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { subPosts, metaData, emissionFactorParts, ...fields } = factorData(left)
   const {
     subPosts: rightSubPosts,

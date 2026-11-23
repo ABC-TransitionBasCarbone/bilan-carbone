@@ -74,6 +74,6 @@
     "prettier-plugin-organize-imports": "^4.2.0",
     "ts-jest": "^29.4.14",
     "tsx": "^4.23.15",
-    "typescript": "^7.0.2"
+    "typescript": "^6.0.3"
   }
 }

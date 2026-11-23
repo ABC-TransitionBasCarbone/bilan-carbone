@@ -1,11 +1,14 @@
+import nextVitals from 'eslint-config-next/core-web-vitals'
+import nextTs from 'eslint-config-next/typescript'
 import prettier from 'eslint-config-prettier/flat'
 import cypress from 'eslint-plugin-cypress'
 import pluginPrettier from 'eslint-plugin-prettier'
 import { defineConfig, globalIgnores } from 'eslint/config'
-import { dtsOverride, nextConfig, sharedRules } from '../../eslint.config.base.mjs'
+import { dtsOverride, sharedRules } from '../../eslint.config.base.mjs'
 
 export default defineConfig([
-  nextConfig,
+  ...nextVitals,
+  ...nextTs,
   prettier,
   globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
   {

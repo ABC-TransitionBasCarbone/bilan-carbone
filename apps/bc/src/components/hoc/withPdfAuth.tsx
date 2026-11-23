@@ -19,7 +19,9 @@ interface Props {
   }>
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const withPdfAuth = (WrappedComponent: React.ComponentType<any & PdfAuthProps>) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Component = async (props: any & Props) => {
     const params = await props.params
     const studyId = params.id

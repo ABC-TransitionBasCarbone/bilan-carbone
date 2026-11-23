@@ -12,7 +12,9 @@ interface Props {
   searchParams: Promise<{ duplicate?: string }>
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const withStudyCreation = (WrappedComponent: React.ComponentType<any & UserSessionProps & StudyCreationProps>) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Component = async (props: any & Props & UserSessionProps) => {
     const searchParams = await props.searchParams
     const duplicateStudyId = searchParams.duplicate ?? null

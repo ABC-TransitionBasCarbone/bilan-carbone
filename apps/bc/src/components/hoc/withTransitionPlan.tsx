@@ -9,7 +9,9 @@ export interface TransitionPlanProps {
   canEdit: boolean
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const withTransitionPlan = (WrappedComponent: React.ComponentType<any & UserSessionProps & StudyProps>) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Component = async (props: any & UserSessionProps & StudyProps) => {
     const { study } = props
 
