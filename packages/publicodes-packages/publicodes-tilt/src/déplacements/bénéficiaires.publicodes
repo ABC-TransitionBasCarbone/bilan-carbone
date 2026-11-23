@@ -12,7 +12,8 @@ déplacements . bénéficiaires:
             - deux roues * part deux roues * général . bénéficiaires * FE deux roues
             - bus * part bus * général . bénéficiaires * commun . FE . moyen de transport . bus
             - transport en commun * part transport en commun * général . bénéficiaires * commun . FE . moyen de transport . transports en commun moyenne France
-            - train * part train * général . bénéficiaires * FE train
+            - TER * part TER * général . bénéficiaires * FE TER
+            - TGV * part TGV * général . bénéficiaires * FE TGV
             - avion * part avion * général . bénéficiaires * commun . FE . moyen de transport . avion ## on prend avion moyen courrier
           avec:
             FE deux roues:
@@ -21,12 +22,19 @@ déplacements . bénéficiaires:
               meta:
                 id: 43775
                 nom: Cyclomoteur/Mixte/2023
-            FE train:
+            FE TER:
               valeur: 0.0277
               unité: kgCO2e/km
               meta:
                 id: 43255
                 nom: TER/2022/Traction moyenne
+            FE TGV:
+              valeur: 0.00293
+              unité: kgCO2e/km
+              meta:
+                id: 43256
+                nom: TGV/2022
+                note: On sépare les déplacements en TER et TGV.
       - sinon: 0
   unité: kgCO2e
   par défaut: 0
@@ -46,15 +54,27 @@ déplacements . bénéficiaires . part voiture:
   unité: "%"
   par défaut: 0
 
-déplacements . bénéficiaires . part train:
-  titre: Train (TER)
+déplacements . bénéficiaires . part TER:
+  titre: TER
   form:
     à traduire: oui
   applicable si:
     toutes ces conditions:
       - est défini: se déplacent
       - se déplacent = oui
-  question: Quel pourcentage des trajets se fait en train ?
+  question: Quel pourcentage des trajets se fait en TER ?
+  unité: "%"
+  par défaut: 0
+
+déplacements . bénéficiaires . part TGV:
+  titre: TGV
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: se déplacent
+      - se déplacent = oui
+  question: Quel pourcentage des trajets se fait en TGV ?
   unité: "%"
   par défaut: 0
 
@@ -130,15 +150,27 @@ déplacements . bénéficiaires . voiture:
   unité: km/bénéficiaires.an
   par défaut: 0
 
-déplacements . bénéficiaires . train:
-  titre: Train (TER)
+déplacements . bénéficiaires . TER:
+  titre: TER
   form:
     à traduire: oui
   applicable si:
     toutes ces conditions:
-      - est défini: part train
-      - part train > 0
-  question: Combien de km parcourent en moyenne sur l'année vos bénéficiaires en train ?
+      - est défini: part TER
+      - part TER > 0
+  question: Combien de km parcourent en moyenne sur l'année vos bénéficiaires en TER ?
+  unité: km/bénéficiaires.an
+  par défaut: 0
+
+déplacements . bénéficiaires . TGV:
+  titre: TGV
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: part TGV
+      - part TGV > 0
+  question: Combien de km parcourent en moyenne sur l'année vos bénéficiaires en TGV ?
   unité: km/bénéficiaires.an
   par défaut: 0
 

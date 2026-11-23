@@ -65,7 +65,8 @@ déplacements . DM-salariés . sans:
   formule:
     somme:
       - voiture
-      - train
+      - actif
+      - TER
       - bus
       - deux roues
       - transports en commun
@@ -94,14 +95,33 @@ déplacements . DM-salariés . sans . voiture:
   description: On considère ici toutes les motorisations de voiture individuelles, basée sur des moyennes nationales
   unité: kgCO2e
 
+déplacements . DM-salariés . sans . actif:
+  titre: Actif
+  form:
+    à traduire: oui
+  # applicable si:
+  #   toutes ces conditions:
+  #     - est défini: déplacements . DT-salariés . MEP présent
+  #     - déplacements . DT-salariés . MEP présent = non
+  formule: distance * 0 * nombre de mois * général . salariés
+  avec:
+    distance:
+      question: Combien de km sont parcourus en moyenne par mois par salarié via des modes actifs (à pied, vélo, trottinette) pour des déplacements liés à des missions ?
+      type: nombre
+      unité: km/salariés.mois
+      par défaut: 0
+  description: Les mobilités activent sont considérées comme non émissives.
+  unité: kgCO2e
+
+
 #GC : J'enlève cette partie, car on utilise des FE en kgCO2e/km et non en kgCO2e/passager.km. Les FE en kgCO2e/km prennent déjà en compte le taux d'occupation normalement.
 # déplacements . DM-salariés . sans . voiture . occupation:
 #   formule: 1.08
 #   note: source pour le taux d'occupation d'une voiture en France pour des trajets D-T https://www.citego.org/bdf_fiche-document-3431_fr.html
 #   unité: unité
 
-déplacements . DM-salariés . sans . train:
-  titre: Train (TER), par mois
+déplacements . DM-salariés . sans . TER:
+  titre: TER, par mois
   form:
     à traduire: oui
   # applicable si:
@@ -111,7 +131,7 @@ déplacements . DM-salariés . sans . train:
   formule: distance * FE * nombre de mois * général . salariés
   avec:
     distance:
-      question: Combien de km sont parcourus en moyenne par mois par salarié en train pour des déplacements liés à des missions ?
+      question: Combien de km sont parcourus en moyenne par mois par salarié en TER pour des déplacements liés à des missions ?
       type: nombre
       unité: km/salarié.mois
       par défaut: 0
@@ -121,7 +141,31 @@ déplacements . DM-salariés . sans . train:
       meta:
         id: 43255
         nom: TER/2022/Traction moyenne
-        note: On considère que la majorité des déplacements en train pour du DM est en TER
+        note: On sépare les déplacements en TER et TGV.
+  unité: kgCO2e
+
+déplacements . DM-salariés . sans . TGV:
+  titre: TGV, par mois
+  form:
+    à traduire: oui
+  # applicable si:
+  #   toutes ces conditions:
+  #     - est défini: déplacements . DT-salariés . MEP présent
+  #     - déplacements . DT-salariés . MEP présent = non
+  formule: distance * FE * nombre de mois * général . salariés
+  avec:
+    distance:
+      question: Combien de km sont parcourus en moyenne par mois par salarié en TGV pour des déplacements liés à des missions ?
+      type: nombre
+      unité: km/salarié.mois
+      par défaut: 0
+    FE:
+      valeur: 0.00293
+      unité: kgCO2e/km
+      meta:
+        id: 43256
+        nom: TGV/2022
+        note: On sépare les déplacements en TER et TGV.
   unité: kgCO2e
 
 déplacements . DM-salariés . sans . bus:
@@ -197,13 +241,6 @@ déplacements . DM-salariés . sans . transports en commun . split:
       note: source doc NGC https://nosgestesclimat.fr/documentation/transport/transports-commun/m%C3%A9tro-ou-tram
 
 déplacements . DM-salariés . sans . avion:
-  formule:
-    somme:
-      - court courrier
-      - moyen courrier
-      - long courrier
-
-déplacements . DM-salariés . sans . avion . court courrier:
   titre: Avion, court courrier, par an
   form:
     à traduire: oui
@@ -224,50 +261,7 @@ déplacements . DM-salariés . sans . avion . court courrier:
       meta:
         id: 43767
         nom: Avion passagers/>220 sièges, 500-1000 kms, 2023/AVEC trainée
+        note: On majore en utilisant le FE court courrier, initialement les trois types étaient proposés.
   unité: kgCO2e/an
 
-déplacements . DM-salariés . sans . avion . moyen courrier:
-  titre: Avion, moyen courrier, par an
-  form:
-    à traduire: oui
- # applicable si:
- #   toutes ces conditions:
- #     - est défini: déplacements . DT-salariés . MEP présent
- #     - déplacements . 
-  formule: distance * FE * général . salariés
-  avec:
-    distance:
-      question: Combien de km ont été parcourus cette année par salarié en avion moyen courrier pour des déplacements liés à des missions ?
-      type: nombre
-      unité: km/salarié.an
-      par défaut: 0
-    FE:
-      valeur: 0.24
-      unité: kgCO2e/km
-      meta:
-        id: 43769
-        nom: Avion passagers/>220 sièges, 1000-2000 kms, 2023/AVEC trainées
-  unité: kgCO2e/an
 
-déplacements . DM-salariés . sans . avion . long courrier:
-  titre: Avion, long courrier, par an
-  form:
-    à traduire: oui
- # applicable si:
- #   toutes ces conditions:
- #     - est défini: déplacements . DT-salariés . MEP présent
- #     - déplacements . 
-  formule: distance * FE * général . salariés
-  avec:
-    distance:
-      question: Combien de km ont été parcourus cette année par salarié en avion long courrier pour des déplacements liés à des missions ?
-      type: nombre
-      unité: km/salarié.an
-      par défaut: 0
-    FE:
-      valeur: 0.15
-      unité: kgCO2e/km
-      meta:
-        id: 43773
-        nom: Avion passagers/>220 sièges, >5000 kms, 2023/AVEC trainées
-  unité: kgCO2e/an

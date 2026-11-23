@@ -70,7 +70,9 @@ déplacements . DT-bénévoles . sans:
   formule:
     somme:
       - voiture * part voiture
-      - train * part train
+      - actif * part actif
+      - TER * part TER
+      - TGV * part TGV
       - bus * part bus
       - deux roues * part deux roues
       - transports en commun * part transport en commun
@@ -89,15 +91,39 @@ déplacements . DT-bénévoles . sans . part voiture:
   unité: "%"
   par défaut: 0
 
-déplacements . DT-bénévoles . sans . part train:
-  titre: Train (TER)
+déplacements . DT-bénévoles . sans . part actif:
+  titre: Modes actifs
   form:
     à traduire: oui
  # applicable si:
  #   toutes ces conditions:
  #     - est défini: déplacements . DT-salariés . MEP présent
  #     - déplacements . 
-  question: Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise le train ?
+  question: Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise un mode de mobilité actif (à pied, vélo, trotinette, ...) ?
+  unité: "%"
+  par défaut: 0
+
+déplacements . DT-bénévoles . sans . part TER:
+  titre: TER
+  form:
+    à traduire: oui
+ # applicable si:
+ #   toutes ces conditions:
+ #     - est défini: déplacements . DT-salariés . MEP présent
+ #     - déplacements . 
+  question: Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise le TER ?
+  unité: "%"
+  par défaut: 0
+
+déplacements . DT-bénévoles . sans . part TGV:
+  titre: TGV
+  form:
+    à traduire: oui
+ # applicable si:
+ #   toutes ces conditions:
+ #     - est défini: déplacements . DT-salariés . MEP présent
+ #     - déplacements . 
+  question: Quand les bénévoles se déplacent, quel pourcentage d'entre eux utilise le TGV ?
   unité: "%"
   par défaut: 0
 
@@ -168,14 +194,35 @@ déplacements . DT-bénévoles . sans . voiture . occupation:
   note: source pour le taux d'occupation d'une voiture en France pour des trajets D-T https://www.citego.org/bdf_fiche-document-3431_fr.html
   unité: unité
 
-déplacements . DT-bénévoles . sans . train:
-  titre: Train (TER)
+déplacements . DT-bénévoles . sans . actif:
+  titre: Modes actifs
   form:
     à traduire: oui
   applicable si:
     toutes ces conditions:
-      - est défini: part train
-      - part train > 0
+      - est défini: part actif
+      - part actif > 0
+  formule: 
+      distance * 0 * général . bénévoles * commun . nombre de semaines travaillées par an * (travail . bénévoles . j - télétravail . bénévoles . j)
+  avec:
+    distance:
+      question: Quand les bénévoles se déplacent en mode actifs, combien de km parcourent-ils en moyenne par jour (A/R) ? 
+      type: nombre
+      unité: km/bénévoles.jours
+      par défaut: 2.5
+  description: On considère ici la marche et le vélo, en nous basant sur la moyenne nationale de ces deux modes actifs.
+  unité: kgCO2e
+  par défaut: 0
+
+
+déplacements . DT-bénévoles . sans . TER:
+  titre: TER
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: part TER
+      - part TER > 0
   formule: 
     variations:
     - si: travail . bénévoles . j = 0
@@ -185,7 +232,7 @@ déplacements . DT-bénévoles . sans . train:
     - sinon: distance * FE * général . bénévoles * commun . nombre de semaines travaillées par an * (travail . bénévoles . j - télétravail . bénévoles . j)
   avec:
     distance:
-      question: Quand les bénévoles se déplacent en train, combien de km parcourent-ils en moyenne par jour (A/R) ? 
+      question: Quand les bénévoles se déplacent en TER, combien de km parcourent-ils en moyenne par jour (A/R) ? 
       unité: km/bénévoles.jours
       par défaut: 29.4
     FE:
@@ -194,7 +241,37 @@ déplacements . DT-bénévoles . sans . train:
       meta:
         id: 43255
         nom: TER/2022/Traction moyenne
-        note: On considère que la majorité des déplacements en train pour du DT est en TER
+        note: On sépare les déplacements en TER et TGV.
+  unité: kgCO2e
+
+déplacements . DT-bénévoles . sans . TGV:
+  titre: TGV
+  form:
+    à traduire: oui
+  applicable si:
+    toutes ces conditions:
+      - est défini: part TGV
+      - part TGV > 0
+  formule: 
+    variations:
+    - si: travail . bénévoles . j = 0
+      alors: distance * FE * général . bénévoles * commun . nombre de semaines travaillées par an * (5 - télétravail . bénévoles . j)
+    - si: travail . bénévoles . j = télétravail . bénévoles . j
+      alors: 0
+    - sinon: distance * FE * général . bénévoles * commun . nombre de semaines travaillées par an * (travail . bénévoles . j - télétravail . bénévoles . j)
+  avec:
+    distance:
+      question: Quand les bénévoles se déplacent en TGV, combien de km parcourent-ils en moyenne par jour (A/R) ? 
+      unité: km/bénévoles.jours
+      par défaut: 120
+      note: La valeur par défaut correspond à une distance Paris-Rouen (moyenne entre vol d'oiseau et route), en supposant que les personnes ne font pas de trajets D-T beaucoup plus longs.
+    FE:
+      valeur: 0.00293
+      unité: kgCO2e/km
+      meta:
+        id: 43256
+        nom: TGV/2022
+        note: On sépare les déplacements en TER et TGV.
   unité: kgCO2e
 
 déplacements . DT-bénévoles . sans . bus:
@@ -215,7 +292,7 @@ déplacements . DT-bénévoles . sans . bus:
 
   avec:
     distance:
-      question: Quand les bénévoles se déplacent en train, combien de km parcourent-ils en moyenne par jour (A/R) ? 
+      question: Quand les bénévoles se déplacent en bus, combien de km parcourent-ils en moyenne par jour (A/R) ? 
       unité: km/bénévoles.jours
       par défaut: 29.4
   unité: kgCO2e
