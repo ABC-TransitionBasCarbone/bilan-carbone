@@ -1699,7 +1699,6 @@ export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEn
     // sites
     const sites = await getSitesForDuplication(study)
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, createdById, organizationVersionId, ...restStudy } = study
     const studyCommand: Prisma.StudyCreateInput = buildStudyForDuplication(
       restStudy,

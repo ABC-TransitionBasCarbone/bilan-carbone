@@ -44,7 +44,6 @@ export const hasAccessToBcExport = isAdvanced
 export const hasAccessToDependencyMatrix = isTilt
 
 // environnement is not used but kept for consistency
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const hasAccessToDependencyMatrixExample = (environment: Environment) => false
 
 export const needsLicenceToUseApp = isBC

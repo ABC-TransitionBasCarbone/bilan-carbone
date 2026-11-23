@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
 import { PrismaClient } from '@abc-transitionbascarbone/common/db'
@@ -145,7 +144,6 @@ const firstPassCreateVersions = async () => {
 
       const onboarderAccount = org.onboarder?.accounts?.[0]
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const data: any = {
         organizationId: org.id,
         isCR: org.isCR,

@@ -77,7 +77,6 @@ const EmissionSourcePerPost = ({ studyId, resultsUnit, results, validatedOnly }:
     </>
   )
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const Marker = ({ size, x, y, seriesId, color, isFaded, dataIndex, isHighlighted, ...rest }: ScatterMarkerProps) => {
     const iconSize = size * 0.75
     return (

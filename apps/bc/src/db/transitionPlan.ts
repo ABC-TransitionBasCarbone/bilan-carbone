@@ -154,7 +154,6 @@ export const duplicateTransitionPlanWithRelations = async (
         },
         actions: {
           create: sourceTransitionPlan.actions.map(
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             ({ id, transitionPlanId, createdAt, updatedAt, indicators, steps, sites, tags, subPosts, ...rest }) => ({
               ...rest,
               indicators: {
@@ -183,7 +182,6 @@ export const duplicateTransitionPlanWithRelations = async (
         },
         externalStudies: {
           create: sourceTransitionPlan.externalStudies.map(
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             ({ id, transitionPlanId, createdAt, updatedAt, ...rest }) => rest,
           ),
         },

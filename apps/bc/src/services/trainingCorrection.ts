@@ -37,7 +37,6 @@ const prepareCorrectionSites = (sources: Site[], existingSites: MatchableSite[],
 
     const copyId = uuidv4()
     siteIds.set(source.id, copyId)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, organizationId, oldBCId, createdAt, updatedAt, ...data } = source
     return [{ ...data, id: copyId, name: forTrainee ? `${source.name} [CORRECTION]` : source.name }]
   })
@@ -59,7 +58,6 @@ const correctionFactorFields = {
 
 type CorrectionFactor = Prisma.EmissionFactorGetPayload<typeof correctionFactorFields>
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const factorData = ({ id, organizationId, ...data }: CorrectionFactor) => data
 
 const translationsByLanguage = <T extends { language: string }>(translations: T[]) =>
