@@ -1522,7 +1522,35 @@
       "noData": "Nessuna fonte di emissione per il momento; è necessario che un editor dello studio ne aggiunga affinché tu possa completarle"
     },
     "cannotCreateStudy": "Per poter realizzare dei Bilan Carbone® è necessario essere formati al metodo! <link>Scopri di più</link>",
-    "canCreateFootPrint": "Se la tua formazione non compare sul tuo account, invia il tuo attestato al <support>supporto</support>. Se è correttamente riconosciuta e desideri creare dei Bilan Carbone®, chiedi a un amministratore della tua organizzazione di modificare il tuo ruolo in collaboratore·rice o amministratore·rice. Ulteriori informazioni sono disponibili nelle <faq>FAQ</faq>."
+    "canCreateFootPrint": "Se la tua formazione non compare sul tuo account, invia il tuo attestato al <support>supporto</support>. Se è correttamente riconosciuta e desideri creare dei Bilan Carbone®, chiedi a un amministratore della tua organizzazione di modificare il tuo ruolo in collaboratore·rice o amministratore·rice. Ulteriori informazioni sono disponibili nelle <faq>FAQ</faq>.",
+    "shareCorrection": "Condividi la correzione con gli studenti",
+    "correctionSession": "Seleziona una sessione",
+    "noCorrectionSessions": "Non hai alcuna sessione in corso o terminata da meno di 14 giorni.",
+    "correctionSharing": {
+      "selectCorrection": "Seleziona una correzione",
+      "noCorrections": "Nessuna correzione disponibile per questa sessione.",
+      "sentCorrections": "Correzioni inviate",
+      "studyWithPlan": "{study} — Con Plan de transition",
+      "studyWithoutPlan": "{study} — Senza Plan de transition",
+      "notSent": "Nessuna correzione inviata",
+      "withoutPlan": "Correzione inviata senza Plan de transition",
+      "withPlan": "Correzione inviata con Plan de transition",
+      "recipients": "Tirocinanti",
+      "targeted": "Destinatario di questo invio",
+      "noTrainees": "Nessun tirocinante firmato in questa sessione.",
+      "missingRecipients": "La correzione sarà inviata solo ai tirocinanti che non l’hanno ancora ricevuta.",
+      "upgradeRecipients": "Puoi aggiungere il Plan de transition per i tirocinanti che hanno già ricevuto la correzione senza il piano.",
+      "alreadySent": "Tutti i tirocinanti hanno già ricevuto la correzione con il Plan de transition.",
+      "withPlanChoice": "Invia con il Plan de transition",
+      "confirmTitle": "Verifica i destinatari della correzione",
+      "confirmWithPlan": "Sessione « {session} »: stai per condividere la correzione con il Plan de transition con i {count, plural, one {# tirocinante evidenziato} other {# tirocinanti evidenziati}} qui sopra.",
+      "confirmWithoutPlan": "Sessione « {session} »: stai per condividere la correzione senza il Plan de transition con i {count, plural, one {# tirocinante evidenziato} other {# tirocinanti evidenziati}} qui sopra.",
+      "sharingWarning": "Attenzione: questa azione è irreversibile.",
+      "sessionName": "Inserisci il nome della sessione per confermare",
+      "confirmSharing": "Conferma l’invio",
+      "changed": "I destinatari o la sessione sono cambiati. Verifica l’elenco prima di confermare di nuovo.",
+      "recorded": "Invio registrato."
+    }
   },
   "importFileModal": {
     "downloadTemplate": "Scarica il modello di importazione",
