@@ -183,7 +183,7 @@ intrants-biens-et-matières . ratios monétaires . tableau détaillé . petites-
   formule: nombre * FE
   form:
     à traduire: oui
-  titre: Petites fournitures
+  titre: Petites fournitures (Stylos, crayons, agrafes, ...)
   avec:
     nombre:
       question: Montant dépensé (k€) en petites fournitures
@@ -202,7 +202,7 @@ intrants-biens-et-matières . ratios monétaires . tableau détaillé . meubles:
   formule: nombre * FE
   form:
     à traduire: oui
-  titre: Meubles
+  titre: Meubles (Tables, chaises, ...)
   avec:
     nombre:
       question: Montant dépensé (k€) en meubles
@@ -221,7 +221,7 @@ intrants-biens-et-matières . ratios monétaires . tableau détaillé . machines
   formule: nombre * FE
   form:
     à traduire: oui
-  titre: Machines et équipements
+  titre: Machines et équipements (Chariots élévateurs, diables, ...)
   avec:
     nombre:
       question: Montant dépensé (k€) en machines et équipements
@@ -240,7 +240,7 @@ intrants-biens-et-matières . ratios monétaires . tableau détaillé . textiles
   formule: nombre * FE
   form:
     à traduire: oui
-  titre: Textiles
+  titre: Textiles (T-shirts, shorts, baskets, ...)
   avec:
     nombre:
       question: Montant dépensé (k€) en textiles
@@ -259,7 +259,7 @@ intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits
   formule: nombre * FE
   form:
     à traduire: oui
-  titre: Produits pharmaceutiques
+  titre: Produits pharmaceutiques (Médicamments, désinfectant, ...)
   avec:
     nombre:
       question: Montant dépensé (k€) en produits pharmaceutiques
@@ -278,7 +278,7 @@ intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits
   formule: nombre * FE
   form:
     à traduire: oui
-  titre: Produits chimiques
+  titre: Produits chimiques (Produits ménagers, produits phytosanitaires, ...)
   avec:
     nombre:
       question: Montant dépensé (k€) en produits chimiques
@@ -316,7 +316,7 @@ intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits
   formule: nombre * FE
   form:
     à traduire: oui
-  titre: Produits métalliques
+  titre: Produits métalliques 
   avec:
     nombre:
       question: Montant dépensé (k€) en produits métalliques
@@ -335,7 +335,7 @@ intrants-biens-et-matières . ratios monétaires . tableau détaillé . autres-p
   formule: nombre * FE
   form:
     à traduire: oui
-  titre: Autres produits manufacturés
+  titre: Autres produits manufacturés 
   avec:
     nombre:
       question: Montant dépensé (k€) en autres produits manufacturés
