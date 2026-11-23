@@ -210,7 +210,7 @@ const getMissingVariables = (
     ),
   )
 
-  // Keep single-option questions visible when missingVariables omits them; mosaic children are handled below.
+  // Restore one-option confirmations omitted from missingVariables; mosaic child scores are grouped below.
   for (const question of meta.everyQuestions) {
     const choice = getChoiceOption(rules[question]?.rawNode)
     const possibilities =
