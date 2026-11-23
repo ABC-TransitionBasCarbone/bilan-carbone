@@ -7,7 +7,11 @@ import {
   previewCorrectionSharing,
   recordCorrectionSharing,
 } from '@/services/serverFunctions/studyCorrectionSharing'
-import { getCorrectionTargets, getCorrectionTargetSnapshot } from '@/services/studyCorrectionSharing'
+import {
+  getCorrectionTargets,
+  getCorrectionTargetSnapshot,
+  getSessionEndingToday,
+} from '@/services/studyCorrectionSharing'
 import Modal, { type Props as ModalProps } from '@abc-transitionbascarbone/common/components/modals/Modal'
 import { useToast } from '@abc-transitionbascarbone/common/ui'
 import BarChartIcon from '@mui/icons-material/BarChart'
@@ -94,9 +98,13 @@ const ShareStudyCorrectionButton = ({ studyId, courseSessionId, compact = false 
               setOptions(
                 result.data.map(({ id, name, startDate, endDate }) => ({
                   id,
-                  name: `${name} (${format.dateTimeRange(startDate, endDate, { dateStyle: 'medium' })})`,
+                  name: `${name} (${format.dateTimeRange(startDate, endDate, { dateStyle: 'medium', timeZone: 'UTC' })})`,
                 })),
               )
+              const session = getSessionEndingToday(result.data)
+              if (session) {
+                selectOption(session.id)
+              }
             }
           }
         } catch (error) {
