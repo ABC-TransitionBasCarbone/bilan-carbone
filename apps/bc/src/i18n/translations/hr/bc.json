@@ -62,8 +62,12 @@
       "sharingWarning": "Pažnja: ova je radnja nepovratna.",
       "sessionName": "Unesite naziv sesije za potvrdu",
       "confirmSharing": "Potvrdi slanje",
-      "changed": "Primatelji ili sesija su se promijenili. Provjerite popis prije ponovne potvrde.",
-      "recorded": "Slanje zabilježeno."
+      "changed": "Primatelji, sesija ili dostupnost plana su se promijenili. Provjerite slanje prije ponovne potvrde.",
+      "recorded": "Slanje zabilježeno.",
+      "noTransitionPlan": "Ova studija nema plan tranzicije."
+    },
+    "delete": {
+      "correctionAlreadySent": "Ispravak je već poslan: brisanje nije moguće."
     }
   },
   "emissionFactors": {

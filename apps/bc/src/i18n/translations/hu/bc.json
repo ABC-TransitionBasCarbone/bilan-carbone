@@ -62,8 +62,12 @@
       "sharingWarning": "Figyelem: ez a művelet visszafordíthatatlan.",
       "sessionName": "A megerősítéshez írja be a munkamenet nevét",
       "confirmSharing": "Küldés megerősítése",
-      "changed": "A címzettek vagy a munkamenet megváltozott. Ellenőrizze a listát, mielőtt újra megerősítené.",
-      "recorded": "Küldés rögzítve."
+      "changed": "A címzettek, a munkamenet vagy a terv elérhetősége megváltozott. Ellenőrizze a küldést, mielőtt újra megerősíti.",
+      "recorded": "Küldés rögzítve.",
+      "noTransitionPlan": "Ennek a tanulmánynak nincs átállási terve."
+    },
+    "delete": {
+      "correctionAlreadySent": "A javítás már elküldve: nem törölhető."
     }
   },
   "emissionFactors": {

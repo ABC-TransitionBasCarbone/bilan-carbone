@@ -974,7 +974,8 @@
       "name": "Nome dello studio",
       "Not authorized": "Non hai i permessi per eseguire questa azione",
       "title": "Eliminazione di uno studio",
-      "wrongName": "Il nome dello studio non corrisponde"
+      "wrongName": "Il nome dello studio non corrisponde",
+      "correctionAlreadySent": "Correzione già inviata: impossibile eliminarla."
     },
     "transitionPlan": {
       "notInitialized": "Il piano di transizione di questo studio non è ancora stato inizializzato.",
@@ -1548,8 +1549,9 @@
       "sharingWarning": "Attenzione: questa azione è irreversibile.",
       "sessionName": "Inserisci il nome della sessione per confermare",
       "confirmSharing": "Conferma l’invio",
-      "changed": "I destinatari o la sessione sono cambiati. Verifica l’elenco prima di confermare di nuovo.",
-      "recorded": "Invio registrato."
+      "changed": "I destinatari, la sessione o la disponibilità del piano sono cambiati. Verifica l'invio prima di confermare nuovamente.",
+      "recorded": "Invio registrato.",
+      "noTransitionPlan": "Questo studio non ha un piano di transizione."
     }
   },
   "importFileModal": {

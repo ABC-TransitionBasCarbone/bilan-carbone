@@ -62,8 +62,12 @@
       "sharingWarning": "Atenție: această acțiune este ireversibilă.",
       "sessionName": "Introduceți numele sesiunii pentru a confirma",
       "confirmSharing": "Confirmați trimiterea",
-      "changed": "Destinatarii sau sesiunea s-au schimbat. Verificați lista înainte de a confirma din nou.",
-      "recorded": "Trimitere înregistrată."
+      "changed": "Destinatarii, sesiunea sau disponibilitatea planului s-au schimbat. Verificați trimiterea înainte de a confirma din nou.",
+      "recorded": "Trimitere înregistrată.",
+      "noTransitionPlan": "Acest studiu nu are un plan de transition."
+    },
+    "delete": {
+      "correctionAlreadySent": "Corectură deja trimisă: imposibil de șters."
     }
   },
   "emissionFactors": {

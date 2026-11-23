@@ -407,7 +407,7 @@
       "sharingWarning": "Warning: this action is irreversible.",
       "sessionName": "Enter the session name to confirm",
       "confirmSharing": "Confirm delivery",
-      "changed": "The recipients or the session have changed. Check the list before confirming again.",
+      "changed": "The recipients, the session, or the plan's availability have changed. Check the submission before confirming again.",
       "noTransitionPlan": "This study has no transition plan.",
       "recorded": "Delivery recorded."
     },
@@ -1081,7 +1081,7 @@
       "Not authorized": "You are not allowed to do this action",
       "title": "Study deletion",
       "wrongName": "Study name does not match",
-      "correctionAlreadySent": "This correction has already been shared and cannot be deleted."
+      "correctionAlreadySent": "Correction already sent: it cannot be deleted."
     },
     "transitionPlan": {
       "notInitialized": "The transition plan for this study has not been initialized yet.",
