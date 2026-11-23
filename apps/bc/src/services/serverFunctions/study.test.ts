@@ -1,6 +1,7 @@
 import * as studyUtilsModule from '@/utils/study'
 import {
   CourseSessionType,
+  EngagementPhase,
   Environment,
   Import,
   StudyRole,
@@ -33,7 +34,7 @@ import {
 import { getMockedDbActualizedAuth } from '../../tests/utils/models/user'
 import * as organizationUtilsModule from '../../utils/organization'
 import * as userUtilsModule from '../../utils/user'
-import type { CreateStudyCommand, DuplicateSiteCommand } from './study.command'
+import type { AddEngagementActionCommand, CreateStudyCommand, DuplicateSiteCommand } from './study.command'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../file', () => ({ download: jest.fn() }))
@@ -71,6 +72,10 @@ jest.mock('../../db/study', () => ({
   updateUserOnStudy: jest.fn(),
   getMinimalStudyForRights: jest.fn(),
   getStudyTemplates: jest.fn(),
+  getEngagementActionById: jest.fn(),
+  createEngagementAction: jest.fn(),
+  updateEngagementAction: jest.fn(),
+  deleteEngagementAction: jest.fn(),
 }))
 const mockTransaction = {
   site: {
@@ -98,6 +103,7 @@ jest.mock('../../services/permissions/study', () => ({
   canChangeName: jest.fn(),
   canChangeOpeningHours: jest.fn(),
   canAddRightOnStudy: jest.fn(),
+  hasEditAccessOnStudy: jest.fn(),
 }))
 jest.mock('../../services/permissions/study.utils', () => ({
   isAdminOnStudyOrga: jest.fn(),
@@ -232,6 +238,9 @@ const {
   changeStudyCinema,
   changeStudyEstablishment,
   duplicateStudyInOtherEnvironment,
+  addEngagementAction,
+  editEngagementAction,
+  deleteEngagementAction,
   newStudyContributor,
 } = jest.requireActual('./study')
 
@@ -247,6 +256,16 @@ const mockedSessionValidator = getMockedDbActualizedAuth({}, { email: TEST_EMAIL
 const mockedSession = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.currentUser })
 const mockedSourceStudy = getMockeFullStudy()
 const mockedStudyCommand = getMockedDuplicateStudyCommand() as CreateStudyCommand
+const mockedEngagementActionCommand: AddEngagementActionCommand = {
+  studyId: TEST_IDS.sourceStudy,
+  name: 'Action de mobilisation',
+  date: '2025-01-01',
+  targets: ['target'],
+  steps: 'step',
+  phase: EngagementPhase.AwarnessAndOutreach,
+  description: '',
+  sites: [TEST_IDS.site],
+}
 
 const mockDbActualizedAuth = authModule.dbActualizedAuth as jest.Mock
 const mockGetCourseSessionsForTrainee = jest.mocked(courseOrganismModule.getCourseSessionsForTrainee)
@@ -276,6 +295,7 @@ const mockHasSufficientLevel = studyUtilsModule.hasSufficientLevel as jest.Mock
 const mockCanCreateSpecificStudy = studyPermissionsModule.canCreateSpecificStudy as jest.Mock
 const mockCanDuplicateStudy = studyPermissionsModule.canDuplicateStudy as jest.Mock
 const mockCanAddContributorOnStudy = studyPermissionsModule.canAddContributorOnStudy as jest.Mock
+const mockHasEditAccessOnStudy = studyPermissionsModule.hasEditAccessOnStudy as jest.Mock
 const mockGetEmissionFactorsImportActiveVersion =
   emissionFactorsModule.getEmissionFactorsImportActiveVersion as jest.Mock
 const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
@@ -292,6 +312,61 @@ const mockGetLinkedAndExternalStudies = (
     getLinkedAndExternalStudies: jest.Mock
   }
 ).getLinkedAndExternalStudies
+
+describe('engagement action edit rights', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    mockDbActualizedAuth.mockResolvedValue(mockedSession)
+    mockGetStudyById.mockResolvedValue(mockedSourceStudy)
+    mockHasEditAccessOnStudy.mockResolvedValue(false)
+  })
+
+  it('denies adding, editing, and deleting actions when the user cannot edit the study', async () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined)
+    const [addResult, editResult, deleteResult] = await Promise.all([
+      addEngagementAction(mockedEngagementActionCommand),
+      editEngagementAction('action-id', mockedEngagementActionCommand),
+      deleteEngagementAction('action-id', TEST_IDS.sourceStudy),
+    ])
+
+    expect(addResult).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+    expect(editResult).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+    expect(deleteResult).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+    expect(mockHasEditAccessOnStudy).toHaveBeenCalledTimes(3)
+    expect(studyDbModule.createEngagementAction).not.toHaveBeenCalled()
+    expect(studyDbModule.updateEngagementAction).not.toHaveBeenCalled()
+    expect(studyDbModule.deleteEngagementAction).not.toHaveBeenCalled()
+    consoleError.mockRestore()
+  })
+
+  it('does not edit or delete an action from a different study', async () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined)
+    mockHasEditAccessOnStudy.mockResolvedValue(true)
+    jest.mocked(studyDbModule.getEngagementActionById).mockResolvedValue({
+      id: 'action-id',
+      name: 'Action de mobilisation',
+      date: new Date('2025-01-01'),
+      targets: ['target'],
+      steps: 'step',
+      phase: EngagementPhase.AwarnessAndOutreach,
+      description: '',
+      studyId: 'another-study-id',
+      createdAt: new Date('2025-01-01'),
+      updatedAt: new Date('2025-01-01'),
+    })
+
+    const [editResult, deleteResult] = await Promise.all([
+      editEngagementAction('action-id', mockedEngagementActionCommand),
+      deleteEngagementAction('action-id', TEST_IDS.sourceStudy),
+    ])
+
+    expect(editResult).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+    expect(deleteResult).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+    expect(studyDbModule.updateEngagementAction).not.toHaveBeenCalled()
+    expect(studyDbModule.deleteEngagementAction).not.toHaveBeenCalled()
+    consoleError.mockRestore()
+  })
+})
 
 describe('study', () => {
   describe('read-only study actions', () => {

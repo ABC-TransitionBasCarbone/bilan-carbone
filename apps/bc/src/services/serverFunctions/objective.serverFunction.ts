@@ -19,7 +19,7 @@ import { getTrajectoryWithTransitionPlan, getTransitionPlanById } from '@/db/tra
 import { withServerResponse } from '@/utils/serverResponse'
 import { SubPost, TrajectoryType } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
-import { hasEditAccessOnStudy } from '../permissions/study'
+import { hasEditAccessOnStudy, hasReadAccessOnStudy } from '../permissions/study'
 
 export interface CreateObjectiveInput {
   name?: string
@@ -73,8 +73,11 @@ export const getOldestPastStudyYearForTransitionPlan = async (transitionPlanId: 
     if (!transitionPlan) {
       throw new Error('transitionPlan not found')
     }
-    const hasEditAccess = await hasEditAccessOnStudy(transitionPlan.studyId)
-    if (!hasEditAccess) {
+    if (!(await hasReadAccessOnStudy(transitionPlan.studyId))) {
+      console.error('getOldestPastStudyYearForTransitionPlan: study not readable', {
+        transitionPlanId,
+        studyId: transitionPlan.studyId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 

@@ -7,7 +7,11 @@ import {
   previewCorrectionSharing,
   recordCorrectionSharing,
 } from '@/services/serverFunctions/studyCorrectionSharing'
-import { getCorrectionTargets, getCorrectionTargetSnapshot } from '@/services/studyCorrectionSharing'
+import {
+  getCorrectionTargets,
+  getCorrectionTargetSnapshot,
+  getSessionEndingToday,
+} from '@/services/studyCorrectionSharing'
 import Modal, { type Props as ModalProps } from '@abc-transitionbascarbone/common/components/modals/Modal'
 import { useToast } from '@abc-transitionbascarbone/common/ui'
 import BarChartIcon from '@mui/icons-material/BarChart'
@@ -94,9 +98,13 @@ const ShareStudyCorrectionButton = ({ studyId, courseSessionId, compact = false 
               setOptions(
                 result.data.map(({ id, name, startDate, endDate }) => ({
                   id,
-                  name: `${name} (${format.dateTimeRange(startDate, endDate, { dateStyle: 'medium' })})`,
+                  name: `${name} (${format.dateTimeRange(startDate, endDate, { dateStyle: 'medium', timeZone: 'UTC' })})`,
                 })),
               )
+              const session = getSessionEndingToday(result.data)
+              if (session) {
+                selectOption(session.id)
+              }
             }
           }
         } catch (error) {
@@ -140,7 +148,13 @@ const ShareStudyCorrectionButton = ({ studyId, courseSessionId, compact = false 
         }
         if (result.data.status === 'changed') {
           const { preview } = result.data
-          setForm((current) => ({ ...current, preview, confirmationName: null, feedback: 'changed' }))
+          setForm((current) => ({
+            ...current,
+            preview,
+            includePlan: current.includePlan && preview.hasTransitionPlan,
+            confirmationName: null,
+            feedback: 'changed',
+          }))
         } else {
           setForm((current) => ({ ...current, confirmationName: null }))
           setOpen(false)
@@ -264,9 +278,12 @@ const ShareStudyCorrectionButton = ({ studyId, courseSessionId, compact = false 
                 <p>{tSharing('noTrainees')}</p>
               )}
               {hasMissing && <p>{tSharing('missingRecipients')}</p>}
-              {hasUpgrade && (includePlan || !hasMissing) && <p>{tSharing('upgradeRecipients')}</p>}
+              {hasUpgrade && preview.hasTransitionPlan && (includePlan || !hasMissing) && (
+                <p>{tSharing('upgradeRecipients')}</p>
+              )}
               {recipients.length > 0 && !hasMissing && !hasUpgrade && <p>{tSharing('alreadySent')}</p>}
-              {(hasMissing || hasUpgrade) && (
+              {(hasMissing || hasUpgrade) && !preview.hasTransitionPlan && <p>{tSharing('noTransitionPlan')}</p>}
+              {(hasMissing || hasUpgrade) && preview.hasTransitionPlan && (
                 <FormControlLabel
                   control={
                     <Checkbox

@@ -21,9 +21,10 @@ interface Props {
   actions: EngagementActionWithSites[]
   study: FullStudy
   studySite: string
+  canEdit: boolean
 }
 
-const EngagementActions = ({ actions, study, studySite }: Props) => {
+const EngagementActions = ({ actions, study, studySite, canEdit }: Props) => {
   const router = useRouter()
   const { callServerFunction } = useServerFunction()
   const t = useTranslations('study.transitionPlan.actions')
@@ -197,12 +198,13 @@ const EngagementActions = ({ actions, study, studySite }: Props) => {
         filters={filters}
         setFilters={setFilters}
         openAddModal={handleOpenAddModal}
-        canEdit
+        canEdit={canEdit}
         actions={actions}
       />
       <EngagementActionTable
         actions={filteredActions}
         studySites={study.sites}
+        canEdit={canEdit}
         openEditModal={handleOpenEditModal}
         openDeleteModal={handleOpenDeleteModal}
       />

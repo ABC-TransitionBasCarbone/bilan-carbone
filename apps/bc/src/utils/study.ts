@@ -94,6 +94,9 @@ export const getAccountRoleOnStudy = (user: UserSession, study: StudyWithRoleFie
   if (isProfessorOnStudy(user, study)) {
     return StudyRole.Validator
   }
+  if (study.receivedCorrectionDelivery) {
+    return isAdminOnOrganization || right ? StudyRole.Reader : null
+  }
 
   if (
     isTiltSimplified(study.organizationVersion.environment, study.simplified) &&

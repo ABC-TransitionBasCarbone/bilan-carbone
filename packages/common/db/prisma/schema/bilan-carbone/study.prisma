@@ -132,6 +132,10 @@ model StudyTag {
   familyId String         @map("family_id")
   family   StudyTagFamily @relation(fields: [familyId], references: [id])
 
+  sourceStudyTagId  String?    @map("source_study_tag_id")
+  sourceStudyTag    StudyTag?  @relation("CorrectionStudyTagCopies", fields: [sourceStudyTagId], references: [id], onDelete: SetNull)
+  correctionCopies StudyTag[] @relation("CorrectionStudyTagCopies")
+
   emissionSourceTags EmissionSourceTag[]
   objectiveTags      ObjectiveTag[]
   actionTags         ActionTag[]
@@ -140,6 +144,7 @@ model StudyTag {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@unique([name, familyId])
+  @@index([sourceStudyTagId])
   @@map("study_tag")
   @@schema("bilan_carbone")
 }
@@ -188,7 +193,8 @@ model Study {
   sourceTemplateStudy      Study?  @relation("TrainingCorrectionCopies", fields: [sourceTemplateStudyId], references: [id], onDelete: SetNull)
   trainingCorrectionCopies Study[] @relation("TrainingCorrectionCopies")
 
-  correctionDeliveries StudyCorrectionDelivery[]
+  correctionDeliveries       StudyCorrectionDelivery[] @relation("CorrectionDeliverySourceStudy")
+  receivedCorrectionDelivery StudyCorrectionDelivery?  @relation("CorrectionDeliveryCopiedStudy")
 
   allowedUsers    UserOnStudy[]
   emissionSources StudyEmissionSource[]
@@ -221,7 +227,10 @@ model StudyCorrectionDelivery {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   sourceStudyId String @map("source_study_id")
-  sourceStudy   Study  @relation(fields: [sourceStudyId], references: [id], onDelete: Restrict)
+  sourceStudy   Study  @relation("CorrectionDeliverySourceStudy", fields: [sourceStudyId], references: [id], onDelete: Restrict)
+
+  copiedStudyId String @unique @map("copied_study_id")
+  copiedStudy   Study  @relation("CorrectionDeliveryCopiedStudy", fields: [copiedStudyId], references: [id], onDelete: Restrict)
 
   courseSessionId String        @map("course_session_id")
   courseSession   CourseSession @relation(fields: [courseSessionId], references: [id], onDelete: Cascade)
@@ -409,6 +418,10 @@ model StudySite {
   siteId String @map("site_id")
   site   Site   @relation(fields: [siteId], references: [id])
 
+  sourceStudySiteId String?     @map("source_study_site_id")
+  sourceStudySite   StudySite?  @relation("CorrectionStudySiteCopies", fields: [sourceStudySiteId], references: [id], onDelete: SetNull)
+  correctionCopies StudySite[] @relation("CorrectionStudySiteCopies")
+
   cncVersionId String?     @map("cnc_version_id")
   cncVersion   CncVersion? @relation(fields: [cncVersionId], references: [id])
 
@@ -438,6 +451,7 @@ model StudySite {
   actionSites       ActionSite[]
 
   @@unique([studyId, siteId])
+  @@unique([sourceStudySiteId, studyId])
   @@map("study_sites")
   @@schema("bilan_carbone")
 }

@@ -125,6 +125,11 @@ export const duplicateTransitionPlan = async (sourceTransitionPlanId: string, ta
     return
   }
 
+  if (targetStudy.receivedCorrectionDelivery) {
+    console.error('duplicateTransitionPlan: cannot modify a received correction', { targetStudyId })
+    throw new Error(NOT_AUTHORIZED)
+  }
+
   const targetYear = targetStudy.startDate.getUTCFullYear()
   const duplicated = await duplicateTransitionPlanWithRelations(sourceTransitionPlan, targetStudyId, targetYear)
 

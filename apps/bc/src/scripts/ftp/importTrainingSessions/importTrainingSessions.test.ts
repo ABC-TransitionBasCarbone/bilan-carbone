@@ -26,7 +26,8 @@ jest.mock('@/db/client', () => {
   const courseSession = { findMany: jest.fn(), upsert: jest.fn(), deleteMany: jest.fn(), updateMany: jest.fn() }
   const courseSessionTraineeOrganization = { deleteMany: jest.fn(), findMany: jest.fn() }
   const courseSessionTraineeRemoval = { findMany: jest.fn() }
-  const transaction = { account, courseSession, courseSessionTraineeOrganization, courseSessionTraineeRemoval }
+  const study = { findFirst: jest.fn().mockResolvedValue(null) }
+  const transaction = { account, courseSession, courseSessionTraineeOrganization, courseSessionTraineeRemoval, study }
   return {
     prismaClient: {
       courseOrganism,
@@ -1734,14 +1735,40 @@ describe('getCourseSessionsFromFTP', () => {
     )
   })
 
-  it('deletes sessions in both environments without recreating them or their participants', async () => {
-    mockDeleteCourseSessions.mockResolvedValueOnce({ count: 1 }).mockResolvedValueOnce({ count: 1 })
+  it('deletes empty sessions and closes sessions with attendance or sent corrections', async () => {
+    jest.setSystemTime(new Date('2026-11-19T13:00:00Z'))
+    const endDate = new Date('2026-11-05T13:00:00Z')
+    const emptyCount = { traineeOrganizations: 0, traineeRemovals: 0, correctionDeliveries: 0 }
+    const first = {
+      ...withParticipants(savedSessions[0]),
+      startDate: endDate,
+      endDate: new Date('2026-11-20T00:00:00Z'),
+      _count: { ...emptyCount, traineeOrganizations: 1 },
+    }
+    const second = {
+      ...withParticipants(savedSessions[1]),
+      startDate: new Date('2026-11-06T00:00:00Z'),
+      endDate: new Date('2026-11-20T00:00:00Z'),
+      _count: { ...emptyCount, correctionDeliveries: 1 },
+    }
+    const empty = { ...first, id: 'empty-session', environment: Environment.COURSE_TILT, _count: emptyCount }
+    mockFindCourseSessions
+      .mockResolvedValueOnce([first, second, empty])
+      .mockResolvedValueOnce([first, empty])
+      .mockResolvedValueOnce([second])
+      .mockResolvedValueOnce([
+        { ...first, endDate },
+        { ...second, endDate, startDate: new Date('2026-11-04T00:00:00Z') },
+      ])
+    mockUpdateCourseSessions.mockResolvedValueOnce({ count: 1 }).mockResolvedValueOnce({ count: 1 })
+    mockDeleteCourseSessions.mockResolvedValueOnce({ count: 1 })
     jest.mocked(xlsx.parse).mockReturnValue([
       ...workbook,
       {
         name: 'A supprimer',
         data: [
           ['Type', 'ParcoursProg', 'E-mail'],
+          ['Stagiaire', first.name, 'test.abc2@abc-transitionbascarbone.fr'],
           ['Session', 'Session Numéro 1'],
           ['Sessions', 'Session Numéro 2'],
         ],
@@ -1755,15 +1782,23 @@ describe('getCourseSessionsFromFTP', () => {
       createdAccounts: 0,
       addedTrainees: 0,
       addedProfessors: 0,
-      deletedSessions: 2,
+      deletedSessions: 3,
       deletedTrainees: 0,
       deletedProfessors: 0,
     })
 
-    expect(mockDeleteCourseSessions.mock.calls).toEqual([
-      [{ where: { courseOrganismId: 'organism-1', name: 'Session Numéro 1' } }],
-      [{ where: { courseOrganismId: 'organism-1', name: 'Session Numéro 2' } }],
+    expect(mockUpdateCourseSessions.mock.calls).toEqual([
+      [{ where: { id: first.id, endDate: { gt: endDate } }, data: { endDate } }],
+      [
+        {
+          where: { id: second.id, endDate: { gt: endDate } },
+          data: { endDate, startDate: new Date('2026-11-04T13:00:00Z') },
+        },
+      ],
     ])
+    expect(mockDeleteCourseSessions.mock.calls).toEqual([[{ where: { id: empty.id } }]])
+    expect(mockDeleteTrainees).not.toHaveBeenCalled()
+    expect(mockSendCourseSessionsCreatedEmail).not.toHaveBeenCalled()
     expect(mockCreateUsersWithAccount).not.toHaveBeenCalled()
     expect(mockFindAccounts).not.toHaveBeenCalled()
     expect(mockUpsertCourseSession).not.toHaveBeenCalled()
@@ -1820,6 +1855,11 @@ describe('getCourseSessionsFromFTP', () => {
         ],
       },
     ])
+    const empty = {
+      ...savedSessions[0],
+      _count: { traineeOrganizations: 0, traineeRemovals: 0, correctionDeliveries: 0 },
+    }
+    mockFindCourseSessions.mockResolvedValueOnce([]).mockResolvedValueOnce([empty])
     mockDeleteCourseSessions.mockRejectedValueOnce(new Error('Deletion failed'))
 
     await expect(importCourseSessionsFromFTP()).rejects.toThrow('Deletion failed')

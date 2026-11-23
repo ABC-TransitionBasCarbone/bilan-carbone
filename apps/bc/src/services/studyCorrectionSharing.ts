@@ -20,6 +20,16 @@ export const getCorrectionTargetSnapshot = (recipients: CorrectionRecipient[]) =
       .sort(),
   )
 
+export const getSessionEndingToday = <T extends { endDate: Date }>(sessions: T[]) => {
+  const today = new Date()
+  return sessions.find(
+    ({ endDate }) =>
+      endDate.getUTCFullYear() === today.getFullYear() &&
+      endDate.getUTCMonth() === today.getMonth() &&
+      endDate.getUTCDate() === today.getDate(),
+  )
+}
+
 export const correctionShareSessionDates = () => {
   const now = new Date()
   return {

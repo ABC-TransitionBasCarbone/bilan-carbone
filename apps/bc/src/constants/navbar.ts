@@ -33,7 +33,7 @@ export const getStudyNavbarMenu = (
   studyId: string,
   studyName: string,
   isTransitionPlanActive: boolean = false,
-  hasObjectives: boolean = false,
+  canAccessPlanSections: boolean = false,
   studySimplified: boolean = false,
 ): Menu => {
   const genericEnv = getEnvironmentHandlingGenericEnvs(environment)
@@ -165,14 +165,14 @@ export const getStudyNavbarMenu = (
                 testId: 'study-initialization-link',
               },
               {
-                disabled: !hasObjectives,
-                href: hasObjectives ? `/etudes/${studyId}/trajectoires` : '#',
+                disabled: !canAccessPlanSections,
+                href: canAccessPlanSections ? `/etudes/${studyId}/trajectoires` : '#',
                 label: t('trajectories'),
                 testId: 'study-trajectories-link',
               },
               {
-                disabled: !hasObjectives,
-                href: hasObjectives ? `/etudes/${studyId}/actions` : '#',
+                disabled: !canAccessPlanSections,
+                href: canAccessPlanSections ? `/etudes/${studyId}/actions` : '#',
                 label: t('actionPlan'),
                 testId: 'study-action-plan-link',
               },
