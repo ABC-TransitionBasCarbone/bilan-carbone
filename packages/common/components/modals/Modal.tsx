@@ -19,6 +19,8 @@ export interface Props {
   className?: string
   big?: boolean
   actions?: ModalAction[]
+  closeLabel?: string
+  closeDisabled?: boolean
 }
 
 type ModalAction =
@@ -32,15 +34,26 @@ type ModalAction =
     })
   | (ButtonProps & { actionType: 'link'; href?: string; 'data-testid'?: string })
 
-const Modal = ({ className, label, open, onClose, title, children, actions, big }: Props) => (
-  <MUIModal
-    open={open}
-    onClose={onClose}
-    aria-labelledby={`${label}-modal-title`}
-    aria-describedby={`${label}-modal-description`}
-    data-testid={`${label}-modal`}
-  >
-    <Box className={classNames(styles.box, className, 'flex-col', { [styles.big]: big })}>
+const Modal = ({
+  className,
+  label,
+  open,
+  onClose,
+  title,
+  children,
+  actions,
+  big,
+  closeLabel,
+  closeDisabled,
+}: Props) => (
+  <MUIModal open={open} onClose={closeDisabled ? undefined : onClose} data-testid={`${label}-modal`}>
+    <Box
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={title ? `${label}-modal-title` : undefined}
+      aria-describedby={`${label}-modal-description`}
+      className={classNames(styles.box, className, 'flex-col', { [styles.big]: big })}
+    >
       <div className={classNames(title ? 'justify-between mb1' : 'justify-end', 'align-center')}>
         {title && (
           <Typography id={`${label}-modal-title`} variant="h6" sx={{ fontWeight: 'bold' }}>
@@ -48,8 +61,8 @@ const Modal = ({ className, label, open, onClose, title, children, actions, big 
           </Typography>
         )}
 
-        <IconButton color="primary" onClick={onClose}>
-          <CloseIcon data-testid='close-modal-button' />
+        <IconButton color="primary" aria-label={closeLabel} disabled={closeDisabled} onClick={onClose}>
+          <CloseIcon data-testid="close-modal-button" />
         </IconButton>
       </div>
 

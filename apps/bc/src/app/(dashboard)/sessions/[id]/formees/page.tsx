@@ -1,6 +1,7 @@
 import CourseSessionTraineesActions from '@/components/courseSession/CourseSessionTraineesActions'
 import CourseSessionTraineesTable from '@/components/courseSession/CourseSessionTraineesTable'
 import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
+import ShareStudyCorrectionButton from '@/components/study/buttons/ShareStudyCorrectionButton'
 import { getCourseSessionDetails, getProfessorCourseSessionTrainees } from '@/services/serverFunctions/courseSession'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
@@ -24,6 +25,7 @@ const SessionTraineesPage = async ({ params }: Props & UserSessionProps) => {
   }
 
   const t = await getTranslations('courseSessions')
+  const { endDate, canShareCorrection } = sessionResponse.data
 
   return (
     <Block
@@ -33,14 +35,11 @@ const SessionTraineesPage = async ({ params }: Props & UserSessionProps) => {
       actions={[
         {
           actionType: 'node',
-          node: (
-            <CourseSessionTraineesActions
-              sessionId={id}
-              trainees={response.data}
-              endDate={sessionResponse.data.endDate}
-            />
-          ),
+          node: <CourseSessionTraineesActions sessionId={id} trainees={response.data} endDate={endDate} />,
         },
+        ...(canShareCorrection
+          ? [{ actionType: 'node' as const, node: <ShareStudyCorrectionButton courseSessionId={id} /> }]
+          : []),
         {
           actionType: 'link',
           href: `/sessions/${id}`,

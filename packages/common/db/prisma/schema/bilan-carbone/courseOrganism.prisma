@@ -42,6 +42,7 @@ model CourseSession {
 
   traineeOrganizations CourseSessionTraineeOrganization[]
   traineeRemovals      CourseSessionTraineeRemoval[]
+  correctionDeliveries StudyCorrectionDelivery[]
 
   @@unique([courseOrganismId, name, environment])
   @@index([professorOrganizationVersionId])

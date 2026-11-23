@@ -1,6 +1,7 @@
 import ProgressBar from '@/components/base/ProgressBar'
 import { StudyCardItem } from '@/db/study'
 import { hasAccessToEmissionSourceValidation, hasRoleOnStudy } from '@/services/permissions/environment'
+import { canShareStudyCorrection } from '@/services/permissions/study.utils'
 import { getDisplayedRoleOnStudy } from '@/utils/study'
 import Box from '@abc-transitionbascarbone/common/components/base/Box'
 import { Button } from '@abc-transitionbascarbone/common/ui'
@@ -10,6 +11,7 @@ import classNames from 'classnames'
 import { UserSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
 import GlossaryIconModal from '../../modals/GlossaryIconModal'
+import ShareStudyCorrectionButton from '../buttons/ShareStudyCorrectionButton'
 import styles from './StudyCard.module.css'
 import StudyName from './StudyName'
 
@@ -25,6 +27,7 @@ const StudyCard = async ({ study, user, simplified }: Props) => {
 
   const showRoleInChip = hasRoleOnStudy(user.environment)
   const accountRoleOnStudy = getDisplayedRoleOnStudy(user, study)
+  const showShareCorrection = canShareStudyCorrection(user, study)
 
   if (!accountRoleOnStudy) {
     return null
@@ -37,8 +40,9 @@ const StudyCard = async ({ study, user, simplified }: Props) => {
   return (
     <li data-testid="study" className="flex">
       <Box className={classNames(styles.card, 'flex-col grow w100')}>
-        <div className="justify-center">
+        <div className={showShareCorrection ? styles.shareHeader : 'justify-center'}>
           <StudyName studyId={id} name={name} role={showRoleInChip ? accountRoleOnStudy : null} clickable />
+          {showShareCorrection && <ShareStudyCorrectionButton studyId={id} compact />}
         </div>
         <p className={classNames(styles.student, 'align-center')} data-testid="study-student">
           <PersonOutlineIcon aria-hidden="true" />

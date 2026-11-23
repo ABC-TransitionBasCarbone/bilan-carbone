@@ -168,6 +168,7 @@ describe('getProfessorCourseSessionTrainees server function', () => {
       id: 'trainee-account',
       organizationVersionId: 'trainee-org',
       attendance: null,
+      corrections: [],
       user: { firstName: 'Camille', lastName: 'Martin', email: 'camille@example.com' },
     },
   ]
@@ -188,13 +189,24 @@ describe('getProfessorCourseSessionTrainees server function', () => {
       mockGetSession.mockResolvedValue(courseSession)
     })
 
-    it('returns session details without loading studies or trainees', async () => {
-      expect(await getCourseSessionDetails(courseSession.id)).toEqual({ success: true, data: courseSession })
-      expect(mockGetSession).toHaveBeenCalledWith(
-        professor.organizationVersionId,
-        professor.environment,
-        courseSession.id,
-      )
+    it('returns session details and disables correction sharing once the session ended 14 days ago', async () => {
+      jest.useFakeTimers({ now: new Date('2026-11-18T23:59:59.999Z') })
+      try {
+        expect(await getCourseSessionDetails(courseSession.id)).toEqual({
+          success: true,
+          data: { ...courseSession, canShareCorrection: true },
+        })
+        expect(mockGetSession).toHaveBeenCalledTimes(2)
+
+        jest.setSystemTime(new Date('2026-11-19T00:00:00.000Z'))
+        expect(await getCourseSessionDetails(courseSession.id)).toEqual({
+          success: true,
+          data: { ...courseSession, canShareCorrection: false },
+        })
+      } finally {
+        jest.useRealTimers()
+      }
+
       expect(mockGetStudies).not.toHaveBeenCalled()
       expect(getCourseSessionTrainees).not.toHaveBeenCalled()
     })

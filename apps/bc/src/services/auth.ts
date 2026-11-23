@@ -263,8 +263,8 @@ export const getAuthenticatedAccountWithOrga = async () => {
   }
 
   const account = await getAccountById(session.user.accountId)
-  if (!account?.organizationVersionId || !account.organizationVersion) {
-    console.error('getAuthenticatedAccountWithOrga: account has no organization version', {
+  if (account?.status !== UserStatus.ACTIVE || !account.organizationVersionId || !account.organizationVersion) {
+    console.error('getAuthenticatedAccountWithOrga: account inactive or missing organization version', {
       accountId: session.user.accountId,
     })
     throw new Error(NOT_AUTHORIZED)

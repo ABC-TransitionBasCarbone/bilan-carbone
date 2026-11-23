@@ -1,6 +1,7 @@
 'use client'
 
 import type { FullStudy } from '@/db/study'
+import { canShareStudyCorrection } from '@/services/permissions/study.utils'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import { Environment, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
 import { UserSession } from 'next-auth'
@@ -24,6 +25,7 @@ interface Props {
 const StudyDataEntryInfographyPage = ({
   study,
   userRole,
+  user,
   canDeleteStudy,
   canDuplicateStudy,
   duplicableEnvironments,
@@ -54,6 +56,7 @@ const StudyDataEntryInfographyPage = ({
         organizationVersionId={organizationVersionId}
         canDeleteStudy={canDeleteStudy}
         canDuplicateStudy={canDuplicateStudy}
+        showShareCorrection={canShareStudyCorrection(user, study)}
         duplicableEnvironments={duplicableEnvironments}
         userRole={userRole}
         siteId={siteId}

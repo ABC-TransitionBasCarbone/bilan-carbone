@@ -18,12 +18,14 @@ import { useForm } from 'react-hook-form'
 import DeletionModal from '../modals/DeletionModal'
 import DuplicateStudyModal from '../modals/DuplicateStudyModal'
 import EmissionSourceButtons from './buttons/EmissionSourceButtons'
+import ShareStudyCorrectionButton from './buttons/ShareStudyCorrectionButton'
 
 interface Props {
   study: FullStudy
   organizationVersionId: string | null
   canDeleteStudy?: boolean
   canDuplicateStudy?: boolean
+  showShareCorrection?: boolean
   duplicableEnvironments: Environment[]
   userRole: StudyRole
   siteId: string
@@ -35,6 +37,7 @@ const StudyManagementActions = ({
   organizationVersionId,
   canDeleteStudy,
   canDuplicateStudy,
+  showShareCorrection,
   duplicableEnvironments,
   userRole,
   siteId,
@@ -118,9 +121,13 @@ const StudyManagementActions = ({
         ]
       : []
 
+  const shareCorrectionAction: BlockProps['actions'] = showShareCorrection
+    ? [{ actionType: 'node', node: <ShareStudyCorrectionButton studyId={study.id} /> }]
+    : []
+
   return (
     <>
-      {children([...duplicateAction, ...deleteAction, ...downloadEmissionSourceAction])}
+      {children([...shareCorrectionAction, ...duplicateAction, ...deleteAction, ...downloadEmissionSourceAction])}
       {deleting && (
         <DeletionModal
           form={form}
