@@ -1737,7 +1737,7 @@ describe('getCourseSessionsFromFTP', () => {
 
   it('deletes empty sessions and closes sessions with attendance or sent corrections', async () => {
     jest.setSystemTime(new Date('2026-11-19T13:00:00Z'))
-    const endDate = new Date('2026-11-05T00:00:00Z')
+    const endDate = new Date('2026-11-05T13:00:00Z')
     const emptyCount = { traineeOrganizations: 0, traineeRemovals: 0, correctionDeliveries: 0 }
     const first = {
       ...withParticipants(savedSessions[0]),
@@ -1792,7 +1792,7 @@ describe('getCourseSessionsFromFTP', () => {
       [
         {
           where: { id: second.id, endDate: { gt: endDate } },
-          data: { endDate, startDate: new Date('2026-11-04T00:00:00Z') },
+          data: { endDate, startDate: new Date('2026-11-04T13:00:00Z') },
         },
       ],
     ])

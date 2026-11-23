@@ -130,7 +130,7 @@ export const importCourseSessionsFromFTP = async () => {
 
   const today = new Date()
   today.setUTCHours(0, 0, 0, 0)
-  const closedEndDate = correctionShareSessionDates(today).endDate.gt
+  const closedEndDate = correctionShareSessionDates().endDate.gt
   const closedStartDate = new Date(closedEndDate)
   closedStartDate.setUTCDate(closedStartDate.getUTCDate() - 1)
   const notFinishedSessions = sessions.filter(({ endDate }) => endDate >= today)

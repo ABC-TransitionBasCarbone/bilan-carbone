@@ -1,5 +1,4 @@
 import { OTHER_TAG_ID } from '@/constants/tag.constants'
-import { StudyTagFamilyWithTags } from '@/db/study'
 import { Checkbox, FormControl, FormControlLabel, InputLabel, Menu, MenuItem, Select } from '@mui/material'
 import classNames from 'classnames'
 import { useTranslations } from 'next-intl'
@@ -10,8 +9,10 @@ const OTHER_FAMILY_ID = 'otherFamily'
 
 type ChildrenType = { id: string; label: string }
 
+type TagFamily = { id: string; name: string; tags: Array<{ id: string; name: string }> }
+
 interface TagFilterProps {
-  tagFamilies: StudyTagFamilyWithTags[]
+  tagFamilies: TagFamily[]
   selectedTagIds: string[]
   onChange: (ids: string[]) => void
   className?: string

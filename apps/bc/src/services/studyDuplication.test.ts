@@ -704,7 +704,6 @@ describe('shared training study duplication', () => {
                 id: 'old-tag',
                 name: 'Tag',
                 familyId: 'old-family',
-                sourceStudyTagId: null,
                 color: null,
                 createdAt: new Date('2026-01-01'),
                 updatedAt: new Date('2026-01-01'),
