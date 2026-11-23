@@ -496,6 +496,7 @@ describe('shared training study duplication', () => {
       prismaClient,
     )
 
+    jest.clearAllMocks()
     await duplicateTrainingStudy(
       sourceStudy,
       [{ id: 'learner', environment: Environment.COURSE_BC }],
@@ -511,8 +512,10 @@ describe('shared training study duplication', () => {
     expect(mockCreateStudy.mock.lastCall?.[0].tagFamilies.create[0].tags.createMany.data).toEqual([
       { name: 'Tag', color: null, sourceStudyTagId: 'source-tag' },
     ])
-    expect(createTrajectoryWithObjectives).toHaveBeenCalledTimes(2)
-    expect(createAction).toHaveBeenCalledTimes(1)
+    expect(mockCreateTransitionPlan).not.toHaveBeenCalled()
+    expect(createTrajectoryWithObjectives).not.toHaveBeenCalled()
+    expect(createAction).not.toHaveBeenCalled()
+    expect(getEngagementActions).toHaveBeenCalledTimes(1)
 
     await duplicateTrainingTransitionPlan(
       sourceStudy,
@@ -536,6 +539,37 @@ describe('shared training study duplication', () => {
       expect.objectContaining({ tags: { create: [{ studyTagId: 'copied-tag' }] } }),
       prismaClient,
     )
+  })
+
+  it.each([false, true])('copies a trainee plan once if included (includePlan=%s)', async (includePlan) => {
+    const plan = {
+      id: 'source-plan',
+      studyId: sourceStudy.id,
+      sectenVersionId: 'secten-version',
+      createdAt: new Date('2026-01-01'),
+      updatedAt: new Date('2026-01-01'),
+    }
+    mockGetTransitionPlan.mockResolvedValue(plan)
+    mockCreateTransitionPlan.mockResolvedValue({ ...plan, id: 'copied-plan', studyId: copiedStudy.id })
+
+    await duplicateTrainingStudy(
+      sourceStudy,
+      [{ id: 'learner', environment: Environment.COURSE_BC }],
+      StudyRole.Reader,
+      prismaClient,
+      undefined,
+      {
+        organizationVersionId: 'learner-organization',
+        siteIds,
+        correction: { name: 'Correction', creatorId: 'professor', includePlan },
+      },
+    )
+
+    expect(mockCreateTransitionPlan).toHaveBeenCalledTimes(includePlan ? 1 : 0)
+    expect(getEngagementActions).toHaveBeenCalledTimes(1)
+    if (includePlan) {
+      expect(mockCreateTransitionPlan).toHaveBeenCalledWith(copiedStudy.id, 'secten-version', prismaClient)
+    }
   })
 
   it('preserves the legacy destination, shared sites, suffix and multiple learner rights', async () => {

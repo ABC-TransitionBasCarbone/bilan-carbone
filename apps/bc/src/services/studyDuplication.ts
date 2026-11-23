@@ -435,7 +435,9 @@ export const duplicateTrainingStudy = async (
     target?.siteIds,
     target?.emissionFactorIds,
   )
-  await duplicateTrainingTransitionPlan(study, createdStudyWithSites, tx, target?.siteIds)
+  if (!target?.correction || target.correction.includePlan) {
+    await duplicateTrainingTransitionPlan(study, createdStudyWithSites, tx, target?.siteIds)
+  }
   const engagementActions = await getEngagementActions(study.id, tx)
   for (const action of engagementActions) {
     const sites = action.sites.map((site) => {
@@ -458,15 +460,6 @@ export const duplicateTrainingStudy = async (
         sites: { connect: sites },
       },
       tx,
-    )
-  }
-
-  if (target?.correction && target.correction.includePlan) {
-    await duplicateTrainingTransitionPlan(
-      study,
-      createdStudyWithSites,
-      tx,
-      target?.correction ? 'correction' : target?.siteIds,
     )
   }
   return createdStudy
