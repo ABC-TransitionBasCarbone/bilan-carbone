@@ -36,7 +36,35 @@
       }
     },
     "cannotCreateStudy": "Da biste mogli izrađivati Bilan Carbone®, morate biti osposobljeni za tu metodu! <link>Saznajte više</link>",
-    "canCreateFootPrint": "Ako se vaše osposobljavanje ne prikazuje na vašem računu, pošaljite svoju potvrdu <support>podršci</support>. Ako je pravilno prepoznato i želite izrađivati Bilan Carbone®, zatražite od administratora vaše organizacije da vašu ulogu promijeni u suradnik·ca ili administrator·ica. Više informacija dostupno je u <faq>FAQ-u</faq>."
+    "canCreateFootPrint": "Ako se vaše osposobljavanje ne prikazuje na vašem računu, pošaljite svoju potvrdu <support>podršci</support>. Ako je pravilno prepoznato i želite izrađivati Bilan Carbone®, zatražite od administratora vaše organizacije da vašu ulogu promijeni u suradnik·ca ili administrator·ica. Više informacija dostupno je u <faq>FAQ-u</faq>.",
+    "shareCorrection": "Podijeli rješenje s učenicima",
+    "correctionSession": "Odaberite sesiju",
+    "noCorrectionSessions": "Nemate nijednu sesiju u tijeku ili završenu prije manje od 14 dana.",
+    "correctionSharing": {
+      "selectCorrection": "Odaberite rješenje",
+      "noCorrections": "Nema dostupnih rješenja za ovu sesiju.",
+      "sentCorrections": "Poslana rješenja",
+      "studyWithPlan": "{study} — S planom tranzicije (Plan de transition)",
+      "studyWithoutPlan": "{study} — Bez plana tranzicije (Plan de transition)",
+      "notSent": "Nijedno rješenje nije poslano",
+      "withoutPlan": "Rješenje poslano bez plana tranzicije (Plan de transition)",
+      "withPlan": "Rješenje poslano s planom tranzicije (Plan de transition)",
+      "recipients": "Polaznici",
+      "targeted": "Primatelj ovog slanja",
+      "noTrainees": "Nijedan polaznik nije prijavljen u ovoj sesiji.",
+      "missingRecipients": "Rješenje će biti poslano samo polaznicima koji ga još nisu primili.",
+      "upgradeRecipients": "Možete dodati plan tranzicije (Plan de transition) za polaznike koji su već primili rješenje bez plana.",
+      "alreadySent": "Svi polaznici su već primili rješenje s planom tranzicije (Plan de transition).",
+      "withPlanChoice": "Pošalji s planom tranzicije (Plan de transition)",
+      "confirmTitle": "Provjerite primatelje rješenja",
+      "confirmWithPlan": "Sesija « {session} »: podijelit ćete rješenje s planom tranzicije (Plan de transition) s {count, plural, one {# istaknutim polaznikom} few {# istaknuta polaznika} other {# istaknutih polaznika}} iznad.",
+      "confirmWithoutPlan": "Sesija « {session} »: podijelit ćete rješenje bez plana tranzicije (Plan de transition) s {count, plural, one {# istaknutim polaznikom} few {# istaknuta polaznika} other {# istaknutih polaznika}} iznad.",
+      "sharingWarning": "Pažnja: ova je radnja nepovratna.",
+      "sessionName": "Unesite naziv sesije za potvrdu",
+      "confirmSharing": "Potvrdi slanje",
+      "changed": "Primatelji ili sesija su se promijenili. Provjerite popis prije ponovne potvrde.",
+      "recorded": "Slanje zabilježeno."
+    }
   },
   "emissionFactors": {
     "table": {

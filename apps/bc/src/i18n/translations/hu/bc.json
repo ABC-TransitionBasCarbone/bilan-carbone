@@ -36,7 +36,35 @@
       }
     },
     "cannotCreateStudy": "Bilan Carbone® készítéséhez el kell végezni a módszertani képzést! <link>Tudjon meg többet</link>",
-    "canCreateFootPrint": "Ha a képzése nem jelenik meg a fiókjában, küldje el az igazolását a <support>ügyfélszolgálatnak</support>. Ha az megfelelően fel van ismerve, és szeretne Bilan Carbone® értékeléseket létrehozni, kérje meg szervezete egyik adminisztrátorát, hogy módosítsa a szerepkörét munkatárssá vagy adminisztrátorrá. További információk a <faq>GYIK-ben</faq> érhetők el."
+    "canCreateFootPrint": "Ha a képzése nem jelenik meg a fiókjában, küldje el az igazolását a <support>ügyfélszolgálatnak</support>. Ha az megfelelően fel van ismerve, és szeretne Bilan Carbone® értékeléseket létrehozni, kérje meg szervezete egyik adminisztrátorát, hogy módosítsa a szerepkörét munkatárssá vagy adminisztrátorrá. További információk a <faq>GYIK-ben</faq> érhetők el.",
+    "shareCorrection": "Megoldókulcs megosztása a tanulókkal",
+    "correctionSession": "Munkamenet kiválasztása",
+    "noCorrectionSessions": "Nincs folyamatban lévő vagy 14 napnál régebben befejezett munkamenete.",
+    "correctionSharing": {
+      "selectCorrection": "Megoldókulcs kiválasztása",
+      "noCorrections": "Ehhez a munkamenethez nem áll rendelkezésre megoldókulcs.",
+      "sentCorrections": "Elküldött megoldókulcsok",
+      "studyWithPlan": "{study} — Plan de transition-nal",
+      "studyWithoutPlan": "{study} — Plan de transition nélkül",
+      "notSent": "Nincs elküldött megoldókulcs",
+      "withoutPlan": "Megoldókulcs elküldve Plan de transition nélkül",
+      "withPlan": "Megoldókulcs elküldve Plan de transition-nal",
+      "recipients": "Gyakornokok",
+      "targeted": "Ennek a küldeménynek a címzettje",
+      "noTrainees": "Nincs aláíró gyakornok ebben a munkamenetben.",
+      "missingRecipients": "A megoldókulcs csak azoknak a gyakornokoknak lesz elküldve, akik még nem kapták meg.",
+      "upgradeRecipients": "Hozzáadhatja a Plan de transition-t azoknak a gyakornokoknak, akik már megkapták a megoldókulcsot a terv nélkül.",
+      "alreadySent": "Minden gyakornok már megkapta a megoldókulcsot a Plan de transition-nal.",
+      "withPlanChoice": "Küldés a Plan de transition-nal",
+      "confirmTitle": "A megoldókulcs címzettjeinek ellenőrzése",
+      "confirmWithPlan": "„{session}” munkamenet: a megoldókulcsot a Plan de transition-nal fogja megosztani a fent {count, plural, one {# kiemelt gyakornokkal} other {# kiemelt gyakornokkal}}.",
+      "confirmWithoutPlan": "„{session}” munkamenet: a megoldókulcsot a Plan de transition nélkül fogja megosztani a fent {count, plural, one {# kiemelt gyakornokkal} other {# kiemelt gyakornokkal}}.",
+      "sharingWarning": "Figyelem: ez a művelet visszafordíthatatlan.",
+      "sessionName": "A megerősítéshez írja be a munkamenet nevét",
+      "confirmSharing": "Küldés megerősítése",
+      "changed": "A címzettek vagy a munkamenet megváltozott. Ellenőrizze a listát, mielőtt újra megerősítené.",
+      "recorded": "Küldés rögzítve."
+    }
   },
   "emissionFactors": {
     "table": {
