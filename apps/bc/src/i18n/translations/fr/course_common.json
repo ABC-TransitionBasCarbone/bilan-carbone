@@ -27,7 +27,7 @@
     "deleteTraineeDescription": "Êtes-vous sûr.e de vouloir supprimer le stagiaire {firstName} {lastName} de votre session ?",
     "studies": "Les études des stagiaires",
     "empty": "Aucune étude pour les stagiaires de cette session pour le moment.",
-    "sessionCode": "Code de session",
+    "sessionCode": "Code de session : {code}",
     "types": {
       "INITIAL": "Initial",
       "PROFESSIONNEL": "Professionnel",

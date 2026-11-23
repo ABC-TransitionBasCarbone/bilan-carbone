@@ -27,7 +27,7 @@
     "deleteTraineeDescription": "Are you sure you want to remove trainee {firstName} {lastName} from your session?",
     "studies": "Trainees' studies",
     "empty": "There are no studies for this session's trainees yet.",
-    "sessionCode": "Session code",
+    "sessionCode": "Session code: {code}",
     "types": {
       "INITIAL": "Initial",
       "PROFESSIONNEL": "Professional",

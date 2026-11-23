@@ -3,6 +3,7 @@ import LinkButton from '@abc-transitionbascarbone/common/components/base/LinkBut
 import type { CourseSession } from '@abc-transitionbascarbone/common/db'
 import { formatDateFr } from '@abc-transitionbascarbone/common/utils'
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined'
+import NumbersIcon from '@mui/icons-material/Numbers'
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline'
 import { getTranslations } from 'next-intl/server'
 import styles from './CourseSessionHeader.module.css'
@@ -32,8 +33,9 @@ const CourseSessionHeader = async ({ session }: Props) => {
                 <time dateTime={session.endDate.toISOString()}>{formatDateFr(session.endDate)}</time>
               </span>
             </p>
-            <p>
-              {t('sessionCode')}: {session.code}
+            <p className={styles.dates}>
+              <NumbersIcon aria-hidden="true" />
+              {t('sessionCode', { code: session.code })}
             </p>
           </div>
         </div>
