@@ -169,6 +169,7 @@ import {
   canReadStudy,
   canUpgradeSourceVersion,
   getEnvironmentsForDuplication,
+  hasEditAccessOnStudy,
   NEWGetAccountRoleOnStudy,
 } from '../permissions/study'
 import { isAdminOnStudyOrga } from '../permissions/study.utils'
@@ -2236,18 +2237,39 @@ export const addEngagementAction = async ({ studyId, sites, ...command }: AddEng
   withServerResponse('addEngagementAction', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
+      console.error('addEngagementAction: user not authenticated', { studyId })
       throw new Error(NOT_AUTHORIZED)
     }
 
     const study = await getStudyById(studyId, session.user.organizationVersionId)
     if (!study) {
+      console.error('addEngagementAction: study not found', {
+        accountId: session.user.accountId,
+        studyId,
+      })
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await hasEditAccessOnStudy(study.id, session))) {
+      console.error('addEngagementAction: user cannot edit study', {
+        accountId: session.user.accountId,
+        studyId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 
     if (!hasAccessToEngagementActions(session.user.environment, study.simplified)) {
+      console.error('addEngagementAction: user cannot access engagement actions', {
+        accountId: session.user.accountId,
+        studyId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
     if (sites.length === 0) {
+      console.error('addEngagementAction: no sites selected', {
+        accountId: session.user.accountId,
+        studyId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -2283,19 +2305,54 @@ export const editEngagementAction = async (id: string, { studyId, sites, ...comm
   withServerResponse('editEngagementAction', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
+      console.error('editEngagementAction: user not authenticated', { actionId: id, studyId })
       throw new Error(NOT_AUTHORIZED)
     }
 
     const study = await getStudyById(studyId, session.user.organizationVersionId)
     if (!study) {
+      console.error('editEngagementAction: study not found', {
+        accountId: session.user.accountId,
+        actionId: id,
+        studyId,
+      })
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await hasEditAccessOnStudy(study.id, session))) {
+      console.error('editEngagementAction: user cannot edit study', {
+        accountId: session.user.accountId,
+        actionId: id,
+        studyId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 
     if (!hasAccessToEngagementActions(session.user.environment, study.simplified)) {
+      console.error('editEngagementAction: user cannot access engagement actions', {
+        accountId: session.user.accountId,
+        actionId: id,
+        studyId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 
     if (sites.length === 0) {
+      console.error('editEngagementAction: no sites selected', {
+        accountId: session.user.accountId,
+        actionId: id,
+        studyId,
+      })
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const action = await getEngagementActionById(id)
+    if (!action || action.studyId !== studyId) {
+      console.error('editEngagementAction: action does not belong to study', {
+        accountId: session.user.accountId,
+        actionId: id,
+        studyId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -2308,21 +2365,46 @@ export const editEngagementAction = async (id: string, { studyId, sites, ...comm
 export const deleteEngagementAction = async (id: string, studyId: string) =>
   withServerResponse('deleteEngagementAction', async () => {
     const session = await dbActualizedAuth()
-    const action = await getEngagementActionById(id)
-    if (!action) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
     if (!session || !session.user) {
+      console.error('deleteEngagementAction: user not authenticated', { actionId: id, studyId })
       throw new Error(NOT_AUTHORIZED)
     }
 
     const study = await getStudyById(studyId, session.user.organizationVersionId)
     if (!study) {
+      console.error('deleteEngagementAction: study not found', {
+        accountId: session.user.accountId,
+        actionId: id,
+        studyId,
+      })
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await hasEditAccessOnStudy(study.id, session))) {
+      console.error('deleteEngagementAction: user cannot edit study', {
+        accountId: session.user.accountId,
+        actionId: id,
+        studyId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 
     if (!hasAccessToEngagementActions(session.user.environment, study.simplified)) {
+      console.error('deleteEngagementAction: user cannot access engagement actions', {
+        accountId: session.user.accountId,
+        actionId: id,
+        studyId,
+      })
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const action = await getEngagementActionById(id)
+    if (!action || action.studyId !== studyId) {
+      console.error('deleteEngagementAction: action does not belong to study', {
+        accountId: session.user.accountId,
+        actionId: id,
+        studyId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 

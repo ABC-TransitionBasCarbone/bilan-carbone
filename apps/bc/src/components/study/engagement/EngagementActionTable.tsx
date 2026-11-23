@@ -20,11 +20,12 @@ import { useEffect, useMemo, useState } from 'react'
 interface Props {
   actions: EngagementActionWithSites[]
   studySites: FullStudy['sites']
+  canEdit: boolean
   openEditModal: (action: EngagementActionWithSites) => void
   openDeleteModal: (action: EngagementActionWithSites) => void
 }
 
-const EngagementActionTable = ({ actions, studySites, openEditModal, openDeleteModal }: Props) => {
+const EngagementActionTable = ({ actions, studySites, canEdit, openEditModal, openDeleteModal }: Props) => {
   const t = useTranslations('study.engagementActions.table')
   const tCommon = useTranslations('study.organization')
   const tTargets = useTranslations('study.engagementActions.targets')
@@ -96,13 +97,13 @@ const EngagementActionTable = ({ actions, studySites, openEditModal, openDeleteM
           accessorFn: () => '',
           cell: ({ row }) => (
             <>
-              <TableActionButton type="edit" onClick={() => openEditModal(row.original)} />
-              <TableActionButton type="delete" onClick={() => openDeleteModal(row.original)} />
+              <TableActionButton type="edit" disabled={!canEdit} onClick={() => openEditModal(row.original)} />
+              <TableActionButton type="delete" disabled={!canEdit} onClick={() => openDeleteModal(row.original)} />
             </>
           ),
         },
       ] as ColumnDef<EngagementActionWithSites>[],
-    [t, tCommon, tSteps, tTargets, tPhases, studySites, openEditModal, openDeleteModal],
+    [t, tCommon, tSteps, tTargets, tPhases, studySites, canEdit, openEditModal, openDeleteModal],
   )
 
   const table = useReactTable({
