@@ -13,7 +13,7 @@ export const getCorrectionDeliverySession = (
       id: courseSessionId,
       professorOrganizationVersionId: user.organizationVersionId,
       environment: user.environment,
-      ...correctionShareSessionDates(new Date()),
+      ...correctionShareSessionDates(),
     },
     select: {
       name: true,

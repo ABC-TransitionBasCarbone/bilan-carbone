@@ -97,20 +97,25 @@ describe('course session database queries', () => {
     })
     expect(result).toEqual(session)
 
-    const mockFindSessions = jest.mocked(prismaClient.courseSession.findMany)
-    const recentSession = { ...session, endDate: new Date('2026-11-06') }
-    mockFindSessions.mockResolvedValue([recentSession])
-    await expect(getProfessorCourseSessions(professor, new Date('2026-11-19'))).resolves.toEqual([recentSession])
-    expect(mockFindSessions).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: {
-          professorOrganizationVersionId: professor.organizationVersionId,
-          environment: professor.environment,
-          startDate: { lte: new Date('2026-11-19') },
-          endDate: { gt: new Date('2026-11-05') },
-        },
-      }),
-    )
+    jest.useFakeTimers().setSystemTime(new Date('2026-11-19T00:00:00.000Z'))
+    try {
+      const recentSession = { ...session, endDate: new Date('2026-11-06') }
+      const mockFindSessions = jest.mocked(prismaClient.courseSession.findMany)
+      mockFindSessions.mockResolvedValue([recentSession])
+      await expect(getProfessorCourseSessions(professor, false)).resolves.toEqual([recentSession])
+      expect(mockFindSessions).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            professorOrganizationVersionId: professor.organizationVersionId,
+            environment: professor.environment,
+            startDate: { lte: new Date('2026-11-19T00:00:00.000Z') },
+            endDate: { gt: new Date('2026-11-05T00:00:00.000Z') },
+          },
+        }),
+      )
+    } finally {
+      jest.useRealTimers()
+    }
   })
 
   it('filters studies by type, environment and creator enrollment, not study invitations', async () => {

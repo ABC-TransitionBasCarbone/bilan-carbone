@@ -73,7 +73,7 @@ export const getCorrectionStudiesForSession = async (input: string) =>
       account.organizationVersionId,
       account.environment,
       courseSessionId,
-      new Date(),
+      false,
     )
     if (!session) {
       console.error('getCorrectionStudiesForSession: session not authorized or ineligible', {

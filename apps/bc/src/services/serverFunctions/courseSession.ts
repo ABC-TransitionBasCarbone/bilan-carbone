@@ -31,7 +31,7 @@ export const getCourseSessionsForCorrectionSharing = async () =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    return getProfessorCourseSessions(account, new Date())
+    return getProfessorCourseSessions(account, false)
   })
 
 export const getProfessorCourseSession = async (id: string) =>

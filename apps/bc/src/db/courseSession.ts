@@ -11,7 +11,7 @@ import { createUsersWithAccount } from './user'
 
 export const getProfessorCourseSessions = async (
   account: Pick<UserSession, 'organizationVersionId' | 'environment'>,
-  correctionShareDate?: Date,
+  allSessions: boolean = true,
 ) => {
   if (!account.organizationVersionId) {
     return []
@@ -21,7 +21,7 @@ export const getProfessorCourseSessions = async (
     where: {
       professorOrganizationVersionId: account.organizationVersionId,
       environment: account.environment,
-      ...(correctionShareDate && correctionShareSessionDates(correctionShareDate)),
+      ...(!allSessions && correctionShareSessionDates()),
     },
     select: { id: true, name: true, startDate: true, endDate: true },
     orderBy: [{ startDate: 'desc' }, { name: 'asc' }],
@@ -50,14 +50,14 @@ export const getCourseSessionForProfessor = (
   organizationVersionId: string,
   environment: Environment,
   id: string,
-  correctionShareDate?: Date,
+  allSessions: boolean = true,
 ) =>
   prismaClient.courseSession.findFirst({
     where: {
       id,
       professorOrganizationVersionId: organizationVersionId,
       environment,
-      ...(correctionShareDate && correctionShareSessionDates(correctionShareDate)),
+      ...(!allSessions && correctionShareSessionDates()),
     },
     select: { id: true, name: true, type: true, startDate: true, endDate: true },
   })
