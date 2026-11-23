@@ -8,6 +8,7 @@ import { useDuplicateStudy } from '@/hooks/useDuplicateStudy'
 import { hasAccessToDuplicateStudy } from '@/services/permissions/environmentAdvanced'
 import { CreateStudyCommand, CreateStudyCommandValidation } from '@/services/serverFunctions/study.command'
 import { CA_UNIT_VALUES, displayCA } from '@/utils/number'
+import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/common/db'
 import { Environment, SiteCAUnit } from '@abc-transitionbascarbone/common/db/enums'
 import { zodResolver } from '@hookform/resolvers/zod'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -33,6 +34,8 @@ interface Props {
   defaultOrganizationVersion?: OrganizationWithSites
   caUnit: SiteCAUnit
   duplicateStudyId: string | null
+  canSelectEmissionFactorVersions: boolean
+  emissionFactorVersions: Pick<EmissionFactorImportVersion, 'id' | 'source' | 'name'>[]
 }
 
 const NewStudyPage = ({
@@ -42,6 +45,8 @@ const NewStudyPage = ({
   defaultOrganizationVersion,
   caUnit,
   duplicateStudyId,
+  canSelectEmissionFactorVersions,
+  emissionFactorVersions,
 }: Props) => {
   const [organizationVersion, setOrganizationVersion] = useState<OrganizationWithSites>()
   const [simplified, setSimplified] = useState<boolean>(false)
@@ -49,6 +54,16 @@ const NewStudyPage = ({
   const tNav = useTranslations('nav')
   const tStudy = useTranslations('study')
   const tSpinner = useTranslations('spinner')
+
+  const latestVersionBySource = new Map<
+    EmissionFactorImportVersion['source'],
+    Pick<EmissionFactorImportVersion, 'id' | 'source' | 'name'>
+  >()
+  emissionFactorVersions.forEach((version) => {
+    if (!latestVersionBySource.has(version.source)) {
+      latestVersionBySource.set(version.source, version)
+    }
+  })
 
   useEffect(() => {
     if (!hasAccessToDuplicateStudy(user.environment, simplified)) {
@@ -91,6 +106,12 @@ const NewStudyPage = ({
           academy: site.establishmentType ?? undefined,
         })) || [],
       exports: [],
+      emissionFactorVersions: canSelectEmissionFactorVersions
+        ? Array.from(latestVersionBySource.values()).map(({ id, source }) => ({
+            source,
+            importVersionId: id,
+          }))
+        : undefined,
     },
   })
 
@@ -135,6 +156,8 @@ const NewStudyPage = ({
                 duplicateStudyId={duplicateStudyId}
                 sourceStudy={sourceStudy}
                 simplified={simplified}
+                canSelectEmissionFactorVersions={canSelectEmissionFactorVersions}
+                emissionFactorVersions={emissionFactorVersions}
               />
             ),
           }}
@@ -145,6 +168,8 @@ const NewStudyPage = ({
               form={form}
               duplicateStudyId={duplicateStudyId}
               sourceStudy={sourceStudy}
+              canSelectEmissionFactorVersions={canSelectEmissionFactorVersions}
+              emissionFactorVersions={emissionFactorVersions}
             />
           }
         />

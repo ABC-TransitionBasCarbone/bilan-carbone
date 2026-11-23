@@ -508,6 +508,7 @@ export type DetailedEmissionFactor = AsyncReturnType<typeof getEmissionFactorDet
 export const getEmissionFactorImportVersionsBC = async (withArchived?: boolean) => {
   return prismaClient.emissionFactorImportVersion.findMany({
     where: { source: { not: Import.CUT }, ...(!withArchived && { archived: false }) },
+    orderBy: { createdAt: 'desc' },
   })
 }
 
@@ -543,6 +544,9 @@ export const getStudyEmissionFactorSources = async (studyId: string, withCut: bo
 
 export const getEmissionFactorVersionsBySource = async (source: Import) =>
   prismaClient.emissionFactorImportVersion.findMany({ where: { source }, orderBy: { createdAt: 'desc' } })
+
+export const getEmissionFactorImportVersionsByIds = async (ids: string[]) =>
+  prismaClient.emissionFactorImportVersion.findMany({ where: { id: { in: ids } } })
 
 export const getManualEmissionFactors = async (units: Unit[]) =>
   prismaClient.emissionFactor.findMany({ where: { importedFrom: Import.Manual, unit: { in: units } } })

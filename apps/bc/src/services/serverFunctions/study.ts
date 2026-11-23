@@ -18,6 +18,7 @@ import { createDocument, deleteDocument } from '@/db/document'
 import {
   getEmissionFactorsByIdsAndSource,
   getEmissionFactorsByImportedIdsAndVersion,
+  getEmissionFactorImportVersionsByIds,
   getEmissionFactorsImportActiveVersion,
   getEmissionFactorVersionsBySource,
   getStudyEmissionFactorSources,
@@ -52,6 +53,7 @@ import {
   getMinimalStudyForRights,
   getOrganizationStudiesBeforeDate,
   getPendingStudyCommentsCountFromAuthor,
+  getSourcesLatestImportVersionId,
   getStudiesSitesFromIds,
   getStudyAllowedUsersUnfiltered,
   getStudyById,
@@ -85,6 +87,7 @@ import {
   UserWithAccounts,
 } from '@/db/user'
 import { getLocale } from '@/i18n/locale'
+import { supportsStudyEmissionFactorVersionSelection } from '@/services/permissions/environment'
 import { buildStudyForDuplication, duplicateEmissionSources, getSitesForDuplication } from '@/services/studyDuplication'
 import { StudySiteFields, studySiteToSituation } from '@/services/studySiteToSituation'
 import { AccountWithUser } from '@/types/account.types'
@@ -234,7 +237,7 @@ export const getStudySite = async (studySiteId: string) =>
   })
 
 export const createStudyCommand = async (
-  { organizationVersionId, validator, sites, ...command }: CreateStudyCommand,
+  { organizationVersionId, validator, sites, emissionFactorVersions, ...command }: CreateStudyCommand,
   resultsUnit?: StudyResultUnit,
   sourceTagFamilies?: FullStudy['tagFamilies'],
   tx?: Prisma.TransactionClient,
@@ -247,8 +250,10 @@ export const createStudyCommand = async (
     }
 
     let courseSessionType: CourseSessionType | null = null
+    let isProfessor = false
     if (isCourseEnvironment(session.user.environment)) {
-      if (await isCourseProfessor(session.user.organizationVersionId, session.user.environment, tx)) {
+      isProfessor = await isCourseProfessor(session.user.organizationVersionId, session.user.environment, tx)
+      if (isProfessor) {
         if (!(await isInOrgaOrParentFromId(session.user.organizationVersionId, organizationVersionId))) {
           console.error('createStudyCommand: professor cannot create a study outside their organization', {
             accountId: session.user.accountId,
@@ -270,6 +275,52 @@ export const createStudyCommand = async (
         }
         courseSessionType = courseSessions[0].type
       }
+    }
+
+    let selectedEmissionFactorVersions: { source: Import; importVersionId: string }[] | undefined
+    if (emissionFactorVersions !== undefined) {
+      if (
+        !supportsStudyEmissionFactorVersionSelection(session.user.environment) ||
+        (session.user.role !== Role.SUPER_ADMIN && !isProfessor)
+      ) {
+        console.error('createStudyCommand: unauthorized emission factor version selection', {
+          accountId: session.user.accountId,
+          environment: session.user.environment,
+        })
+        throw new Error(NOT_AUTHORIZED)
+      }
+
+      const hasGHGP = command.exports.includes(Export.GHGP)
+      const sources = Object.values(Import).filter(
+        (source) => source !== Import.Manual && source !== Import.CUT && (source !== Import.AIB || hasGHGP),
+      )
+      const latestVersions = await getSourcesLatestImportVersionId(sources)
+      const selectedSources = new Set(emissionFactorVersions.map(({ source }) => source))
+      const hasInvalidSelection =
+        emissionFactorVersions.length !== latestVersions.length ||
+        selectedSources.size !== emissionFactorVersions.length ||
+        latestVersions.some((version) => !selectedSources.has(version.source))
+
+      const selectedImportVersions = await getEmissionFactorImportVersionsByIds(
+        emissionFactorVersions.map(({ importVersionId }) => importVersionId),
+      )
+      if (
+        hasInvalidSelection ||
+        selectedImportVersions.length !== emissionFactorVersions.length ||
+        emissionFactorVersions.some(
+          (selection) =>
+            !selectedImportVersions.some(
+              (version) => version.id === selection.importVersionId && version.source === selection.source,
+            ),
+        )
+      ) {
+        console.error('createStudyCommand: invalid emission factor version selection', {
+          accountId: session.user.accountId,
+          environment: session.user.environment,
+        })
+        throw new Error(NOT_AUTHORIZED)
+      }
+      selectedEmissionFactorVersions = emissionFactorVersions
     }
 
     const rights: Prisma.UserOnStudyCreateManyStudyInput[] = []
@@ -387,7 +438,9 @@ export const createStudyCommand = async (
     }
 
     try {
-      const createdStudy = await createStudy(study, session.user.environment, true, tx)
+      const createdStudy = selectedEmissionFactorVersions
+        ? await createStudy(study, session.user.environment, true, tx, selectedEmissionFactorVersions)
+        : await createStudy(study, session.user.environment, true, tx)
       if (!tx) {
         // This cannot be part of a transaction easily so it is done in the duplication flow after the transaction is committed
         await addUserChecklistItem(UserChecklist.CreateFirstStudy)
@@ -1477,7 +1530,12 @@ export const duplicateStudyCommand = async (
     }
 
     const { createdStudyId, createdStudy } = await prismaClient.$transaction(async (tx) => {
-      const createResult = await createStudyCommand(studyCommand, sourceStudy.resultsUnit, sourceStudy.tagFamilies, tx)
+      const createResult = await createStudyCommand(
+        { ...studyCommand, emissionFactorVersions: undefined },
+        sourceStudy.resultsUnit,
+        sourceStudy.tagFamilies,
+        tx,
+      )
       if (!createResult.success) {
         throw new Error(createResult.errorMessage || 'Failed to create study')
       }

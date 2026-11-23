@@ -8,16 +8,20 @@ import { HelpIcon } from '@abc-transitionbascarbone/common/components'
 import Form from '@abc-transitionbascarbone/common/components/base/Form'
 import IconLabel from '@abc-transitionbascarbone/common/components/base/IconLabel'
 import LoadingButton from '@abc-transitionbascarbone/common/components/base/LoadingButton'
+import { FormSelect } from '@abc-transitionbascarbone/common/components/form/Select'
 import { FormTextField } from '@abc-transitionbascarbone/common/components/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
 import GlossaryModal from '@abc-transitionbascarbone/common/components/modals/GlossaryModal'
+import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/common/db'
+import { Export, Import } from '@abc-transitionbascarbone/common/db/enums'
 import { Toast } from '@abc-transitionbascarbone/common/ui'
 import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
+import { MenuItem } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
-import { UseFormReturn } from 'react-hook-form'
+import { UseFormReturn, useWatch } from 'react-hook-form'
 import styles from './Form.module.css'
 
 const toastPosition = { vertical: 'bottom', horizontal: 'left' } as const
@@ -32,6 +36,8 @@ interface Props {
   beforeSubmit?: (createStudyCommand: CreateStudyCommand) => CreateStudyCommand
   customRouteAfterCreation?: string
   showStudyDates?: boolean
+  canSelectEmissionFactorVersions?: boolean
+  emissionFactorVersions?: Pick<EmissionFactorImportVersion, 'id' | 'source' | 'name'>[]
 }
 
 const NewStudyForm = ({
@@ -44,6 +50,8 @@ const NewStudyForm = ({
   beforeSubmit,
   customRouteAfterCreation = '',
   showStudyDates = true,
+  canSelectEmissionFactorVersions = false,
+  emissionFactorVersions = [],
 }: Props) => {
   const router = useRouter()
   const tLabel = useTranslations('common.label')
@@ -51,6 +59,8 @@ const NewStudyForm = ({
   const tGeneralError = useTranslations('error')
   const tGlossary = useTranslations('study.new.glossary')
   const tStudyNewSuggestion = useTranslations('study.new.suggestion')
+  const tEmissionFactorVersion = useTranslations('study.new')
+  const tEmissionFactorSource = useTranslations('emissionFactors.table')
   const tDocumentation = useTranslations('documentationUrl')
   const { callServerFunction } = useServerFunction()
   const [showValidationError, setShowValidationError] = useState(false)
@@ -59,10 +69,21 @@ const NewStudyForm = ({
     contributors: true,
   })
   const [loading, setLoading] = useState(false)
+  const exports = useWatch({ control: form.control, name: 'exports' })
+  const versionSelections = useWatch({ control: form.control, name: 'emissionFactorVersions' }) ?? []
+  const versionSelectionsToDisplay = versionSelections
+    .map((selection, index) => ({ selection, index }))
+    .filter(({ selection }) => selection.source !== Import.AIB || exports?.includes(Export.GHGP))
 
   const onSubmit = async (command: CreateStudyCommand) => {
     setShowValidationError(false)
     setLoading(true)
+    if (command.emissionFactorVersions && !command.exports.includes(Export.GHGP)) {
+      command = {
+        ...command,
+        emissionFactorVersions: command.emissionFactorVersions.filter(({ source }) => source !== Import.AIB),
+      }
+    }
     if (beforeSubmit) {
       command = beforeSubmit(command)
     }
@@ -118,6 +139,30 @@ const NewStudyForm = ({
                 data-testid="new-study-endDate"
               />
             </div>
+          </div>
+        )}
+        {canSelectEmissionFactorVersions && !duplicateStudyId && versionSelectionsToDisplay.length > 0 && (
+          <div>
+            <p>{tEmissionFactorVersion('latestEmissionFactorVersionDefault')}</p>
+            {versionSelectionsToDisplay.map(({ selection, index }) => (
+              <FormSelect
+                key={selection.source}
+                control={form.control}
+                name={`emissionFactorVersions.${index}.importVersionId` as const}
+                translation={tEmissionFactorVersion}
+                label={tEmissionFactorVersion('emissionFactorVersion', {
+                  source: tEmissionFactorSource(selection.source),
+                })}
+              >
+                {emissionFactorVersions
+                  .filter((version) => version.source === selection.source)
+                  .map((version) => (
+                    <MenuItem key={version.id} value={version.id}>
+                      {version.name}
+                    </MenuItem>
+                  ))}
+              </FormSelect>
+            ))}
           </div>
         )}
         {children}

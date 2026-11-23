@@ -4,6 +4,7 @@ import type { FullStudy } from '@/db/study'
 import NewStudyForm from '@/environments/base/study/new/Form'
 import { CreateStudyCommand } from '@/services/serverFunctions/study.command'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
+import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/common/db'
 import { Level } from '@abc-transitionbascarbone/common/db/enums'
 import { UserSession } from 'next-auth'
 import { useTranslations } from 'next-intl'
@@ -17,9 +18,20 @@ interface Props {
   duplicateStudyId?: string | null
   sourceStudy?: FullStudy | null
   simplified?: boolean
+  canSelectEmissionFactorVersions?: boolean
+  emissionFactorVersions?: Pick<EmissionFactorImportVersion, 'id' | 'source' | 'name'>[]
 }
 
-const NewStudyFormTilt = ({ user, accounts, form, duplicateStudyId, sourceStudy, simplified }: Props) => {
+const NewStudyFormTilt = ({
+  user,
+  accounts,
+  form,
+  duplicateStudyId,
+  sourceStudy,
+  simplified,
+  canSelectEmissionFactorVersions,
+  emissionFactorVersions,
+}: Props) => {
   const t = useTranslations('study.new')
   const [glossary, setGlossary] = useState('')
 
@@ -43,6 +55,8 @@ const NewStudyFormTilt = ({ user, accounts, form, duplicateStudyId, sourceStudy,
         form={form}
         duplicateStudyId={duplicateStudyId}
         sourceStudy={sourceStudy}
+        canSelectEmissionFactorVersions={canSelectEmissionFactorVersions}
+        emissionFactorVersions={emissionFactorVersions}
       />
     )
   }
