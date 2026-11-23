@@ -35,7 +35,7 @@ const CourseSessionHeader = async ({ session }: Props) => {
             </p>
             <p className={styles.dates}>
               <NumbersIcon aria-hidden="true" />
-              {t('sessionCode')}: {session.code}
+              {t('sessionCode', { code: session.code })}
             </p>
           </div>
         </div>
