@@ -68,7 +68,6 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
           hasFormation={hasFormation}
           hasMultipleAccounts={hasMultipleAccounts}
         />
-        {messageBanners.success && <MessageBanners banners={messageBanners.data} />}
         {withOrganizationCard && (
           <OrganizationCard
             account={account}
@@ -77,6 +76,7 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
             shouldRenewLicenseText={shouldRenewLicenseText}
           />
         )}
+        {messageBanners.success && <MessageBanners banners={messageBanners.data} />}
         <Box component="main" className={styles.content}>
           {children}
         </Box>
