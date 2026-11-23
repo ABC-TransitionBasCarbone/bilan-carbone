@@ -1,15 +1,128 @@
 import { prismaClient } from '@/db/client'
 import { FullStudy, getStudyById, getStudyTemplates } from '@/db/study'
 import type { Prisma, Site } from '@abc-transitionbascarbone/common/db'
-import { DuplicableStudy, Environment, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
+import { DuplicableStudy, Environment, Import, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
 import { DAY, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils'
 import {
   getEnvironmentHandlingGenericEnvs,
   isCourseEnvironment,
 } from '@abc-transitionbascarbone/common/utils/environments'
 import { normalizeString } from '@abc-transitionbascarbone/common/utils/parsing'
+import { isDeepStrictEqual } from 'node:util'
 import { v4 as uuidv4 } from 'uuid'
 import { duplicateTrainingStudy } from './studyDuplication'
+
+const correctionFactorFields = {
+  omit: { createdAt: true, updatedAt: true, oldBCId: true, importedId: true },
+  include: {
+    metaData: { omit: { emissionFactorId: true, createdAt: true, updatedAt: true } },
+    emissionFactorParts: {
+      omit: { id: true, emissionFactorId: true, createdAt: true, updatedAt: true, oldBCId: true },
+      include: {
+        metaData: { omit: { emissionFactorPartId: true, createdAt: true, updatedAt: true } },
+      },
+    },
+  },
+} as const satisfies Prisma.EmissionFactorDefaultArgs
+
+type CorrectionFactor = Prisma.EmissionFactorGetPayload<typeof correctionFactorFields>
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const factorData = ({ id, organizationId, ...data }: CorrectionFactor) => data
+
+const translationsByLanguage = <T extends { language: string }>(translations: T[]) =>
+  Object.fromEntries(translations.map((translation) => [translation.language, translation]))
+
+const sameFactorContent = (left: CorrectionFactor, right: CorrectionFactor) => {
+  const { subPosts, metaData, emissionFactorParts, ...fields } = factorData(left)
+  const {
+    subPosts: rightSubPosts,
+    metaData: rightMetaData,
+    emissionFactorParts: rightParts,
+    ...rightFields
+  } = factorData(right)
+  if (
+    !isDeepStrictEqual(fields, rightFields) ||
+    !isDeepStrictEqual([...subPosts].sort(), [...rightSubPosts].sort()) ||
+    !isDeepStrictEqual(translationsByLanguage(metaData), translationsByLanguage(rightMetaData)) ||
+    emissionFactorParts.length !== rightParts.length
+  ) {
+    return false
+  }
+
+  const unmatchedParts = rightParts.map(({ metaData, ...part }) => ({
+    ...part,
+    metaData: translationsByLanguage(metaData),
+  }))
+  return emissionFactorParts.every(({ metaData, ...part }) => {
+    const data = { ...part, metaData: translationsByLanguage(metaData) }
+    const index = unmatchedParts.findIndex((candidate) => isDeepStrictEqual(data, candidate))
+    if (index === -1) {
+      return false
+    }
+    unmatchedParts.splice(index, 1)
+    return true
+  })
+}
+
+const copyCorrectionManualEmissionFactors = async (
+  studies: FullStudy[],
+  organizationId: string,
+  transaction: Prisma.TransactionClient,
+) => {
+  const ids = [
+    ...new Set(
+      studies.flatMap(({ emissionSources }) =>
+        emissionSources.flatMap(({ emissionFactor }) =>
+          emissionFactor?.importedFrom === Import.Manual ? [emissionFactor.id] : [],
+        ),
+      ),
+    ),
+  ]
+  const copies = new Map<string, string>()
+  if (ids.length === 0) {
+    return copies
+  }
+
+  const factors = await transaction.emissionFactor.findMany({
+    where: { importedFrom: Import.Manual, OR: [{ id: { in: ids } }, { organizationId }] },
+    orderBy: { id: 'asc' },
+    ...correctionFactorFields,
+  })
+  const factorsById = new Map(factors.map((factor) => [factor.id, factor]))
+  const candidates = factors.filter((factor) => factor.organizationId === organizationId)
+  for (const id of ids) {
+    const source = factorsById.get(id)
+    if (!source) {
+      throw new Error(
+        `Missing manual emission factor ${id} while copying corrections for organization ${organizationId}`,
+      )
+    }
+    if (source.organizationId === organizationId) {
+      continue
+    }
+    const existing = candidates.find((candidate) => sameFactorContent(source, candidate))
+    if (existing) {
+      copies.set(id, existing.id)
+      continue
+    }
+    const { metaData, emissionFactorParts, ...factor } = factorData(source)
+    const copy = await transaction.emissionFactor.create({
+      data: {
+        ...factor,
+        organizationId,
+        metaData: { create: metaData },
+        emissionFactorParts: {
+          create: emissionFactorParts.map(({ metaData, ...part }) => ({ ...part, metaData: { create: metaData } })),
+        },
+      },
+      select: { id: true },
+    })
+    copies.set(id, copy.id)
+    candidates.push({ ...source, id: copy.id, organizationId })
+  }
+  return copies
+}
 
 export const ensureProfessorCorrectionClient = async (
   professorOrganizationVersionId: string,
@@ -47,10 +160,10 @@ export const ensureProfessorCorrectionClient = async (
   }
   const account = await transaction.account.findFirst({
     where: { organizationVersionId: professorOrganizationVersionId, environment },
-    select: { id: true },
+    select: { id: true, organizationVersion: { select: { organizationId: true } } },
     orderBy: { createdAt: 'asc' },
   })
-  if (!account) {
+  if (!account?.organizationVersion) {
     console.error(`Professor account not found for organization ${professorOrganizationVersionId} in ${environment}`)
     return
   }
@@ -129,6 +242,11 @@ export const ensureProfessorCorrectionClient = async (
       data: copiedSites.map((site) => ({ ...site, organizationId: existingClient.organizationId })),
     })
   }
+  const emissionFactorIds = await copyCorrectionManualEmissionFactors(
+    studies,
+    account.organizationVersion.organizationId,
+    transaction,
+  )
   for (const study of studies) {
     await duplicateTrainingStudy(
       study,
@@ -139,6 +257,7 @@ export const ensureProfessorCorrectionClient = async (
       {
         organizationVersionId: client.id,
         siteIds,
+        emissionFactorIds,
       },
     )
   }

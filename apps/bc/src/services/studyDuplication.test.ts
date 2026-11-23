@@ -1,7 +1,13 @@
 import { prismaClient } from '@/db/client'
 import { createEmissionSourcesWithReturn, getFamilyTagsForStudy } from '@/db/emissionSource'
 import { getOrganizationWithSitesById } from '@/db/organization'
-import { createEmissionSourceTags, createStudy, getStudyById } from '@/db/study'
+import {
+  createEmissionSourceTags,
+  createEngagementAction,
+  createStudy,
+  getEngagementActions,
+  getStudyById,
+} from '@/db/study'
 import {
   createAction,
   createTrajectoryWithObjectives,
@@ -10,12 +16,20 @@ import {
   getTrajectoriesByTransitionPlanId,
   getTransitionPlanByStudyId,
 } from '@/db/transitionPlan'
-import { getMockedFullStudy, getMockedFullStudySite, getMockeFullStudy, TEST_IDS } from '@/tests/utils/models/study'
+import {
+  getMockedFullStudy,
+  getMockedFullStudySite,
+  getMockeFullStudy,
+  mockedEmissionSourceEmissionFactor,
+  TEST_IDS,
+} from '@/tests/utils/models/study'
 import type { ActionWithRelations } from '@/types/trajectory.types'
 import {
   ActionIndicatorType,
   ActionPotentialDeduction,
+  EngagementPhase,
   Environment,
+  Import,
   StudyRole,
   SubPost,
   TrajectoryType,
@@ -37,6 +51,8 @@ jest.mock('@/db/study', () => ({
   createStudy: jest.fn(),
   getStudyById: jest.fn(),
   createEmissionSourceTags: jest.fn(),
+  getEngagementActions: jest.fn(),
+  createEngagementAction: jest.fn(),
 }))
 jest.mock('@/db/transitionPlan', () => ({
   getTransitionPlanByStudyId: jest.fn(),
@@ -99,6 +115,28 @@ const copiedStudy = getMockedFullStudy({
   ],
 })
 const siteIds = new Map([[TEST_IDS.site, 'copied-site']])
+const engagementSite = {
+  ...sourceSite,
+  studyId: sourceStudy.id,
+  cncVersionId: null,
+  siteId: TEST_IDS.site,
+  createdAt: new Date('2026-01-01'),
+  updatedAt: new Date('2026-01-01'),
+  site: {
+    ...sourceSite.site,
+    oldBCId: null,
+    organizationId: 'source-organization',
+    ca: 0,
+    volunteerNumber: 0,
+    beneficiaryNumber: 0,
+    cncId: null,
+    establishmentId: null,
+    academy: null,
+    establishmentType: null,
+    createdAt: new Date('2026-01-01'),
+    updatedAt: new Date('2026-01-01'),
+  },
+}
 
 describe('shared training study duplication', () => {
   beforeEach(() => {
@@ -113,6 +151,81 @@ describe('shared training study duplication', () => {
     mockGetTransitionPlan.mockResolvedValue(null)
     mockGetTrajectories.mockResolvedValue([])
     mockGetActions.mockResolvedValue([])
+    jest.mocked(getEngagementActions).mockResolvedValue([])
+  })
+
+  it('copies mobilization actions and connects them to the copied study sites', async () => {
+    const date = new Date('2026-11-19')
+    jest.mocked(getEngagementActions).mockResolvedValue([
+      {
+        id: 'source-engagement',
+        studyId: sourceStudy.id,
+        createdAt: date,
+        updatedAt: date,
+        name: 'Atelier',
+        date,
+        targets: ['Equipe'],
+        steps: 'Préparer un atelier',
+        phase: EngagementPhase.CoConstruction,
+        description: 'Atelier collectif',
+        sites: [engagementSite],
+      },
+    ])
+
+    await duplicateTrainingStudy(
+      sourceStudy,
+      [{ id: 'professor', environment: Environment.COURSE_BC }],
+      StudyRole.Validator,
+      prismaClient,
+      undefined,
+      { organizationVersionId: 'correction-client', siteIds },
+    )
+
+    expect(getEngagementActions).toHaveBeenCalledWith(sourceStudy.id, prismaClient)
+    expect(createEngagementAction).toHaveBeenCalledWith(
+      {
+        name: 'Atelier',
+        date,
+        targets: ['Equipe'],
+        steps: 'Préparer un atelier',
+        phase: EngagementPhase.CoConstruction,
+        description: 'Atelier collectif',
+        study: { connect: { id: copiedStudy.id } },
+        sites: { connect: [{ id: 'copied-study-site' }] },
+      },
+      prismaClient,
+    )
+  })
+
+  it('rejects a mobilization action referencing a site absent from the copied study', async () => {
+    const date = new Date('2026-11-19')
+    jest.mocked(getEngagementActions).mockResolvedValue([
+      {
+        id: 'source-engagement',
+        studyId: sourceStudy.id,
+        createdAt: date,
+        updatedAt: date,
+        name: 'Atelier',
+        date,
+        targets: [],
+        steps: '',
+        phase: EngagementPhase.CoConstruction,
+        description: '',
+        sites: [{ ...engagementSite, siteId: 'missing-site' }],
+      },
+    ])
+
+    await expect(
+      duplicateTrainingStudy(
+        sourceStudy,
+        [{ id: 'professor', environment: Environment.COURSE_BC }],
+        StudyRole.Validator,
+        prismaClient,
+        undefined,
+        { organizationVersionId: 'correction-client', siteIds },
+      ),
+    ).rejects.toThrow('Missing copied site missing-site for engagement action source-engagement')
+    expect(createEngagementAction).not.toHaveBeenCalled()
   })
 
   it('copies studies and their emissions onto the new site IDs with Validator rights', async () => {
@@ -440,6 +553,42 @@ describe('shared training study duplication', () => {
       siteIds,
     )
     expect(mockCreateEmissions.mock.calls[0][0][0].subPost).toBe(SubPost.EquipementsDesSalaries)
+  })
+
+  it('links correction sources to copied manual factors and keeps base factors', async () => {
+    const emission = sourceStudy.emissionSources[0]
+    await duplicateTrainingStudy(
+      {
+        ...sourceStudy,
+        emissionSources: [
+          emission,
+          {
+            ...emission,
+            emissionFactor: {
+              ...mockedEmissionSourceEmissionFactor,
+              id: 'base-factor',
+              importedFrom: Import.BaseEmpreinte,
+            },
+          },
+          { ...emission, emissionFactor: null },
+        ],
+      },
+      [{ id: 'professor', environment: Environment.COURSE_BC }],
+      StudyRole.Validator,
+      prismaClient,
+      undefined,
+      {
+        organizationVersionId: 'correction-client',
+        siteIds,
+        emissionFactorIds: new Map([[TEST_IDS.emissionFactor, 'copied-manual-factor']]),
+      },
+    )
+    expect(mockCreateEmissions).toHaveBeenCalledWith(
+      ['copied-manual-factor', 'base-factor', null].map((emissionFactorId) =>
+        expect.objectContaining({ emissionFactorId }),
+      ),
+      prismaClient,
+    )
   })
 
   it('fails explicitly when an emission has no matching copied site', async () => {

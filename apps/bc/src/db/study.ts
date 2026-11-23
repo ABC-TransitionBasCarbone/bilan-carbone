@@ -1200,8 +1200,8 @@ export const deleteStudyComment = async (id: string) =>
     where: { id },
   })
 
-export const getEngagementActions = (studyId: string) =>
-  prismaClient.engagementAction.findMany({
+export const getEngagementActions = (studyId: string, tx: Prisma.TransactionClient = prismaClient) =>
+  tx.engagementAction.findMany({
     where: { studyId },
     include: { sites: { include: { site: true } } },
   })
@@ -1211,8 +1211,10 @@ export const getEngagementActionById = (id: string) =>
     where: { id },
   })
 
-export const createEngagementAction = async (data: Prisma.EngagementActionCreateInput) =>
-  prismaClient.engagementAction.create({ data })
+export const createEngagementAction = async (
+  data: Prisma.EngagementActionCreateInput,
+  tx: Prisma.TransactionClient = prismaClient,
+) => tx.engagementAction.create({ data })
 
 export const updateEngagementAction = async (id: string, data: Prisma.EngagementActionUpdateInput) =>
   prismaClient.engagementAction.update({ where: { id }, data })

@@ -1,7 +1,19 @@
 import { prismaClient } from '@/db/client'
 import { getStudyById, getStudyTemplates } from '@/db/study'
-import { getMockedFullStudy } from '@/tests/utils/models/study'
-import { DuplicableStudy, Environment, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
+import {
+  getMockedFullStudy,
+  getMockeFullStudy,
+  mockedEmissionSourceEmissionFactor,
+  TEST_IDS,
+} from '@/tests/utils/models/study'
+import {
+  DuplicableStudy,
+  EmissionFactorPartType,
+  Environment,
+  Import,
+  StudyRole,
+  SubPost,
+} from '@abc-transitionbascarbone/common/db/enums'
 import { duplicateTrainingStudy } from './studyDuplication'
 import { ensureCourseProfessorCorrections, ensureProfessorCorrectionClient } from './trainingCorrection'
 
@@ -12,6 +24,7 @@ jest.mock('@/db/client', () => {
     account: { findFirst: jest.fn() },
     study: { findMany: jest.fn() },
     site: { findMany: jest.fn(), createMany: jest.fn() },
+    emissionFactor: { findMany: jest.fn(), create: jest.fn() },
     $transaction: jest.fn(),
   }
   prismaClient.$transaction.mockImplementation((operation) => operation(prismaClient))
@@ -60,7 +73,10 @@ describe('professor correction client', () => {
     jest.clearAllMocks()
     mockFindClient.mockResolvedValue(null)
     mockCreateClient.mockResolvedValue({ id: 'correction-client' })
-    mockFindAccount.mockResolvedValue({ id: 'professor-account' })
+    mockFindAccount.mockResolvedValue({
+      id: 'professor-account',
+      organizationVersion: { organizationId: 'professor-organization' },
+    })
     mockFindOrganization.mockResolvedValue({ sites: [sourceSite] })
     mockTemplates.mockResolvedValue([{ studyId: 'correction-1' }, { studyId: 'correction-2' }])
     mockStudy.mockImplementation(async (id) => getMockedFullStudy({ id }))
@@ -108,9 +124,137 @@ describe('professor correction client', () => {
       expect(call[5]).toEqual({
         organizationVersionId: 'correction-client',
         siteIds: new Map([['source-site', 'copied-site']]),
+        emissionFactorIds: new Map(),
       })
     }
     expect(mockDuplicate.mock.calls.map(([study]) => study.id)).toEqual(['correction-1', 'correction-2'])
+    expect(prismaClient.emissionFactor.findMany).not.toHaveBeenCalled()
+  })
+
+  it('copies a shared manual factor with its parts and translations once per batch', async () => {
+    const study = getMockeFullStudy()
+    const manual = study.emissionSources[0]
+    mockStudy.mockImplementation(async (id) => ({
+      ...study,
+      id,
+      emissionSources: [
+        manual,
+        {
+          ...manual,
+          emissionFactor: {
+            ...mockedEmissionSourceEmissionFactor,
+            id: 'base-factor',
+            importedFrom: Import.BaseEmpreinte,
+          },
+        },
+      ],
+    }))
+    const translations = [
+      { language: 'fr', title: 'Facteur' },
+      { language: 'en', title: 'Factor' },
+    ]
+    const part = { type: EmissionFactorPartType.Amont, totalCo2: 12, metaData: [{ language: 'fr', title: 'Amont' }] }
+    const factor = { importedFrom: Import.Manual, totalCo2: 42, co2f: 12 }
+    const findFactors = prismaClient.emissionFactor.findMany as jest.Mock
+    const createFactor = prismaClient.emissionFactor.create as jest.Mock
+    findFactors.mockResolvedValue([
+      {
+        ...factor,
+        id: TEST_IDS.emissionFactor,
+        organizationId: 'source-organization',
+        metaData: translations,
+        emissionFactorParts: [part],
+      },
+    ])
+    createFactor.mockResolvedValue({ id: 'copied-manual-factor' })
+
+    await ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)
+
+    expect(findFactors).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          importedFrom: Import.Manual,
+          OR: [{ id: { in: [TEST_IDS.emissionFactor] } }, { organizationId: 'professor-organization' }],
+        },
+      }),
+    )
+    expect(createFactor).toHaveBeenCalledTimes(1)
+    expect(createFactor).toHaveBeenCalledWith({
+      data: {
+        ...factor,
+        organizationId: 'professor-organization',
+        metaData: { create: translations },
+        emissionFactorParts: { create: [{ ...part, metaData: { create: part.metaData } }] },
+      },
+      select: { id: true },
+    })
+    expect(mockDuplicate.mock.calls.map((call) => call[5]?.emissionFactorIds)).toEqual([
+      new Map([[TEST_IDS.emissionFactor, 'copied-manual-factor']]),
+      new Map([[TEST_IDS.emissionFactor, 'copied-manual-factor']]),
+    ])
+  })
+
+  it.each([
+    ['identical content', 'existing-manual-factor'],
+    ['different gas breakdown', 'new-manual-factor'],
+    ['different translation', 'new-manual-factor'],
+    ['different component breakdown', 'new-manual-factor'],
+  ])('links to the correct manual factor for %s', async (scenario, expectedId) => {
+    mockStudy.mockResolvedValue(getMockeFullStudy())
+    const metaData = [
+      { language: 'fr', title: 'Facteur' },
+      { language: 'en', title: 'Factor' },
+    ]
+    const part = { type: EmissionFactorPartType.Amont, totalCo2: 12, metaData }
+    const otherPart = { ...part, totalCo2: 30 }
+    const source = {
+      id: TEST_IDS.emissionFactor,
+      organizationId: 'source-organization',
+      importedFrom: Import.Manual,
+      subPosts: [SubPost.Achats, SubPost.EquipementsDesSalaries],
+      totalCo2: 42,
+      co2f: 42,
+      metaData,
+      emissionFactorParts: [part, otherPart],
+    }
+    const candidate = {
+      ...source,
+      id: 'existing-manual-factor',
+      organizationId: 'professor-organization',
+      subPosts: [...source.subPosts].reverse(),
+      co2f: scenario === 'different gas breakdown' ? 41 : source.co2f,
+      metaData: [
+        metaData[1],
+        { ...metaData[0], title: scenario === 'different translation' ? 'Autre facteur' : metaData[0].title },
+      ],
+      emissionFactorParts: [
+        otherPart,
+        {
+          ...part,
+          totalCo2: scenario === 'different component breakdown' ? 90 : part.totalCo2,
+          metaData: [...metaData].reverse(),
+        },
+      ],
+    }
+    const findFactors = prismaClient.emissionFactor.findMany as jest.Mock
+    const createFactor = prismaClient.emissionFactor.create as jest.Mock
+    findFactors.mockResolvedValue([candidate, source, { ...source, id: 'other-organization-factor' }])
+    createFactor.mockResolvedValue({ id: 'new-manual-factor' })
+
+    await ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)
+
+    expect(createFactor).toHaveBeenCalledTimes(expectedId === candidate.id ? 0 : 1)
+    expect(mockDuplicate.mock.calls[0][5]?.emissionFactorIds?.get(source.id)).toBe(expectedId)
+  })
+
+  it('does not duplicate corrections if a required manual factor cannot be copied', async () => {
+    mockStudy.mockResolvedValue(getMockeFullStudy())
+    jest.mocked(prismaClient.emissionFactor.findMany).mockResolvedValue([])
+
+    await expect(ensureProfessorCorrectionClient('professor-org', Environment.COURSE_BC, prismaClient)).rejects.toThrow(
+      'Missing manual emission factor',
+    )
+    expect(mockDuplicate).not.toHaveBeenCalled()
   })
 
   it('reuses a renamed child whose corrections have all been copied without reading full studies', async () => {
@@ -183,6 +327,7 @@ describe('professor correction client', () => {
           ['source-site', 'existing-site-copy'],
           ['new-source-site', 'copied-site'],
         ]),
+        emissionFactorIds: new Map(),
       },
     )
   })

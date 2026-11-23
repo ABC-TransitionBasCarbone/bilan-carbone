@@ -1,6 +1,13 @@
 import { createEmissionSourcesWithReturn, getFamilyTagsForStudy } from '@/db/emissionSource'
 import { getOrganizationWithSitesById } from '@/db/organization'
-import { createEmissionSourceTags, createStudy, FullStudy, getStudyById } from '@/db/study'
+import {
+  createEmissionSourceTags,
+  createEngagementAction,
+  createStudy,
+  FullStudy,
+  getEngagementActions,
+  getStudyById,
+} from '@/db/study'
 import {
   createAction,
   createExternalStudy,
@@ -29,6 +36,7 @@ export const duplicateEmissionSources = async (
   sourceEnvironment?: Environment,
   targetEnvironment?: Environment,
   siteIds?: ReadonlyMap<string, string>,
+  emissionFactorIds?: ReadonlyMap<string, string>,
 ) => {
   const { id: targetStudyId, sites: targetStudySites, tagFamilies: targetTagFamilies } = targetStudy
   const sourceTagFamilies = await getFamilyTagsForStudy(sourceStudyId, tx)
@@ -67,6 +75,7 @@ export const duplicateEmissionSources = async (
     ({ sourceEmissionSource, targetStudySiteId, subPost }) => {
       const newId = uuidv4()
       const lastEditorId = sourceEmissionSource.lastEditor?.id
+      const emissionFactorId = sourceEmissionSource.emissionFactor?.id
       return {
         sourceId: sourceEmissionSource.id,
         targetId: newId,
@@ -95,7 +104,7 @@ export const duplicateEmissionSources = async (
           caracterisation: shouldClearCaracterisations ? null : sourceEmissionSource.caracterisation,
           constructionYear: sourceEmissionSource.constructionYear,
           studyId: targetStudyId,
-          emissionFactorId: sourceEmissionSource.emissionFactor?.id ?? null,
+          emissionFactorId: emissionFactorId ? (emissionFactorIds?.get(emissionFactorId) ?? emissionFactorId) : null,
           studySiteId: targetStudySiteId,
           validated: shouldClearValidations ? false : sourceEmissionSource.validated,
           lastEditorId,
@@ -330,7 +339,11 @@ export const duplicateTrainingStudy = async (
   role: StudyRole,
   tx: Prisma.TransactionClient,
   nameSuffix?: string,
-  target?: { organizationVersionId: string; siteIds: ReadonlyMap<string, string> },
+  target?: {
+    organizationVersionId: string
+    siteIds: ReadonlyMap<string, string>
+    emissionFactorIds?: ReadonlyMap<string, string>
+  },
 ) => {
   const environment = accounts[0].environment
   const sourceSites = await getSitesForDuplication(study, tx)
@@ -380,7 +393,32 @@ export const duplicateTrainingStudy = async (
     study.organizationVersion.environment,
     environment,
     target?.siteIds,
+    target?.emissionFactorIds,
   )
   await duplicateTrainingTransitionPlan(study, createdStudyWithSites, tx, target?.siteIds)
+  const engagementActions = await getEngagementActions(study.id, tx)
+  for (const action of engagementActions) {
+    const sites = action.sites.map((site) => {
+      const targetSiteId = target ? target.siteIds.get(site.siteId) : site.siteId
+      const copiedSite = createdStudyWithSites.sites.find((site) => site.site.id === targetSiteId)
+      if (!copiedSite) {
+        throw new Error(`Missing copied site ${site.siteId} for engagement action ${action.id}`)
+      }
+      return { id: copiedSite.id }
+    })
+    await createEngagementAction(
+      {
+        name: action.name,
+        date: action.date,
+        targets: action.targets,
+        steps: action.steps,
+        phase: action.phase,
+        description: action.description,
+        study: { connect: { id: createdStudy.id } },
+        sites: { connect: sites },
+      },
+      tx,
+    )
+  }
   return createdStudy
 }

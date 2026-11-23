@@ -1,4 +1,4 @@
-import { setStudyTemplate } from '@/services/serverFunctions/study'
+import { setStudyTemplate } from '@/services/trainingStudy'
 import { DuplicableStudy, Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { Command } from 'commander'
 
