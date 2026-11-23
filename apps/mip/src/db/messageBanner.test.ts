@@ -15,7 +15,6 @@ it('scopes MIP reads and ID-based mutations to MIP-only records', async () => {
     environments: [Environment.MIP],
     startDate: new Date('2026-11-17T10:00:00Z'),
     endDate: new Date('2026-11-18T10:00:00Z'),
-    active: true,
   }
   await dbGetMessageBannersForManagement()
   await dbSaveMessageBanner(command)

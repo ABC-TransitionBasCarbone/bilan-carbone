@@ -1,10 +1,13 @@
 'use server'
 
-import { prismaClient } from '@/db/client'
-import { dbDeleteMessageBanner, dbGetMessageBannersForManagement, dbSaveMessageBanner } from '@/db/messageBanner'
+import {
+  dbDeleteMessageBanner,
+  dbGetMessageBannersForEnvironment,
+  dbGetMessageBannersForManagement,
+  dbSaveMessageBanner,
+} from '@/db/messageBanner'
 import { dbActualizedAuth } from '@/services/auth'
 import { withServerResponse } from '@/utils/serverResponse'
-import { getActiveMessageBannerWhere } from '@abc-transitionbascarbone/common/db/db'
 import { Environment, RoleMip } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import type { MessageBannerCommand } from '@abc-transitionbascarbone/common/utils/messageBanner.command'
@@ -44,8 +47,5 @@ export const getCurrentMessageBanners = async () =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    return prismaClient.messageBanner.findMany({
-      where: getActiveMessageBannerWhere(Environment.MIP),
-      orderBy: { startDate: 'asc' },
-    })
+    return dbGetMessageBannersForEnvironment(Environment.MIP)
   })

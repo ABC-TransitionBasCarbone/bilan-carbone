@@ -10,7 +10,6 @@ export const CommonMessageBannerCommandValidation = z
     environments: z.array(z.enum(Environment)).min(1),
     startDate: z.date(),
     endDate: z.date(),
-    active: z.boolean(),
   })
   .refine((data) => data.endDate > data.startDate, {
     path: ['endDate'],
@@ -18,3 +17,9 @@ export const CommonMessageBannerCommandValidation = z
   })
 
 export type MessageBannerCommand = z.infer<typeof CommonMessageBannerCommandValidation>
+
+export const makeMessageBannerCommandValidation = (allowedEnvironments: Environment[]) =>
+  CommonMessageBannerCommandValidation.refine(
+    (data) => data.environments.every((environment) => allowedEnvironments.includes(environment)),
+    { path: ['environments'], message: 'notAuthorized' },
+  )

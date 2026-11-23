@@ -4,7 +4,6 @@ CREATE TABLE "bilan_carbone"."message_banners" (
     "environments" "common"."Environment"[] NOT NULL DEFAULT ARRAY[]::"common"."Environment"[],
     "start_at" TIMESTAMP(3) NOT NULL,
     "end_at" TIMESTAMP(3) NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

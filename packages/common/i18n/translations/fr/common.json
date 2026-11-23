@@ -5,8 +5,6 @@
     "environments": "Environnements",
     "startAt": "Date de début",
     "endAt": "Date de fin",
-    "active": "Actif",
-    "inactive": "Inactif",
     "create": "Créer le bandeau",
     "update": "Mettre à jour",
     "cancel": "Annuler",

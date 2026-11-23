@@ -27,7 +27,6 @@ const command = {
   environments: [Environment.BC],
   startDate: new Date('2026-11-16T10:00:00Z'),
   endDate: new Date('2026-11-17T10:00:00Z'),
-  active: true,
 }
 const id = '97fcde8c-3702-4c5d-bd29-73277c339676'
 

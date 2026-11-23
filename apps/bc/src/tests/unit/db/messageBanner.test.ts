@@ -14,7 +14,6 @@ const command = {
   environments: [Environment.BC],
   startDate: new Date('2026-11-17T10:00:00Z'),
   endDate: new Date('2026-11-18T10:00:00Z'),
-  active: true,
 }
 
 beforeEach(() => jest.clearAllMocks())

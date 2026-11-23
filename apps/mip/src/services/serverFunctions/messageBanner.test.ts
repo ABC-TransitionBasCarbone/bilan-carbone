@@ -1,5 +1,9 @@
-import { prismaClient } from '@/db/client'
-import { dbDeleteMessageBanner, dbGetMessageBannersForManagement, dbSaveMessageBanner } from '@/db/messageBanner'
+import {
+  dbDeleteMessageBanner,
+  dbGetMessageBannersForEnvironment,
+  dbGetMessageBannersForManagement,
+  dbSaveMessageBanner,
+} from '@/db/messageBanner'
 import { dbActualizedAuth } from '@/services/auth'
 import { Environment, RoleMip } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
@@ -13,10 +17,10 @@ import {
 
 jest.mock('@/db/messageBanner', () => ({
   dbDeleteMessageBanner: jest.fn(),
+  dbGetMessageBannersForEnvironment: jest.fn(),
   dbGetMessageBannersForManagement: jest.fn(),
   dbSaveMessageBanner: jest.fn(),
 }))
-jest.mock('@/db/client', () => ({ prismaClient: { messageBanner: { findMany: jest.fn() } } }))
 jest.mock('@/services/auth', () => ({ dbActualizedAuth: jest.fn(), auth: jest.fn() }))
 
 const command = {
@@ -24,7 +28,6 @@ const command = {
   environments: [Environment.MIP],
   startDate: new Date('2026-11-17T10:00:00Z'),
   endDate: new Date('2026-11-18T10:00:00Z'),
-  active: true,
 }
 const id = '97fcde8c-3702-4c5d-bd29-73277c339676'
 
@@ -85,13 +88,11 @@ it('reports database failures', async () => {
 
 it('requires authentication and only displays MIP banners', async () => {
   expect(await getCurrentMessageBanners()).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
-  expect(prismaClient.messageBanner.findMany).not.toHaveBeenCalled()
+  expect(dbGetMessageBannersForEnvironment).not.toHaveBeenCalled()
   jest.mocked(dbActualizedAuth).mockResolvedValue({
     user: { id: 'user', role: RoleMip.ADMIN },
   } as Awaited<ReturnType<typeof dbActualizedAuth>>)
-  await getCurrentMessageBanners()
-  expect(prismaClient.messageBanner.findMany).toHaveBeenCalledWith({
-    where: expect.objectContaining({ environments: { has: Environment.MIP } }),
-    orderBy: { startDate: 'asc' },
-  })
+  jest.mocked(dbGetMessageBannersForEnvironment).mockResolvedValue([])
+  expect(await getCurrentMessageBanners()).toEqual({ success: true, data: [] })
+  expect(dbGetMessageBannersForEnvironment).toHaveBeenCalledWith(Environment.MIP)
 })

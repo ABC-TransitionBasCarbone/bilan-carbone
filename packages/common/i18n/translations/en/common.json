@@ -5,8 +5,6 @@
     "environments": "Environments",
     "startAt": "Start date",
     "endAt": "End date",
-    "active": "Active",
-    "inactive": "Inactive",
     "create": "Create banner",
     "update": "Update",
     "cancel": "Cancel",

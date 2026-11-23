@@ -1,7 +1,7 @@
 import type { MessageBanner, Prisma } from '@abc-transitionbascarbone/common/db'
 import {
   deleteManagedMessageBanner,
-  getActiveMessageBannerWhere,
+  getActiveMessageBanners,
   getManagedMessageBanners,
   saveManagedMessageBanner,
 } from '@abc-transitionbascarbone/common/db/db'
@@ -12,10 +12,7 @@ import { prismaClient } from './client'
 export const dbGetMessageBannersForManagement = () => getManagedMessageBanners(prismaClient, bcEnvironments)
 
 export const dbGetMessageBannersForEnvironment = (environment: Environment) =>
-  prismaClient.messageBanner.findMany({
-    where: getActiveMessageBannerWhere(environment),
-    orderBy: { startDate: 'asc' },
-  })
+  getActiveMessageBanners(prismaClient, environment)
 
 export const dbSaveMessageBanner = (data: Prisma.MessageBannerUncheckedCreateInput) =>
   saveManagedMessageBanner(prismaClient, bcEnvironments, data)

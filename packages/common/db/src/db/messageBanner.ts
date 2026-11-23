@@ -32,8 +32,13 @@ export const getActiveMessageBannerWhere = (
   environment: Environment,
   now: Date = new Date(),
 ): Prisma.MessageBannerWhereInput => ({
-  active: true,
   environments: { has: environment },
   startDate: { lte: now },
   endDate: { gte: now },
 })
+
+export const getActiveMessageBanners = (client: PrismaClient, environment: Environment) =>
+  client.messageBanner.findMany({
+    where: getActiveMessageBannerWhere(environment),
+    orderBy: { startDate: 'asc' },
+  })

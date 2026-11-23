@@ -9,7 +9,6 @@ const validBanner = {
   environments: [Environment.BC],
   startDate: new Date('2026-11-16T10:00:00.000Z'),
   endDate: new Date('2026-11-17T10:00:00.000Z'),
-  active: true,
 }
 
 describe('BCMessageBannerCommandValidation', () => {
@@ -34,11 +33,10 @@ describe('BCMessageBannerCommandValidation', () => {
 })
 
 describe('getActiveMessageBannerWhere', () => {
-  it('filters active banners for the environment and inclusive display window', () => {
+  it('filters banners for the environment and inclusive display window', () => {
     const now = new Date('2026-11-16T10:00:00.000Z')
 
     expect(getActiveMessageBannerWhere(Environment.MIP, now)).toEqual({
-      active: true,
       environments: { has: Environment.MIP },
       startDate: { lte: now },
       endDate: { gte: now },

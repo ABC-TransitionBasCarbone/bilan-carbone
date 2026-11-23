@@ -4,9 +4,9 @@ import { useServerFunction } from '@abc-transitionbascarbone/common/components/h
 import type { MessageBanner } from '@abc-transitionbascarbone/common/db'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import type { MessageBannerCommand } from '@abc-transitionbascarbone/common/utils/messageBanner.command'
-import { DAY, MIN, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils/time'
 import type { ApiResponse } from '@abc-transitionbascarbone/common/utils/serverResponse'
-import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Switch, TextField } from '@mui/material'
+import { DAY, MIN, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils/time'
+import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, TextField } from '@mui/material'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import type { FormEvent } from 'react'
@@ -30,7 +30,6 @@ const createEmptyBannerForm = (environments: Environment[]): BannerForm => {
     environments,
     startDate: toDateTimeInputValue(startDate),
     endDate: toDateTimeInputValue(endDate),
-    active: true,
   }
 }
 
@@ -85,7 +84,6 @@ const MessageBannerManagement = ({ banners, environments, saveBanner, deleteBann
       environments: banner.environments,
       startDate: toDateTimeInputValue(banner.startDate),
       endDate: toDateTimeInputValue(banner.endDate),
-      active: banner.active,
     })
   }
 
@@ -158,12 +156,6 @@ const MessageBannerManagement = ({ banners, environments, saveBanner, deleteBann
             required
           />
         </div>
-        <FormControlLabel
-          control={
-            <Switch checked={form.active} onChange={(event) => setForm({ ...form, active: event.target.checked })} />
-          }
-          label={t('active')}
-        />
         <div className="align-center gapped1">
           <Button type="submit" variant="contained" loading={isSaving}>
             {form.id ? t('update') : t('create')}
@@ -182,10 +174,7 @@ const MessageBannerManagement = ({ banners, environments, saveBanner, deleteBann
           {banners.map((banner) => (
             <li key={banner.id} className="flex-col gapped1">
               <strong>{banner.message}</strong>
-              <span>
-                {banner.environments.map((environment) => tEnvironment(environment)).join(', ')} ·{' '}
-                {banner.active ? t('active') : t('inactive')}
-              </span>
+              <span>{banner.environments.map((environment) => tEnvironment(environment)).join(', ')}</span>
               <span>
                 {toDateTimeInputValue(banner.startDate)} – {toDateTimeInputValue(banner.endDate)}
               </span>
