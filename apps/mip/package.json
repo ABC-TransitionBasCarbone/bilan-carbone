@@ -30,13 +30,13 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@hookform/resolvers": "^7.0.7",
-    "@mui/icons-material": "^9.5.0",
-    "@mui/material": "^9.5.0",
-    "@mui/material-nextjs": "^9.5.0",
-    "@mui/x-date-pickers": "^9.18.0",
+    "@mui/icons-material": "^7.3.8",
+    "@mui/material": "^7.3.8",
+    "@mui/material-nextjs": "^7.3.8",
+    "@mui/x-date-pickers": "^8.27.2",
     "@prisma/adapter-pg": "^7.10.0",
     "@publicodes/forms": "^0.6.1",
-    "@tanstack/react-table": "^9.3.1",
+    "@tanstack/react-table": "^8.21.3",
     "bcryptjs": "^3.0.3",
     "dayjs": "^1.11.23",
     "html-to-image": "^1.11.11",
@@ -63,7 +63,7 @@
     "@types/uuid": "^11.0.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "cypress": "^16.3.0",
-    "eslint": "^10.15.0",
+    "eslint": "^9.39.2",
     "eslint-config-next": "16.4.6",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-cypress": "^7.0.5",
@@ -74,6 +74,7 @@
     "prettier-plugin-organize-imports": "^4.2.0",
     "ts-jest": "^29.4.14",
     "tsx": "^4.23.15",
-    "typescript": "^7.0.2"
+    "@typescript/native": "npm:typescript@^7.0.2",
+    "typescript": "npm:@typescript/typescript6@^6.0.2"
   }
 }
