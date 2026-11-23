@@ -38,6 +38,6 @@
     },
     "devDependencies": {
         "@publicodes/tools": "^1.10.6",
-        "vitest": "^5.0.5"
+        "vitest": "^5.1.1"
     }
 }
