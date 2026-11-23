@@ -142,6 +142,10 @@ const testEmail = 'test@example.com'
 const testSiret = '12345678901234'
 const testCNC = 'CNC123'
 
+beforeEach(() => {
+  process.env.NEXTAUTH_SECRET = 'test-secret'
+})
+
 const createCourseActivationSession = (): CourseActivationSession => ({ id: 'course-session-id' })
 
 const mockCourseActivationDependencies = () => {
@@ -207,7 +211,7 @@ describe('signUpWithSiretOrCNC', () => {
 
       const result = await signUpWithSiretOrCNC(testEmail, testSiret, Environment.TILT)
 
-      expect(result.success).toBe(true)
+      expect(result).toEqual({ success: true, data: EMAIL_SENT })
     })
   })
 

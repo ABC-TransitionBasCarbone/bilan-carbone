@@ -240,6 +240,7 @@
     "loading": "Betöltés"
   },
   "error": {
+    "invalidForm": "Az űrlap hiányzó vagy érvénytelen adatokat tartalmaz. Ellenőrizze a mezőket. Ha a probléma továbbra is fennáll, forduljon az ügyfélszolgálathoz.",
     "Not authorized": "Nincs jogosultsága a művelet végrehajtásához",
     "Not found": "A kért erőforrás nem található",
     "Server error": "Szerverhiba történt, kérjük, forduljon az ügyfélszolgálathoz",

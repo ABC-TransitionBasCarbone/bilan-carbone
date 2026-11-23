@@ -243,6 +243,7 @@
     "loading": "Loading"
   },
   "error": {
+    "invalidForm": "The form contains missing or invalid data. Check the fields. If the problem persists, contact support.",
     "Not authorized": "You are not allowed to do this action",
     "Not found": "The requested resource was not found",
     "Server error": "A server error occurred, please contact support",
