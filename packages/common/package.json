@@ -48,19 +48,19 @@
     "next-intl": "*"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.36.0",
+    "@anthropic-ai/sdk": "^1.10.0",
     "@prisma/adapter-pg": "^7.10.0",
-    "@prisma/client": "7.10.0",
+    "@prisma/client": "7.10.1",
     "client-only": "0.0.1",
     "pg": "^8.23.1",
-    "prettier": "^3.8.4",
+    "prettier": "^3.10.1",
     "publicodes": "^1.10.4",
     "server-only": "^0.0.1",
-    "yargs": "^17.7.2",
+    "yargs": "^18.2.0",
     "zod": "*"
   },
   "devDependencies": {
-    "@types/node": "^24.13.3",
+    "@types/node": "^26.6.6",
     "tsx": "^4.23.15",
     "typescript": "^6.0.2"
   }

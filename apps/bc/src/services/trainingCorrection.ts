@@ -37,7 +37,6 @@ const prepareCorrectionSites = (sources: Site[], existingSites: MatchableSite[],
 
     const copyId = uuidv4()
     siteIds.set(source.id, copyId)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, organizationId, oldBCId, createdAt, updatedAt, ...data } = source
     return [{ ...data, id: copyId, name: forTrainee ? `${source.name} [CORRECTION]` : source.name }]
   })
@@ -66,6 +65,7 @@ const translationsByLanguage = <T extends { language: string }>(translations: T[
   Object.fromEntries(translations.map((translation) => [translation.language, translation]))
 
 const sameFactorContent = (left: CorrectionFactor, right: CorrectionFactor) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { subPosts, metaData, emissionFactorParts, ...fields } = factorData(left)
   const {
     subPosts: rightSubPosts,

@@ -48,10 +48,10 @@
     "publicodes:compile-windows": "yarn workspace @abc-transitionbascarbone/publicodes-packages compile"
   },
   "dependencies": {
-    "next": "16.4.3"
+    "next": "16.4.6"
   },
   "devDependencies": {
-    "turbo": "^2.11.6"
+    "turbo": "^2.11.13"
   },
   "resolutions": {
     "**/@tailwindcss/typography/postcss-selector-parser": "^7.1.7",

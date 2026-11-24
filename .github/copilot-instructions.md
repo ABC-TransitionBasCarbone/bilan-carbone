@@ -81,6 +81,7 @@ Run from repo root unless specified:
 ## Tooling Rules
 
 - Root prettier/eslint/tsconfig base are canonical.
+- When updating dependencies, try removing matching `resolutions` from the root `package.json`; regenerate `yarn.lock` and run relevant checks before keeping or restoring each resolution.
 - Do not add per-app prettier configs.
 - Keep app tsconfig focused on app-specific overrides only.
 - Do not add a README explanation for each bug fix. Keep bug-specific causes, implementation details, and regression test commands in the PR description. Update READMEs only for lasting changes to setup, usage, or maintenance.
