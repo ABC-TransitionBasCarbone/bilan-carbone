@@ -1,4 +1,5 @@
 import { getAccountById } from '@/db/account'
+import { isCourseProfessor } from '@/db/courseSession'
 import { getDocumentById } from '@/db/document'
 import { getOrganizationVersionForRightsCheck, getOrganizationVersionsByOrganizationId } from '@/db/organization'
 import { FullStudy, getStudyById, MinimalStudyForRights } from '@/db/study'
@@ -27,7 +28,12 @@ import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
 import { getUserActiveAccounts } from '../serverFunctions/user'
-import { canCreateStudyOnlyAsAdministrator, canCreateStudyWithoutSpecificRights, isTilt } from './environment'
+import {
+  canCreateStudyOnlyAsAdministrator,
+  canCreateStudyWithoutSpecificRights,
+  hasAccessToEmissionFactorVersionSelection,
+  isTilt,
+} from './environment'
 import { hasAccessToDuplicateStudy, isTiltSimplified } from './environmentAdvanced'
 import { isTiltSimplifiedFeatureActive } from './environmentFeature'
 import { isInOrgaOrParentFromId } from './organization'
@@ -572,4 +578,18 @@ export const hasEditAccessOnStudy = async (studyId: string, session?: { user: Us
   }
 
   return canEditStudy(actualSession.user, study)
+}
+
+export const canSelectEmissionFactorVersions = async (
+  organizationVersionId: string | null,
+  environment: Environment,
+  role: Role,
+  tx?: Prisma.TransactionClient,
+) => {
+  return !!(
+    organizationVersionId &&
+    hasAccessToEmissionFactorVersionSelection(environment) &&
+    (role === Role.SUPER_ADMIN ||
+      (isCourseEnvironment(environment) && (await isCourseProfessor(organizationVersionId, environment, tx))))
+  )
 }

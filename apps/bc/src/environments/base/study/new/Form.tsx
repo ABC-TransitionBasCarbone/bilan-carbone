@@ -13,6 +13,7 @@ import { HelpIcon } from '@abc-transitionbascarbone/common/components'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import IconLabel from '@abc-transitionbascarbone/common/components/base/IconLabel'
 import { FormSelect } from '@abc-transitionbascarbone/common/components/form/Select'
+import type { EmissionFactorImportVersion } from '@abc-transitionbascarbone/common/db'
 import { Level } from '@abc-transitionbascarbone/common/db/enums'
 import { FormControlLabel, MenuItem, Radio } from '@mui/material'
 import { UserSession } from 'next-auth'
@@ -27,9 +28,19 @@ interface Props {
   form: UseFormReturn<CreateStudyCommand>
   duplicateStudyId?: string | null
   sourceStudy?: FullStudy | null
+  canSelectEmissionFactorVersions?: boolean
+  emissionFactorVersions?: Pick<EmissionFactorImportVersion, 'id' | 'source' | 'name'>[]
 }
 
-const NewStudyForm = ({ user, accounts, form, duplicateStudyId, sourceStudy }: Props) => {
+const NewStudyForm = ({
+  user,
+  accounts,
+  form,
+  duplicateStudyId,
+  sourceStudy,
+  canSelectEmissionFactorVersions,
+  emissionFactorVersions,
+}: Props) => {
   const tLabel = useTranslations('common.label')
   const t = useTranslations('study.new')
   const tGlossary = useTranslations('study.new.glossary')
@@ -62,6 +73,8 @@ const NewStudyForm = ({ user, accounts, form, duplicateStudyId, sourceStudy }: P
         setGlossary={setGlossary}
         t={t}
         duplicateStudyId={duplicateStudyId}
+        canSelectEmissionFactorVersions={canSelectEmissionFactorVersions}
+        emissionFactorVersions={emissionFactorVersions}
       >
         <div>
           <IconLabel icon={Help('realizationDates')} iconPosition="after" className="mb-2">

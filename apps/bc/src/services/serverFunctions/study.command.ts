@@ -6,6 +6,7 @@ import {
   EngagementPhase,
   EstablishmentType,
   Export,
+  Import,
   Level,
   StudyResultUnit,
   StudyRole,
@@ -66,6 +67,14 @@ const BaseStudyValidation = z.object({
   level: z.enum(Level),
   isPublic: z.string(),
   simplified: z.boolean().optional(),
+  emissionFactorVersions: z
+    .array(
+      z.object({
+        source: z.enum(Import),
+        importVersionId: z.string().min(1),
+      }),
+    )
+    .optional(),
 })
 
 export const CreateStudyCommandValidation = z

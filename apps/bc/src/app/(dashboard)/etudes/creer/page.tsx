@@ -4,9 +4,10 @@ import NewStudyPage from '@/components/pages/NewStudy'
 import TiltSimplifiedComingSoon from '@/components/pages/TiltSimplifiedComingSoon'
 import { getAccountOrganizationVersions } from '@/db/account'
 import { getOrganizationVersionAccounts, getOrganizationVersionForRightsCheck } from '@/db/organization'
+import { getStudyCreationEmissionFactorVersions } from '@/db/study'
 import { isTilt } from '@/services/permissions/environment'
 import { isTiltSimplifiedFeatureActive } from '@/services/permissions/environmentFeature'
-import { canCreateAStudy } from '@/services/permissions/study'
+import { canCreateAStudy, canSelectEmissionFactorVersions } from '@/services/permissions/study'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { defaultCAUnit } from '@/utils/number'
 import { hasActiveLicence } from '@/utils/organization'
@@ -30,6 +31,14 @@ const NewStudy = async ({ user, duplicateStudyId, isSimplified }: UserSessionPro
     getOrganizationVersionAccounts(user.organizationVersionId),
   ])
 
+  const canSelectVersions = await canSelectEmissionFactorVersions(
+    user.organizationVersionId,
+    user.environment,
+    user.role,
+  )
+  const emissionFactorVersions =
+    canSelectVersions && !duplicateStudyId ? await getStudyCreationEmissionFactorVersions(user.environment) : []
+
   const organizationVersionId = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === user.organizationVersionId,
   )?.id
@@ -49,6 +58,8 @@ const NewStudy = async ({ user, duplicateStudyId, isSimplified }: UserSessionPro
       organizationVersions={organizationVersions}
       user={user}
       accounts={accounts}
+      canSelectEmissionFactorVersions={canSelectVersions}
+      emissionFactorVersions={emissionFactorVersions}
       caUnit={caUnit}
       duplicateStudyId={duplicateStudyId}
     />

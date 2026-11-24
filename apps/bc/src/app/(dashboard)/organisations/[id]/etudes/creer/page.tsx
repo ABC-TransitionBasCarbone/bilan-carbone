@@ -3,7 +3,8 @@ import withStudyCreation, { StudyCreationProps } from '@/components/hoc/withStud
 import NewStudyPage from '@/components/pages/NewStudy'
 import { getAccountOrganizationVersions } from '@/db/account'
 import { getOrganizationVersionAccounts, getOrganizationVersionForRightsCheck } from '@/db/organization'
-import { canCreateAStudy } from '@/services/permissions/study'
+import { getStudyCreationEmissionFactorVersions } from '@/db/study'
+import { canCreateAStudy, canSelectEmissionFactorVersions } from '@/services/permissions/study'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { defaultCAUnit } from '@/utils/number'
 import { hasActiveLicence } from '@/utils/organization'
@@ -28,6 +29,13 @@ const NewStudyInOrganization = async (props: Props & UserSessionProps & StudyCre
     getAccountOrganizationVersions(user.accountId),
     getOrganizationVersionAccounts(user.organizationVersionId),
   ])
+  const canSelectVersions = await canSelectEmissionFactorVersions(
+    user.organizationVersionId,
+    user.environment,
+    user.role,
+  )
+  const emissionFactorVersions =
+    canSelectVersions && !props.duplicateStudyId ? await getStudyCreationEmissionFactorVersions(user.environment) : []
 
   const organizationVersionId = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === user.organizationVersionId,
@@ -46,6 +54,8 @@ const NewStudyInOrganization = async (props: Props & UserSessionProps & StudyCre
       organizationVersions={organizationVersions}
       user={user}
       accounts={accounts}
+      canSelectEmissionFactorVersions={canSelectVersions}
+      emissionFactorVersions={emissionFactorVersions}
       defaultOrganizationVersion={organizationVersions.find((organizationVersion) => organizationVersion.id === id)}
       caUnit={caUnit}
       duplicateStudyId={props.duplicateStudyId}

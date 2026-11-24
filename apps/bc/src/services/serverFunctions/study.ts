@@ -58,6 +58,7 @@ import {
   getStudyCommentsCountFromOrganizationVersionId,
   getStudyCommentsFromOrganizationVersionId,
   getStudyCommentsWithStudyIdAndSubPost,
+  getStudyCreationEmissionFactorVersions,
   getStudyForDeletion,
   getStudySites,
   getStudySitesWithName,
@@ -167,6 +168,7 @@ import {
   canDuplicateStudy,
   canEditStudyFlows,
   canReadStudy,
+  canSelectEmissionFactorVersions,
   canUpgradeSourceVersion,
   getEnvironmentsForDuplication,
   hasEditAccessOnStudy,
@@ -234,7 +236,7 @@ export const getStudySite = async (studySiteId: string) =>
   })
 
 export const createStudyCommand = async (
-  { organizationVersionId, validator, sites, ...command }: CreateStudyCommand,
+  { organizationVersionId, validator, sites, emissionFactorVersions, ...command }: CreateStudyCommand,
   resultsUnit?: StudyResultUnit,
   sourceTagFamilies?: FullStudy['tagFamilies'],
   tx?: Prisma.TransactionClient,
@@ -247,8 +249,10 @@ export const createStudyCommand = async (
     }
 
     let courseSessionType: CourseSessionType | null = null
+    let isProfessor = false
     if (isCourseEnvironment(session.user.environment)) {
-      if (await isCourseProfessor(session.user.organizationVersionId, session.user.environment, tx)) {
+      isProfessor = await isCourseProfessor(session.user.organizationVersionId, session.user.environment, tx)
+      if (isProfessor) {
         if (!(await isInOrgaOrParentFromId(session.user.organizationVersionId, organizationVersionId))) {
           console.error('createStudyCommand: professor cannot create a study outside their organization', {
             accountId: session.user.accountId,
@@ -270,6 +274,52 @@ export const createStudyCommand = async (
         }
         courseSessionType = courseSessions[0].type
       }
+    }
+
+    let selectedEmissionFactorVersions: { source: Import; importVersionId: string }[] | undefined
+    if (emissionFactorVersions !== undefined) {
+      if (
+        !(await canSelectEmissionFactorVersions(
+          session.user.organizationVersionId,
+          session.user.environment,
+          session.user.role,
+          tx,
+        ))
+      ) {
+        console.error('createStudyCommand: unauthorized emission factor version selection', {
+          accountId: session.user.accountId,
+          environment: session.user.environment,
+        })
+        throw new Error(NOT_AUTHORIZED)
+      }
+
+      const hasGHGP = command.exports.includes(Export.GHGP)
+      const availableVersions = (await getStudyCreationEmissionFactorVersions(session.user.environment)).filter(
+        ({ source }) => source !== Import.AIB || hasGHGP,
+      )
+      const selectedSources = new Set(emissionFactorVersions.map(({ source }) => source))
+      const availableSources = new Set(availableVersions.map(({ source }) => source))
+      const hasInvalidSelection =
+        emissionFactorVersions.length !== availableSources.size ||
+        selectedSources.size !== emissionFactorVersions.length ||
+        [...availableSources].some((source) => !selectedSources.has(source))
+
+      if (
+        hasInvalidSelection ||
+        emissionFactorVersions.some(
+          (selection) =>
+            !availableVersions.some(
+              (version) => version.id === selection.importVersionId && version.source === selection.source,
+            ),
+        )
+      ) {
+        console.error('createStudyCommand: invalid emission factor version selection', {
+          accountId: session.user.accountId,
+          environment: session.user.environment,
+        })
+        throw new Error(NOT_AUTHORIZED)
+      }
+      selectedEmissionFactorVersions = emissionFactorVersions
     }
 
     const rights: Prisma.UserOnStudyCreateManyStudyInput[] = []
@@ -387,7 +437,9 @@ export const createStudyCommand = async (
     }
 
     try {
-      const createdStudy = await createStudy(study, session.user.environment, true, tx)
+      const createdStudy = selectedEmissionFactorVersions
+        ? await createStudy(study, session.user.environment, true, tx, selectedEmissionFactorVersions)
+        : await createStudy(study, session.user.environment, true, tx)
       if (!tx) {
         // This cannot be part of a transaction easily so it is done in the duplication flow after the transaction is committed
         await addUserChecklistItem(UserChecklist.CreateFirstStudy)
@@ -1477,7 +1529,12 @@ export const duplicateStudyCommand = async (
     }
 
     const { createdStudyId, createdStudy } = await prismaClient.$transaction(async (tx) => {
-      const createResult = await createStudyCommand(studyCommand, sourceStudy.resultsUnit, sourceStudy.tagFamilies, tx)
+      const createResult = await createStudyCommand(
+        { ...studyCommand, emissionFactorVersions: undefined },
+        sourceStudy.resultsUnit,
+        sourceStudy.tagFamilies,
+        tx,
+      )
       if (!createResult.success) {
         throw new Error(createResult.errorMessage || 'Failed to create study')
       }

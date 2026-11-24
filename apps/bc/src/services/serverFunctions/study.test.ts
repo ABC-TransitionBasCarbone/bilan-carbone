@@ -4,6 +4,7 @@ import {
   EngagementPhase,
   Environment,
   Import,
+  Role,
   StudyRole,
   SubPost,
   UserStatus,
@@ -76,6 +77,7 @@ jest.mock('../../db/study', () => ({
   createEngagementAction: jest.fn(),
   updateEngagementAction: jest.fn(),
   deleteEngagementAction: jest.fn(),
+  getStudyCreationEmissionFactorVersions: jest.fn(),
 }))
 const mockTransaction = {
   site: {
@@ -104,6 +106,7 @@ jest.mock('../../services/permissions/study', () => ({
   canChangeOpeningHours: jest.fn(),
   canAddRightOnStudy: jest.fn(),
   hasEditAccessOnStudy: jest.fn(),
+  canSelectEmissionFactorVersions: jest.fn(),
 }))
 jest.mock('../../services/permissions/study.utils', () => ({
   isAdminOnStudyOrga: jest.fn(),
@@ -298,6 +301,8 @@ const mockCanAddContributorOnStudy = studyPermissionsModule.canAddContributorOnS
 const mockHasEditAccessOnStudy = studyPermissionsModule.hasEditAccessOnStudy as jest.Mock
 const mockGetEmissionFactorsImportActiveVersion =
   emissionFactorsModule.getEmissionFactorsImportActiveVersion as jest.Mock
+const mockGetStudyCreationEmissionFactorVersions = jest.mocked(studyDbModule.getStudyCreationEmissionFactorVersions)
+const mockCanSelectEmissionFactorVersions = jest.mocked(studyPermissionsModule.canSelectEmissionFactorVersions)
 const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
 const mockGetFamilyTagsForStudy = emissionSourcesModule.getFamilyTagsForStudy as jest.Mock
 const mockCreateEmissionSourcesWithReturn = emissionSourcesModule.createEmissionSourcesWithReturn as jest.Mock
@@ -498,6 +503,7 @@ describe('study', () => {
       mockCreateStudy.mockResolvedValue({ id: TEST_IDS.newStudy, sites: [] })
       mockCreateContributorOnStudy.mockResolvedValue(undefined)
       mockIsCourseProfessor.mockResolvedValue(false)
+      mockCanSelectEmissionFactorVersions.mockResolvedValue(false)
       mockGetOrganizationVersionForRightsCheck.mockResolvedValue(null)
     }
 
@@ -653,24 +659,161 @@ describe('study', () => {
         expect(mockCreateStudy).not.toHaveBeenCalled()
       })
 
+      it.each([Environment.BC, Environment.TILT])('does not require a course session in %s', async (environment) => {
+        mockDbActualizedAuth.mockResolvedValue({
+          ...mockedSession,
+          user: { ...mockedSession.user, environment },
+        })
+
+        const result = await createStudyCommand(mockedStudyCommand)
+
+        expect(result.success).toBe(true)
+        expect(mockGetCourseSessionsForTrainee).not.toHaveBeenCalled()
+        expect(mockCreateStudy).toHaveBeenCalledWith(
+          expect.objectContaining({ courseSessionType: null }),
+          environment,
+          true,
+          undefined,
+        )
+      })
+
       it.each([Environment.BC, Environment.TILT, Environment.CUT, Environment.CLICKSON])(
-        'does not require a course session in %s',
+        'allows a super admin to select an older emission factor version in %s',
         async (environment) => {
+          const selectedVersion = { source: Import.BaseEmpreinte, importVersionId: 'old-base-version' }
           mockDbActualizedAuth.mockResolvedValue({
             ...mockedSession,
-            user: { ...mockedSession.user, environment },
+            user: { ...mockedSession.user, environment, role: Role.SUPER_ADMIN },
+          })
+          mockCanSelectEmissionFactorVersions.mockResolvedValue(true)
+          mockGetStudyCreationEmissionFactorVersions.mockResolvedValue([
+            { id: selectedVersion.importVersionId, source: selectedVersion.source, name: 'Old' },
+          ])
+
+          const result = await createStudyCommand({
+            ...mockedStudyCommand,
+            emissionFactorVersions: [selectedVersion],
           })
 
-          const result = await createStudyCommand(mockedStudyCommand)
-
           expect(result.success).toBe(true)
-          expect(mockGetCourseSessionsForTrainee).not.toHaveBeenCalled()
+          expect(mockGetStudyCreationEmissionFactorVersions).toHaveBeenCalledWith(environment)
           expect(mockCreateStudy).toHaveBeenCalledWith(
             expect.objectContaining({ courseSessionType: null }),
             environment,
             true,
             undefined,
+            [selectedVersion],
           )
+        },
+      )
+
+      it('allows a course professor to select an emission factor version', async () => {
+        const selectedVersion = { source: Import.BaseEmpreinte, importVersionId: 'old-base-version' }
+        mockDbActualizedAuth.mockResolvedValue({
+          ...mockedSession,
+          user: {
+            ...mockedSession.user,
+            environment: Environment.COURSE_BC,
+            organizationVersionId: TEST_IDS.orgVersion,
+          },
+        })
+        mockIsCourseProfessor.mockResolvedValue(true)
+        mockCanSelectEmissionFactorVersions.mockResolvedValue(true)
+        mockGetStudyCreationEmissionFactorVersions.mockResolvedValue([
+          { id: selectedVersion.importVersionId, source: selectedVersion.source, name: 'Old' },
+        ])
+
+        const result = await createStudyCommand({
+          ...mockedStudyCommand,
+          emissionFactorVersions: [selectedVersion],
+        })
+
+        expect(result.success).toBe(true)
+        expect(mockCreateStudy).toHaveBeenCalledWith(
+          expect.objectContaining({ courseSessionType: null }),
+          Environment.COURSE_BC,
+          true,
+          undefined,
+          [selectedVersion],
+        )
+      })
+
+      it('rejects an emission factor version that does not match its source', async () => {
+        const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined)
+        const selectedVersion = { source: Import.BaseEmpreinte, importVersionId: 'old-base-version' }
+        mockDbActualizedAuth.mockResolvedValue({
+          ...mockedSession,
+          user: { ...mockedSession.user, environment: Environment.BC, role: Role.SUPER_ADMIN },
+        })
+        mockCanSelectEmissionFactorVersions.mockResolvedValue(true)
+        mockGetStudyCreationEmissionFactorVersions.mockResolvedValue([
+          { id: 'latest-base-version', source: Import.BaseEmpreinte, name: 'Latest' },
+          { id: selectedVersion.importVersionId, source: Import.AIB, name: 'Other' },
+        ])
+
+        const result = await createStudyCommand({
+          ...mockedStudyCommand,
+          emissionFactorVersions: [selectedVersion],
+        })
+
+        expect(result).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+        expect(mockCreateStudy).not.toHaveBeenCalled()
+        consoleError.mockRestore()
+      })
+
+      it('rejects a version belonging to a source unavailable in the environment', async () => {
+        const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined)
+        mockCanSelectEmissionFactorVersions.mockResolvedValue(true)
+        mockGetStudyCreationEmissionFactorVersions.mockResolvedValue([
+          { id: 'base-version', source: Import.BaseEmpreinte, name: 'Base' },
+        ])
+
+        const result = await createStudyCommand({
+          ...mockedStudyCommand,
+          emissionFactorVersions: [{ source: Import.CLICKSON, importVersionId: 'clickson-version' }],
+        })
+
+        expect(result).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+        expect(mockCreateStudy).not.toHaveBeenCalled()
+        consoleError.mockRestore()
+      })
+
+      it('rejects emission factor version overrides from non-trainers', async () => {
+        const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined)
+
+        const result = await createStudyCommand({
+          ...mockedStudyCommand,
+          emissionFactorVersions: [{ source: Import.BaseEmpreinte, importVersionId: 'old-base-version' }],
+        })
+
+        expect(result).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+        expect(mockCreateStudy).not.toHaveBeenCalled()
+        consoleError.mockRestore()
+      })
+
+      it.each([Environment.CUT, Environment.CLICKSON])(
+        'rejects version selection when permission is denied in %s',
+        async (environment) => {
+          const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined)
+          mockDbActualizedAuth.mockResolvedValue({
+            ...mockedSession,
+            user: { ...mockedSession.user, environment, role: Role.SUPER_ADMIN },
+          })
+
+          const result = await createStudyCommand({
+            ...mockedStudyCommand,
+            emissionFactorVersions: [{ source: Import.BaseEmpreinte, importVersionId: 'old-base-version' }],
+          })
+
+          expect(result).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+          expect(mockCanSelectEmissionFactorVersions).toHaveBeenCalledWith(
+            mockedSession.user.organizationVersionId,
+            environment,
+            Role.SUPER_ADMIN,
+            undefined,
+          )
+          expect(mockCreateStudy).not.toHaveBeenCalled()
+          consoleError.mockRestore()
         },
       )
 
@@ -723,8 +866,12 @@ describe('study', () => {
 
     describe('Data Duplication', () => {
       it('should duplicate emission factor versions', async () => {
-        await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
+        await duplicateStudyCommand(TEST_IDS.sourceStudy, {
+          ...mockedStudyCommand,
+          emissionFactorVersions: [{ source: Import.BaseEmpreinte, importVersionId: 'requested-version' }],
+        })
 
+        expect(mockCreateStudy).toHaveBeenCalledWith(expect.anything(), Environment.BC, true, mockTransaction)
         expect(mockUpdateStudyEmissionFactorVersion).toHaveBeenCalledWith(
           TEST_IDS.newStudy,
           Import.BaseEmpreinte,

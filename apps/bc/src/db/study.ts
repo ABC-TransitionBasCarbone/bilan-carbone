@@ -46,6 +46,7 @@ export const createStudy = async (
   environment: Environment,
   shouldCreateFEVersions = true,
   tx?: Prisma.TransactionClient,
+  selectedEmissionFactorVersions?: { source: Import; importVersionId: string }[],
 ) => {
   const client = tx ?? prismaClient
   const dbStudy = await client.study.create({
@@ -59,14 +60,19 @@ export const createStudy = async (
   })
 
   if (hasAccessToCreateStudyWithEmissionFactorVersions(environment) || shouldCreateFEVersions) {
-    let studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] = []
-    if (environment === Environment.CUT) {
+    let studyEmissionFactorVersions: Prisma.StudyEmissionFactorVersionCreateManyInput[] =
+      selectedEmissionFactorVersions?.map(({ source, importVersionId }) => ({
+        studyId: dbStudy.id,
+        source,
+        importVersionId,
+      })) ?? []
+    if (!selectedEmissionFactorVersions && environment === Environment.CUT) {
       studyEmissionFactorVersions = (await getSourceCutImportVersionIds()).map((importVersion) => ({
         studyId: dbStudy.id,
         source: importVersion.source,
         importVersionId: importVersion.id,
       }))
-    } else if (environment === Environment.CLICKSON) {
+    } else if (!selectedEmissionFactorVersions && environment === Environment.CLICKSON) {
       studyEmissionFactorVersions = (await getSourceEnvironmentImportVersionIds(Environment.CLICKSON)).map(
         (importVersion) => ({
           studyId: dbStudy.id,
@@ -74,7 +80,7 @@ export const createStudy = async (
           importVersionId: importVersion.id,
         }),
       )
-    } else {
+    } else if (!selectedEmissionFactorVersions) {
       const hasGHGP = dbStudy.exports?.types.includes(Export.GHGP)
       const sources = Object.values(Import).filter(
         (source) => source !== Import.Manual && source !== Import.CUT && (source !== Import.AIB || hasGHGP),
@@ -1011,6 +1017,21 @@ export const getSourceEnvironmentImportVersionIds = async (
     },
     orderBy: { createdAt: 'desc' },
     distinct: ['source'],
+  })
+}
+
+export const getStudyCreationEmissionFactorVersions = async (environment: Environment) => {
+  const sources = (await isSourceForEnv(environment)).filter(
+    (source) => source !== Import.Manual && source !== Import.CUT,
+  )
+  if (sources.length === 0) {
+    throw new Error(`No emission factor import sources configured for ${environment}`)
+  }
+
+  return prismaClient.emissionFactorImportVersion.findMany({
+    select: { id: true, source: true, name: true },
+    where: { source: { in: sources } },
+    orderBy: { createdAt: 'desc' },
   })
 }
 
