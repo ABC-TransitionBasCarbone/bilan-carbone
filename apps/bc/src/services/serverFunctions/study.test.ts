@@ -748,13 +748,9 @@ describe('study', () => {
           })
 
           expect(result.success).toBe(true)
-          expect(mockCreateStudy).toHaveBeenCalledWith(
-            expect.anything(),
-            Environment.CLICKSON,
-            true,
-            undefined,
-            [selectedVersion],
-          )
+          expect(mockCreateStudy).toHaveBeenCalledWith(expect.anything(), Environment.CLICKSON, true, undefined, [
+            selectedVersion,
+          ])
         })
 
         expect(result.success).toBe(true)
