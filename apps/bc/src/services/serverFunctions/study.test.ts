@@ -696,6 +696,7 @@ describe('study', () => {
           })
 
           expect(result.success).toBe(true)
+          expect(mockGetStudyCreationEmissionFactorVersions).toHaveBeenCalledWith(environment)
           expect(mockCreateStudy).toHaveBeenCalledWith(
             expect.objectContaining({ courseSessionType: null }),
             environment,
@@ -753,6 +754,23 @@ describe('study', () => {
         const result = await createStudyCommand({
           ...mockedStudyCommand,
           emissionFactorVersions: [selectedVersion],
+        })
+
+        expect(result).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+        expect(mockCreateStudy).not.toHaveBeenCalled()
+        consoleError.mockRestore()
+      })
+
+      it('rejects a version belonging to a source unavailable in the environment', async () => {
+        const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined)
+        mockCanSelectEmissionFactorVersions.mockResolvedValue(true)
+        mockGetStudyCreationEmissionFactorVersions.mockResolvedValue([
+          { id: 'base-version', source: Import.BaseEmpreinte, name: 'Base' },
+        ])
+
+        const result = await createStudyCommand({
+          ...mockedStudyCommand,
+          emissionFactorVersions: [{ source: Import.CLICKSON, importVersionId: 'clickson-version' }],
         })
 
         expect(result).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })

@@ -36,7 +36,8 @@ const NewStudy = async ({ user, duplicateStudyId, isSimplified }: UserSessionPro
     user.environment,
     user.role,
   )
-  const emissionFactorVersions = canSelectVersions ? await getStudyCreationEmissionFactorVersions() : []
+  const emissionFactorVersions =
+    canSelectVersions && !duplicateStudyId ? await getStudyCreationEmissionFactorVersions(user.environment) : []
 
   const organizationVersionId = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === user.organizationVersionId,

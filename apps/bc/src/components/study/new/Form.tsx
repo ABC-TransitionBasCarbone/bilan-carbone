@@ -141,30 +141,6 @@ const NewStudyForm = ({
             </div>
           </div>
         )}
-        {canSelectEmissionFactorVersions && !duplicateStudyId && versionSelectionsToDisplay.length > 0 && (
-          <div>
-            <p>{tEmissionFactorVersion('latestEmissionFactorVersionDefault')}</p>
-            {versionSelectionsToDisplay.map(({ selection, index }) => (
-              <FormSelect
-                key={selection.source}
-                control={form.control}
-                name={`emissionFactorVersions.${index}.importVersionId` as const}
-                translation={tEmissionFactorVersion}
-                label={tEmissionFactorVersion('emissionFactorVersion', {
-                  source: tEmissionFactorSource(selection.source),
-                })}
-              >
-                {emissionFactorVersions
-                  .filter((version) => version.source === selection.source)
-                  .map((version) => (
-                    <MenuItem key={version.id} value={version.id}>
-                      {version.name}
-                    </MenuItem>
-                  ))}
-              </FormSelect>
-            ))}
-          </div>
-        )}
         {children}
         {duplicateStudyId && (
           <StudyDuplicationForm
@@ -172,6 +148,38 @@ const NewStudyForm = ({
             inviteOptions={inviteOptions}
             setInviteOptions={setInviteOptions}
           />
+        )}
+        {canSelectEmissionFactorVersions && !duplicateStudyId && versionSelectionsToDisplay.length > 0 && (
+          <section aria-labelledby="emission-factor-versions-title">
+            <h2 id="emission-factor-versions-title" className="title-h5">
+              {tEmissionFactorVersion('emissionFactorVersionsTitle')}
+            </h2>
+            <p>{tEmissionFactorVersion('latestEmissionFactorVersionDefault')}</p>
+            <div className={styles.emissionFactorVersions}>
+              {versionSelectionsToDisplay.map(({ selection, index }) => (
+                <FormSelect
+                  key={selection.source}
+                  control={form.control}
+                  name={`emissionFactorVersions.${index}.importVersionId` as const}
+                  translation={tEmissionFactorVersion}
+                  label={
+                    tEmissionFactorSource.has(selection.source)
+                      ? tEmissionFactorSource(selection.source)
+                      : selection.source
+                  }
+                  fullWidth
+                >
+                  {emissionFactorVersions
+                    .filter((version) => version.source === selection.source)
+                    .map((version) => (
+                      <MenuItem key={version.id} value={version.id}>
+                        {version.name}
+                      </MenuItem>
+                    ))}
+                </FormSelect>
+              ))}
+            </div>
+          </section>
         )}
         <LoadingButton type="submit" loading={loading} data-testid="new-study-create-button">
           {duplicateStudyId ? t('duplicate') : t('create')}

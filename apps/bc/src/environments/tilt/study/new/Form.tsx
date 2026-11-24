@@ -69,8 +69,6 @@ const NewStudyFormTilt = ({
         setGlossary={setGlossary}
         t={t}
         duplicateStudyId={duplicateStudyId}
-        canSelectEmissionFactorVersions={canSelectEmissionFactorVersions}
-        emissionFactorVersions={emissionFactorVersions}
         customRouteAfterCreation="/cadrage"
         showStudyDates={false}
       />

@@ -479,6 +479,7 @@
       "numberOfOpenDays": "Number of opening days",
       "openingHours": "Opening hours",
       "openingHoursHoliday": "Opening hours during school holidays",
+      "emissionFactorVersionsTitle": "Emission factor versions",
       "latestEmissionFactorVersionDefault": "The latest version is selected by default.",
       "emissionFactorVersion": "Emission factor version - {source}",
       "clear": "Clear value",

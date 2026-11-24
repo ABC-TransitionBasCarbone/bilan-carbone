@@ -482,6 +482,7 @@
       "numberOfOpenDays": "Nombre de jours d'ouverture",
       "openingHours": "Horaires d'ouverture",
       "openingHoursHoliday": "Horaires d'ouverture pendant les vacances scolaires",
+      "emissionFactorVersionsTitle": "Version des facteurs d'émission",
       "latestEmissionFactorVersionDefault": "La dernière version est sélectionnée par défaut.",
       "emissionFactorVersion": "Version des facteurs d'émission - {source}",
       "clear": "Supprimer la valeur",

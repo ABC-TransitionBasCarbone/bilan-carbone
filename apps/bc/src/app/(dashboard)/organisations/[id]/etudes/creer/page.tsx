@@ -34,7 +34,8 @@ const NewStudyInOrganization = async (props: Props & UserSessionProps & StudyCre
     user.environment,
     user.role,
   )
-  const emissionFactorVersions = canSelectVersions ? await getStudyCreationEmissionFactorVersions() : []
+  const emissionFactorVersions =
+    canSelectVersions && !props.duplicateStudyId ? await getStudyCreationEmissionFactorVersions(user.environment) : []
 
   const organizationVersionId = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === user.organizationVersionId,

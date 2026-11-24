@@ -1020,10 +1020,17 @@ export const getSourceEnvironmentImportVersionIds = async (
   })
 }
 
-export const getStudyCreationEmissionFactorVersions = async () => {
+export const getStudyCreationEmissionFactorVersions = async (environment: Environment) => {
+  const sources = (await isSourceForEnv(environment)).filter(
+    (source) => source !== Import.Manual && source !== Import.CUT,
+  )
+  if (sources.length === 0) {
+    throw new Error(`No emission factor import sources configured for ${environment}`)
+  }
+
   return prismaClient.emissionFactorImportVersion.findMany({
     select: { id: true, source: true, name: true },
-    where: { source: { notIn: [Import.Manual, Import.CUT] } },
+    where: { source: { in: sources } },
     orderBy: { createdAt: 'desc' },
   })
 }
