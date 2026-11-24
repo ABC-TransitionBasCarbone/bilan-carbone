@@ -1,4 +1,5 @@
 import * as dbAccountModule from '@/db/account'
+import * as dbCourseSessionModule from '@/db/courseSession'
 import * as dbOrganizationModule from '@/db/organization'
 import * as dbStudyModule from '@/db/study'
 import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
@@ -32,6 +33,7 @@ import {
   canDuplicateStudy,
   canReadStudy,
   canReadStudyDetail,
+  canSelectEmissionFactorVersions,
   getEnvironmentsForDuplication,
   NEWGetAccountRoleOnStudy,
 } from './study'
@@ -44,6 +46,7 @@ jest.mock('uuid', () => ({ v4: jest.fn() }))
 
 // mocked called function
 jest.mock('@/db/account', () => ({ getAccountById: jest.fn() }))
+jest.mock('@/db/courseSession', () => ({ isCourseProfessor: jest.fn() }))
 jest.mock('@/db/organization', () => ({
   getOrganizationVersionsByOrganizationId: jest.fn(),
   getOrganizationVersionById: jest.fn(),
@@ -100,6 +103,33 @@ const mockIsProfessorOnStudy = jest.mocked(studyUtils.isProfessorOnStudy)
 const advancedStudy = getMockedStudyCreateInput({ level: Level.Advanced })
 const standardStudy = getMockedStudyCreateInput({ level: Level.Standard })
 const initialStudy = getMockedStudyCreateInput({ level: Level.Initial })
+
+describe('emission factor version selection', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it.each([Environment.BC, Environment.TILT, Environment.CUT, Environment.CLICKSON])(
+    'allows a super admin in %s',
+    async (environment) => {
+      expect(await canSelectEmissionFactorVersions(mockedOrganizationVersionId, environment, Role.SUPER_ADMIN)).toBe(
+        true,
+      )
+    },
+  )
+
+  it.each([true, false])('allows a course user only when professor is %s', async (isProfessor) => {
+    jest.mocked(dbCourseSessionModule.isCourseProfessor).mockResolvedValue(isProfessor)
+
+    expect(
+      await canSelectEmissionFactorVersions(mockedOrganizationVersionId, Environment.COURSE_BC, Role.DEFAULT),
+    ).toBe(isProfessor)
+  })
+
+  it('does not allow other users', async () => {
+    expect(await canSelectEmissionFactorVersions(mockedOrganizationVersionId, Environment.BC, Role.DEFAULT)).toBe(false)
+  })
+})
 
 describe('professor study access', () => {
   beforeEach(() => {

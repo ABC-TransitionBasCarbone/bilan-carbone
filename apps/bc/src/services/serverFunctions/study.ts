@@ -16,7 +16,6 @@ import { getCourseSessionsForTrainee } from '@/db/courseOrganism'
 import { isCourseProfessor } from '@/db/courseSession'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
-  getEmissionFactorImportVersionsByIds,
   getEmissionFactorsByIdsAndSource,
   getEmissionFactorsByImportedIdsAndVersion,
   getEmissionFactorsImportActiveVersion,
@@ -53,13 +52,13 @@ import {
   getMinimalStudyForRights,
   getOrganizationStudiesBeforeDate,
   getPendingStudyCommentsCountFromAuthor,
-  getSourcesLatestImportVersionId,
   getStudiesSitesFromIds,
   getStudyAllowedUsersUnfiltered,
   getStudyById,
   getStudyCommentsCountFromOrganizationVersionId,
   getStudyCommentsFromOrganizationVersionId,
   getStudyCommentsWithStudyIdAndSubPost,
+  getStudyCreationEmissionFactorVersions,
   getStudyForDeletion,
   getStudySites,
   getStudySitesWithName,
@@ -87,7 +86,6 @@ import {
   UserWithAccounts,
 } from '@/db/user'
 import { getLocale } from '@/i18n/locale'
-import { supportsStudyEmissionFactorVersionSelection } from '@/services/permissions/environment'
 import { buildStudyForDuplication, duplicateEmissionSources, getSitesForDuplication } from '@/services/studyDuplication'
 import { StudySiteFields, studySiteToSituation } from '@/services/studySiteToSituation'
 import { AccountWithUser } from '@/types/account.types'
@@ -170,6 +168,7 @@ import {
   canDuplicateStudy,
   canEditStudyFlows,
   canReadStudy,
+  canSelectEmissionFactorVersions,
   canUpgradeSourceVersion,
   getEnvironmentsForDuplication,
   hasEditAccessOnStudy,
@@ -280,8 +279,12 @@ export const createStudyCommand = async (
     let selectedEmissionFactorVersions: { source: Import; importVersionId: string }[] | undefined
     if (emissionFactorVersions !== undefined) {
       if (
-        !supportsStudyEmissionFactorVersionSelection(session.user.environment) ||
-        (session.user.role !== Role.SUPER_ADMIN && !isProfessor)
+        !(await canSelectEmissionFactorVersions(
+          session.user.organizationVersionId,
+          session.user.environment,
+          session.user.role,
+          tx,
+        ))
       ) {
         console.error('createStudyCommand: unauthorized emission factor version selection', {
           accountId: session.user.accountId,
@@ -291,25 +294,21 @@ export const createStudyCommand = async (
       }
 
       const hasGHGP = command.exports.includes(Export.GHGP)
-      const sources = Object.values(Import).filter(
-        (source) => source !== Import.Manual && source !== Import.CUT && (source !== Import.AIB || hasGHGP),
+      const availableVersions = (await getStudyCreationEmissionFactorVersions(session.user.environment)).filter(
+        ({ source }) => source !== Import.AIB || session.user.environment === Environment.CLICKSON || hasGHGP,
       )
-      const latestVersions = await getSourcesLatestImportVersionId(sources)
       const selectedSources = new Set(emissionFactorVersions.map(({ source }) => source))
+      const availableSources = new Set(availableVersions.map(({ source }) => source))
       const hasInvalidSelection =
-        emissionFactorVersions.length !== latestVersions.length ||
+        emissionFactorVersions.length !== availableSources.size ||
         selectedSources.size !== emissionFactorVersions.length ||
-        latestVersions.some((version) => !selectedSources.has(version.source))
+        [...availableSources].some((source) => !selectedSources.has(source))
 
-      const selectedImportVersions = await getEmissionFactorImportVersionsByIds(
-        emissionFactorVersions.map(({ importVersionId }) => importVersionId),
-      )
       if (
         hasInvalidSelection ||
-        selectedImportVersions.length !== emissionFactorVersions.length ||
         emissionFactorVersions.some(
           (selection) =>
-            !selectedImportVersions.some(
+            !availableVersions.some(
               (version) => version.id === selection.importVersionId && version.source === selection.source,
             ),
         )

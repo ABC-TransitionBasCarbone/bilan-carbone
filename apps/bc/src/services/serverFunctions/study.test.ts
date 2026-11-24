@@ -77,7 +77,7 @@ jest.mock('../../db/study', () => ({
   createEngagementAction: jest.fn(),
   updateEngagementAction: jest.fn(),
   deleteEngagementAction: jest.fn(),
-  getSourcesLatestImportVersionId: jest.fn(),
+  getStudyCreationEmissionFactorVersions: jest.fn(),
 }))
 const mockTransaction = {
   site: {
@@ -106,6 +106,7 @@ jest.mock('../../services/permissions/study', () => ({
   canChangeOpeningHours: jest.fn(),
   canAddRightOnStudy: jest.fn(),
   hasEditAccessOnStudy: jest.fn(),
+  canSelectEmissionFactorVersions: jest.fn(),
 }))
 jest.mock('../../services/permissions/study.utils', () => ({
   isAdminOnStudyOrga: jest.fn(),
@@ -159,7 +160,6 @@ jest.mock('../../utils/serverResponse', () => ({
   }),
 }))
 jest.mock('../../db/emissionFactors', () => ({
-  getEmissionFactorImportVersionsByIds: jest.fn(),
   getEmissionFactorsImportActiveVersion: jest.fn(),
 }))
 jest.mock('../../db/emissionSource', () => ({
@@ -301,8 +301,8 @@ const mockCanAddContributorOnStudy = studyPermissionsModule.canAddContributorOnS
 const mockHasEditAccessOnStudy = studyPermissionsModule.hasEditAccessOnStudy as jest.Mock
 const mockGetEmissionFactorsImportActiveVersion =
   emissionFactorsModule.getEmissionFactorsImportActiveVersion as jest.Mock
-const mockGetEmissionFactorImportVersionsByIds = emissionFactorsModule.getEmissionFactorImportVersionsByIds as jest.Mock
-const mockGetSourcesLatestImportVersionId = studyDbModule.getSourcesLatestImportVersionId as jest.Mock
+const mockGetStudyCreationEmissionFactorVersions = jest.mocked(studyDbModule.getStudyCreationEmissionFactorVersions)
+const mockCanSelectEmissionFactorVersions = jest.mocked(studyPermissionsModule.canSelectEmissionFactorVersions)
 const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
 const mockGetFamilyTagsForStudy = emissionSourcesModule.getFamilyTagsForStudy as jest.Mock
 const mockCreateEmissionSourcesWithReturn = emissionSourcesModule.createEmissionSourcesWithReturn as jest.Mock
@@ -503,6 +503,7 @@ describe('study', () => {
       mockCreateStudy.mockResolvedValue({ id: TEST_IDS.newStudy, sites: [] })
       mockCreateContributorOnStudy.mockResolvedValue(undefined)
       mockIsCourseProfessor.mockResolvedValue(false)
+      mockCanSelectEmissionFactorVersions.mockResolvedValue(false)
       mockGetOrganizationVersionForRightsCheck.mockResolvedValue(null)
     }
 
@@ -679,33 +680,34 @@ describe('study', () => {
         },
       )
 
-      it('allows a super admin to select an older emission factor version', async () => {
-        const selectedVersion = { source: Import.BaseEmpreinte, importVersionId: 'old-base-version' }
-        mockDbActualizedAuth.mockResolvedValue({
-          ...mockedSession,
-          user: { ...mockedSession.user, environment: Environment.BC, role: Role.SUPER_ADMIN },
-        })
-        mockGetSourcesLatestImportVersionId.mockResolvedValue([
-          { id: 'latest-base-version', source: Import.BaseEmpreinte },
-        ])
-        mockGetEmissionFactorImportVersionsByIds.mockResolvedValue([
-          { id: selectedVersion.importVersionId, source: selectedVersion.source },
-        ])
+      it.each([Environment.BC, Environment.TILT, Environment.CUT, Environment.CLICKSON])(
+        'allows a super admin to select an older emission factor version in %s',
+        async (environment) => {
+          const selectedVersion = { source: Import.BaseEmpreinte, importVersionId: 'old-base-version' }
+          mockDbActualizedAuth.mockResolvedValue({
+            ...mockedSession,
+            user: { ...mockedSession.user, environment, role: Role.SUPER_ADMIN },
+          })
+          mockCanSelectEmissionFactorVersions.mockResolvedValue(true)
+          mockGetStudyCreationEmissionFactorVersions.mockResolvedValue([
+            { id: selectedVersion.importVersionId, source: selectedVersion.source, name: 'Old' },
+          ])
 
-        const result = await createStudyCommand({
-          ...mockedStudyCommand,
-          emissionFactorVersions: [selectedVersion],
-        })
+          const result = await createStudyCommand({
+            ...mockedStudyCommand,
+            emissionFactorVersions: [selectedVersion],
+          })
 
-        expect(result.success).toBe(true)
-        expect(mockCreateStudy).toHaveBeenCalledWith(
-          expect.objectContaining({ courseSessionType: null }),
-          Environment.BC,
-          true,
-          undefined,
-          [selectedVersion],
-        )
-      })
+          expect(result.success).toBe(true)
+          expect(mockCreateStudy).toHaveBeenCalledWith(
+            expect.objectContaining({ courseSessionType: null }),
+            environment,
+            true,
+            undefined,
+            [selectedVersion],
+          )
+        },
+      )
 
       it('allows a course professor to select an emission factor version', async () => {
         const selectedVersion = { source: Import.BaseEmpreinte, importVersionId: 'old-base-version' }
@@ -718,16 +720,41 @@ describe('study', () => {
           },
         })
         mockIsCourseProfessor.mockResolvedValue(true)
-        mockGetSourcesLatestImportVersionId.mockResolvedValue([
-          { id: 'latest-base-version', source: Import.BaseEmpreinte },
-        ])
-        mockGetEmissionFactorImportVersionsByIds.mockResolvedValue([
-          { id: selectedVersion.importVersionId, source: selectedVersion.source },
+        mockCanSelectEmissionFactorVersions.mockResolvedValue(true)
+        mockGetStudyCreationEmissionFactorVersions.mockResolvedValue([
+          { id: selectedVersion.importVersionId, source: selectedVersion.source, name: 'Old' },
         ])
 
         const result = await createStudyCommand({
           ...mockedStudyCommand,
           emissionFactorVersions: [selectedVersion],
+        })
+
+        it('accepts an AIB version configured for CLICKSON without a GHGP export', async () => {
+          const selectedVersion = { source: Import.AIB, importVersionId: 'aib-version' }
+          mockDbActualizedAuth.mockResolvedValue({
+            ...mockedSession,
+            user: { ...mockedSession.user, environment: Environment.CLICKSON, role: Role.SUPER_ADMIN },
+          })
+          mockCanSelectEmissionFactorVersions.mockResolvedValue(true)
+          mockGetStudyCreationEmissionFactorVersions.mockResolvedValue([
+            { id: selectedVersion.importVersionId, source: selectedVersion.source, name: 'AIB' },
+          ])
+
+          const result = await createStudyCommand({
+            ...mockedStudyCommand,
+            exports: [],
+            emissionFactorVersions: [selectedVersion],
+          })
+
+          expect(result.success).toBe(true)
+          expect(mockCreateStudy).toHaveBeenCalledWith(
+            expect.anything(),
+            Environment.CLICKSON,
+            true,
+            undefined,
+            [selectedVersion],
+          )
         })
 
         expect(result.success).toBe(true)
@@ -747,11 +774,10 @@ describe('study', () => {
           ...mockedSession,
           user: { ...mockedSession.user, environment: Environment.BC, role: Role.SUPER_ADMIN },
         })
-        mockGetSourcesLatestImportVersionId.mockResolvedValue([
-          { id: 'latest-base-version', source: Import.BaseEmpreinte },
-        ])
-        mockGetEmissionFactorImportVersionsByIds.mockResolvedValue([
-          { id: selectedVersion.importVersionId, source: Import.AIB },
+        mockCanSelectEmissionFactorVersions.mockResolvedValue(true)
+        mockGetStudyCreationEmissionFactorVersions.mockResolvedValue([
+          { id: 'latest-base-version', source: Import.BaseEmpreinte, name: 'Latest' },
+          { id: selectedVersion.importVersionId, source: Import.AIB, name: 'Other' },
         ])
 
         const result = await createStudyCommand({

@@ -1,4 +1,5 @@
 import { getAccountById } from '@/db/account'
+import { isCourseProfessor } from '@/db/courseSession'
 import { getDocumentById } from '@/db/document'
 import { getOrganizationVersionForRightsCheck, getOrganizationVersionsByOrganizationId } from '@/db/organization'
 import { FullStudy, getStudyById, MinimalStudyForRights } from '@/db/study'
@@ -572,4 +573,17 @@ export const hasEditAccessOnStudy = async (studyId: string, session?: { user: Us
   }
 
   return canEditStudy(actualSession.user, study)
+}
+
+export const canSelectEmissionFactorVersions = async (
+  organizationVersionId: string | null,
+  environment: Environment,
+  role: Role,
+  tx?: Prisma.TransactionClient,
+) => {
+  return !!(
+    organizationVersionId &&
+    (role === Role.SUPER_ADMIN ||
+      (isCourseEnvironment(environment) && (await isCourseProfessor(organizationVersionId, environment, tx))))
+  )
 }

@@ -2,17 +2,13 @@ import withAuth, { UserSessionProps } from '@/components/hoc/withAuth'
 import withStudyCreation, { StudyCreationProps } from '@/components/hoc/withStudyCreation'
 import NewStudyPage from '@/components/pages/NewStudy'
 import { getAccountOrganizationVersions } from '@/db/account'
-import { isCourseProfessor } from '@/db/courseSession'
-import { getEmissionFactorImportVersionsBC } from '@/db/emissionFactors'
 import { getOrganizationVersionAccounts, getOrganizationVersionForRightsCheck } from '@/db/organization'
-import { supportsStudyEmissionFactorVersionSelection } from '@/services/permissions/environment'
-import { canCreateAStudy } from '@/services/permissions/study'
+import { getStudyCreationEmissionFactorVersions } from '@/db/study'
+import { canCreateAStudy, canSelectEmissionFactorVersions } from '@/services/permissions/study'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { defaultCAUnit } from '@/utils/number'
 import { hasActiveLicence } from '@/utils/organization'
 import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
-import { Role } from '@abc-transitionbascarbone/common/db/enums'
-import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import { redirect } from 'next/navigation'
 
 interface Props {
@@ -33,14 +29,12 @@ const NewStudyInOrganization = async (props: Props & UserSessionProps & StudyCre
     getAccountOrganizationVersions(user.accountId),
     getOrganizationVersionAccounts(user.organizationVersionId),
   ])
-  const canSelectEmissionFactorVersions =
-    supportsStudyEmissionFactorVersionSelection(user.environment) &&
-    (user.role === Role.SUPER_ADMIN ||
-      (isCourseEnvironment(user.environment) &&
-        (await isCourseProfessor(user.organizationVersionId, user.environment))))
-  const emissionFactorVersions = canSelectEmissionFactorVersions
-    ? (await getEmissionFactorImportVersionsBC(true)).map(({ id, source, name }) => ({ id, source, name }))
-    : []
+  const canSelectVersions = await canSelectEmissionFactorVersions(
+    user.organizationVersionId,
+    user.environment,
+    user.role,
+  )
+  const emissionFactorVersions = canSelectVersions ? await getStudyCreationEmissionFactorVersions(user.environment) : []
 
   const organizationVersionId = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === user.organizationVersionId,
@@ -59,7 +53,7 @@ const NewStudyInOrganization = async (props: Props & UserSessionProps & StudyCre
       organizationVersions={organizationVersions}
       user={user}
       accounts={accounts}
-      canSelectEmissionFactorVersions={canSelectEmissionFactorVersions}
+      canSelectEmissionFactorVersions={canSelectVersions}
       emissionFactorVersions={emissionFactorVersions}
       defaultOrganizationVersion={organizationVersions.find((organizationVersion) => organizationVersion.id === id)}
       caUnit={caUnit}

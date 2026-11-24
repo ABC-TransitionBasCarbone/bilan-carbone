@@ -3,18 +3,15 @@ import withStudyCreation, { StudyCreationProps } from '@/components/hoc/withStud
 import NewStudyPage from '@/components/pages/NewStudy'
 import TiltSimplifiedComingSoon from '@/components/pages/TiltSimplifiedComingSoon'
 import { getAccountOrganizationVersions } from '@/db/account'
-import { isCourseProfessor } from '@/db/courseSession'
-import { getEmissionFactorImportVersionsBC } from '@/db/emissionFactors'
 import { getOrganizationVersionAccounts, getOrganizationVersionForRightsCheck } from '@/db/organization'
-import { isTilt, supportsStudyEmissionFactorVersionSelection } from '@/services/permissions/environment'
+import { getStudyCreationEmissionFactorVersions } from '@/db/study'
+import { isTilt } from '@/services/permissions/environment'
 import { isTiltSimplifiedFeatureActive } from '@/services/permissions/environmentFeature'
-import { canCreateAStudy } from '@/services/permissions/study'
+import { canCreateAStudy, canSelectEmissionFactorVersions } from '@/services/permissions/study'
 import { getUserSettings } from '@/services/serverFunctions/user'
 import { defaultCAUnit } from '@/utils/number'
 import { hasActiveLicence } from '@/utils/organization'
 import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
-import { Role } from '@abc-transitionbascarbone/common/db/enums'
-import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import { redirect } from 'next/navigation'
 
 const NewStudy = async ({ user, duplicateStudyId, isSimplified }: UserSessionProps & StudyCreationProps) => {
@@ -33,14 +30,13 @@ const NewStudy = async ({ user, duplicateStudyId, isSimplified }: UserSessionPro
     getAccountOrganizationVersions(user.accountId),
     getOrganizationVersionAccounts(user.organizationVersionId),
   ])
-  const canSelectEmissionFactorVersions =
-    supportsStudyEmissionFactorVersionSelection(user.environment) &&
-    (user.role === Role.SUPER_ADMIN ||
-      (isCourseEnvironment(user.environment) &&
-        (await isCourseProfessor(user.organizationVersionId, user.environment))))
-  const emissionFactorVersions = canSelectEmissionFactorVersions
-    ? (await getEmissionFactorImportVersionsBC(true)).map(({ id, source, name }) => ({ id, source, name }))
-    : []
+
+  const canSelectVersions = await canSelectEmissionFactorVersions(
+    user.organizationVersionId,
+    user.environment,
+    user.role,
+  )
+  const emissionFactorVersions = canSelectVersions ? await getStudyCreationEmissionFactorVersions(user.environment) : []
 
   const organizationVersionId = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === user.organizationVersionId,
@@ -61,7 +57,7 @@ const NewStudy = async ({ user, duplicateStudyId, isSimplified }: UserSessionPro
       organizationVersions={organizationVersions}
       user={user}
       accounts={accounts}
-      canSelectEmissionFactorVersions={canSelectEmissionFactorVersions}
+      canSelectEmissionFactorVersions={canSelectVersions}
       emissionFactorVersions={emissionFactorVersions}
       caUnit={caUnit}
       duplicateStudyId={duplicateStudyId}
