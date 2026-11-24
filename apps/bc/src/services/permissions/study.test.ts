@@ -109,7 +109,7 @@ describe('emission factor version selection', () => {
     jest.clearAllMocks()
   })
 
-  it.each([Environment.BC, Environment.TILT, Environment.CUT, Environment.CLICKSON])(
+  it.each([Environment.BC, Environment.TILT, Environment.COURSE_BC, Environment.COURSE_TILT])(
     'allows a super admin in %s',
     async (environment) => {
       expect(await canSelectEmissionFactorVersions(mockedOrganizationVersionId, environment, Role.SUPER_ADMIN)).toBe(
@@ -118,13 +118,24 @@ describe('emission factor version selection', () => {
     },
   )
 
-  it.each([true, false])('allows a course user only when professor is %s', async (isProfessor) => {
-    jest.mocked(dbCourseSessionModule.isCourseProfessor).mockResolvedValue(isProfessor)
+  it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
+    'allows a professor and rejects a trainee in %s',
+    async (environment) => {
+      jest.mocked(dbCourseSessionModule.isCourseProfessor).mockResolvedValueOnce(true).mockResolvedValueOnce(false)
 
-    expect(
-      await canSelectEmissionFactorVersions(mockedOrganizationVersionId, Environment.COURSE_BC, Role.DEFAULT),
-    ).toBe(isProfessor)
-  })
+      expect(await canSelectEmissionFactorVersions(mockedOrganizationVersionId, environment, Role.DEFAULT)).toBe(true)
+      expect(await canSelectEmissionFactorVersions(mockedOrganizationVersionId, environment, Role.DEFAULT)).toBe(false)
+    },
+  )
+
+  it.each([Environment.CUT, Environment.CLICKSON, Environment.MIP])(
+    'denies a super admin in %s',
+    async (environment) => {
+      expect(await canSelectEmissionFactorVersions(mockedOrganizationVersionId, environment, Role.SUPER_ADMIN)).toBe(
+        false,
+      )
+    },
+  )
 
   it('does not allow other users', async () => {
     expect(await canSelectEmissionFactorVersions(mockedOrganizationVersionId, Environment.BC, Role.DEFAULT)).toBe(false)

@@ -294,8 +294,8 @@ export const createStudyCommand = async (
       }
 
       const hasGHGP = command.exports.includes(Export.GHGP)
-      const availableVersions = (await getStudyCreationEmissionFactorVersions(session.user.environment)).filter(
-        ({ source }) => source !== Import.AIB || session.user.environment === Environment.CLICKSON || hasGHGP,
+      const availableVersions = (await getStudyCreationEmissionFactorVersions()).filter(
+        ({ source }) => source !== Import.AIB || hasGHGP,
       )
       const selectedSources = new Set(emissionFactorVersions.map(({ source }) => source))
       const availableSources = new Set(availableVersions.map(({ source }) => source))

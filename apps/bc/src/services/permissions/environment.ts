@@ -62,6 +62,8 @@ export const hasAccessToMonetaryRatio = (environment: Environment) =>
 
 export const hasAccessToCreateStudyWithEmissionFactorVersions = isSimplified
 
+export const hasAccessToEmissionFactorVersionSelection = isAdvanced
+
 export const showResultsInfoText = (env: Environment) => isCut(env) || isTilt(env)
 
 export const displayingStudyRightModalForAddingContributors = (environment: Environment) => !isClickson(environment)

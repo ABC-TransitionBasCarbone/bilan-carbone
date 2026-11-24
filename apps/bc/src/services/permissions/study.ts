@@ -28,7 +28,12 @@ import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
 import { getUserActiveAccounts } from '../serverFunctions/user'
-import { canCreateStudyOnlyAsAdministrator, canCreateStudyWithoutSpecificRights, isTilt } from './environment'
+import {
+  canCreateStudyOnlyAsAdministrator,
+  canCreateStudyWithoutSpecificRights,
+  hasAccessToEmissionFactorVersionSelection,
+  isTilt,
+} from './environment'
 import { hasAccessToDuplicateStudy, isTiltSimplified } from './environmentAdvanced'
 import { isTiltSimplifiedFeatureActive } from './environmentFeature'
 import { isInOrgaOrParentFromId } from './organization'
@@ -583,6 +588,7 @@ export const canSelectEmissionFactorVersions = async (
 ) => {
   return !!(
     organizationVersionId &&
+    hasAccessToEmissionFactorVersionSelection(environment) &&
     (role === Role.SUPER_ADMIN ||
       (isCourseEnvironment(environment) && (await isCourseProfessor(organizationVersionId, environment, tx))))
   )

@@ -1020,19 +1020,10 @@ export const getSourceEnvironmentImportVersionIds = async (
   })
 }
 
-export const getStudyCreationEmissionFactorVersions = async (environment: Environment) => {
-  let sources: Import[]
-  if (environment === Environment.CUT) {
-    sources = (await getSourceCutImportVersionIds()).map(({ source }) => source)
-  } else if (environment === Environment.CLICKSON) {
-    sources = (await getSourceEnvironmentImportVersionIds(environment)).map(({ source }) => source)
-  } else {
-    sources = Object.values(Import).filter((source) => source !== Import.Manual && source !== Import.CUT)
-  }
-
+export const getStudyCreationEmissionFactorVersions = async () => {
   return prismaClient.emissionFactorImportVersion.findMany({
     select: { id: true, source: true, name: true },
-    where: { source: { in: sources } },
+    where: { source: { notIn: [Import.Manual, Import.CUT] } },
     orderBy: { createdAt: 'desc' },
   })
 }

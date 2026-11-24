@@ -659,26 +659,23 @@ describe('study', () => {
         expect(mockCreateStudy).not.toHaveBeenCalled()
       })
 
-      it.each([Environment.BC, Environment.TILT, Environment.CUT, Environment.CLICKSON])(
-        'does not require a course session in %s',
-        async (environment) => {
-          mockDbActualizedAuth.mockResolvedValue({
-            ...mockedSession,
-            user: { ...mockedSession.user, environment },
-          })
+      it.each([Environment.BC, Environment.TILT])('does not require a course session in %s', async (environment) => {
+        mockDbActualizedAuth.mockResolvedValue({
+          ...mockedSession,
+          user: { ...mockedSession.user, environment },
+        })
 
-          const result = await createStudyCommand(mockedStudyCommand)
+        const result = await createStudyCommand(mockedStudyCommand)
 
-          expect(result.success).toBe(true)
-          expect(mockGetCourseSessionsForTrainee).not.toHaveBeenCalled()
-          expect(mockCreateStudy).toHaveBeenCalledWith(
-            expect.objectContaining({ courseSessionType: null }),
-            environment,
-            true,
-            undefined,
-          )
-        },
-      )
+        expect(result.success).toBe(true)
+        expect(mockGetCourseSessionsForTrainee).not.toHaveBeenCalled()
+        expect(mockCreateStudy).toHaveBeenCalledWith(
+          expect.objectContaining({ courseSessionType: null }),
+          environment,
+          true,
+          undefined,
+        )
+      })
 
       it.each([Environment.BC, Environment.TILT, Environment.CUT, Environment.CLICKSON])(
         'allows a super admin to select an older emission factor version in %s',
@@ -730,29 +727,6 @@ describe('study', () => {
           emissionFactorVersions: [selectedVersion],
         })
 
-        it('accepts an AIB version configured for CLICKSON without a GHGP export', async () => {
-          const selectedVersion = { source: Import.AIB, importVersionId: 'aib-version' }
-          mockDbActualizedAuth.mockResolvedValue({
-            ...mockedSession,
-            user: { ...mockedSession.user, environment: Environment.CLICKSON, role: Role.SUPER_ADMIN },
-          })
-          mockCanSelectEmissionFactorVersions.mockResolvedValue(true)
-          mockGetStudyCreationEmissionFactorVersions.mockResolvedValue([
-            { id: selectedVersion.importVersionId, source: selectedVersion.source, name: 'AIB' },
-          ])
-
-          const result = await createStudyCommand({
-            ...mockedStudyCommand,
-            exports: [],
-            emissionFactorVersions: [selectedVersion],
-          })
-
-          expect(result.success).toBe(true)
-          expect(mockCreateStudy).toHaveBeenCalledWith(expect.anything(), Environment.CLICKSON, true, undefined, [
-            selectedVersion,
-          ])
-        })
-
         expect(result.success).toBe(true)
         expect(mockCreateStudy).toHaveBeenCalledWith(
           expect.objectContaining({ courseSessionType: null }),
@@ -798,6 +772,32 @@ describe('study', () => {
         expect(mockCreateStudy).not.toHaveBeenCalled()
         consoleError.mockRestore()
       })
+
+      it.each([Environment.CUT, Environment.CLICKSON])(
+        'rejects version selection when permission is denied in %s',
+        async (environment) => {
+          const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined)
+          mockDbActualizedAuth.mockResolvedValue({
+            ...mockedSession,
+            user: { ...mockedSession.user, environment, role: Role.SUPER_ADMIN },
+          })
+
+          const result = await createStudyCommand({
+            ...mockedStudyCommand,
+            emissionFactorVersions: [{ source: Import.BaseEmpreinte, importVersionId: 'old-base-version' }],
+          })
+
+          expect(result).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+          expect(mockCanSelectEmissionFactorVersions).toHaveBeenCalledWith(
+            mockedSession.user.organizationVersionId,
+            environment,
+            Role.SUPER_ADMIN,
+            undefined,
+          )
+          expect(mockCreateStudy).not.toHaveBeenCalled()
+          consoleError.mockRestore()
+        },
+      )
 
       it('uses the enrolled session type when duplicating, within the existing transaction', async () => {
         mockDbActualizedAuth.mockResolvedValue({
