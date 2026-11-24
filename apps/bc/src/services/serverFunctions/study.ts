@@ -16,9 +16,9 @@ import { getCourseSessionsForTrainee } from '@/db/courseOrganism'
 import { isCourseProfessor } from '@/db/courseSession'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
+  getEmissionFactorImportVersionsByIds,
   getEmissionFactorsByIdsAndSource,
   getEmissionFactorsByImportedIdsAndVersion,
-  getEmissionFactorImportVersionsByIds,
   getEmissionFactorsImportActiveVersion,
   getEmissionFactorVersionsBySource,
   getStudyEmissionFactorSources,
