@@ -200,7 +200,13 @@ const ShareStudyCorrectionButton = ({ studyId, courseSessionId, compact = false 
     <>
       <Tooltip title={label}>
         {compact ? (
-          <IconButton color="primary" aria-label={label} aria-haspopup="dialog" onClick={openDialog}>
+          <IconButton
+            className={styles.compactButton}
+            color="primary"
+            aria-label={label}
+            aria-haspopup="dialog"
+            onClick={openDialog}
+          >
             <ShareOutlinedIcon />
           </IconButton>
         ) : (

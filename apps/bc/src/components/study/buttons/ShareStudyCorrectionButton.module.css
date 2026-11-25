@@ -1,3 +1,9 @@
+.compactButton.compactButton {
+  border: 1px solid var(--mui-palette-grey-300);
+  border-radius: 0.5rem;
+  padding: 7px;
+}
+
 .modal[role='dialog'] {
   min-width: min(34rem, calc(100% - 2rem));
 }
