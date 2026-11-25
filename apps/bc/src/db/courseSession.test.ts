@@ -73,6 +73,7 @@ afterAll(() => {
 describe('course session database queries', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    jest.mocked(prismaClient.account.update).mockResolvedValue(getMockedAccount())
     mockFindSession.mockResolvedValue(session)
     mockFindStudies.mockResolvedValue([])
     jest.mocked(prismaClient.courseSessionTraineeOrganization.deleteMany).mockResolvedValue({ count: 1 })

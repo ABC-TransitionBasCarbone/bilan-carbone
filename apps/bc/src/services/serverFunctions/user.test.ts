@@ -417,7 +417,7 @@ describe('signUpWithSiretOrCNC', () => {
       const result = await actualActivateEmailForCourse(testEmail, '123456', undefined, Environment.COURSE_BC)
 
       expect(result.success).toBe(true)
-      expect(mockValidateUser).not.toHaveBeenCalled()
+      expect(mockValidateUser).toHaveBeenCalledWith(mockedAccountId, expect.anything())
       expect(mockUpdateUserPasswordForEmail).not.toHaveBeenCalled()
       expect(mockUpdateAccount).toHaveBeenCalledWith(
         mockedAccountId,
@@ -638,9 +638,12 @@ describe('signUpWithSiretOrCNC', () => {
       })
       mockOrganizationVersionActiveAccountsCount.mockResolvedValue(1)
       mockGetAccountFromUserOrganization.mockResolvedValue([
-        { role: Role.GESTIONNAIRE, status: UserStatus.ACTIVE, user: { email: 'manager@example.com' } },
+        {
+          role: Role.GESTIONNAIRE,
+          status: UserStatus.ACTIVE,
+          user: { email: 'manager@example.com' },
+        },
       ])
-
       const result = await actualActivateEmail(testEmail, Environment.BC)
 
       expect(result.success).toBe(true)
@@ -910,6 +913,13 @@ describe('signUpWithSiretOrCNC', () => {
       })
       mockOrganizationVersionActiveAccountsCount.mockResolvedValue(true)
       mockGetAccountFromUserOrganization.mockResolvedValue([
+        {
+          role: Role.ADMIN,
+          status: UserStatus.ACTIVE,
+          user: { email: 'admin@example.com' },
+        },
+      ])
+      mockGetAccountsFromOrganization.mockResolvedValue([
         {
           role: Role.ADMIN,
           status: UserStatus.ACTIVE,

@@ -22,10 +22,7 @@ export const getAccountById = (id: string) =>
   })
 
 export const changeAccountRole = (id: string, role: Role) =>
-  prismaClient.account.update({
-    data: { role },
-    where: { id },
-  })
+  prismaClient.account.update({ data: { role }, where: { id } })
 
 export const getAccountOrganizationVersions = async (accountId: string) => {
   if (!accountId) {
@@ -94,8 +91,8 @@ export const getAccountsFromOrganizationForActivation = (
       id: true,
       role: true,
       status: true,
-      user: { select: { email: true, firstName: true, lastName: true } },
       organizationVersionId: true,
+      user: { select: { email: true, firstName: true, lastName: true } },
     },
     where: {
       activationRequestedAt: { not: null },
@@ -161,10 +158,7 @@ export const addAccount = async (account: Prisma.AccountCreateInput & { role: Ex
     throw new Error(NOT_AUTHORIZED)
   }
 
-  return prismaClient.account.create({
-    data: account,
-    select: AccountWithUserSelect,
-  })
+  return prismaClient.account.create({ data: account, select: AccountWithUserSelect })
 }
 export const getAccountsUserLevel = (ids: string[]) =>
   prismaClient.account.findMany({

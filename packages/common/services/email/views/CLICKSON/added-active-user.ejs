@@ -4,9 +4,7 @@
     <div>
       <p>Bonjour <span><%= userName %></span>,</p>
       <br />
-      <p>
-        Vous avez été ajouté par <span><%= creatorName %></span> à l'établissement <%= orga %> et avez donc à présent accès à l'environnement <%= newEnv %> <%= envInfo%>.
-      </p>
+      <p><%= t_added %></p>
       <br />
       <p>
         Vous aviez déjà accès <%= oldEnvs %> sur notre outil. vous pouvez donc vous connecter à ce nouvel environnement avec votre mot de passe habituel sur <a href="<%= link %>">ce lien</a>.

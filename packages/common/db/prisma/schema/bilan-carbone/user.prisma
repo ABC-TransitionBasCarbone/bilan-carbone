@@ -53,8 +53,8 @@ model Account {
   studyCommentsValidated StudyComment[] @relation("study_comment_validator")
   studyComments          StudyComment[] @relation("study_comment_author")
 
-  environment Environment
-  status      UserStatus
+  environment            Environment
+  status                 UserStatus
 
   formationName      String?   @map("formation_name")
   formationStartDate DateTime? @map("formation_start_date")

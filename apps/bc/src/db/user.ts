@@ -70,7 +70,10 @@ export const getUserWithAccountsAndOrganizationsById = async (id: string) => {
     throw new Error(`User with id ${id} not found`)
   }
 
-  const userWithOnlyActiveAccounts = { ...user, accounts: user.accounts.filter((a) => a.status === UserStatus.ACTIVE) }
+  const userWithOnlyActiveAccounts = {
+    ...user,
+    accounts: user.accounts.filter((a) => a.status === UserStatus.ACTIVE),
+  }
 
   return userWithOnlyActiveAccounts
 }
@@ -106,9 +109,12 @@ const updatePassword = async (
     (env === Environment.BC || env === Environment.TILT) &&
     account.status === UserStatus.VALIDATED &&
     account.role === Role.DEFAULT &&
-    account.organizationVersionId &&
+    !!account.organizationVersionId &&
     (await transaction.account.count({
-      where: { organizationVersionId: account.organizationVersionId, status: UserStatus.ACTIVE },
+      where: {
+        organizationVersionId: account.organizationVersionId,
+        status: UserStatus.ACTIVE,
+      },
     })) === 0
 
   const updatedUser = await transaction.user.update({
@@ -185,9 +191,7 @@ export const hasAccountToValidateInOrganization = async (organizationVersionId: 
     : 0
 
 export const organizationVersionActiveAccountsCount = async (organizationVersionId: string) =>
-  prismaClient.account.count({
-    where: { organizationVersionId, status: UserStatus.ACTIVE },
-  })
+  prismaClient.account.count({ where: { organizationVersionId, status: UserStatus.ACTIVE } })
 
 export const getUserApplicationSettings = (accountId: string) =>
   prismaClient.userApplicationSettings.upsert({ where: { accountId }, update: {}, create: { accountId } })

@@ -123,7 +123,10 @@ export const isOrganizationVersionCR = async (id: string | null) =>
 export const getOrganizationVersionAccounts = (id: string | null) =>
   id
     ? prismaClient.account.findMany({
-        select: { user: { select: { email: true, firstName: true, lastName: true, level: true } }, role: true },
+        select: {
+          user: { select: { email: true, firstName: true, lastName: true, level: true } },
+          role: true,
+        },
         where: { organizationVersionId: id, status: UserStatus.ACTIVE },
         orderBy: { user: { email: 'asc' } },
       })

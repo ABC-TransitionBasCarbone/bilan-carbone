@@ -56,7 +56,11 @@ describe('session organization', () => {
 
   it('does not preserve a stale organization when the account no longer has one', async () => {
     jest.mocked(getServerSession).mockResolvedValue(getMockedDbActualizedAuth())
-    mockGetAccountById.mockResolvedValue({ ...account, organizationVersionId: null, organizationVersion: null })
+    mockGetAccountById.mockResolvedValue({
+      ...account,
+      organizationVersionId: null,
+      organizationVersion: null,
+    })
 
     const session = await dbActualizedAuth()
 

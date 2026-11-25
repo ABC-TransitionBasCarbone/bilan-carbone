@@ -12,7 +12,10 @@ export const findUserInfo = (user: Pick<UserSession, 'role' | 'organizationVersi
     select: findAccountSelect({ formationName: true }),
     where: canEditMemberRole(user)
       ? { organizationVersionId: user.organizationVersionId }
-      : { status: UserStatus.ACTIVE, organizationVersionId: user.organizationVersionId },
+      : {
+          status: UserStatus.ACTIVE,
+          organizationVersionId: user.organizationVersionId,
+        },
   }) satisfies Prisma.AccountFindManyArgs
 
 export const getEnvironmentRoles = (environment: Environment) => {

@@ -430,7 +430,6 @@ const isActivationAutorhizedCommon = async (
 }> => {
   const user = await getUserByEmail(email.toLowerCase())
   const account = await getAccountById(user?.accounts.find((a) => a.environment === environment)?.id || '')
-
   if (
     !user ||
     !account ||
@@ -509,17 +508,28 @@ export const activateEmailForCourse = async (
 
     await prismaClient.$transaction(
       async (transaction) => {
-        if (activeEnvs.length) {
-          await updateAccount(account.id, { role: Role.ADMIN, status: UserStatus.ACTIVE }, {}, transaction)
-        } else {
-          if (!password || !Object.values(computePasswordValidation(password)).every((value) => value)) {
-            throw new Error('Password invalid')
-          }
-
-          await validateUser(account.id, transaction)
-          await updateUserPasswordForEmail(user.email, password, environment, transaction)
-          await updateAccount(account.id, { role: Role.ADMIN }, {}, transaction)
+        const passwordToSet = activeEnvs.length ? undefined : password
+        if (
+          !activeEnvs.length &&
+          (!passwordToSet || !Object.values(computePasswordValidation(passwordToSet)).every(Boolean))
+        ) {
+          throw new Error('Password invalid')
         }
+
+        await validateUser(account.id, transaction)
+        if (passwordToSet) {
+          await updateUserPasswordForEmail(user.email, passwordToSet, environment, transaction)
+        }
+
+        await updateAccount(
+          account.id,
+          {
+            role: Role.ADMIN,
+            ...(activeEnvs.length ? { status: UserStatus.ACTIVE } : {}),
+          },
+          {},
+          transaction,
+        )
       },
       {
         isolationLevel: 'Serializable',
@@ -551,7 +561,6 @@ export const activateEmail = async (email: string, userEnv: Environment, fromRes
     }
 
     const { user, account } = await isActivationAutorhizedCommon(email, userEnv)
-
     if (
       (await organizationVersionActiveAccountsCount(account.organizationVersionId)) &&
       account.status !== UserStatus.VALIDATED
@@ -578,9 +587,6 @@ export const activateEmail = async (email: string, userEnv: Environment, fromRes
       return REQUEST_SENT
     } else {
       await prismaClient.$transaction(async (transaction) => {
-        if (!account.organizationVersionId) {
-          throw new Error(NOT_AUTHORIZED)
-        }
         await checkIfOtherAccountHasReservationActivation(account.id, account.organizationVersionId, transaction)
         await validateUser(account.id, transaction)
         await updateAccount(
