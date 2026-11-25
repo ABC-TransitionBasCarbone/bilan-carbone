@@ -36,7 +36,35 @@
       }
     },
     "cannotCreateStudy": "Pentru a putea realiza Bilan Carbone® trebuie să fiți format în metodă! <link>Aflați mai multe</link>",
-    "canCreateFootPrint": "Dacă formarea dumneavoastră nu apare în contul dumneavoastră, trimiteți certificatul la <support>suport</support>. Dacă este recunoscut corect și doriți să creați Bilan Carbone®, cereți unui administrator al organizației dumneavoastră să vă modifice rolul în colaborator·oare sau administrator·oare. Mai multe informații sunt disponibile în <faq>secțiunea Întrebări frecvente</faq>."
+    "canCreateFootPrint": "Dacă formarea dumneavoastră nu apare în contul dumneavoastră, trimiteți certificatul la <support>suport</support>. Dacă este recunoscut corect și doriți să creați Bilan Carbone®, cereți unui administrator al organizației dumneavoastră să vă modifice rolul în colaborator·oare sau administrator·oare. Mai multe informații sunt disponibile în <faq>secțiunea Întrebări frecvente</faq>.",
+    "shareCorrection": "Partajați corectarea cu elevii",
+    "correctionSession": "Selectați o sesiune",
+    "noCorrectionSessions": "Nu aveți nicio sesiune în curs sau finalizată de mai puțin de 14 zile.",
+    "correctionSharing": {
+      "selectCorrection": "Selectați o corectare",
+      "noCorrections": "Nicio corectare disponibilă pentru această sesiune.",
+      "sentCorrections": "Corectări trimise",
+      "studyWithPlan": "{study} — Cu Plan de transition",
+      "studyWithoutPlan": "{study} — Fără Plan de transition",
+      "notSent": "Nicio corectare trimisă",
+      "withoutPlan": "Corectare trimisă fără Plan de transition",
+      "withPlan": "Corectare trimisă cu Plan de transition",
+      "recipients": "Cursanți",
+      "targeted": "Destinatarul acestui trimis",
+      "noTrainees": "Niciun cursant înscris în această sesiune.",
+      "missingRecipients": "Corectarea va fi trimisă doar cursanților care nu au primit-o încă.",
+      "upgradeRecipients": "Puteți adăuga Plan de transition pentru cursanții care au primit deja corectarea fără plan.",
+      "alreadySent": "Toți cursanții au primit deja corectarea cu Plan de transition.",
+      "withPlanChoice": "Trimiteți cu Plan de transition",
+      "confirmTitle": "Verificați destinatarii corectării",
+      "confirmWithPlan": "Sesiunea „{session}”: veți partaja corectarea cu Plan de transition cu {count, plural, one {# cursantul evidențiat} other {# cursanții evidențiați}} de mai sus.",
+      "confirmWithoutPlan": "Sesiunea „{session}”: veți partaja corectarea fără Plan de transition cu {count, plural, one {# cursantul evidențiat} other {# cursanții evidențiați}} de mai sus.",
+      "sharingWarning": "Atenție: această acțiune este ireversibilă.",
+      "sessionName": "Introduceți numele sesiunii pentru a confirma",
+      "confirmSharing": "Confirmați trimiterea",
+      "changed": "Destinatarii sau sesiunea s-au schimbat. Verificați lista înainte de a confirma din nou.",
+      "recorded": "Trimitere înregistrată."
+    }
   },
   "emissionFactors": {
     "table": {

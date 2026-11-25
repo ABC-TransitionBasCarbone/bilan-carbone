@@ -1,15 +1,16 @@
-import { Environment } from '@abc-transitionbascarbone/common/db'
+import { CourseSessionType, Environment } from '@abc-transitionbascarbone/common/db'
 
 export type CourseParticipant = {
   email: string
   firstName: string
   lastName: string
+  OfUpdatedAt?: Date
 }
 
 export type CourseSession = {
   courseOrganismId: string
   name: string
-  type: string | null
+  type: CourseSessionType
   startDate: Date
   endDate: Date
   environment: Environment

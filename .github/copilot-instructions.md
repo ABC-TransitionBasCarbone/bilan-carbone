@@ -1,9 +1,11 @@
 # Copilot Instructions for bc and mip
 
-## Règles
+## Rules
 
 Do not run commands in the terminal without approval. When we approve a command, only that command is approved.
 Do not run git commands that edit the repository state (only read-only commands like git status, show, etc. are allowed).
+Write unit tests for all logical methods. Do not write tests for components. Write End-to-End tests for some user flows when critical. Focus on testing the behavior and outcomes rather than implementation details.
+Ask me before editing database models. I need to review and approve any changes to the schema.
 
 ## Scope
 
@@ -21,6 +23,7 @@ Monorepo Next.js (Yarn workspaces + Turbo) for carbon accounting products:
 - DB schema: packages/common/db/prisma/schema
 - DB access and business logic: apps/_/src/db and apps/_/src/services
 - Shared types/constants: src/types and src/constants (or shared packages when reusable)
+- Never call directly a db functions from a tsx file. Always use a serverFunction first checking the authorizations before calling the db function.
 
 ## Preferred Commands
 
@@ -78,8 +81,10 @@ Run from repo root unless specified:
 ## Tooling Rules
 
 - Root prettier/eslint/tsconfig base are canonical.
+- When updating dependencies, try removing matching `resolutions` from the root `package.json`; regenerate `yarn.lock` and run relevant checks before keeping or restoring each resolution.
 - Do not add per-app prettier configs.
 - Keep app tsconfig focused on app-specific overrides only.
+- Do not add a README explanation for each bug fix. Keep bug-specific causes, implementation details, and regression test commands in the PR description. Update READMEs only for lasting changes to setup, usage, or maintenance.
 - Keep README footprint minimal:
   - root README.md
   - apps/bc/README.md
@@ -112,4 +117,5 @@ Never validate my claims without checking them. Prefer evidence over my approval
 
 ## PR
 
+- When preparing or reviewing a PR, count nonblank code and test lines added and deleted in the full branch diff against its base, excluding generated files, lockfiles, and documentation. If the total exceeds 600 lines, report the count and propose a split. Even at or below 600 lines, propose splitting the branch when separating distinct concerns would make review easier. State the scope of each proposed PR and any dependencies or required merge order. Do not split the branch automatically.
 - Do not comment on french text that are not translated. We have a script that translate it automatically after the PR is merged.

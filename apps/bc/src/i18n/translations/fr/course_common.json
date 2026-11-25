@@ -1,6 +1,41 @@
 {
+  "courseSessions": {
+    "title": "Mes sessions de formation",
+    "session": "Session de formation",
+    "manageTrainees": "Gérer les formé.es",
+    "traineesTitle": "Gestion des formé.es",
+    "backToSession": "Revenir à la session",
+    "addTrainee": "Ajouter un formé",
+    "signAttendance": "Émarger les stagiaires",
+    "attendance": "Émargement",
+    "attendancePresent": "Présent.e",
+    "attendanceAbsent": "Absent.e",
+    "attendanceMissing": "Non émargé",
+    "attendanceDescription": "Sélectionnez les stagiaires présents à la session du {date}. Seuls ces stagiaires recevront les corrigés de l'étude de cas. Vous pouvez décocher les stagiaires pour supprimer leurs émargements en cas d'erreur initiale.",
+    "selectAllTrainees": "Sélectionner tous les stagiaires",
+    "attendanceSelectionCount": "{count} / {total} stagiaires sélectionnés",
+    "attendanceSaved": "Les émargements ont été enregistrés.",
+    "backToTrainees": "Revenir aux formé.es",
+    "traineeAdded": "Le formé a été ajouté à la session.",
+    "traineeAlreadyInSession": "Ce formé est déjà inscrit à cette session.",
+    "traineeTransferred": "Le stagiaire a été transféré dans cette session.",
+    "transferTraineeTitle": "Transférer le stagiaire",
+    "transferTraineeDescription": "Le stagiaire {firstName} {lastName} ({email}) est déjà inscrit à une autre session. Confirmez-vous son transfert vers cette session ?",
+    "emptyTrainees": "Aucun stagiaire dans cette session pour le moment.",
+    "deleteTraineeTitle": "Supprimer un stagiaire",
+    "deleteTraineeLabel": "Supprimer le stagiaire {firstName} {lastName}",
+    "deleteTraineeDescription": "Êtes-vous sûr.e de vouloir supprimer le stagiaire {firstName} {lastName} de votre session ?",
+    "studies": "Les études des stagiaires",
+    "empty": "Aucune étude pour les stagiaires de cette session pour le moment.",
+    "sessionCode": "Code de session : {code}",
+    "types": {
+      "INITIAL": "Initial",
+      "PROFESSIONNEL": "Professionnel",
+      "MAITRISE": "Maîtrise"
+    }
+  },
   "login": {
-    "welcome": "Bienvenue sur le Bilan Carbone® + [ESPACE FORMATION]",
+    "welcome": "<b>Bienvenue sur le Bilan Carbone®+ [ESPACE FORMATION]</b>",
     "form": {
       "emailPlaceholder": "Votre email transmis à votre organisme de formation"
     }

@@ -2,6 +2,23 @@
   gap: 1rem;
 }
 
+.shareHeader {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) 2.5rem;
+  align-items: start;
+  justify-items: center;
+
+  > :first-child {
+    grid-column: 2;
+  }
+}
+
+.student {
+  gap: 0.5rem;
+  color: var(--primary-800);
+  align-self: center;
+}
+
 .validated {
   color: var(--warning);
 

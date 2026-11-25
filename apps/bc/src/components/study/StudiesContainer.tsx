@@ -4,48 +4,31 @@ import {
   getAllowedStudiesByAccount,
   getAllowedStudiesByUserAndOrganization,
   getExternalAllowedStudiesByUser,
-  getStudiesForCards,
-  getStudiesValidatedEmissionsSources,
+  getStudyCards,
 } from '@/db/study'
-import {
-  canCreateStudyOnlyAsAdministrator,
-  isTilt,
-  isTiltSimplifiedFeatureActive,
-} from '@/services/permissions/environment'
+import { canCreateStudyOnlyAsAdministrator, isTilt } from '@/services/permissions/environment'
+import { isTiltSimplifiedFeatureActive } from '@/services/permissions/environmentFeature'
 import { canCreateAStudy } from '@/services/permissions/study'
 import { hasActiveLicence } from '@/utils/organization'
-import Block from '@abc-transitionbascarbone/common/components/base/Block'
-import Box from '@abc-transitionbascarbone/common/components/base/Box'
-import LinkButton from '@abc-transitionbascarbone/common/components/base/LinkButton'
-import Image from '@abc-transitionbascarbone/common/components/document/Image'
-import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
-import { getEnvVarClient } from '@abc-transitionbascarbone/common/utils/environmentClient'
-import AddIcon from '@mui/icons-material/Add'
-import { Alert, Box as MUIBox } from '@mui/material'
-import classNames from 'classnames'
+import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import { UserSession } from 'next-auth'
-import { getTranslations } from 'next-intl/server'
-import Link from 'next/link'
-import BetaBanner from '../base/BetaBanner/BetaBanner'
-import Studies from './Studies'
-import styles from './StudiesContainer.module.css'
+import CannotCreateStudy from './CannotCreateStudy'
+import CreateFirstStudy from './CreateFirstStudy'
+import NoStudies from './NoStudies'
+import StudiesList from './StudiesList'
 
 interface Props {
   user: UserSession
   organizationVersionId?: string
   isCR?: boolean
+  isProfessor?: boolean
   simplified?: boolean
 }
 
-const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified = false }: Props) => {
-  const t = await getTranslations('study')
-  const tCommon = await getTranslations('common')
-  const tLinks = await getTranslations('links')
-  const supportEmail = getEnvVarClient('SUPPORT_EMAIL', user.environment)
-
+const StudiesContainer = async ({ user, organizationVersionId, isCR, isProfessor, simplified = false }: Props) => {
   const allowedStudies = organizationVersionId
     ? await getAllowedStudiesByUserAndOrganization(user, organizationVersionId, simplified)
-    : isCR
+    : isCR || isProfessor
       ? await getExternalAllowedStudiesByUser(user)
       : await getAllowedStudiesByAccount(user)
 
@@ -53,21 +36,10 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
 
   const mainStudyOrganizationVersionId = organizationVersionId ?? user.organizationVersionId
 
-  const [organizationVersion, studiesForCards, studiesValidatedSources] = await Promise.all([
+  const [organizationVersion, studies] = await Promise.all([
     getOrganizationVersionForRightsCheck(mainStudyOrganizationVersionId),
-    getStudiesForCards(allowedStudyIds),
-    getStudiesValidatedEmissionsSources(allowedStudyIds),
+    getStudyCards(allowedStudyIds),
   ])
-
-  const studies = allowedStudyIds
-    .map((studyId) => {
-      const card = studiesForCards[studyId]
-      if (!card) {
-        return null
-      }
-      return { ...card, validatedSources: studiesValidatedSources[studyId] }
-    })
-    .filter((c): c is StudyCardItem => c !== null)
 
   const isOrgaHomePage = !organizationVersionId && !isCR
   const [orgaStudies, otherStudies] = isOrgaHomePage
@@ -101,84 +73,42 @@ const StudiesContainer = async ({ user, organizationVersionId, isCR, simplified 
     }
   }
 
-  return hasStudies ? (
-    <>
-      {!!advancedStudies.length && (
-        <Studies
-          studies={advancedStudies}
-          canAddStudy={(await canCreateAStudy(user)) && !isCR && activeLicence}
-          creationUrl={creationUrl}
-          user={user}
-          collaborations={!organizationVersionId && isCR}
-        />
-      )}
-
-      {displaySimplifiedStudies && !!simplifiedStudies.length && (
-        <Studies
-          studies={simplifiedStudies}
-          canAddStudy={(await canCreateAStudy(user, true)) && !isCR && activeLicence}
-          creationUrl={creationUrlSimplified}
-          user={user}
-          collaborations={!organizationVersionId && isCR}
-          simplified
-          showBetaBanner={isTilt(user.environment) && displaySimplifiedStudies}
-        />
-      )}
-      {!!collaborationStudies.length && (
-        <Studies studies={collaborationStudies} canAddStudy={false} user={user} collaborations />
-      )}
-    </>
-  ) : (await canCreateAStudy(user, simplified)) ? (
-    !isCR && (
-      <MUIBox component="section" className="mt1">
-        <Block>
-          {isTilt(user.environment) && displaySimplifiedStudies && simplified && <BetaBanner />}
-          <div className="justify-center">
-            <Box className={classNames(styles.firstStudyCard, 'flex-col align-center')}>
-              <Image src="/img/orga.png" alt="orga.png" width={177} height={119} />
-              <h5>{t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}</h5>
-              <p>{t(simplified ? 'firstSimplifiedStudyMessage' : 'firstStudyMessage')}</p>
-              <LinkButton
-                data-testid="new-study"
-                className={classNames('w100 justify-center mb1')}
-                href={simplified ? creationUrlSimplified : creationUrl}
-              >
-                <AddIcon />
-                {t(simplified ? 'createFirstSimplifiedStudy' : 'createFirstStudy')}
-              </LinkButton>
-            </Box>
-          </div>
-        </Block>
-      </MUIBox>
+  if (hasStudies) {
+    return (
+      <StudiesList
+        user={user}
+        advancedStudies={advancedStudies}
+        simplifiedStudies={simplifiedStudies}
+        collaborationStudies={collaborationStudies}
+        displaySimplifiedStudies={displaySimplifiedStudies}
+        activeLicence={activeLicence}
+        creationUrl={creationUrl}
+        creationUrlSimplified={creationUrlSimplified}
+        organizationVersionId={organizationVersionId}
+        isCR={isCR}
+      />
     )
-  ) : !canCreateStudyOnlyAsAdministrator(user.environment) && !simplified ? (
-    <Block>
-      <Alert
-        className="p0"
-        severity="info"
-        slotProps={{ message: { className: 'grow flex align-center justify-between gapped' } }}
-      >
-        <div>
-          <p>
-            {customRich(t, 'cannotCreateStudy', {
-              link: (children) => (
-                <Link href="https://abc-transitionbascarbone.fr/agir/se-former-au-bilan-carbone/">{children}</Link>
-              ),
-            })}
-          </p>
-          <p>
-            {customRich(t, 'canCreateFootPrint', {
-              link: (children) => <Link href="/mes-empreintes">{children}</Link>,
-              faq: (children) => <Link href={tLinks('faqUrl')}>{children}</Link>,
-              support: (children) => <Link href={`mailto:${supportEmail}`}>{children}</Link>,
-            })}
-          </p>
-        </div>
-      </Alert>
-    </Block>
-  ) : (
-    <Block>{customRich(tCommon, 'noStudies')}</Block>
-  )
+  }
+
+  if ((await canCreateAStudy(user, simplified)) && !isCR && !isProfessor) {
+    return (
+      <CreateFirstStudy
+        simplified={simplified}
+        creationUrl={simplified ? creationUrlSimplified : creationUrl}
+        showBetaBanner={isTilt(user.environment) && displaySimplifiedStudies && simplified}
+      />
+    )
+  }
+
+  if (isCourseEnvironment(user.environment) || isCR) {
+    return null
+  }
+
+  if (!canCreateStudyOnlyAsAdministrator(user.environment) && !simplified) {
+    return <CannotCreateStudy environment={user.environment} />
+  }
+
+  return <NoStudies />
 }
 
 export default StudiesContainer

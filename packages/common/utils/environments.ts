@@ -22,7 +22,7 @@ export const environmentsWithChecklist: Environment[] = [BC]
 export const EnvironmentNames = {
   [BC]: 'BC+ 2.0',
   [CUT]: 'Count',
-  [TILT]: 'Tilt',
+  [TILT]: 'BC+ associatif',
   [CLICKSON]: 'ClicksOn',
   [MIP]: 'Mon Impact Pro',
   [COURSE_BC]: 'BC+ Formation',

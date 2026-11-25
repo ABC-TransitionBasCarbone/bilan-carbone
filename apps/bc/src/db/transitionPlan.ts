@@ -12,7 +12,7 @@ import type {
   TransitionPlanWithStudies,
 } from '@/types/trajectory.types'
 import { Prisma, SubPost, TransitionPlan } from '@abc-transitionbascarbone/common/db'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 
 const actionInclude = {
   indicators: true,
@@ -52,8 +52,12 @@ export const getTransitionPlanByIdWithRelations = async (id: string): Promise<Tr
   })
 }
 
-export const getTransitionPlanByStudyId = async (studyId: string): Promise<TransitionPlan | null> => {
-  return prismaClient.transitionPlan.findUnique({
+export const getTransitionPlanByStudyId = async (
+  studyId: string,
+  tx?: Prisma.TransactionClient,
+): Promise<TransitionPlan | null> => {
+  const client = tx ?? prismaClient
+  return client.transitionPlan.findUnique({
     where: {
       studyId,
     },
@@ -87,8 +91,13 @@ export const getOrganizationTransitionPlans = async (
   })
 }
 
-export const createTransitionPlan = async (studyId: string, sectenVersionId?: string) => {
-  return prismaClient.transitionPlan.create({
+export const createTransitionPlan = async (
+  studyId: string,
+  sectenVersionId?: string,
+  tx?: Prisma.TransactionClient,
+) => {
+  const client = tx ?? prismaClient
+  return client.transitionPlan.create({
     data: {
       studyId,
       sectenVersionId,
@@ -210,7 +219,10 @@ export const hasTransitionPlan = async (studyId: string): Promise<boolean> => {
   return count > 0
 }
 
-export const createAction = async (data: Prisma.ActionUncheckedCreateInput) => prismaClient.action.create({ data })
+export const createAction = async (data: Prisma.ActionUncheckedCreateInput, tx?: Prisma.TransactionClient) => {
+  const client = tx ?? prismaClient
+  return client.action.create({ data })
+}
 
 export const createActionWithRelations = async (
   command: Omit<AddActionInputCommand, 'siteIds' | 'tagIds' | 'subPosts'>,
@@ -248,8 +260,12 @@ export const getActionById = async (id: string): Promise<ActionWithRelations | n
     },
   })
 
-export const getActions = async (transitionPlanId: string): Promise<ActionWithRelations[]> =>
-  prismaClient.action.findMany({
+export const getActions = async (
+  transitionPlanId: string,
+  tx?: Prisma.TransactionClient,
+): Promise<ActionWithRelations[]> => {
+  const client = tx ?? prismaClient
+  return client.action.findMany({
     where: { transitionPlanId },
     orderBy: [{ priority: 'asc' }, { createdAt: 'desc' }],
     include: {
@@ -258,12 +274,17 @@ export const getActions = async (transitionPlanId: string): Promise<ActionWithRe
       steps: { orderBy: { order: 'asc' } },
     },
   })
+}
 
 export const createTransitionPlanStudy = async (transitionPlanId: string, studyId: string) =>
   prismaClient.transitionPlanStudy.create({ data: { transitionPlanId, studyId } })
 
-export const createExternalStudy = async (data: Prisma.ExternalStudyUncheckedCreateInput) => {
-  return prismaClient.externalStudy.create({ data })
+export const createExternalStudy = async (
+  data: Prisma.ExternalStudyUncheckedCreateInput,
+  tx?: Prisma.TransactionClient,
+) => {
+  const client = tx ?? prismaClient
+  return client.externalStudy.create({ data })
 }
 
 export const updateExternalStudy = async (id: string, data: Prisma.ExternalStudyUpdateInput) => {
@@ -291,8 +312,10 @@ export const getLinkedStudiesForTransitionPlanAndYear = async (
     where: { transitionPlanId, study: { startDate: { gte: startDate, lt: endDate } } },
   })
 
-export const getExternalStudiesForTransitionPlan = async (transitionPlanId: string) =>
-  prismaClient.externalStudy.findMany({ where: { transitionPlanId } })
+export const getExternalStudiesForTransitionPlan = async (transitionPlanId: string, tx?: Prisma.TransactionClient) => {
+  const client = tx ?? prismaClient
+  return client.externalStudy.findMany({ where: { transitionPlanId } })
+}
 
 export const getLinkedStudiesForTransitionPlan = async (transitionPlanId: string) =>
   prismaClient.transitionPlanStudy.findMany({ where: { transitionPlanId } })
@@ -309,8 +332,12 @@ export const deleteLinkedStudy = async (studyId: string, transitionPlanId: strin
 export const deleteExternalStudy = async (externalStudyId: string) =>
   prismaClient.externalStudy.delete({ where: { id: externalStudyId } })
 
-export const createTrajectoryWithObjectives = async (data: Prisma.TrajectoryCreateInput) => {
-  return prismaClient.trajectory.create({
+export const createTrajectoryWithObjectives = async (
+  data: Prisma.TrajectoryCreateInput,
+  tx?: Prisma.TransactionClient,
+) => {
+  const client = tx ?? prismaClient
+  return client.trajectory.create({
     data,
     include: {
       objectives: {
@@ -324,8 +351,10 @@ export const createTrajectoryWithObjectives = async (data: Prisma.TrajectoryCrea
 
 export const getTrajectoriesByTransitionPlanId = async (
   transitionPlanId: string,
+  tx?: Prisma.TransactionClient,
 ): Promise<TrajectoryWithObjectivesAndScope[]> => {
-  return prismaClient.trajectory.findMany({
+  const client = tx ?? prismaClient
+  return client.trajectory.findMany({
     where: { transitionPlanId },
     include: {
       objectives: {

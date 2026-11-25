@@ -1,4 +1,4 @@
-import { assignTrainingCorrectionExerciseStudy, assignTrainingExerciseStudy } from '@/services/serverFunctions/study'
+import { assignTrainingCorrectionExerciseStudy, assignTrainingExerciseStudy } from '@/services/trainingStudy'
 import { formatDateFr } from '@abc-transitionbascarbone/common/utils'
 
 export const assignTrainingStudies = async () => {

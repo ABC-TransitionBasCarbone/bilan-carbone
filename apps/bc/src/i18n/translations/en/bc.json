@@ -1,4 +1,10 @@
 {
+  "homeCards": {
+    "search": "Search clients by name",
+    "noResults": "No results match your search.",
+    "invalidDate": "Please enter a valid date.",
+    "invalidDateRange": "The start date must be on or before the end date."
+  },
   "links": {
     "openCarbonPracticeUrl": "https://www.opencarbonpractice.com/rejoindre-la-communaute",
     "methodologyUrl": "https://www.bilancarbone-methode.com/",
@@ -376,6 +382,35 @@
     "duplicate": "Duplicate study",
     "duplicateEnvironment": "Duplicate study in another environment",
     "deleteStudy": "Delete study",
+    "shareCorrection": "Share the correction with trainees",
+    "correctionSession": "Select a session",
+    "noCorrectionSessions": "You have no ongoing or completed sessions in the last 14 days.",
+    "correctionSharing": {
+      "selectCorrection": "Select a correction",
+      "noCorrections": "No correction available for this session.",
+      "sentCorrections": "Corrections sent",
+      "studyWithPlan": "{study} — With Transition Plan",
+      "studyWithoutPlan": "{study} — Without Transition Plan",
+      "notSent": "No correction sent",
+      "withoutPlan": "Correction sent without Transition Plan",
+      "withPlan": "Correction sent with Transition Plan",
+      "recipients": "Trainees",
+      "targeted": "Recipient of this delivery",
+      "noTrainees": "No trainee signed in for this session.",
+      "missingRecipients": "The correction will only be sent to trainees who have not yet received it.",
+      "upgradeRecipients": "You can add the Transition Plan for trainees who have already received the correction without the plan.",
+      "alreadySent": "All trainees have already received the correction with the Transition Plan.",
+      "withPlanChoice": "Send with the Transition Plan",
+      "confirmTitle": "Check the correction recipients",
+      "confirmWithPlan": "Session \"{session}\": you are about to share the correction with the Transition Plan with the {count, plural, one {# highlighted trainee} other {# highlighted trainees}} above.",
+      "confirmWithoutPlan": "Session \"{session}\": you are about to share the correction without the Transition Plan with the {count, plural, one {# highlighted trainee} other {# highlighted trainees}} above.",
+      "sharingWarning": "Warning: this action is irreversible.",
+      "sessionName": "Enter the session name to confirm",
+      "confirmSharing": "Confirm delivery",
+      "changed": "The recipients or the session have changed. Check the list before confirming again.",
+      "noTransitionPlan": "This study has no transition plan.",
+      "recorded": "Delivery recorded."
+    },
     "duplicateCopy": " - Copy",
     "duplicateDialog": {
       "title": "Study duplication",
@@ -386,6 +421,7 @@
       "confirm": "Duplicate",
       "selectEnvironment": "Select the target environment"
     },
+    "createdBy": "Created by:",
     "myCollaborations": "My collaborations",
     "myStudies": "My Bilan Carbone®",
     "createFirstStudy": "Create my first Bilan Carbone®",
@@ -508,7 +544,9 @@
       },
       "error": {
         "default": "Something went wrong ...",
-        "noActiveVersion_BaseEmpreinte": "No active version for BaseEmpreinte. Please contact support"
+        "noActiveVersion_BaseEmpreinte": "No active version for BaseEmpreinte. Please contact support",
+        "noCourseSession": "You must be enrolled in a training session to create a study.",
+        "multipleCourseSessions": "You are enrolled in multiple training sessions. Please contact support."
       },
       "coming": "coming"
     },
@@ -1042,7 +1080,8 @@
       "name": "Study name",
       "Not authorized": "You are not allowed to do this action",
       "title": "Study deletion",
-      "wrongName": "Study name does not match"
+      "wrongName": "Study name does not match",
+      "correctionAlreadySent": "This correction has already been shared and cannot be deleted."
     },
     "transitionPlan": {
       "notInitialized": "The transition plan for this study has not been initialized yet.",
@@ -1936,8 +1975,10 @@
       "BaseEmpreinte": "Base Empreinte®",
       "NegaOctet": "NegaOctet",
       "Legifrance": "Légifrance",
+      "ABC": "ABC",
       "AIB": "AIB",
       "GIEC": "IPCC",
+      "ADEME": "Autres études de l'Ademe",
       "displayArchived": "Display archived factors",
       "goTo": "Go to page",
       "items": "Items per page",
@@ -1971,9 +2012,11 @@
       "importedFrom": {
         "baseEmpreinte": "Base Empreinte logo",
         "legifrance": "Légifrance logo",
+        "abc": "ABC logo",
         "negaOctet": "NegaOctet logo",
         "aib": "Association of Issuing Bodies logo",
         "giec": "IPCC logo",
+        "ademe": "Ademe logo",
         "manual": "Manual"
       },
       "post": "Categories",
@@ -2058,7 +2101,7 @@
   "environment": {
     "BC": "BC+ 2.0",
     "CUT": "Count",
-    "TILT": "Tilt",
+    "TILT": "BC+ associatif",
     "CLICKSON": "ClicksOn"
   },
   "source": {
@@ -2152,6 +2195,8 @@
     "KNOTS": "{count, plural, one {knot} other {knots}}",
     "KWH": "kWh",
     "KWH_PCI": "kWh PCI",
+    "KGCO2E": "kgCO₂e",
+    "Night": "nuitée",
     "KWH_PCS": "kWh PCS",
     "KWH_ELEC_TON": "kWh elec / ton",
     "KWH_PER_KM": "kWh / km",

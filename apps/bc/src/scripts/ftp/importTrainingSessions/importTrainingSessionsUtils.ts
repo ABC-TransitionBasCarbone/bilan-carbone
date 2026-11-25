@@ -30,6 +30,14 @@ export const sessionsSelect = {
 } satisfies Prisma.CourseSessionSelect
 export type SavedCourseSession = Prisma.CourseSessionGetPayload<{ select: typeof sessionsSelect }>
 
+export const isSameSession = (
+  savedSession: Pick<SavedCourseSession, 'courseOrganismId' | 'name' | 'environment'>,
+  importedSession: Pick<CourseSession, 'courseOrganismId' | 'name' | 'environment'>,
+) =>
+  savedSession.courseOrganismId === importedSession.courseOrganismId &&
+  savedSession.name === importedSession.name &&
+  savedSession.environment === importedSession.environment
+
 export const getProfessor = (session: SavedCourseSession) =>
   session.professorOrganization?.userAccounts[0]?.user ?? null
 
@@ -76,8 +84,27 @@ export const getRecordTimestamp = (record: Record<string, unknown>) => {
   return value == null || value === '' ? -Infinity : getRecordDate(record, field).getTime()
 }
 
+export const shouldImportCourseSessionTrainee = (
+  importedAt: Date | undefined,
+  removedAt: Date | undefined,
+  endDate: Date,
+) => {
+  if (!removedAt) {
+    return true
+  }
+  if (!importedAt) {
+    return false
+  }
+
+  const importedDay = new Date(importedAt).setUTCHours(0, 0, 0, 0)
+  const removedDay = new Date(removedAt).setUTCHours(0, 0, 0, 0)
+  const endDay = new Date(endDate).setUTCHours(0, 0, 0, 0)
+
+  return importedDay > removedDay || (importedDay === removedDay && importedDay !== endDay)
+}
+
 export const normalizeEmail = (record: Record<string, unknown>) => {
-  return getRequiredText(record, 'Email')?.toLowerCase()
+  return getRequiredText(record, 'E-mail')?.toLowerCase()
 }
 
 export const getParticipant = (record: Record<string, unknown>): CourseParticipant | null => {
@@ -97,7 +124,7 @@ export const getParticipant = (record: Record<string, unknown>): CourseParticipa
 }
 
 export const getSession = (sessions: Map<string, CourseSession>, record: Record<string, unknown>) => {
-  const name = getRequiredText(record, 'Nom de la session')
+  const name = getRequiredText(record, 'ParcoursProg')
   const session = name ? sessions.get(name) : null
   if (!session) {
     console.error(`Unknown training session: ${name}`)

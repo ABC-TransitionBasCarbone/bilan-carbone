@@ -1,6 +1,6 @@
 import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/common/db/db'
 import { TIME_IN_MS } from '@abc-transitionbascarbone/common/utils'
-import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/common/utils/user.server'
+import { generateResetToken, hashResetToken } from '@abc-transitionbascarbone/common/utils/userTokens'
 import jwt from 'jsonwebtoken'
 
 export const updateUserResetToken = async (email: string, duration: number) => {

@@ -7,6 +7,10 @@ import {
   Unit,
 } from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
+import { mkdtempSync, rmdirSync, unlinkSync } from 'fs'
+import { tmpdir } from 'os'
+import { join } from 'path'
+import * as XLSX from 'xlsx'
 import {
   getBaseFunc,
   getEmissionFactorOverrideData,
@@ -15,6 +19,7 @@ import {
   ImportEmissionFactor,
   isSourceForEnv,
 } from './import'
+import { parseEmissionFactorFile } from './parseXlsx'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
 jest.mock('../file', () => ({ download: jest.fn() }))
@@ -28,11 +33,52 @@ jest.mock('next-intl/server', () => ({
 }))
 
 describe('import Service', () => {
+  describe('parseEmissionFactorFile', () => {
+    it.each(['csv', 'xlsx'] as const)('should preserve decimal values from %s overrides', (extension) => {
+      const directory = mkdtempSync(join(tmpdir(), 'fe-overrides-'))
+      const file = join(directory, `overrides.${extension}`)
+      const rows = ['128,3389168', '128.3389168', 128.3389168, 0].map((value, index) => ({
+        "Identifiant de l'élément": `00${index}`,
+        "Statut de l'élément": 'Valide générique',
+        Type_Ligne: index === 0 ? 'Poste' : 'Élément',
+        'Total poste non décomposé': value,
+        CO2f: value,
+        Incertitude: '12,5',
+      }))
+      const workbook = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(rows), 'Overrides')
+
+      try {
+        XLSX.writeFile(workbook, file, { bookType: extension, FS: ';' })
+
+        const parsed = parseEmissionFactorFile(file)
+
+        expect(parsed).toHaveLength(4)
+        expect(parsed.map((row) => row.Total_poste_non_décomposé)).toEqual([128.3389168, 128.3389168, 128.3389168, 0])
+        expect(parsed.map((row) => row.CO2f)).toEqual([128.3389168, 128.3389168, 128.3389168, 0])
+        expect(parsed.map((row) => row.Incertitude)).toEqual([12.5, 12.5, 12.5, 12.5])
+        expect(parsed.map((row) => row["Identifiant_de_l'élément"])).toEqual(['000', '001', '002', '003'])
+        expect(parsed[0].Type_Ligne).toBe('Poste')
+      } finally {
+        unlinkSync(file)
+        rmdirSync(directory)
+      }
+    })
+  })
+
   describe('isSourceForEnv', () => {
     it('should retrieve sources for env', async () => {
-      process.env.BC_FE_SOURCES_IMPORT = 'BaseEmpreinte,Legifrance,NegaOctet,Manual,ADEME,CUT'
+      process.env.BC_FE_SOURCES_IMPORT = 'BaseEmpreinte,Legifrance,NegaOctet,Manual,ADEME,CUT,ABC'
       const result = await isSourceForEnv(Environment.BC)
-      expect(result).toEqual([Import.BaseEmpreinte, Import.Legifrance, Import.NegaOctet, Import.Manual, Import.CUT])
+      expect(result).toEqual([
+        Import.BaseEmpreinte,
+        Import.Legifrance,
+        Import.NegaOctet,
+        Import.Manual,
+        Import.ADEME,
+        Import.CUT,
+        Import.ABC,
+      ])
     })
 
     it('should not retrieve sources when env has no import', async () => {

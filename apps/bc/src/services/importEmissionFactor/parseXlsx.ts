@@ -13,7 +13,10 @@ const parseNumber = (value: unknown): number => {
   return 0
 }
 
-export const parseSheetRows = (sheet: XLSX.WorkSheet): ImportEmissionFactor[] => {
+export const parseEmissionFactorFile = (file: string): ImportEmissionFactor[] => {
+  // Keep CSV decimal commas intact until parseNumber handles them.
+  const workbook = XLSX.readFile(file, { raw: true })
+  const sheet = workbook.Sheets[workbook.SheetNames[0]]
   const raw = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, { defval: undefined })
   return raw
     .map((row) => {

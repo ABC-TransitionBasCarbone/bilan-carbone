@@ -15,6 +15,6 @@ export const removeDiacritics = (value: string): string => {
     return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 }
 
-export const normalizeCategoryKey = (value: string): string => {
+export const normalizeString = (value: string): string => {
     return removeDiacritics(value.trim()).toLowerCase()
 }

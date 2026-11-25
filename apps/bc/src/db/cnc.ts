@@ -1,5 +1,5 @@
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 
 export const getOrCreateCncVersion = async (year: number) => {
   const existingVersion = await prismaClient.cncVersion.findUnique({

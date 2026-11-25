@@ -1,15 +1,29 @@
 import * as situationServerModule from '@/services/serverFunctions/situation'
 import { getMockedFullStudyEmissionSource } from '@/tests/utils/models/emissionSource'
-import { getMockedFullStudySite, mockedEmissionSourceEmissionFactor } from '@/tests/utils/models/study'
+import {
+  getMockedFullStudy,
+  getMockedFullStudySite,
+  mockedEmissionSourceEmissionFactor,
+} from '@/tests/utils/models/study'
 import { getMockedAuthUser } from '@/tests/utils/models/user'
 import * as UserUtilsModule from '@/utils/user'
-import { EmissionFactorBase, Environment, Level, Role } from '@abc-transitionbascarbone/common/db/enums'
+import {
+  CourseSessionType,
+  EmissionFactorBase,
+  Environment,
+  Level,
+  Role,
+  StudyRole,
+} from '@abc-transitionbascarbone/common/db/enums'
 import { expect } from '@jest/globals'
 import {
+  getAccountRoleOnStudy,
+  getAllowedLevels,
   getBaseFilteredEmissionSources,
   getDuplicableEnvironments,
   getStudyDefaultLandingPath,
   getUserRoleOnPublicStudy,
+  isProfessorOnStudy,
 } from './study'
 
 // TODO : remove these mocks. Should not be mocked but tests fail if not
@@ -51,7 +65,158 @@ const emissionSources = [
 
 const userMock = getMockedAuthUser()
 
+describe('professor study permissions', () => {
+  const professor = { ...userMock, environment: Environment.COURSE_BC, organizationVersionId: 'professor-org' }
+  const study = getMockedFullStudy({
+    courseSessionType: CourseSessionType.INITIAL,
+    isPublic: false,
+    allowedUsers: [],
+    organizationVersion: {
+      ...getMockedFullStudy().organizationVersion,
+      environment: Environment.COURSE_BC,
+    },
+    createdBy: {
+      environment: Environment.COURSE_BC,
+      user: { firstName: 'Camille', lastName: 'Martin' },
+      organizationVersion: {
+        traineeCourseSessions: [
+          {
+            courseSession: {
+              type: CourseSessionType.INITIAL,
+              environment: Environment.COURSE_BC,
+              professorOrganizationVersionId: professor.organizationVersionId,
+            },
+          },
+        ],
+      },
+    },
+  })
+
+  it('preserves assigned rights on a correction client study using the professor parent course access', () => {
+    const correctionStudy = {
+      ...study,
+      level: Level.Initial,
+      courseSessionType: null,
+      allowedUsers: [
+        { role: StudyRole.Validator, account: { id: professor.accountId, user: { email: professor.email } } },
+      ],
+      organizationVersion: {
+        ...study.organizationVersion,
+        id: 'correction-client',
+        parentId: professor.organizationVersionId,
+        parent: { activatedLicence: [], professorCourseSessions: [{ id: 'session' }] },
+      },
+    }
+    expect(getAccountRoleOnStudy({ ...professor, level: Level.Initial }, correctionStudy)).toBe(StudyRole.Validator)
+    expect(
+      getAccountRoleOnStudy(
+        { ...professor, level: Level.Initial },
+        {
+          ...correctionStudy,
+          organizationVersion: {
+            ...correctionStudy.organizationVersion,
+            parent: { activatedLicence: [], professorCourseSessions: [] },
+          },
+        },
+      ),
+    ).toBe(StudyRole.Reader)
+  })
+
+  it('grants only Validator to the current session professor', () => {
+    expect(isProfessorOnStudy(professor, study)).toBe(true)
+    expect(getAccountRoleOnStudy(professor, study)).toBe(StudyRole.Validator)
+  })
+
+  it('does not grant access to another professor or an account without an organization', () => {
+    expect(isProfessorOnStudy({ ...professor, organizationVersionId: 'other' }, study)).toBe(false)
+    expect(isProfessorOnStudy({ ...professor, organizationVersionId: null }, study)).toBe(false)
+  })
+
+  it('does not expose other training types or untyped studies', () => {
+    expect(isProfessorOnStudy(professor, { ...study, courseSessionType: CourseSessionType.PROFESSIONNEL })).toBe(false)
+    expect(isProfessorOnStudy(professor, { ...study, courseSessionType: null })).toBe(false)
+  })
+
+  it.each([Environment.BC, Environment.TILT, Environment.CUT, Environment.CLICKSON, Environment.MIP])(
+    'does not grant professor access outside training environments: %s',
+    (environment) => {
+      expect(isProfessorOnStudy({ ...professor, environment }, study)).toBe(false)
+    },
+  )
+
+  it('requires matching environments on the study, creator and session', () => {
+    expect(isProfessorOnStudy({ ...professor, environment: Environment.COURSE_TILT }, study)).toBe(false)
+    expect(
+      isProfessorOnStudy(professor, {
+        ...study,
+        createdBy: { ...study.createdBy, environment: Environment.COURSE_TILT },
+      }),
+    ).toBe(false)
+    expect(
+      isProfessorOnStudy(professor, {
+        ...study,
+        organizationVersion: { ...study.organizationVersion, environment: Environment.COURSE_TILT },
+      }),
+    ).toBe(false)
+  })
+
+  it('revokes implicit access as soon as the registration is removed', () => {
+    expect(
+      isProfessorOnStudy(professor, {
+        ...study,
+        createdBy: { ...study.createdBy, organizationVersion: { traineeCourseSessions: [] } },
+      }),
+    ).toBe(false)
+  })
+
+  it('grant validator role on tilt simplified studies for course_tilt', () => {
+    const tiltStudy = {
+      ...study,
+      simplified: true,
+      organizationVersion: { ...study.organizationVersion, environment: Environment.COURSE_TILT },
+      createdBy: {
+        ...study.createdBy,
+        environment: Environment.COURSE_TILT,
+        organizationVersion: {
+          traineeCourseSessions: [
+            {
+              courseSession: {
+                type: CourseSessionType.INITIAL,
+                environment: Environment.COURSE_TILT,
+                professorOrganizationVersionId: professor.organizationVersionId,
+              },
+            },
+          ],
+        },
+      },
+    }
+
+    expect(getAccountRoleOnStudy({ ...professor, environment: Environment.COURSE_TILT }, tiltStudy)).toBe(
+      StudyRole.Validator,
+    )
+  })
+})
+
 describe('StudyUtils functions', () => {
+  describe('getAllowedLevels', () => {
+    it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
+      'allows every level without a training level in %s',
+      (environment) => {
+        expect(getAllowedLevels(null, environment)).toEqual(Object.values(Level))
+      },
+    )
+
+    it.each(Object.values(Environment).filter((environment) => !environment.startsWith('COURSE_')))(
+      'requires a training level in %s',
+      (environment) => {
+        expect(getAllowedLevels(null, environment)).toEqual([])
+        expect(getAllowedLevels(Level.Initial, environment)).toEqual([Level.Initial])
+        expect(getAllowedLevels(Level.Standard, environment)).toEqual([Level.Initial, Level.Standard])
+        expect(getAllowedLevels(Level.Advanced, environment)).toEqual([Level.Initial, Level.Standard, Level.Advanced])
+      },
+    )
+  })
+
   describe('getDuplicableEnvironments', () => {
     test('Should return Tilt and BC for BC environment', () => {
       const res = getDuplicableEnvironments(Environment.BC)

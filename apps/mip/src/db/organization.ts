@@ -1,5 +1,5 @@
 import { Prisma } from '@abc-transitionbascarbone/common/db'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 
 export const getOrgNameByOrgVersionMipId = async (id: string | null) => {
   if (!id) {

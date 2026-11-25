@@ -1,4 +1,7 @@
 {
+  "homeCards": {
+    "searchSessions": "Search sessions by name"
+  },
   "activation": {
     "description": "Enter the email address and session code provided by the training organization accompanying you.",
     "sessionCode": "Session code",
@@ -7,6 +10,13 @@
     "validation": {
       "sessionCode": "Please enter the session code",
       "consent": "You must accept this condition to activate your account"
+    }
+  },
+  "email": {
+    "body": {
+      "accountActivated": {
+        "content": "You have just activated your account on the BC+ training platform."
+      }
     }
   }
 }

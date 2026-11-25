@@ -15,9 +15,10 @@ import useStudySite from '../study/site/useStudySite'
 interface Props {
   study: FullStudy
   actions: EngagementActionWithSites[]
+  canEdit: boolean
 }
 
-const EngagementActionsPage = ({ study, actions }: Props) => {
+const EngagementActionsPage = ({ study, actions, canEdit }: Props) => {
   const t = useTranslations('study.engagementActions')
   const tNav = useTranslations('nav')
   const tStudyNav = useTranslations('study.navigation')
@@ -58,7 +59,7 @@ const EngagementActionsPage = ({ study, actions }: Props) => {
         }
       >
         <div className="flex-col gapped2">
-          <EngagementActions actions={actions} study={study} studySite={studySiteId} />
+          <EngagementActions actions={actions} study={study} studySite={studySiteId} canEdit={canEdit} />
         </div>
       </Block>
     </>

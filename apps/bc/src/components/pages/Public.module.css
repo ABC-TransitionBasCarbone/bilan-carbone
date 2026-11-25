@@ -23,6 +23,19 @@
   width: 50%;
 }
 
+.partnerLogos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+}
+
+.partnerLogo {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
 .info {
   background-color: var(--primary-800);
   border: var(--border-dark);

@@ -1,5 +1,5 @@
 import { getRecords, Worksheet } from '@/utils/excel.utils'
-import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { CourseSessionType } from '@abc-transitionbascarbone/common/db/enums'
 import xlsx from 'node-xlsx'
 import {
   CourseParticipant,
@@ -17,6 +17,15 @@ import {
   normalizeEmail,
 } from './importTrainingSessionsUtils'
 
+const courseSessionTypes: Record<string, CourseSessionType | undefined> = {
+  M1: CourseSessionType.INITIAL,
+  M2: CourseSessionType.PROFESSIONNEL,
+  M3: CourseSessionType.MAITRISE,
+  INITIAL: CourseSessionType.INITIAL,
+  PROFESSIONNEL: CourseSessionType.PROFESSIONNEL,
+  MAITRISE: CourseSessionType.MAITRISE,
+}
+
 const handleDeletionTab = (worksheets: Worksheet[], courseOrganismId: string) => {
   const deletions: CourseSessionDeletion[] = []
 
@@ -26,7 +35,7 @@ const handleDeletionTab = (worksheets: Worksheet[], courseOrganismId: string) =>
         continue
       }
       const type = getRequiredText(record, 'Type')?.toLowerCase()
-      const name = getRequiredText(record, 'Session')
+      const name = getRequiredText(record, 'ParcoursProg')
 
       if (!type || !name) {
         continue
@@ -53,7 +62,7 @@ const handleSessionTab = (worksheets: Worksheet[], deletedSessionNames: Set<stri
   const sessionTimestamps = new Map<string, number>()
 
   for (const record of getRecords(worksheets, 'Sessions')) {
-    const name = getRequiredText(record, 'Nom de la session')
+    const name = getRequiredText(record, 'ParcoursProg')
     if (!name || deletedSessionNames.has(name)) {
       continue
     }
@@ -80,7 +89,13 @@ const handleSessionTab = (worksheets: Worksheet[], deletedSessionNames: Set<stri
       console.error(`Invalid Type de formation for training session: ${name}`)
       continue
     }
-    const type = typeValue?.trim().toUpperCase() || (environment === Environment.COURSE_BC ? 'M1' : null)
+    const normalizedType = typeValue?.trim().toUpperCase()
+    const type = normalizedType ? (courseSessionTypes[normalizedType] ?? null) : null
+
+    if (!type) {
+      console.error(`Invalid type for training session: ${name}`)
+      continue
+    }
 
     const startDate = getDateAtMidnight(record, 'Date de début')
     const endDate = getDateAtMidnight(record, 'Date de fin')
@@ -132,7 +147,7 @@ const handleTraineeTab = (
     { session: CourseSession; trainee: CourseParticipant; timestamp: number }
   >()
   for (const record of getRecords(worksheets, 'Stagiaires')) {
-    const sessionName = getRequiredText(record, 'Nom de la session')
+    const sessionName = getRequiredText(record, 'ParcoursProg')
     if (!sessionName || deletedSessionNames.has(sessionName)) {
       continue
     }
@@ -151,11 +166,15 @@ const handleTraineeTab = (
     ) {
       continue
     }
-    const key = JSON.stringify([session.type, trainee.email])
+    const key = JSON.stringify([session.type, session.environment, trainee.email])
     const timestamp = getRecordTimestamp(record)
     const previous = traineeAssignments.get(key)
     if (!previous || timestamp >= previous.timestamp) {
-      traineeAssignments.set(key, { session, trainee, timestamp })
+      traineeAssignments.set(key, {
+        session,
+        trainee: { ...trainee, ...(Number.isFinite(timestamp) && { OfUpdatedAt: new Date(timestamp) }) },
+        timestamp,
+      })
     }
   }
 
@@ -174,7 +193,7 @@ const handleProfessorTab = (
 ) => {
   const sessionsWithProfessors = cloneSessions(sessions)
   for (const record of getRecords(worksheets, 'Formateur')) {
-    const sessionName = getRequiredText(record, 'Nom de la session')
+    const sessionName = getRequiredText(record, 'ParcoursProg')
 
     if (!sessionName || deletedSessionNames.has(sessionName)) {
       continue

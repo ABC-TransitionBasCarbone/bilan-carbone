@@ -165,15 +165,19 @@ export const mergeRowWithOverride = (
 
 export const isRowUnchanged = (existingRawCsv: string, newRow: ImportEmissionFactor): boolean => {
   const newSerialized = serializeRowAsCsv(newRow)
-  const existingLines = existingRawCsv.split('\n')
-  const newLines = newSerialized.split('\n')
-  if (existingLines.length !== 2 || newLines.length !== 2) {
+  const existingHeaderEnd = existingRawCsv.indexOf('\n')
+  const newHeaderEnd = newSerialized.indexOf('\n')
+  if (existingHeaderEnd === -1 || newHeaderEnd === -1) {
     return false
   }
-  const existingHeaders = existingLines[0].split(';')
-  const existingValues = existingLines[1].split(';')
-  const newHeaders = newLines[0].split(';')
-  const newValues = newLines[1].split(';')
+  const existingHeaders = existingRawCsv.slice(0, existingHeaderEnd).split(';')
+  const existingValues = existingRawCsv.slice(existingHeaderEnd + 1).split(';')
+  const newHeaders = newSerialized.slice(0, newHeaderEnd).split(';')
+  const newValues = newSerialized.slice(newHeaderEnd + 1).split(';')
+  // add this check in case there is a ";" in a column
+  if (existingValues.length !== existingHeaders.length || newValues.length !== newHeaders.length) {
+    return false
+  }
 
   const existingMap = new Map(existingHeaders.map((h, i) => [h, existingValues[i] ?? '']))
 
@@ -440,7 +444,6 @@ export const getSubPosts = (
       return [SubPost.Electricite]
     case Import.CUT:
       return [SubPost.UsagesNumeriques]
-    case Import.GIEC:
     case Import.BaseEmpreinte:
     default:
       return Object.entries(elementsBySubPost)
@@ -454,11 +457,10 @@ export const getBaseFunc = (subPosts: SubPost[], importedFrom: Import) => {
     case Import.AIB:
       return EmissionFactorBase.MarketBased
     case Import.GIEC:
+    case Import.ABC:
+    case Import.ADEME:
     case Import.BaseEmpreinte:
       return subPosts.includes(SubPost.Electricite) ? EmissionFactorBase.LocationBased : null
-    case Import.Legifrance:
-    case Import.NegaOctet:
-    case Import.CUT:
     default:
       return null
   }

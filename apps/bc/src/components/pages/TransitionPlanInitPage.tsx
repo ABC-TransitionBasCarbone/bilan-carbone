@@ -24,10 +24,11 @@ import {
   updateTransitionPlanSectenVersion,
 } from '@/services/serverFunctions/transitionPlan'
 import { ObjectiveGroup, TrajectoryWithObjectivesAndScope } from '@/types/trajectory.types'
+import { readStoredStringArray } from '@/utils/localStorage'
 import { compareSectenVersions } from '@/utils/secten'
 import { calculateSectoralSNBCReductionRates, getDefaultSnbcSectoralTrajectory } from '@/utils/snbc'
 import { getAllTagIds } from '@/utils/tag.utils'
-import { getInitialCurrentStep, readStoredStringArray } from '@/utils/transitionPlan.utils'
+import { getInitialCurrentStep } from '@/utils/transitionPlan.utils'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import Box from '@abc-transitionbascarbone/common/components/base/Box'
 import Image from '@abc-transitionbascarbone/common/components/document/Image'
@@ -96,7 +97,7 @@ const TransitionPlanInitPage = ({
   const [isSectenUpdateLoading, setIsSectenUpdateLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [currentStep, setCurrentStep] = useState<number | 'complete'>(() =>
-    getInitialCurrentStep(`transition-init-step-${study.id}`, trajectories.length),
+    canEdit ? getInitialCurrentStep(`transition-init-step-${study.id}`, trajectories.length) : 0,
   )
   const [selectedSnbcTrajectories, setSelectedSnbcTrajectories] = useState<string[]>(
     () => readStoredStringArray(`trajectory-snbc-selected-${study.id}`) ?? [TRAJECTORY_SNBC_GENERAL_ID],
@@ -120,7 +121,7 @@ const TransitionPlanInitPage = ({
   const storageKey = `transition-init-step-${study.id}`
   const snbcStorageKey = `trajectory-snbc-selected-${study.id}`
   const sbtiStorageKey = `trajectory-sbti-selected-${study.id}`
-  const isComplete = currentStep === 'complete'
+  const isComplete = canEdit ? currentStep === 'complete' : transitionPlan !== null
   const defaultSnbcSectoralTrajectory = getDefaultSnbcSectoralTrajectory(trajectories)
   const validSnbcIds = new Set([
     TRAJECTORY_SNBC_GENERAL_ID,
@@ -157,12 +158,7 @@ const TransitionPlanInitPage = ({
     }
   }
 
-  const isStepVisible = (step: number) => {
-    if (isComplete) {
-      return true
-    }
-    return step <= currentStep
-  }
+  const isStepVisible = (step: number) => isComplete || (typeof currentStep === 'number' && step <= currentStep)
 
   const isStepActive = (step: number) => {
     if (isComplete) {
@@ -255,7 +251,7 @@ const TransitionPlanInitPage = ({
   }
 
   const handleSaveTrajectory = async (sectorPercentages: SectorPercentages) => {
-    if (!transitionPlan) {
+    if (!transitionPlan || !canEdit) {
       return
     }
 

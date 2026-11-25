@@ -1,4 +1,7 @@
 {
+  "homeCards": {
+    "searchSessions": "Rechercher une session"
+  },
   "activation": {
     "description": "Indiquez l'adresse e-mail et le code de session que vous a transmis l'organisme de formation qui vous accompagne.",
     "sessionCode": "Code de session",
@@ -8,6 +11,13 @@
     "validation": {
       "sessionCode": "Veuillez entrer le code de session",
       "consent": "Vous devez accepter cette condition pour activer votre compte"
+    }
+  },
+  "email": {
+    "body": {
+      "accountActivated": {
+        "content": "Vous venez d'activer votre compte sur le BC+ de formation."
+      }
     }
   }
 }

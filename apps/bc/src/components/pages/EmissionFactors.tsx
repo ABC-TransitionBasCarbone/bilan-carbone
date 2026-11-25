@@ -1,4 +1,4 @@
-import { canCreateEmissionFactor } from '@/services/permissions/emissionFactor.server'
+import { canCreateEmissionFactor } from '@/services/permissions/emissionFactorAccess'
 import { BCEnvironment } from '@/types/environment'
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import { getTranslations } from 'next-intl/server'

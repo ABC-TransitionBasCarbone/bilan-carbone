@@ -1,3 +1,11 @@
+enum CourseSessionType {
+  INITIAL
+  PROFESSIONNEL
+  MAITRISE
+
+  @@schema("bilan_carbone")
+}
+
 model CourseOrganism {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
@@ -19,12 +27,12 @@ model CourseSession {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  startDate   DateTime    @map("start_date")
-  endDate     DateTime    @map("end_date")
+  startDate   DateTime           @map("start_date")
+  endDate     DateTime           @map("end_date")
   name        String
-  type        String?
+  type        CourseSessionType
   environment Environment
-  code        String      @unique
+  code        String             @unique
 
   courseOrganism   CourseOrganism @relation(fields: [courseOrganismId], references: [id], onDelete: Cascade)
   courseOrganismId String         @map("course_organism_id")
@@ -33,13 +41,20 @@ model CourseSession {
   professorOrganizationVersionId String?              @map("professor_organization_version_id")
 
   traineeOrganizations CourseSessionTraineeOrganization[]
+  traineeRemovals      CourseSessionTraineeRemoval[]
+  correctionDeliveries StudyCorrectionDelivery[]
 
   @@unique([courseOrganismId, name, environment])
+  @@index([professorOrganizationVersionId])
   @@map("course_session")
   @@schema("bilan_carbone")
 }
 
 model CourseSessionTraineeOrganization {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
   courseSessionId String        @map("course_session_id")
   courseSession   CourseSession @relation(fields: [courseSessionId], references: [id], onDelete: Cascade)
 
@@ -48,9 +63,39 @@ model CourseSessionTraineeOrganization {
 
   courseStatus CourseSessionTraineeOrganizationStatus @default(INACTIVE) @map("is_active")
 
-  @@id([courseSessionId, organizationVersionId])
+  attendance Attendance?
+
+  @@unique([courseSessionId, organizationVersionId])
   @@index([organizationVersionId])
   @@map("course_session_trainee_organization")
+  @@schema("bilan_carbone")
+}
+
+model Attendance {
+  id                                 String                          @id @default(uuid())
+  courseSessionTraineeOrganizationId String                          @unique @map("course_session_trainee_organization_id")
+  traineeOrganization                CourseSessionTraineeOrganization @relation(fields: [courseSessionTraineeOrganizationId], references: [id], onDelete: Cascade)
+
+  @@map("attendance")
+  @@schema("bilan_carbone")
+}
+
+model CourseSessionTraineeRemoval {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  courseSessionId String        @map("course_session_id")
+  courseSession   CourseSession @relation(fields: [courseSessionId], references: [id], onDelete: Cascade)
+
+  organizationVersionId String              @map("organization_version_id")
+  organizationVersion   OrganizationVersion @relation(fields: [organizationVersionId], references: [id], onDelete: Cascade)
+
+  removedAt DateTime @default(now()) @map("removed_at")
+
+  @@unique([courseSessionId, organizationVersionId])
+  @@index([organizationVersionId])
+  @@map("course_session_trainee_removal")
   @@schema("bilan_carbone")
 }
 

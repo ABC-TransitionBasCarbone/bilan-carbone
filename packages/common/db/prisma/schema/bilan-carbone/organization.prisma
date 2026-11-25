@@ -82,7 +82,9 @@ model OrganizationVersion {
   userAccounts            Account[]
   studies                 Study[]
   traineeCourseSessions   CourseSessionTraineeOrganization[]
+  courseSessionRemovals    CourseSessionTraineeRemoval[]
   professorCourseSessions CourseSession[]                    @relation("CourseSessionProfessor")
+  receivedStudyCorrections StudyCorrectionDelivery[]
 
   onboarded   Boolean  @default(false)
   onboarderId String?  @map("onboarder_id")

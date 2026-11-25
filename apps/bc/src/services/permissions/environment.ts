@@ -1,5 +1,4 @@
-import { isFeatureActiveForEnvironment } from '@/db/deactivableFeatures'
-import { DeactivatableFeature, Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { Locale } from '@abc-transitionbascarbone/common/i18n/config'
 import {
   advancedEnvironments,
@@ -73,6 +72,9 @@ export const hasAccessToAllLocales = isClickson
 
 export const hasAccessToSimplifiedEmissionAnalysis = isClickson
 
+export const hasAccessToOrgaCreation = (environment: Environment) =>
+  isAdvanced(environment) && !isCourseEnvironment(environment)
+
 export const canCreateStudyWithoutSpecificRights = (environment: Environment, simplified: boolean = false) =>
   isCut(environment) || (isTilt(environment) && simplified)
 
@@ -112,15 +114,6 @@ export const hasStartLinkOnFootprints = isTilt
 export const hasAccessToPostTypeform = isTilt
 
 export const hasAccessToReductionObjectivesGlossary = isTilt
-
-export const isTiltSimplifiedFeatureActive = async (environment: Environment) => {
-  const genericEnvironment = getEnvironmentHandlingGenericEnvs(environment)
-  if (genericEnvironment && !isTilt(genericEnvironment)) {
-    return true
-  }
-
-  return !genericEnvironment || isFeatureActiveForEnvironment(DeactivatableFeature.TiltSimplified, genericEnvironment)
-}
 
 export const hasAccessToHomeSubtitle = isClickson
 

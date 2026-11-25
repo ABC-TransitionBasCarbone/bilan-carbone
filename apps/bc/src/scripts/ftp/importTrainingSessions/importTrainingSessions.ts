@@ -1,25 +1,32 @@
-import { prismaClient } from '@/db/client.server'
-import { createUsersWithAccount } from '@/db/user'
-import type { Prisma } from '@abc-transitionbascarbone/common/db'
+import { prismaClient } from '@/db/client'
 import {
-  CourseSessionTraineeOrganizationStatus,
-  Environment,
-  Role,
-  UserSource,
-  UserStatus,
-} from '@abc-transitionbascarbone/common/db/enums'
+  courseSessionStudyFilter,
+  createCourseParticipantAccounts,
+  prepareCourseSessionTraineeRegistrations,
+} from '@/db/courseSession'
+import { correctionShareSessionDates } from '@/services/studyCorrectionSharing'
+import { ensureCourseProfessorCorrections } from '@/services/trainingCorrection'
+import type { Prisma } from '@abc-transitionbascarbone/common/db'
+import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import {
   sendCourseSessionsCreatedEmail,
   type TrainingSessionUpdate,
 } from '@abc-transitionbascarbone/common/services/email/email'
 import { Client } from 'basic-ftp'
-import { randomInt } from 'crypto'
+import { randomInt, randomUUID } from 'crypto'
 import fs from 'fs'
 import path from 'path'
 import { downloadFileFromFTP, getFTPClient } from '../utils'
 import { parseCourseSessionWorkbook } from './importTrainingSessionsParsing'
 import { CourseSessionImport } from './importTrainingSessionsType'
-import { getProfessor, getTrainees, SavedCourseSession, sessionsSelect } from './importTrainingSessionsUtils'
+import {
+  getProfessor,
+  getTrainees,
+  isSameSession,
+  SavedCourseSession,
+  sessionsSelect,
+  shouldImportCourseSessionTrainee,
+} from './importTrainingSessionsUtils'
 
 const getSessionUpdate = (before: SavedCourseSession, after: SavedCourseSession): TrainingSessionUpdate | null => {
   const dates: TrainingSessionUpdate['dates'] = []
@@ -57,11 +64,8 @@ const getSessionUpdate = (before: SavedCourseSession, after: SavedCourseSession)
 const getInfoFromLocal = async (organisms: { id: string }[]) => {
   const localFilePath = path.resolve(process.cwd(), 'sessions_a_importer.xlsx')
   const data = await fs.promises.readFile(localFilePath)
-  const imports = organisms.map(({ id }) => parseCourseSessionWorkbook(data, id))
-  return {
-    sessions: imports.flatMap(({ sessions }) => sessions),
-    deletions: imports.flatMap(({ deletions }) => deletions),
-  }
+  const imports = parseCourseSessionWorkbook(data, organisms[0].id)
+  return imports
 }
 
 export const getCourseSessionsFromFTP = async (): Promise<CourseSessionImport> => {
@@ -124,101 +128,33 @@ const getOrganizationVersionId = (
 export const importCourseSessionsFromFTP = async () => {
   const { sessions, deletions } = await getCourseSessionsFromFTP()
 
-  if (sessions.length === 0 && deletions.length === 0) {
-    return {
-      importedSessions: 0,
-      modifiedSessions: 0,
-      createdUsers: 0,
-      createdAccounts: 0,
-      addedTrainees: 0,
-      addedProfessors: 0,
-      deletedSessions: 0,
-      deletedTrainees: 0,
-      deletedProfessors: 0,
-    }
-  }
-
   const today = new Date()
   today.setUTCHours(0, 0, 0, 0)
+  const closedEndDate = correctionShareSessionDates().endDate.gt
+  const closedStartDate = new Date(closedEndDate)
+  closedStartDate.setUTCDate(closedStartDate.getUTCDate() - 1)
   const notFinishedSessions = sessions.filter(({ endDate }) => endDate >= today)
 
-  const userAccountInSession = []
-  for (const session of notFinishedSessions) {
-    for (const participant of session.trainees) {
-      userAccountInSession.push({ ...participant, environment: session.environment })
-    }
-    if (session.professor) {
-      userAccountInSession.push({ ...session.professor, environment: session.environment })
-    }
-  }
-
-  const { newUsers, newAccounts } =
-    userAccountInSession.length > 0
-      ? await createUsersWithAccount(
-          userAccountInSession.map(({ email, firstName, lastName, environment }) => ({
-            email,
-            firstName,
-            lastName,
-            source: UserSource.CRON,
-            account: {
-              environment,
-              role: Role.DEFAULT,
-              status: UserStatus.IMPORTED,
-              user: { create: undefined, connectOrCreate: undefined, connect: undefined },
-            },
-          })),
-        )
-      : { newUsers: { count: 0 }, newAccounts: { count: 0 } }
-
-  const accounts =
-    userAccountInSession.length > 0
-      ? await prismaClient.account.findMany({
-          where: {
-            environment: { in: [...new Set(notFinishedSessions.map(({ environment }) => environment))] },
-            user: { email: { in: userAccountInSession.map(({ email }) => email) } },
-          },
-          select: {
-            id: true,
-            environment: true,
-            organizationVersionId: true,
-            user: { select: { email: true, firstName: true, lastName: true } },
-          },
-        })
-      : []
-  const createdOrganizationVersions = await prismaClient.$transaction(
-    accounts
-      .filter(({ organizationVersionId }) => !organizationVersionId)
-      .map((account) =>
-        prismaClient.account.update({
-          where: { id: account.id },
-          data: {
-            organizationVersion: {
-              create: {
-                environment: account.environment,
-                organization: { create: { name: `${account.user.firstName} ${account.user.lastName}` } },
-              },
-            },
-          },
-          select: { id: true, organizationVersionId: true },
-        }),
-      ),
+  const userAccountInSession = notFinishedSessions.flatMap(({ trainees, professor, environment }) =>
+    [...trainees, ...(professor ? [professor] : [])].map((participant) => ({ ...participant, environment })),
   )
-  const createdOrganizationVersionIds = new Map(
-    createdOrganizationVersions.map(({ id, organizationVersionId }) => [id, organizationVersionId]),
+
+  const {
+    newUsers,
+    newAccounts,
+    accounts: accountsWithOrganizationVersions,
+  } = await prismaClient.$transaction((transaction) =>
+    createCourseParticipantAccounts(userAccountInSession, transaction),
   )
-  const accountsWithOrganizationVersions = accounts.map((account) => ({
-    ...account,
-    organizationVersionId: account.organizationVersionId ?? createdOrganizationVersionIds.get(account.id) ?? null,
-  }))
 
   const affectedSessionsSQLRequest: Prisma.CourseSessionWhereInput[] = [
     ...notFinishedSessions.flatMap(({ courseOrganismId, name, environment, type, trainees }) => [
-      { courseOrganismId, type, name, environment },
+      { courseOrganismId, name, environment },
       ...(trainees.length > 0
         ? [
             {
-              courseOrganismId,
               type,
+              environment,
               traineeOrganizations: {
                 some: {
                   organizationVersion: {
@@ -233,159 +169,231 @@ export const importCourseSessionsFromFTP = async () => {
     ...deletions.map(({ courseOrganismId, name }) => ({ courseOrganismId, name })),
   ]
   const deletedCounts = { deletedSessions: 0, deletedTrainees: 0, deletedProfessors: 0 }
+  const closedSessionIds = new Set<string>()
   const existingSessions = await prismaClient.courseSession.findMany({
     where: {
       OR: affectedSessionsSQLRequest,
     },
     select: sessionsSelect,
   })
-  const conflictingRegistrations = notFinishedSessions.flatMap((session) =>
-    existingSessions.flatMap((previous) => {
-      if (
-        previous.courseOrganismId !== session.courseOrganismId ||
-        (previous.name === session.name && previous.environment === session.environment)
-      ) {
-        return []
-      }
-      const imported = sessions.find(
-        ({ courseOrganismId, name, environment }) =>
-          courseOrganismId === previous.courseOrganismId &&
-          name === previous.name &&
-          environment === previous.environment,
-      )
-      if ((imported ? imported.type : previous.type) !== session.type) {
-        return []
-      }
-      const previousEmails = new Set(getTrainees(previous).map(({ email }) => email))
-      const emails = session.trainees.filter(({ email }) => previousEmails.has(email)).map(({ email }) => email)
-      return emails.length > 0 ? [{ courseSessionId: previous.id, emails }] : []
-    }),
-  )
+  const importedSessions = await prismaClient.$transaction(
+    async (transaction) => {
+      const removals = await transaction.courseSessionTraineeRemoval.findMany({
+        where: { courseSessionId: { in: existingSessions.map(({ id }) => id) } },
+        select: { courseSessionId: true, organizationVersionId: true, removedAt: true },
+      })
+      const sessionsToImport = notFinishedSessions.map((session) => {
+        const previous = existingSessions.find((previous) => isSameSession(previous, session))
+        const removedAtByOrganization = new Map(
+          removals
+            .filter(({ courseSessionId }) => courseSessionId === previous?.id)
+            .map(({ organizationVersionId, removedAt }) => [organizationVersionId, removedAt]),
+        )
+        return {
+          ...session,
+          trainees: session.trainees.filter(({ email, OfUpdatedAt }) =>
+            shouldImportCourseSessionTrainee(
+              OfUpdatedAt,
+              removedAtByOrganization.get(
+                getOrganizationVersionId(accountsWithOrganizationVersions, email, session.environment),
+              ),
+              session.endDate,
+            ),
+          ),
+        }
+      })
 
-  const importedSessions = await prismaClient.$transaction(async (transaction) => {
-    for (const deletion of deletions) {
-      const where = { courseOrganismId: deletion.courseOrganismId, name: deletion.name }
-      if (deletion.type === 'session') {
-        deletedCounts.deletedSessions += (await transaction.courseSession.deleteMany({ where })).count
-      } else if (deletion.type === 'stagiaire') {
-        deletedCounts.deletedTrainees += (
-          await transaction.courseSessionTraineeOrganization.deleteMany({
-            where: {
-              courseSession: where,
-              organizationVersion: { userAccounts: { some: { user: { email: deletion.email } } } },
-            },
-          })
-        ).count
-      } else {
-        deletedCounts.deletedProfessors += (
-          await transaction.courseSession.updateMany({
-            where: {
-              ...where,
-              professorOrganization: { userAccounts: { some: { user: { email: deletion.email } } } },
-            },
-            data: { professorOrganizationVersionId: null },
-          })
-        ).count
-      }
-    }
-    for (const { courseSessionId, emails } of conflictingRegistrations) {
-      deletedCounts.deletedTrainees += (
-        await transaction.courseSessionTraineeOrganization.deleteMany({
-          where: {
-            courseSessionId,
-            organizationVersion: { userAccounts: { some: { user: { email: { in: emails } } } } },
-          },
-        })
-      ).count
-    }
-    const importedSessionsPromises = []
-    for (const session of notFinishedSessions) {
-      const courseStatus =
-        session.startDate <= today
-          ? CourseSessionTraineeOrganizationStatus.ACTIVE
-          : CourseSessionTraineeOrganizationStatus.INACTIVE
-      const professorOrganizationVersionId = session.professor
-        ? getOrganizationVersionId(accountsWithOrganizationVersions, session.professor.email, session.environment)
-        : null
-      const traineeOrganizationVersionIds = session.trainees.map(({ email }) =>
-        getOrganizationVersionId(accountsWithOrganizationVersions, email, session.environment),
-      )
-
-      let code = randomInt(99999999).toString()
-
-      let existingCodes = [{}]
-      let count = 0
-      while (existingCodes.length > 0 && count < 10) {
-        code = randomInt(99999999).toString()
-
-        existingCodes = await transaction.courseSession.findMany({
-          where: { OR: [{ code }] },
-        })
-
-        count++
-      }
-
-      if (count >= 10 && existingCodes.length > 0) {
-        throw new Error('Failed to generate unique session codes after 10 attempts')
-      }
-
-      importedSessionsPromises.push(
-        await transaction.courseSession.upsert({
-          where: {
-            courseOrganismId_name_environment: {
-              courseOrganismId: session.courseOrganismId,
-              name: session.name,
-              environment: session.environment,
-            },
-          },
-          select: sessionsSelect,
-          create: {
-            courseOrganismId: session.courseOrganismId,
-            name: session.name,
-            type: session.type,
-            environment: session.environment,
-            startDate: session.startDate,
-            endDate: session.endDate,
-            code,
-            professorOrganizationVersionId,
-            traineeOrganizations: {
-              create: traineeOrganizationVersionIds.map((id) => ({
-                organizationVersion: { connect: { id } },
-                courseStatus,
-              })),
-            },
-          },
-          update: {
-            type: session.type,
-            startDate: session.startDate,
-            endDate: session.endDate,
-            ...(professorOrganizationVersionId && { professorOrganizationVersionId }),
-            traineeOrganizations: {
-              createMany: {
-                data: traineeOrganizationVersionIds.map((organizationVersionId) => ({
-                  organizationVersionId,
-                  courseStatus,
-                })),
-                skipDuplicates: true,
+      for (const deletion of deletions) {
+        const where = { courseOrganismId: deletion.courseOrganismId, name: deletion.name }
+        if (deletion.type === 'session') {
+          const sessions = await transaction.courseSession.findMany({
+            where,
+            select: {
+              id: true,
+              startDate: true,
+              endDate: true,
+              type: true,
+              environment: true,
+              professorOrganizationVersionId: true,
+              _count: {
+                select: {
+                  traineeOrganizations: { where: { attendance: { isNot: null } } },
+                  traineeRemovals: true,
+                  correctionDeliveries: true,
+                },
               },
             },
-          },
-        }),
-      )
-    }
-    return deletions.length > 0 || conflictingRegistrations.length > 0
-      ? transaction.courseSession.findMany({
-          where: {
-            OR: [...affectedSessionsSQLRequest, { id: { in: existingSessions.map(({ id }) => id) } }],
-          },
-          select: sessionsSelect,
-        })
-      : importedSessionsPromises
-  })
+          })
+          for (const session of sessions) {
+            const { id, startDate, endDate, _count } = session
+            const hasData =
+              _count.traineeOrganizations > 0 ||
+              _count.traineeRemovals > 0 ||
+              _count.correctionDeliveries > 0 ||
+              (await transaction.study.findFirst({
+                where: courseSessionStudyFilter(session, session.professorOrganizationVersionId, session.environment),
+                select: { id: true },
+              }))
+            if (!hasData) {
+              deletedCounts.deletedSessions += (await transaction.courseSession.deleteMany({ where: { id } })).count
+              continue
+            }
+            if (endDate <= closedEndDate) {
+              continue
+            }
+            const closed = await transaction.courseSession.updateMany({
+              where: { id, endDate: { gt: closedEndDate } },
+              data: {
+                endDate: closedEndDate,
+                ...(startDate > closedEndDate && { startDate: closedStartDate }),
+              },
+            })
+            if (closed.count > 0) {
+              closedSessionIds.add(id)
+              deletedCounts.deletedSessions += closed.count
+            }
+          }
+        } else if (
+          deletions.some(
+            (entry) =>
+              entry.type === 'session' &&
+              entry.courseOrganismId === deletion.courseOrganismId &&
+              entry.name === deletion.name,
+          )
+        ) {
+          continue
+        } else if (deletion.type === 'stagiaire') {
+          deletedCounts.deletedTrainees += (
+            await transaction.courseSessionTraineeOrganization.deleteMany({
+              where: {
+                courseSession: where,
+                organizationVersion: { userAccounts: { some: { user: { email: deletion.email } } } },
+              },
+            })
+          ).count
+        } else {
+          deletedCounts.deletedProfessors += (
+            await transaction.courseSession.updateMany({
+              where: {
+                ...where,
+                professorOrganization: { userAccounts: { some: { user: { email: deletion.email } } } },
+              },
+              data: { professorOrganizationVersionId: null },
+            })
+          ).count
+        }
+      }
+      for (const session of sessionsToImport) {
+        const previous = existingSessions.find((existingSession) => isSameSession(existingSession, session))
+        if (previous && previous.type !== session.type) {
+          await transaction.courseSession.updateMany({
+            where: { id: previous.id },
+            data: { type: session.type },
+          })
+        }
+      }
+
+      let hasTransferredTrainees = false
+      const importedSessionsPromises = []
+      for (const session of sessionsToImport) {
+        const professorOrganizationVersionId = session.professor
+          ? getOrganizationVersionId(accountsWithOrganizationVersions, session.professor.email, session.environment)
+          : null
+        const traineeOrganizationVersionIds = session.trainees.map(({ email }) =>
+          getOrganizationVersionId(accountsWithOrganizationVersions, email, session.environment),
+        )
+        const previous = existingSessions.find((existingSession) => isSameSession(existingSession, session))
+        const courseSessionId = previous?.id ?? randomUUID()
+        const prepared = await prepareCourseSessionTraineeRegistrations(
+          { ...session, id: courseSessionId },
+          traineeOrganizationVersionIds,
+          transaction,
+          { source: 'ftp' },
+        )
+        deletedCounts.deletedTrainees += prepared.removedCount
+        hasTransferredTrainees ||= prepared.removedCount > 0
+
+        let code = randomInt(99999999).toString()
+
+        let existingCodes = [{}]
+        let count = 0
+        while (existingCodes.length > 0 && count < 10) {
+          code = randomInt(99999999).toString()
+
+          existingCodes = await transaction.courseSession.findMany({
+            where: { OR: [{ code }] },
+          })
+
+          count++
+        }
+
+        if (count >= 10 && existingCodes.length > 0) {
+          throw new Error('Failed to generate unique session codes after 10 attempts')
+        }
+
+        importedSessionsPromises.push(
+          await transaction.courseSession.upsert({
+            where: {
+              courseOrganismId_name_environment: {
+                courseOrganismId: session.courseOrganismId,
+                name: session.name,
+                environment: session.environment,
+              },
+            },
+            select: sessionsSelect,
+            create: {
+              id: courseSessionId,
+              courseOrganismId: session.courseOrganismId,
+              name: session.name,
+              type: session.type,
+              environment: session.environment,
+              startDate: session.startDate,
+              endDate: session.endDate,
+              code,
+              professorOrganizationVersionId,
+              traineeOrganizations: {
+                create: prepared.data,
+              },
+            },
+            update: {
+              type: session.type,
+              startDate: session.startDate,
+              endDate: session.endDate,
+              ...(professorOrganizationVersionId && { professorOrganizationVersionId }),
+              traineeOrganizations: {
+                createMany: {
+                  data: prepared.data,
+                  skipDuplicates: true,
+                },
+              },
+            },
+          }),
+        )
+      }
+      return deletions.length > 0 || hasTransferredTrainees
+        ? transaction.courseSession.findMany({
+            where: {
+              OR: [...affectedSessionsSQLRequest, { id: { in: existingSessions.map(({ id }) => id) } }],
+            },
+            select: sessionsSelect,
+          })
+        : importedSessionsPromises
+    },
+    { isolationLevel: 'Serializable' },
+  )
+
+  try {
+    await ensureCourseProfessorCorrections()
+  } catch (error) {
+    console.error('Error creating correction studies for professors:', error)
+  }
 
   const existingSessionIds = new Set(existingSessions.map(({ id }) => id))
   const previousSessionsById = new Map(existingSessions.map((session) => [session.id, session]))
   const updatedSessions = importedSessions.flatMap((session) => {
+    if (closedSessionIds.has(session.id)) {
+      return []
+    }
     const previous = previousSessionsById.get(session.id)
     const update = previous ? getSessionUpdate(previous, session) : null
     return update ? [update] : []

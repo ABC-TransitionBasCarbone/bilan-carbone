@@ -1,7 +1,7 @@
 'use server'
 
 import { getAccountOrganizationVersions } from '@/db/account'
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { getEmissionFactorWithoutQuality } from '@/db/emissionFactors'
 import {
   createOrganizationWithVersion,
@@ -66,6 +66,10 @@ export const createOrganizationCommand = async (command: CreateOrganizationComma
   withServerResponse('createOrganizationCommand', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user.organizationVersionId || !hasAccessToCreateOrganization(session.user.environment)) {
+      console.error('createOrganizationCommand: user not authorized', {
+        accountId: session?.user.accountId,
+        organizationVersionId: session?.user.organizationVersionId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -79,6 +83,10 @@ export const createOrganizationCommand = async (command: CreateOrganizationComma
     } satisfies Omit<Prisma.OrganizationVersionCreateInput, 'organization'>
 
     if (!(await canCreateOrganization(session.user))) {
+      console.error('createOrganizationCommand: client creation not authorized', {
+        accountId: session.user.accountId,
+        organizationVersionId: session.user.organizationVersionId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 

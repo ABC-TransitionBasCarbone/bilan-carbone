@@ -66,9 +66,10 @@ const QualitySelectGroup = <T extends FieldValues>({
     name: qualityKeys.map((key) => getField(key) as Path<T>),
   })
 
-  const qualityFieldErrors = qualityKeys
-    .map((field) => errors[getField(field) as keyof typeof errors])
-    .filter((error) => error !== undefined)
+  const qualityFieldErrors = qualityKeys.flatMap((field) => {
+    const error = errors[getField(field) as keyof typeof errors]
+    return error ? [error] : []
+  })
   const hasQualityError = qualityFieldErrors.length > 0
 
   return (

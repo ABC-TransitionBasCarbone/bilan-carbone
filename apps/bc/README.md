@@ -95,7 +95,13 @@ yarn tsx src/scripts/FE/applyOverrides.ts -f ${pathToXlsxFile} --dry-run
 # Apply manual corrections to existing EFs (writes values directly onto the EF)
 # The Excel file must contain the same columns as the standard import CSV
 yarn tsx src/scripts/FE/applyOverrides.ts -f ${pathToXlsxFile}
+
+# Apply corrections to another source (BaseEmpreinte is the default; Manual is not supported)
+yarn tsx src/scripts/FE/applyOverrides.ts -f ${pathToXlsxFile} -b ABC --dry-run
+yarn tsx src/scripts/FE/applyOverrides.ts -f ${pathToXlsxFile} -b ABC
 ```
+
+Overrides modify existing EFs directly, including those already used in studies. They do not target a specific import version.
 
 ### Create BEGES rules
 

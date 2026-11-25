@@ -17,7 +17,7 @@ import { signPassword } from '@abc-transitionbascarbone/common/utils/auth'
 import { environmentsWithChecklist } from '@abc-transitionbascarbone/common/utils/environments'
 import { UserSession } from 'next-auth'
 import { addAccount, getAccountByEmailAndEnvironment, getAccountByEmailAndOrganizationVersionId } from './account'
-import { prismaClient } from './client.server'
+import { prismaClient } from './client'
 
 export const getUserByEmailWithSensibleInformations = (email: string) =>
   prismaClient.user.findUnique({
@@ -238,6 +238,7 @@ export const updateUser = (userId: string, data: Partial<Prisma.UserCreateInput>
 
 export const createUsersWithAccount = async (
   users: (Prisma.UserCreateManyInput & { account: Prisma.AccountCreateInput })[],
+  transaction: Prisma.TransactionClient = prismaClient,
 ) => {
   const deactivatedFeaturesRestrictions = await getDeactivableFeatureRestrictions(DeactivatableFeature.Creation)
   let filteredUsers = users
@@ -257,7 +258,7 @@ export const createUsersWithAccount = async (
     }
   }
 
-  const newUsers = await prismaClient.user.createMany({
+  const newUsers = await transaction.user.createMany({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     data: filteredUsers.map(({ account, ...user }) => user),
     skipDuplicates: true,
@@ -265,7 +266,7 @@ export const createUsersWithAccount = async (
 
   const emails = filteredUsers.map(({ email }) => email)
 
-  const createdUsers = await prismaClient.user.findMany({
+  const createdUsers = await transaction.user.findMany({
     where: { email: { in: emails } },
   })
 
@@ -277,11 +278,15 @@ export const createUsersWithAccount = async (
     }
 
     for (const originalUser of originalUsers) {
-      const accountAlreadyExists = await getAccountByEmailAndEnvironment(user.email, originalUser.account.environment)
+      const accountAlreadyExists = await getAccountByEmailAndEnvironment(
+        user.email,
+        originalUser.account.environment,
+        transaction,
+      )
       if (accountAlreadyExists) {
         continue
       }
-      await prismaClient.account.create({
+      await transaction.account.create({
         data: {
           ...originalUser.account,
           user: {

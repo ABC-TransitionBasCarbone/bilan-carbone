@@ -1,4 +1,4 @@
-import { deleteActuality } from '@/db/actuality.server'
+import { deleteActuality } from '@/db/actuality'
 import { Command } from 'commander'
 
 const program = new Command()

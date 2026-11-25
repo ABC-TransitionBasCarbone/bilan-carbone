@@ -1,0 +1,9 @@
+.card {
+  background-color: white;
+}
+
+.content {
+  text-decoration: none;
+  color: var(--primary-800);
+  gap: 1rem;
+}

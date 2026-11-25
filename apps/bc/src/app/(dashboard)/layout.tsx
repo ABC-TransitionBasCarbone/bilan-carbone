@@ -7,7 +7,9 @@ import { getAllowedStudyIdByAccount } from '@/db/study'
 import EnvironmentInitializer from '@/environments/core/EnvironmentInitializer'
 import DynamicTheme from '@/environments/core/providers/DynamicTheme'
 import { getEnvironment } from '@/i18n/environment'
-import { isTiltSimplifiedFeatureActive } from '@/services/permissions/environment'
+import { isTiltSimplifiedFeatureActive } from '@/services/permissions/environmentFeature'
+import { hasAccessToFormation } from '@/services/permissions/formations'
+import { getUserActiveAccounts } from '@/services/serverFunctions/user'
 import { shouldRenewLicenceText } from '@/utils/organization'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { environmentsWithChecklist } from '@abc-transitionbascarbone/common/utils/environments'
@@ -25,11 +27,14 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
     return <main className={styles.content}>{children}</main>
   }
 
-  const [organizationVersions, studyId, isTiltSimplifiedActive] = await Promise.all([
+  const [organizationVersions, studyId, isTiltSimplifiedActive, hasFormation, userAccounts] = await Promise.all([
     getAccountOrganizationVersions(account.accountId),
     getAllowedStudyIdByAccount(account),
     isTiltSimplifiedFeatureActive(account.environment),
+    hasAccessToFormation(account),
+    getUserActiveAccounts(),
   ])
+  const hasMultipleAccounts = userAccounts.success && userAccounts.data.length > 1
 
   const accountOrganizationVersion = organizationVersions.find(
     (organizationVersion) => organizationVersion.id === account.organizationVersionId,
@@ -49,7 +54,13 @@ const NavLayout = async ({ children, user: account }: Props & UserSessionProps) 
   return (
     <DynamicTheme environment={environment}>
       <Box className={classNames('flex-col h100', { [styles.withOrganizationCard]: withOrganizationCard })}>
-        <Navbar user={account} isFootprintsEnabled={isTiltSimplifiedActive} hasTrainedUsers={hasTrainedUsers} />
+        <Navbar
+          user={account}
+          isFootprintsEnabled={isTiltSimplifiedActive}
+          hasTrainedUsers={hasTrainedUsers}
+          hasFormation={hasFormation}
+          hasMultipleAccounts={hasMultipleAccounts}
+        />
         {withOrganizationCard && (
           <OrganizationCard
             account={account}

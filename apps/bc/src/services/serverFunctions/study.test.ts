@@ -1,8 +1,19 @@
 import * as studyUtilsModule from '@/utils/study'
-import { Environment, Import, StudyRole, SubPost } from '@abc-transitionbascarbone/common/db/enums'
+import {
+  CourseSessionType,
+  EngagementPhase,
+  Environment,
+  Import,
+  StudyRole,
+  SubPost,
+  UserStatus,
+} from '@abc-transitionbascarbone/common/db/enums'
+import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { expect } from '@jest/globals'
 import { v4 as uuidv4 } from 'uuid'
 import * as accountModule from '../../db/account'
+import * as courseOrganismModule from '../../db/courseOrganism'
+import * as courseSessionModule from '../../db/courseSession'
 import * as emissionFactorsModule from '../../db/emissionFactors'
 import * as emissionSourcesModule from '../../db/emissionSource'
 import * as organizationModule from '../../db/organization'
@@ -23,7 +34,7 @@ import {
 import { getMockedDbActualizedAuth } from '../../tests/utils/models/user'
 import * as organizationUtilsModule from '../../utils/organization'
 import * as userUtilsModule from '../../utils/user'
-import type { CreateStudyCommand, DuplicateSiteCommand } from './study.command'
+import type { AddEngagementActionCommand, CreateStudyCommand, DuplicateSiteCommand } from './study.command'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../file', () => ({ download: jest.fn() }))
@@ -48,15 +59,23 @@ jest.mock('../../services/auth', () => ({
 jest.mock('../../db/study', () => ({
   getStudyById: jest.fn(),
   getStudySites: jest.fn(),
+  getStudiesSitesFromIds: jest.fn(),
   createStudyEmissionSource: jest.fn(),
   createUserOnStudy: jest.fn(),
   createStudy: jest.fn(),
   updateStudy: jest.fn(),
+  updateStudySiteData: jest.fn(),
+  updateStudySites: jest.fn(),
   updateStudyEmissionFactorVersion: jest.fn(),
   createContributorOnStudy: jest.fn(),
   createEmissionSourceTags: jest.fn(),
   updateUserOnStudy: jest.fn(),
   getMinimalStudyForRights: jest.fn(),
+  getStudyTemplates: jest.fn(),
+  getEngagementActionById: jest.fn(),
+  createEngagementAction: jest.fn(),
+  updateEngagementAction: jest.fn(),
+  deleteEngagementAction: jest.fn(),
 }))
 const mockTransaction = {
   site: {
@@ -67,8 +86,9 @@ const mockTransaction = {
     updateMany: jest.fn(),
   },
 }
-jest.mock('../../db/client.server', () => ({
+jest.mock('../../db/client', () => ({
   prismaClient: {
+    account: { findMany: jest.fn() },
     $transaction: jest.fn((callback) => callback(mockTransaction)),
   },
 }))
@@ -76,9 +96,14 @@ jest.mock('../../services/permissions/study', () => ({
   hasEditionRights: jest.fn(),
   canCreateSpecificStudy: jest.fn(),
   canDuplicateStudy: jest.fn(),
+  canAddContributorOnStudy: jest.fn(),
   canChangeSites: jest.fn(),
   canChangeDates: jest.fn(),
+  canChangePublicStatus: jest.fn(),
+  canChangeName: jest.fn(),
+  canChangeOpeningHours: jest.fn(),
   canAddRightOnStudy: jest.fn(),
+  hasEditAccessOnStudy: jest.fn(),
 }))
 jest.mock('../../services/permissions/study.utils', () => ({
   isAdminOnStudyOrga: jest.fn(),
@@ -89,19 +114,29 @@ jest.mock('../../utils/study', () => ({
   hasSufficientLevel: jest.fn(),
 }))
 jest.mock('../../db/organization', () => ({
+  getOrganizationVersionForRightsCheck: jest.fn(),
   getOrganizationVersionById: jest.fn(),
+  getOrganizationWithSitesById: jest.fn(),
   getOrgVersionWithNameById: jest.fn(),
   getOrgSitesWithCNCByOrgVersionId: jest.fn(),
   isOrganizationVersionCR: jest.fn(),
 }))
 jest.mock('../../db/user', () => ({
+  updateAccount: jest.fn(),
   getUserByEmail: jest.fn(),
   getUserApplicationSettings: jest.fn(),
   getUserSourceById: jest.fn(),
 }))
 jest.mock('../../db/account', () => ({
+  addAccount: jest.fn(),
   getAccountByEmailAndOrganizationVersionId: jest.fn(),
   getAccountByEmailAndEnvironment: jest.fn(),
+}))
+jest.mock('../../db/courseOrganism', () => ({
+  getCourseSessionsForTrainee: jest.fn(),
+}))
+jest.mock('../../db/courseSession', () => ({
+  isCourseProfessor: jest.fn(),
 }))
 jest.mock('../../services/serverFunctions/user', () => ({
   addUserChecklistItem: jest.fn(),
@@ -192,14 +227,49 @@ jest.mock('../../services/serverFunctions/transitionPlan', () => ({
   getLinkedAndExternalStudies: jest.fn(),
 }))
 
-const { duplicateStudyCommand, duplicateSiteAndEmissionSources, changeStudyDates } = jest.requireActual('./study')
+const {
+  createStudyCommand,
+  duplicateStudyCommand,
+  duplicateSiteAndEmissionSources,
+  changeStudyDates,
+  changeStudyName,
+  changeStudyPublicStatus,
+  changeStudySites,
+  changeStudyCinema,
+  changeStudyEstablishment,
+  duplicateStudyInOtherEnvironment,
+  addEngagementAction,
+  editEngagementAction,
+  deleteEngagementAction,
+  newStudyContributor,
+} = jest.requireActual('./study')
+
+it('does not expose training jobs or template administration as Server Actions', () => {
+  const actions = jest.requireActual('./study')
+  expect(actions).not.toHaveProperty('assignTrainingExerciseStudy')
+  expect(actions).not.toHaveProperty('assignTrainingCorrectionExerciseStudy')
+  expect(actions).not.toHaveProperty('duplicateStudyTemplateForAccounts')
+  expect(actions).not.toHaveProperty('setStudyTemplate')
+})
 
 const mockedSessionValidator = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.validator })
 const mockedSession = getMockedDbActualizedAuth({}, { email: TEST_EMAILS.currentUser })
 const mockedSourceStudy = getMockeFullStudy()
 const mockedStudyCommand = getMockedDuplicateStudyCommand() as CreateStudyCommand
+const mockedEngagementActionCommand: AddEngagementActionCommand = {
+  studyId: TEST_IDS.sourceStudy,
+  name: 'Action de mobilisation',
+  date: '2025-01-01',
+  targets: ['target'],
+  steps: 'step',
+  phase: EngagementPhase.AwarnessAndOutreach,
+  description: '',
+  sites: [TEST_IDS.site],
+}
 
 const mockDbActualizedAuth = authModule.dbActualizedAuth as jest.Mock
+const mockGetCourseSessionsForTrainee = jest.mocked(courseOrganismModule.getCourseSessionsForTrainee)
+const mockIsCourseProfessor = jest.mocked(courseSessionModule.isCourseProfessor)
 const mockGetStudyById = studyDbModule.getStudyById as jest.Mock
 const mockGetStudySites = studyDbModule.getStudySites as jest.Mock
 const mockCreateStudyEmissionSource = studyDbModule.createStudyEmissionSource as jest.Mock
@@ -208,11 +278,11 @@ const mockCreateStudy = studyDbModule.createStudy as jest.Mock
 const mockUpdateStudyEmissionFactorVersion = studyDbModule.updateStudyEmissionFactorVersion as jest.Mock
 const mockCreateContributorOnStudy = studyDbModule.createContributorOnStudy as jest.Mock
 const mockCreateEmissionSourceTags = studyDbModule.createEmissionSourceTags as jest.Mock
-const mockUpdateUserOnStudy = studyDbModule.updateUserOnStudy as jest.Mock
-const mockGetMinimalStudyForRights = studyDbModule.getMinimalStudyForRights as jest.Mock
 const mockAddUserChecklistItem = userModule.addUserChecklistItem as jest.Mock
 const mockSendInvitation = userModule.sendInvitation as jest.Mock
 const mockGetOrganizationVersionById = organizationModule.getOrganizationVersionById as jest.Mock
+const mockGetOrganizationVersionForRightsCheck = organizationModule.getOrganizationVersionForRightsCheck as jest.Mock
+const mockAddAccount = accountModule.addAccount as jest.Mock
 const mockGetOrgSitesWithCNCByOrgVersionId = organizationModule.getOrgSitesWithCNCByOrgVersionId as jest.Mock
 const mockGetUserByEmail = userDbModule.getUserByEmail as jest.Mock
 const mockGetUserApplicationSettings = userDbModule.getUserApplicationSettings as jest.Mock
@@ -224,7 +294,8 @@ const mockGetAccountRoleOnStudy = studyUtilsModule.getAccountRoleOnStudy as jest
 const mockHasSufficientLevel = studyUtilsModule.hasSufficientLevel as jest.Mock
 const mockCanCreateSpecificStudy = studyPermissionsModule.canCreateSpecificStudy as jest.Mock
 const mockCanDuplicateStudy = studyPermissionsModule.canDuplicateStudy as jest.Mock
-const mockCanAddRightOnStudy = studyPermissionsModule.canAddRightOnStudy as jest.Mock
+const mockCanAddContributorOnStudy = studyPermissionsModule.canAddContributorOnStudy as jest.Mock
+const mockHasEditAccessOnStudy = studyPermissionsModule.hasEditAccessOnStudy as jest.Mock
 const mockGetEmissionFactorsImportActiveVersion =
   emissionFactorsModule.getEmissionFactorsImportActiveVersion as jest.Mock
 const mockIsAdmin = userUtilsModule.isAdmin as unknown as jest.Mock
@@ -242,7 +313,146 @@ const mockGetLinkedAndExternalStudies = (
   }
 ).getLinkedAndExternalStudies
 
+describe('engagement action edit rights', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    mockDbActualizedAuth.mockResolvedValue(mockedSession)
+    mockGetStudyById.mockResolvedValue(mockedSourceStudy)
+    mockHasEditAccessOnStudy.mockResolvedValue(false)
+  })
+
+  it('denies adding, editing, and deleting actions when the user cannot edit the study', async () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined)
+    const [addResult, editResult, deleteResult] = await Promise.all([
+      addEngagementAction(mockedEngagementActionCommand),
+      editEngagementAction('action-id', mockedEngagementActionCommand),
+      deleteEngagementAction('action-id', TEST_IDS.sourceStudy),
+    ])
+
+    expect(addResult).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+    expect(editResult).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+    expect(deleteResult).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+    expect(mockHasEditAccessOnStudy).toHaveBeenCalledTimes(3)
+    expect(studyDbModule.createEngagementAction).not.toHaveBeenCalled()
+    expect(studyDbModule.updateEngagementAction).not.toHaveBeenCalled()
+    expect(studyDbModule.deleteEngagementAction).not.toHaveBeenCalled()
+    consoleError.mockRestore()
+  })
+
+  it('does not edit or delete an action from a different study', async () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined)
+    mockHasEditAccessOnStudy.mockResolvedValue(true)
+    jest.mocked(studyDbModule.getEngagementActionById).mockResolvedValue({
+      id: 'action-id',
+      name: 'Action de mobilisation',
+      date: new Date('2025-01-01'),
+      targets: ['target'],
+      steps: 'step',
+      phase: EngagementPhase.AwarnessAndOutreach,
+      description: '',
+      studyId: 'another-study-id',
+      createdAt: new Date('2025-01-01'),
+      updatedAt: new Date('2025-01-01'),
+    })
+
+    const [editResult, deleteResult] = await Promise.all([
+      editEngagementAction('action-id', mockedEngagementActionCommand),
+      deleteEngagementAction('action-id', TEST_IDS.sourceStudy),
+    ])
+
+    expect(editResult).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+    expect(deleteResult).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+    expect(studyDbModule.updateEngagementAction).not.toHaveBeenCalled()
+    expect(studyDbModule.deleteEngagementAction).not.toHaveBeenCalled()
+    consoleError.mockRestore()
+  })
+})
+
 describe('study', () => {
+  describe('read-only study actions', () => {
+    beforeEach(() => {
+      jest.clearAllMocks()
+      mockDbActualizedAuth.mockResolvedValue(mockedSession)
+      mockGetStudyById.mockResolvedValue(mockedSourceStudy)
+    })
+
+    it('awaits permission denial before changing the study name', async () => {
+      jest.mocked(studyPermissionsModule.canChangeName).mockResolvedValue(false)
+
+      expect(await changeStudyName({ studyId: TEST_IDS.sourceStudy, name: 'New name' })).toEqual({
+        success: false,
+        errorMessage: 'Not authorized',
+      })
+      expect(studyDbModule.updateStudy).not.toHaveBeenCalled()
+    })
+
+    it('awaits permission denial before changing public visibility', async () => {
+      jest.mocked(studyPermissionsModule.canChangePublicStatus).mockResolvedValue(false)
+
+      expect(await changeStudyPublicStatus({ studyId: TEST_IDS.sourceStudy, isPublic: 'true' })).toEqual({
+        success: false,
+        errorMessage: 'Not authorized',
+      })
+      expect(studyDbModule.updateStudy).not.toHaveBeenCalled()
+    })
+
+    it('still allows authorized name changes', async () => {
+      jest.mocked(studyPermissionsModule.canChangeName).mockResolvedValue(true)
+
+      expect(await changeStudyName({ studyId: TEST_IDS.sourceStudy, name: 'New name' })).toEqual({
+        success: true,
+        data: undefined,
+      })
+      expect(studyDbModule.updateStudy).toHaveBeenCalledWith(TEST_IDS.sourceStudy, { name: 'New name' })
+    })
+
+    it('awaits permission denial before changing study sites', async () => {
+      const mockGetOrganization = organizationModule.getOrganizationWithSitesById as jest.Mock
+      mockGetOrganization.mockResolvedValue({ sites: [] })
+      mockCanChangeSites.mockResolvedValue(false)
+
+      expect(await changeStudySites(TEST_IDS.sourceStudy, { organizationId: 'org', sites: [] })).toEqual({
+        success: false,
+        errorMessage: 'Not authorized',
+      })
+      expect(studyDbModule.updateStudySites).not.toHaveBeenCalled()
+    })
+
+    it('awaits permission denial before changing establishment data', async () => {
+      const mockGetStudySitesFromIds = studyDbModule.getStudiesSitesFromIds as jest.Mock
+      mockGetStudySitesFromIds.mockResolvedValue([{ study: mockedSourceStudy }])
+      jest.mocked(studyPermissionsModule.canChangeOpeningHours).mockResolvedValue(false)
+
+      expect(await changeStudyEstablishment(TEST_IDS.studySite, {})).toEqual({
+        success: false,
+        errorMessage: 'Not authorized',
+      })
+      expect(studyDbModule.updateStudySiteData).not.toHaveBeenCalled()
+    })
+
+    it('awaits permission denial before changing cinema data', async () => {
+      const mockGetStudySitesFromIds = studyDbModule.getStudiesSitesFromIds as jest.Mock
+      mockGetStudySitesFromIds.mockResolvedValue([{ study: mockedSourceStudy }])
+      jest.mocked(studyPermissionsModule.canChangeOpeningHours).mockResolvedValue(false)
+
+      expect(await changeStudyCinema(TEST_IDS.studySite, 'cinema', {})).toEqual({
+        success: false,
+        errorMessage: 'Not authorized',
+      })
+      expect(studyDbModule.updateStudySiteData).not.toHaveBeenCalled()
+    })
+
+    it('awaits permission denial before cross-environment duplication', async () => {
+      mockCanDuplicateStudy.mockResolvedValue(false)
+
+      expect(await duplicateStudyInOtherEnvironment(TEST_IDS.sourceStudy, Environment.COURSE_TILT)).toEqual({
+        success: false,
+        errorMessage: 'Not authorized',
+      })
+      expect(mockCreateStudy).not.toHaveBeenCalled()
+    })
+  })
+
   describe('duplicateStudyCommand', () => {
     const setupSuccessfullDuplication = () => {
       mockCreateEmissionSourceTags.mockResolvedValue(undefined)
@@ -287,10 +497,12 @@ describe('study', () => {
       mockCreateStudyEmissionSource.mockResolvedValue(undefined)
       mockCreateStudy.mockResolvedValue({ id: TEST_IDS.newStudy, sites: [] })
       mockCreateContributorOnStudy.mockResolvedValue(undefined)
+      mockIsCourseProfessor.mockResolvedValue(false)
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue(null)
     }
 
     const setupInvitationMocks = () => {
-      mockGetUserByEmail.mockResolvedValue({ id: 'existing-user-id' })
+      mockGetUserByEmail.mockResolvedValue({ id: 'existing-user-id', accounts: [] })
       mockGetUserSourceById.mockResolvedValue({ source: 'BC' })
       mockGetAccountByEmailAndEnvironment.mockResolvedValue({ id: 'account-by-email-env-id' })
     }
@@ -307,6 +519,183 @@ describe('study', () => {
       expect(mockAddUserChecklistItem).toHaveBeenCalled()
       expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
       expect(mockCreateContributorOnStudy).not.toHaveBeenCalled()
+    })
+
+    describe('course session at creation', () => {
+      it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
+        'copies the enrolled session type in %s',
+        async (environment) => {
+          mockDbActualizedAuth.mockResolvedValue({
+            ...mockedSession,
+            user: { ...mockedSession.user, environment },
+          })
+          mockGetCourseSessionsForTrainee.mockResolvedValue([{ type: CourseSessionType.INITIAL }])
+
+          const result = await createStudyCommand(mockedStudyCommand)
+
+          expect(result.success).toBe(true)
+          expect(mockGetCourseSessionsForTrainee).toHaveBeenCalledWith(
+            mockedSession.user.accountId,
+            environment,
+            undefined,
+          )
+          expect(mockCreateStudy).toHaveBeenCalledWith(
+            expect.objectContaining({ courseSessionType: CourseSessionType.INITIAL }),
+            environment,
+            true,
+            undefined,
+          )
+        },
+      )
+
+      it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
+        'rejects creation without a session in %s',
+        async (environment) => {
+          mockDbActualizedAuth.mockResolvedValue({
+            ...mockedSession,
+            user: { ...mockedSession.user, environment },
+          })
+          mockGetCourseSessionsForTrainee.mockResolvedValue([])
+
+          const result = await createStudyCommand(mockedStudyCommand)
+
+          expect(result).toEqual({ success: false, errorMessage: 'noCourseSession' })
+          expect(mockCreateStudy).not.toHaveBeenCalled()
+        },
+      )
+
+      it('rejects ambiguous registrations rather than choosing an arbitrary session', async () => {
+        mockDbActualizedAuth.mockResolvedValue({
+          ...mockedSession,
+          user: { ...mockedSession.user, environment: Environment.COURSE_BC },
+        })
+        mockGetCourseSessionsForTrainee.mockResolvedValue([
+          { type: CourseSessionType.INITIAL },
+          { type: CourseSessionType.PROFESSIONNEL },
+        ])
+
+        const result = await createStudyCommand(mockedStudyCommand)
+
+        expect(result).toEqual({ success: false, errorMessage: 'multipleCourseSessions' })
+        expect(mockCreateStudy).not.toHaveBeenCalled()
+      })
+
+      it.each([Environment.COURSE_BC, Environment.COURSE_TILT])(
+        'lets a professor create a study on their own organization in %s',
+        async (environment) => {
+          mockDbActualizedAuth.mockResolvedValue({
+            ...mockedSession,
+            user: { ...mockedSession.user, environment, organizationVersionId: TEST_IDS.orgVersion },
+          })
+          mockIsCourseProfessor.mockResolvedValue(true)
+
+          const result = await createStudyCommand({ ...mockedStudyCommand, organizationVersionId: TEST_IDS.orgVersion })
+
+          expect(result.success).toBe(true)
+          expect(mockGetCourseSessionsForTrainee).not.toHaveBeenCalled()
+          expect(mockCreateStudy).toHaveBeenCalledWith(
+            expect.objectContaining({ courseSessionType: null }),
+            environment,
+            true,
+            undefined,
+          )
+        },
+      )
+
+      it('lets a professor create a study on a child organization', async () => {
+        const childOrganizationVersionId = 'child-org-version'
+        mockDbActualizedAuth.mockResolvedValue({
+          ...mockedSession,
+          user: {
+            ...mockedSession.user,
+            environment: Environment.COURSE_BC,
+            organizationVersionId: TEST_IDS.orgVersion,
+          },
+        })
+        mockIsCourseProfessor.mockResolvedValue(true)
+        mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+          id: childOrganizationVersionId,
+          parentId: TEST_IDS.orgVersion,
+        })
+
+        const result = await createStudyCommand({
+          ...mockedStudyCommand,
+          organizationVersionId: childOrganizationVersionId,
+        })
+
+        expect(result.success).toBe(true)
+        expect(mockGetCourseSessionsForTrainee).not.toHaveBeenCalled()
+        expect(mockCreateStudy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            courseSessionType: null,
+            organizationVersion: { connect: { id: childOrganizationVersionId } },
+          }),
+          Environment.COURSE_BC,
+          true,
+          undefined,
+        )
+      })
+
+      it('prevents a professor from creating a study on another organization', async () => {
+        mockDbActualizedAuth.mockResolvedValue({
+          ...mockedSession,
+          user: {
+            ...mockedSession.user,
+            environment: Environment.COURSE_BC,
+            organizationVersionId: TEST_IDS.orgVersion,
+          },
+        })
+        mockIsCourseProfessor.mockResolvedValue(true)
+
+        const result = await createStudyCommand({ ...mockedStudyCommand, organizationVersionId: 'client-org-version' })
+
+        expect(result).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+        expect(mockCreateStudy).not.toHaveBeenCalled()
+      })
+
+      it.each([Environment.BC, Environment.TILT, Environment.CUT, Environment.CLICKSON])(
+        'does not require a course session in %s',
+        async (environment) => {
+          mockDbActualizedAuth.mockResolvedValue({
+            ...mockedSession,
+            user: { ...mockedSession.user, environment },
+          })
+
+          const result = await createStudyCommand(mockedStudyCommand)
+
+          expect(result.success).toBe(true)
+          expect(mockGetCourseSessionsForTrainee).not.toHaveBeenCalled()
+          expect(mockCreateStudy).toHaveBeenCalledWith(
+            expect.objectContaining({ courseSessionType: null }),
+            environment,
+            true,
+            undefined,
+          )
+        },
+      )
+
+      it('uses the enrolled session type when duplicating, within the existing transaction', async () => {
+        mockDbActualizedAuth.mockResolvedValue({
+          ...mockedSession,
+          user: { ...mockedSession.user, environment: Environment.COURSE_BC },
+        })
+        mockGetCourseSessionsForTrainee.mockResolvedValue([{ type: CourseSessionType.PROFESSIONNEL }])
+
+        const result = await duplicateStudyCommand(TEST_IDS.sourceStudy, mockedStudyCommand)
+
+        expect(result.success).toBe(true)
+        expect(mockGetCourseSessionsForTrainee).toHaveBeenCalledWith(
+          mockedSession.user.accountId,
+          Environment.COURSE_BC,
+          expect.objectContaining(mockTransaction),
+        )
+        expect(mockCreateStudy).toHaveBeenCalledWith(
+          expect.objectContaining({ courseSessionType: CourseSessionType.PROFESSIONNEL }),
+          Environment.COURSE_BC,
+          true,
+          mockTransaction,
+        )
+      })
     })
 
     describe('Authentication and Authorization', () => {
@@ -529,6 +918,51 @@ describe('study', () => {
         expect(result).toEqual({ success: true, data: { id: TEST_IDS.newStudy } })
         expect(mockCreateContributorOnStudy).toHaveBeenCalled()
         expect(mockCreateUserOnStudy).not.toHaveBeenCalled()
+      })
+
+      it('should keep a new environment account validated for an already active study contributor', async () => {
+        const study = {
+          id: 'study-id',
+          organizationVersionId: 'target-organization-version-id',
+          organizationVersion: {
+            id: 'target-organization-version-id',
+            environment: Environment.TILT,
+            organization: { name: 'Target organization' },
+          },
+          allowedUsers: [],
+        }
+        const account = { id: 'new-environment-account-id', status: UserStatus.VALIDATED }
+        mockGetStudyById.mockResolvedValue(study)
+        mockGetOrganizationVersionById.mockResolvedValue(study.organizationVersion)
+        mockGetAccountByEmailAndOrganizationVersionId.mockResolvedValue(null)
+        mockGetUserByEmail.mockResolvedValue({
+          id: 'existing-user-id',
+          accounts: [{ environment: Environment.BC, status: UserStatus.ACTIVE }],
+        })
+        mockGetAccountByEmailAndEnvironment.mockResolvedValue(null)
+        mockAddAccount.mockResolvedValue(account)
+        mockCanAddContributorOnStudy.mockReturnValue(true)
+
+        const result = await newStudyContributor({
+          studyId: study.id,
+          email: 'contributor@example.com',
+          firstName: 'Contributor',
+          subPosts: { default: [SubPost.Achats] },
+        })
+
+        expect(result).toEqual({ success: true, data: undefined })
+        expect(mockAddAccount).toHaveBeenCalledWith(
+          expect.objectContaining({ environment: Environment.TILT, status: UserStatus.VALIDATED }),
+        )
+        expect(mockSendInvitation).toHaveBeenCalledWith(
+          expect.any(String),
+          study,
+          study.organizationVersion.organization,
+          expect.any(Object),
+          '',
+          Environment.TILT,
+          account,
+        )
       })
 
       it('should skip current user when inviting team members', async () => {

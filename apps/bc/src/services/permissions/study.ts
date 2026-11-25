@@ -10,6 +10,7 @@ import {
   getUserRoleOnPublicStudy,
   hasEditionRights,
   hasSufficientLevel,
+  isProfessorOnStudy,
   StudyWithRoleFields,
 } from '@/utils/study'
 import type { Prisma, Study, User } from '@abc-transitionbascarbone/common/db'
@@ -26,13 +27,9 @@ import { UserSession } from 'next-auth'
 import { dbActualizedAuth } from '../auth'
 import { isDeactivableFeatureActiveForEnvironment } from '../serverFunctions/deactivableFeatures'
 import { getUserActiveAccounts } from '../serverFunctions/user'
-import {
-  canCreateStudyOnlyAsAdministrator,
-  canCreateStudyWithoutSpecificRights,
-  isTilt,
-  isTiltSimplifiedFeatureActive,
-} from './environment'
+import { canCreateStudyOnlyAsAdministrator, canCreateStudyWithoutSpecificRights, isTilt } from './environment'
 import { hasAccessToDuplicateStudy, isTiltSimplified } from './environmentAdvanced'
+import { isTiltSimplifiedFeatureActive } from './environmentFeature'
 import { isInOrgaOrParentFromId } from './organization'
 import { isAdminOnStudyOrga } from './study.utils'
 
@@ -48,6 +45,7 @@ export const canReadStudy = async (user: UserSession | UserWithAllowedStudies, s
   }
 
   if (
+    isProfessorOnStudy(user, study) ||
     isAdminOnStudyOrga(user, study.organizationVersion) ||
     (study.isPublic && isInOrgaOrParent(user.organizationVersionId, study.organizationVersion))
   ) {
@@ -206,6 +204,10 @@ export const canCreateSpecificStudy = async (
 }
 
 const canEditStudy = async (user: UserSession, study: FullStudy) => {
+  if (study.receivedCorrectionDelivery) {
+    return false
+  }
+
   const organizationVersion = await getOrganizationVersionForRightsCheck(
     study.organizationVersion.parentId ? study.organizationVersion.parentId : study.organizationVersionId,
   )
@@ -282,11 +284,27 @@ const getRoleIfHasAccess = (user: UserSession, minimalStudy: MinimalStudyForRigh
 }
 
 export const NEWGetAccountRoleOnStudy = (user: UserSession, minimalStudy: MinimalStudyForRights): StudyRole | null => {
+  if (isProfessorOnStudy(user, minimalStudy)) {
+    return StudyRole.Validator
+  }
+
+  const right = minimalStudy.allowedUsers.find((right) => right.account.id === user.accountId)
+
+  if (
+    isTiltSimplified(minimalStudy.organizationVersion.environment, minimalStudy.simplified) &&
+    (isInOrgaOrParent(user.organizationVersionId, minimalStudy.organizationVersion) || right)
+  ) {
+    return StudyRole.Editor
+  }
+
+  if (minimalStudy.receivedCorrectionDelivery) {
+    return getAccountRoleOnStudy(user, minimalStudy)
+  }
+
   if (isAdminOnStudyOrga(user, minimalStudy.organizationVersion)) {
     return getRoleIfHasAccess(user, minimalStudy)
   }
 
-  const right = minimalStudy.allowedUsers.find((right) => right.account.id === user.accountId)
   if (right) {
     return getRoleIfHasAccess(user, minimalStudy, right.role)
   }
@@ -326,6 +344,10 @@ export const canAddRightOnStudy = (
 }
 
 export const canAddContributorOnStudy = (user: UserSession, study: FullStudy) => {
+  if (study.receivedCorrectionDelivery) {
+    return false
+  }
+
   if (isAdminOnStudyOrga(user, study.organizationVersion)) {
     return true
   }
@@ -347,7 +369,7 @@ export const canDeleteStudy = async (studyId: string) => {
 
   const study = await getStudyById(studyId, session.user.organizationVersionId)
 
-  if (!study) {
+  if (!study || study.receivedCorrectionDelivery) {
     return false
   }
 
@@ -458,6 +480,7 @@ export const canReadStudyDetail = async (user: UserSession, study: StudyWithRole
   }
 
   if (
+    isProfessorOnStudy(user, study) ||
     isAdminOnStudyOrga(user, study.organizationVersion) ||
     (study.isPublic && isInOrgaOrParent(user.organizationVersionId, study.organizationVersion))
   ) {

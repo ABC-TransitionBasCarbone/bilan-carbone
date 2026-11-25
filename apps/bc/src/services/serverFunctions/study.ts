@@ -10,8 +10,10 @@ import {
   getAccountsFromOrganization,
   getAccountsUserLevel,
 } from '@/db/account'
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { findCncByCncCode, updateNumberOfProgrammedFilms } from '@/db/cnc'
+import { getCourseSessionsForTrainee } from '@/db/courseOrganism'
+import { isCourseProfessor } from '@/db/courseSession'
 import { createDocument, deleteDocument } from '@/db/document'
 import {
   getEmissionFactorsByIdsAndSource,
@@ -20,7 +22,6 @@ import {
   getEmissionFactorVersionsBySource,
   getStudyEmissionFactorSources,
 } from '@/db/emissionFactors'
-import { createEmissionSourcesWithReturn, getFamilyTagsForStudy } from '@/db/emissionSource'
 import {
   getOrganizationVersionById,
   getOrganizationVersionsByOrganizationId,
@@ -34,7 +35,6 @@ import {
   clearEmissionSourceEmissionFactor,
   countOrganizationStudiesFromOtherUsers,
   createContributorOnStudy,
-  createEmissionSourceTags,
   createEngagementAction,
   createStudy,
   createStudyComment,
@@ -58,10 +58,9 @@ import {
   getStudyCommentsCountFromOrganizationVersionId,
   getStudyCommentsFromOrganizationVersionId,
   getStudyCommentsWithStudyIdAndSubPost,
-  getStudyNameById,
+  getStudyForDeletion,
   getStudySites,
   getStudySitesWithName,
-  getStudyTemplate,
   getUsersOnStudy,
   MinimalStudyForRights,
   removeSourceToStudy,
@@ -75,7 +74,6 @@ import {
   updateStudySites,
   updateUserOnStudy,
   upsertStudyExport,
-  upsertStudyTemplate,
 } from '@/db/study'
 import { getTransitionPlanByStudyId, getTransitionPlansWhereStudyIsLinked } from '@/db/transitionPlan'
 import {
@@ -87,9 +85,9 @@ import {
   UserWithAccounts,
 } from '@/db/user'
 import { getLocale } from '@/i18n/locale'
+import { buildStudyForDuplication, duplicateEmissionSources, getSitesForDuplication } from '@/services/studyDuplication'
 import { StudySiteFields, studySiteToSituation } from '@/services/studySiteToSituation'
 import { AccountWithUser } from '@/types/account.types'
-import { groupBy } from '@/utils/array'
 import { mapCncToStudySite } from '@/utils/cnc'
 import { calculateDistanceFromParis } from '@/utils/distance'
 import { CA_UNIT_VALUES, defaultCAUnit } from '@/utils/number'
@@ -108,6 +106,7 @@ import { mapStudyForReport } from '@/utils/studyReport.utils'
 import { isAdmin } from '@/utils/user'
 import { accountWithUserToUserSession } from '@/utils/userAccounts'
 import { LocaleType } from '@abc-transitionbascarbone/common/i18n/config'
+import { isCourseEnvironment } from '@abc-transitionbascarbone/common/utils/environments'
 import type { IsSuccess } from '@abc-transitionbascarbone/common/utils/serverResponse'
 
 import type {
@@ -121,8 +120,8 @@ import type {
 import {
   CommentStatus,
   ControlMode,
+  CourseSessionType,
   DocumentCategory,
-  DuplicableStudy,
   EmissionSourceCaracterisation,
   Environment,
   Export,
@@ -170,6 +169,7 @@ import {
   canReadStudy,
   canUpgradeSourceVersion,
   getEnvironmentsForDuplication,
+  hasEditAccessOnStudy,
   NEWGetAccountRoleOnStudy,
 } from '../permissions/study'
 import { isAdminOnStudyOrga } from '../permissions/study.utils'
@@ -246,6 +246,32 @@ export const createStudyCommand = async (
       throw new Error(NOT_AUTHORIZED)
     }
 
+    let courseSessionType: CourseSessionType | null = null
+    if (isCourseEnvironment(session.user.environment)) {
+      if (await isCourseProfessor(session.user.organizationVersionId, session.user.environment, tx)) {
+        if (!(await isInOrgaOrParentFromId(session.user.organizationVersionId, organizationVersionId))) {
+          console.error('createStudyCommand: professor cannot create a study outside their organization', {
+            accountId: session.user.accountId,
+            userOrganizationVersionId: session.user.organizationVersionId,
+            organizationVersionId,
+          })
+          throw new Error(NOT_AUTHORIZED)
+        }
+      } else {
+        const courseSessions = await getCourseSessionsForTrainee(session.user.accountId, session.user.environment, tx)
+
+        if (courseSessions.length !== 1) {
+          console.error('createStudyCommand: expected one trainee course session', {
+            accountId: session.user.accountId,
+            environment: session.user.environment,
+            sessionCount: courseSessions.length,
+          })
+          throw new Error(courseSessions.length === 0 ? 'noCourseSession' : 'multipleCourseSessions')
+        }
+        courseSessionType = courseSessions[0].type
+      }
+    }
+
     const rights: Prisma.UserOnStudyCreateManyStudyInput[] = []
     if (validator === session.user.email) {
       rights.push({
@@ -307,6 +333,7 @@ export const createStudyCommand = async (
 
     const study = {
       ...studyCommand,
+      courseSessionType,
       createdBy: { connect: { id: session.user.accountId } },
       organizationVersion: { connect: { id: organizationVersionId } },
       isPublic: isPublic === 'true',
@@ -401,7 +428,8 @@ export const changeStudyPublicStatus = async ({ studyId, ...command }: ChangeStu
     if (informations === null) {
       throw new Error(NOT_AUTHORIZED)
     }
-    if (!canChangePublicStatus(informations.user, informations.studyWithRights)) {
+    if (!(await canChangePublicStatus(informations.user, informations.studyWithRights))) {
+      console.error('changeStudyPublicStatus: user not authorized', informations.user.accountId, studyId)
       throw new Error(NOT_AUTHORIZED)
     }
     await updateStudy(studyId, { isPublic: command.isPublic === 'true' })
@@ -506,7 +534,8 @@ export const changeStudyName = async ({ studyId, ...command }: ChangeStudyNameCo
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!canChangeName(informations.user, informations.studyWithRights)) {
+    if (!(await canChangeName(informations.user, informations.studyWithRights))) {
+      console.error('changeStudyName: user not authorized', informations.user.accountId, studyId)
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -534,7 +563,8 @@ export const changeStudyCinema = async (studySiteId: string, cncId: string, data
     }
     const { openingHours, openingHoursHoliday, numberOfProgrammedFilms, ...updateData } = data
 
-    if (!canChangeOpeningHours(informations.user, informations.studyWithRights)) {
+    if (!(await canChangeOpeningHours(informations.user, informations.studyWithRights))) {
+      console.error('changeStudyCinema: user not authorized', informations.user.accountId, study.id)
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -682,7 +712,8 @@ export const changeStudySites = async (studyId: string, { organizationId, ...com
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (!canChangeSites(informations.user, informations.studyWithRights)) {
+    if (!(await canChangeSites(informations.user, informations.studyWithRights))) {
+      console.error('changeStudySites: user not authorized', informations.user.accountId, studyId)
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -1156,14 +1187,20 @@ export const newStudyContributor = async (
 export const deleteStudyCommand = async ({ id, name }: DeleteCommand) =>
   withServerResponse('deleteStudyCommand', async () => {
     if (!(await canDeleteStudy(id))) {
+      console.error('deleteStudyCommand: study not deletable', { studyId: id })
       throw new Error(NOT_AUTHORIZED)
     }
-    const studyName = await getStudyNameById(id)
-    if (!studyName) {
+    const study = await getStudyForDeletion(id)
+    if (!study?.name) {
+      console.error('deleteStudyCommand: study name unavailable', { studyId: id })
       throw new Error(NOT_AUTHORIZED)
     }
 
-    if (studyName.toLowerCase() !== name.toLowerCase()) {
+    if (study.correctionDeliveries.length > 0) {
+      throw new Error('correctionAlreadySent')
+    }
+
+    if (study.name.toLowerCase() !== name.toLowerCase()) {
       throw new Error('wrongName')
     }
     await deleteStudy(id)
@@ -1282,7 +1319,7 @@ export const deleteStudyContributor = async (contributor: StudyContributorDelete
     await deleteContributor(studyId, contributor)
   })
 
-export const deleteStudyContributors = async (studyId: string, contributors: StudyContributorDeleteParams[]) => {
+const deleteStudyContributors = async (studyId: string, contributors: StudyContributorDeleteParams[]) => {
   const promises = contributors.map((contributor) => deleteContributor(studyId, contributor))
   return Promise.all(promises)
 }
@@ -1416,133 +1453,6 @@ export const upgradeStudyEmissionFactorSource = async (studyId: string, source: 
 
     return undefined
   })
-
-const duplicateEmissionSources = async (
-  tx: Prisma.TransactionClient,
-  sourceEmissionSources: FullStudy['emissionSources'],
-  targetStudy: FullStudy,
-  sourceStudyId: string,
-  shouldClearCaracterisations: boolean,
-  shouldClearValidations: boolean,
-  sourceEnvironment?: Environment,
-  targetEnvironment?: Environment,
-) => {
-  const { id: targetStudyId, sites: targetStudySites, tagFamilies: targetTagFamilies } = targetStudy
-
-  const sourceTagFamilies = await getFamilyTagsForStudy(sourceStudyId, tx)
-
-  // Map emission sources to target study sites
-  const emissionSourcesWithSites = sourceEmissionSources
-    .map((sourceEmissionSource) => {
-      const sourceSiteId = sourceEmissionSource.studySite.site.id
-      const targetStudySiteId = targetStudySites.find((studySite) => studySite.site.id === sourceSiteId)?.id
-
-      if (!targetStudySiteId) {
-        return null
-      }
-
-      const subPost =
-        sourceEnvironment && targetEnvironment
-          ? getTransEnvironmentSubPost(sourceEnvironment, targetEnvironment, sourceEmissionSource.subPost)
-          : sourceEmissionSource.subPost
-
-      if (!subPost) {
-        return null
-      }
-
-      return {
-        sourceEmissionSource,
-        targetStudySiteId,
-        subPost,
-      }
-    })
-    .filter((item) => item !== null)
-
-  const emissionSourcesDataWithSourceId = emissionSourcesWithSites.map(
-    ({ sourceEmissionSource, targetStudySiteId, subPost }) => {
-      const newId = uuidv4()
-      const lastEditorId = sourceEmissionSource.lastEditor?.id
-      return {
-        sourceId: sourceEmissionSource.id,
-        targetId: newId,
-        data: {
-          id: newId,
-          name: sourceEmissionSource.name,
-          value: sourceEmissionSource.value,
-          subPost: subPost,
-          type: sourceEmissionSource.type,
-          source: sourceEmissionSource.source,
-          comment: sourceEmissionSource.comment,
-          depreciationPeriod: sourceEmissionSource.depreciationPeriod,
-          hectare: sourceEmissionSource.hectare,
-          duration: sourceEmissionSource.duration,
-          reliability: sourceEmissionSource.reliability,
-          technicalRepresentativeness: sourceEmissionSource.technicalRepresentativeness,
-          geographicRepresentativeness: sourceEmissionSource.geographicRepresentativeness,
-          temporalRepresentativeness: sourceEmissionSource.temporalRepresentativeness,
-          completeness: sourceEmissionSource.completeness,
-          feReliability: sourceEmissionSource.feReliability,
-          feTechnicalRepresentativeness: sourceEmissionSource.feTechnicalRepresentativeness,
-          feGeographicRepresentativeness: sourceEmissionSource.feGeographicRepresentativeness,
-          feTemporalRepresentativeness: sourceEmissionSource.feTemporalRepresentativeness,
-          feCompleteness: sourceEmissionSource.feCompleteness,
-          caracterisation: shouldClearCaracterisations ? null : sourceEmissionSource.caracterisation,
-          constructionYear: sourceEmissionSource.constructionYear,
-          studyId: targetStudyId,
-          emissionFactorId: sourceEmissionSource.emissionFactor?.id ?? null,
-          studySiteId: targetStudySiteId,
-          validated: shouldClearValidations ? false : sourceEmissionSource.validated,
-          lastEditorId,
-        },
-      }
-    },
-  )
-
-  const createdEmissionSourceIds = await createEmissionSourcesWithReturn(
-    emissionSourcesDataWithSourceId.map((item) => item.data),
-    tx,
-  )
-
-  const emissionSourceTagsData = emissionSourcesDataWithSourceId.flatMap(({ sourceId, targetId }) => {
-    const sourceEmissionSource = sourceEmissionSources.find((es) => es.id === sourceId)
-    if (!sourceEmissionSource) {
-      return []
-    }
-
-    const createdTargetEmissionSource = createdEmissionSourceIds.find((item) => item.id === targetId)
-    if (!createdTargetEmissionSource) {
-      return []
-    }
-
-    return sourceEmissionSource.emissionSourceTags
-      .map((emissionSourceTag) => {
-        const sourceTag = sourceTagFamilies
-          .flatMap((f) => f.tags.map((t) => ({ ...t, familyName: f.name })))
-          .find((t) => t.id === emissionSourceTag.tag.id)
-
-        if (!sourceTag) {
-          return null
-        }
-
-        const targetFamily = targetTagFamilies.find((f) => f.name === sourceTag.familyName)
-        const targetTag = targetFamily?.tags.find((t) => t.name === sourceTag.name)
-
-        if (!targetTag) {
-          return null
-        }
-
-        return {
-          emissionSourceId: targetId,
-          tagId: targetTag.id,
-        }
-      })
-      .filter((t) => t !== null)
-  })
-
-  if (emissionSourceTagsData.length > 0) {
-    await createEmissionSourceTags(emissionSourceTagsData, tx)
-  }
-}
 
 export const duplicateStudyCommand = async (
   sourceStudyId: string,
@@ -1737,88 +1647,10 @@ const getContributorsForDuplication = async (
     )
 }
 
-const getSitesForDuplication = async (study: FullStudy) => {
-  const organization = await getOrganizationWithSitesById(study.organizationVersion.organization.id)
-  if (!organization) {
-    throw new Error(NOT_AUTHORIZED)
-  }
-  return study.sites
-    .map((studySite) => {
-      const organizationSite = organization.sites.find((organizationSite) => organizationSite.id === studySite.site.id)
-      if (!organizationSite) {
-        return undefined
-      }
-      const studySiteData: Prisma.StudySiteCreateManyStudyInput = {
-        siteId: studySite.site.id,
-        etp: studySite.etp || organizationSite.etp,
-        ca: studySite.ca ? studySite.ca : organizationSite.ca,
-        volunteerNumber: studySite.volunteerNumber || organizationSite.volunteerNumber,
-        beneficiaryNumber: studySite.beneficiaryNumber || organizationSite.beneficiaryNumber,
-      }
-      const cncData = organizationSite.cnc
-      if (cncData) {
-        Object.assign(studySiteData, mapCncToStudySite(cncData))
-        studySiteData.cncVersionId = cncData.cncVersionId
-      }
-
-      return studySiteData
-    })
-    .filter((site) => !!site)
-}
-
-const buildStudyForDuplication = (
-  study: Omit<FullStudy, 'id' | 'createdById' | 'organizationVersionId' | 'allowedUsers'>,
-  userAccountId: string,
-  organizationId: string,
-  users: AsyncReturnType<typeof getAllowedUsersForDuplication>,
-  contributors: AsyncReturnType<typeof getContributorsForDuplication>,
-  sites: Prisma.StudySiteCreateManyStudyInput[],
-) => ({
-  ...study,
-  createdBy: { connect: { id: userAccountId } },
-  organizationVersion: { connect: { id: organizationId } },
-  allowedUsers: {
-    createMany: { data: users },
-  },
-  contributors: {
-    createMany: { data: contributors },
-  },
-  exports: {
-    create: { types: study.exports?.types, control: study.exports?.control },
-  },
-  sites: {
-    createMany: { data: sites },
-  },
-  emissionSources: {
-    createMany: { data: [] },
-  },
-  emissionFactorVersions: {
-    createMany: {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      data: study.emissionFactorVersions.map(({ id, ...emissionFactorVersion }) => ({
-        importVersionId: emissionFactorVersion.importVersionId,
-        source: emissionFactorVersion.source,
-      })),
-    },
-  },
-  tagFamilies: {
-    create: study.tagFamilies.map((tagFamily) => ({
-      name: tagFamily.name,
-      tags: {
-        createMany: {
-          data: tagFamily.tags.map((tag) => ({
-            name: tag.name,
-            color: tag.color,
-          })),
-        },
-      },
-    })),
-  },
-})
-
 export const duplicateStudyInOtherEnvironment = async (studyId: string, targetEnvironment: Environment) =>
   withServerResponse('duplicateStudyInOtherEnvironment', async () => {
-    if (!canDuplicateStudy(studyId)) {
+    if (!(await canDuplicateStudy(studyId))) {
+      console.error('duplicateStudyInOtherEnvironment: user not authorized', studyId, targetEnvironment)
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -2006,134 +1838,6 @@ export const prepareReport = async (
       cmdDelimiter: ['{', '}'],
     })
   })
-
-export const setStudyTemplate = async (template: DuplicableStudy, environment: Environment, studyId: string) => {
-  const study = await getStudyById(studyId, null)
-  if (!study) {
-    throw new Error('Study not found')
-  }
-  if (study.organizationVersion.environment !== environment) {
-    throw new Error(`Study is not from the right environment (${study.organizationVersion.environment})`)
-  }
-  if (study.organizationVersion.organization.id !== process.env.STUDY_TEMPLATE_ORGANIZATION_ID) {
-    throw new Error(`Study is not from the right organization (${study.organizationVersion.organization.name})`)
-  }
-  await upsertStudyTemplate(template, environment, studyId)
-}
-
-export const assignTrainingExerciseStudy = async (): Promise<{ created: number; error: number }> => {
-  let created = 0
-  let error = 0
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-
-  const tomorrow = new Date(today)
-  tomorrow.setDate(today.getDate() + 1)
-
-  const targetAccounts = await prismaClient.account.findMany({
-    where: { formationStartDate: { gte: today, lt: tomorrow } },
-    select: { id: true, environment: true, user: { select: { firstName: true, lastName: true } } },
-  })
-  for (const account of targetAccounts) {
-    const studyTemplate = await getStudyTemplate(DuplicableStudy.TrainingExercise, account.environment)
-    if (studyTemplate) {
-      try {
-        await duplicateStudyTemplateForAccounts(
-          [account],
-          studyTemplate.studyId,
-          StudyRole.Validator,
-          ` - ${account.user.firstName} ${account.user.lastName}`,
-        )
-        created++
-      } catch (e) {
-        console.log(
-          `An error occured during the assignment of study ${studyTemplate.studyId} to account ${account.id} in the environment ${account.environment} : ${e}`,
-        )
-        error++
-      }
-    }
-  }
-  return { created, error }
-}
-
-export const assignTrainingCorrectionExerciseStudy = async () => {
-  const created = []
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-
-  const tomorrow = new Date(today)
-  tomorrow.setDate(today.getDate() + 1)
-
-  const targetAccounts = await prismaClient.account.findMany({
-    where: { formationEndDate: { gte: today, lt: tomorrow } },
-    select: { id: true, environment: true, formationName: true, user: { select: { firstName: true, lastName: true } } },
-  })
-  const groupedByEnv = groupBy(targetAccounts, 'environment')
-  for (const [environment, envAccounts] of Object.entries(groupedByEnv)) {
-    const groupedByFormationName = groupBy(envAccounts, 'formationName')
-    const studyTemplate = await getStudyTemplate(DuplicableStudy.TrainingCorrectionExercise, environment as Environment)
-    if (studyTemplate) {
-      for (const [formationName, accounts] of Object.entries(groupedByFormationName)) {
-        await duplicateStudyTemplateForAccounts(
-          accounts,
-          studyTemplate.studyId,
-          StudyRole.Reader,
-          ` - ${formationName}`,
-        )
-        created.push(formationName)
-      }
-    }
-  }
-  return created
-}
-
-export const duplicateStudyTemplateForAccounts = async (
-  accounts: { id: string; environment: Environment }[],
-  studyId: string,
-  role: StudyRole,
-  nameSuffix?: string,
-) => {
-  const study = await getStudyById(studyId, null)
-  const environment = accounts[0].environment
-  if (!study || study.organizationVersion.environment !== environment) {
-    throw new Error(NOT_AUTHORIZED)
-  }
-  const allowedUsers = accounts.map((account) => ({ accountId: account.id, role }))
-  const sites = await getSitesForDuplication(study)
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { id, createdById, organizationVersionId, ...restStudy } = study
-  if (nameSuffix) {
-    restStudy.name = restStudy.name + nameSuffix
-  }
-  const creator = accounts.length === 1 ? accounts[0].id : createdById
-  const studyCommand: Prisma.StudyCreateInput = buildStudyForDuplication(
-    restStudy,
-    creator,
-    study.organizationVersion.id,
-    allowedUsers,
-    [],
-    sites,
-  )
-
-  await prismaClient.$transaction(async (tx) => {
-    const createdStudy = await createStudy(studyCommand, environment, false, tx)
-    const createdStudyWithSites = (await getStudyById(createdStudy.id, organizationVersionId, tx)) as FullStudy
-
-    await duplicateEmissionSources(
-      tx,
-      study.emissionSources,
-      createdStudyWithSites,
-      studyId,
-      false,
-      false,
-      study.organizationVersion.environment,
-      environment,
-    )
-  })
-
-  return
-}
 
 export const duplicateSiteAndEmissionSources = async (command: DuplicateSiteCommand) =>
   withServerResponse('duplicateSiteAndEmissionSources', async () => {
@@ -2470,7 +2174,8 @@ export const changeStudyEstablishment = async (studySiteId: string, data: Change
     }
 
     const study = studySites[0].study
-    if (!study) {
+    if (!study || study.receivedCorrectionDelivery) {
+      console.error('changeStudyEstablishment: study not editable', { studySiteId })
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -2478,7 +2183,8 @@ export const changeStudyEstablishment = async (studySiteId: string, data: Change
     if (informations === null) {
       throw new Error(NOT_AUTHORIZED)
     }
-    if (!canChangeOpeningHours(informations.user, informations.studyWithRights)) {
+    if (!(await canChangeOpeningHours(informations.user, informations.studyWithRights))) {
+      console.error('changeStudyEstablishment: user not authorized', informations.user.accountId, study.id)
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -2496,7 +2202,8 @@ export const changeStudySiteTiltSimplified = async (studyId: string, data?: Chan
 
     const study = studyInfo.data
 
-    if (!study) {
+    if (!study || study.receivedCorrectionDelivery) {
+      console.error('changeStudySiteTiltSimplified: study not editable', { studyId })
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -2530,18 +2237,39 @@ export const addEngagementAction = async ({ studyId, sites, ...command }: AddEng
   withServerResponse('addEngagementAction', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
+      console.error('addEngagementAction: user not authenticated', { studyId })
       throw new Error(NOT_AUTHORIZED)
     }
 
     const study = await getStudyById(studyId, session.user.organizationVersionId)
     if (!study) {
+      console.error('addEngagementAction: study not found', {
+        accountId: session.user.accountId,
+        studyId,
+      })
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await hasEditAccessOnStudy(study.id, session))) {
+      console.error('addEngagementAction: user cannot edit study', {
+        accountId: session.user.accountId,
+        studyId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 
     if (!hasAccessToEngagementActions(session.user.environment, study.simplified)) {
+      console.error('addEngagementAction: user cannot access engagement actions', {
+        accountId: session.user.accountId,
+        studyId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
     if (sites.length === 0) {
+      console.error('addEngagementAction: no sites selected', {
+        accountId: session.user.accountId,
+        studyId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -2577,19 +2305,54 @@ export const editEngagementAction = async (id: string, { studyId, sites, ...comm
   withServerResponse('editEngagementAction', async () => {
     const session = await dbActualizedAuth()
     if (!session || !session.user) {
+      console.error('editEngagementAction: user not authenticated', { actionId: id, studyId })
       throw new Error(NOT_AUTHORIZED)
     }
 
     const study = await getStudyById(studyId, session.user.organizationVersionId)
     if (!study) {
+      console.error('editEngagementAction: study not found', {
+        accountId: session.user.accountId,
+        actionId: id,
+        studyId,
+      })
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await hasEditAccessOnStudy(study.id, session))) {
+      console.error('editEngagementAction: user cannot edit study', {
+        accountId: session.user.accountId,
+        actionId: id,
+        studyId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 
     if (!hasAccessToEngagementActions(session.user.environment, study.simplified)) {
+      console.error('editEngagementAction: user cannot access engagement actions', {
+        accountId: session.user.accountId,
+        actionId: id,
+        studyId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 
     if (sites.length === 0) {
+      console.error('editEngagementAction: no sites selected', {
+        accountId: session.user.accountId,
+        actionId: id,
+        studyId,
+      })
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const action = await getEngagementActionById(id)
+    if (!action || action.studyId !== studyId) {
+      console.error('editEngagementAction: action does not belong to study', {
+        accountId: session.user.accountId,
+        actionId: id,
+        studyId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 
@@ -2602,21 +2365,46 @@ export const editEngagementAction = async (id: string, { studyId, sites, ...comm
 export const deleteEngagementAction = async (id: string, studyId: string) =>
   withServerResponse('deleteEngagementAction', async () => {
     const session = await dbActualizedAuth()
-    const action = await getEngagementActionById(id)
-    if (!action) {
-      throw new Error(NOT_AUTHORIZED)
-    }
-
     if (!session || !session.user) {
+      console.error('deleteEngagementAction: user not authenticated', { actionId: id, studyId })
       throw new Error(NOT_AUTHORIZED)
     }
 
     const study = await getStudyById(studyId, session.user.organizationVersionId)
     if (!study) {
+      console.error('deleteEngagementAction: study not found', {
+        accountId: session.user.accountId,
+        actionId: id,
+        studyId,
+      })
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    if (!(await hasEditAccessOnStudy(study.id, session))) {
+      console.error('deleteEngagementAction: user cannot edit study', {
+        accountId: session.user.accountId,
+        actionId: id,
+        studyId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 
     if (!hasAccessToEngagementActions(session.user.environment, study.simplified)) {
+      console.error('deleteEngagementAction: user cannot access engagement actions', {
+        accountId: session.user.accountId,
+        actionId: id,
+        studyId,
+      })
+      throw new Error(NOT_AUTHORIZED)
+    }
+
+    const action = await getEngagementActionById(id)
+    if (!action || action.studyId !== studyId) {
+      console.error('deleteEngagementAction: action does not belong to study', {
+        accountId: session.user.accountId,
+        actionId: id,
+        studyId,
+      })
       throw new Error(NOT_AUTHORIZED)
     }
 

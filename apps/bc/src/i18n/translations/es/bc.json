@@ -282,7 +282,9 @@
       },
       "error": {
         "default": "Se ha producido un error...",
-        "noActiveVersion_BaseEmpreinte": "No hay ninguna versión activa de Base Empreinte. Póngase en contacto con el soporte."
+        "noActiveVersion_BaseEmpreinte": "No hay ninguna versión activa de Base Empreinte. Póngase en contacto con el soporte.",
+        "noCourseSession": "Debe estar inscrito en una sesión de formación para crear un estudio.",
+        "multipleCourseSessions": "Está inscrito en varias sesiones de formación. Póngase en contacto con el soporte."
       },
       "coming": "próximamente",
       "title": "Información sobre el nuevo estudio",
@@ -1464,7 +1466,35 @@
       "noData": "No hay fuentes de emisión por el momento; un editor del estudio debe añadirlas para que usted pueda completarlas"
     },
     "cannotCreateStudy": "Para poder realizar Bilan Carbone® ¡hay que estar formado en el método! <link>Más información</link>",
-    "canCreateFootPrint": "Si su formación no aparece en su cuenta, envíe su certificado al <support>soporte</support>. Si está bien reconocida y desea crear Bilan Carbone®, pida a un administrador de su organización que modifique su rol a colaborador·a o administrador·a. Encontrará más información en <faq>las preguntas frecuentes</faq>."
+    "canCreateFootPrint": "Si su formación no aparece en su cuenta, envíe su certificado al <support>soporte</support>. Si está bien reconocida y desea crear Bilan Carbone®, pida a un administrador de su organización que modifique su rol a colaborador·a o administrador·a. Encontrará más información en <faq>las preguntas frecuentes</faq>.",
+    "shareCorrection": "Compartir la corrección con los alumnos",
+    "correctionSession": "Seleccionar una sesión",
+    "noCorrectionSessions": "No tiene ninguna sesión en curso o finalizada hace menos de 14 días.",
+    "correctionSharing": {
+      "selectCorrection": "Seleccionar una corrección",
+      "noCorrections": "No hay ninguna corrección disponible para esta sesión.",
+      "sentCorrections": "Correcciones enviadas",
+      "studyWithPlan": "{study} — Con plan de transición",
+      "studyWithoutPlan": "{study} — Sin plan de transición",
+      "notSent": "Ninguna corrección enviada",
+      "withoutPlan": "Corrección enviada sin plan de transición",
+      "withPlan": "Corrección enviada con plan de transición",
+      "recipients": "Alumnos en prácticas",
+      "targeted": "Destinatario de este envío",
+      "noTrainees": "Ningún alumno en prácticas firmó en esta sesión.",
+      "missingRecipients": "La corrección se enviará únicamente a los alumnos en prácticas que aún no la han recibido.",
+      "upgradeRecipients": "Puede añadir el plan de transición para los alumnos en prácticas que ya han recibido la corrección sin el plan.",
+      "alreadySent": "Todos los alumnos en prácticas ya han recibido la corrección con el plan de transición.",
+      "withPlanChoice": "Enviar con el plan de transición",
+      "confirmTitle": "Verificar los destinatarios de la corrección",
+      "confirmWithPlan": "Sesión «{session}»: va a compartir la corrección con el plan de transición con los {count, plural, one {# alumno en prácticas resaltado} other {# alumnos en prácticas resaltados}} más arriba.",
+      "confirmWithoutPlan": "Sesión «{session}»: va a compartir la corrección sin el plan de transición con los {count, plural, one {# alumno en prácticas resaltado} other {# alumnos en prácticas resaltados}} más arriba.",
+      "sharingWarning": "Atención: esta acción es irreversible.",
+      "sessionName": "Introduzca el nombre de la sesión para confirmar",
+      "confirmSharing": "Confirmar el envío",
+      "changed": "Los destinatarios o la sesión han cambiado. Verifique la lista antes de confirmar de nuevo.",
+      "recorded": "Envío registrado."
+    }
   },
   "importFileModal": {
     "incompatibleSubPosts": "Subcategoría(s) incompatible(s) con su categoría: {value}",
@@ -1742,6 +1772,7 @@
       "importedFrom": {
         "baseEmpreinte": "Logo de Base Empreinte",
         "legifrance": "Logo de Légifrance",
+        "abc": "Logo de l'ABC",
         "negaOctet": "Logo de NegaOctet",
         "aib": "Logo de la Association of Issuing Bodies",
         "giec": "IPCC logo",
@@ -1774,8 +1805,10 @@
       "BaseEmpreinte": "Base Empreinte®",
       "NegaOctet": "NegaOctet",
       "Legifrance": "Légifrance",
+      "ABC": "ABC",
       "AIB": "AIB",
       "GIEC": "IPCC",
+      "ADEME": "Autres études de l'Ademe",
       "displayArchived": "Mostrar los factores archivados",
       "goTo": "Ir a la página",
       "items": "Elementos por página",
@@ -1932,7 +1965,7 @@
   "environment": {
     "BC": "BC+ 2.0",
     "CUT": "Count",
-    "TILT": "Tilt",
+    "TILT": "BC+ associatif",
     "CLICKSON": "ClicksOn"
   },
   "source": {
@@ -2024,6 +2057,8 @@
     "KNOTS": "{count, plural, =0 {nudos} one {nudo} other {nudos}}",
     "KWH": "kWh",
     "KWH_PCI": "kWh PCI",
+    "KGCO2E": "kgCO₂e",
+    "Night": "nuitée",
     "KWH_PCS": "kWh PCS",
     "KWH_ELEC_TON": "kWh elec / t",
     "KWH_PER_KM": "kWh / km",

@@ -1,4 +1,39 @@
 {
+  "courseSessions": {
+    "title": "My training sessions",
+    "session": "Training session",
+    "manageTrainees": "Manage trainees",
+    "traineesTitle": "Trainee management",
+    "backToSession": "Back to session",
+    "addTrainee": "Add a trainee",
+    "signAttendance": "Sign trainees in",
+    "attendance": "Attendance",
+    "attendancePresent": "Signed in",
+    "attendanceAbsent": "Absent",
+    "attendanceMissing": "Not signed in",
+    "attendanceDescription": "Select trainees to sign in for the end of training on {date}. Attendance records for unchecked trainees will be deleted.",
+    "selectAllTrainees": "Select all trainees",
+    "attendanceSelectionCount": "{count} / {total} trainees selected",
+    "attendanceSaved": "Attendance has been saved.",
+    "backToTrainees": "Back to trainees",
+    "traineeAdded": "The trainee has been added to the session.",
+    "traineeAlreadyInSession": "This trainee is already registered for this session.",
+    "traineeTransferred": "The trainee has been transferred to this session.",
+    "transferTraineeTitle": "Transfer the trainee",
+    "transferTraineeDescription": "Trainee {firstName} {lastName} ({email}) is already registered for another session of the same training type in this environment. Do you confirm their transfer to this session?",
+    "emptyTrainees": "There are no trainees in this session yet.",
+    "deleteTraineeTitle": "Remove a trainee",
+    "deleteTraineeLabel": "Remove trainee {firstName} {lastName}",
+    "deleteTraineeDescription": "Are you sure you want to remove trainee {firstName} {lastName} from your session?",
+    "studies": "Trainees' studies",
+    "empty": "There are no studies for this session's trainees yet.",
+    "sessionCode": "Session code: {code}",
+    "types": {
+      "INITIAL": "Initial",
+      "PROFESSIONNEL": "Professional",
+      "MAITRISE": "Mastery"
+    }
+  },
   "login": {
     "welcome": "Welcome on the BC+ [TRAINING BC] !",
     "form": {

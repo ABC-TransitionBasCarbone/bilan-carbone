@@ -1,5 +1,5 @@
 import { getAccountByEmailAndOrganizationVersionId } from '@/db/account'
-import { prismaClient } from '@/db/client.server'
+import { prismaClient } from '@/db/client'
 import { getOrganizationVersionById, getOrganizationWithSitesById } from '@/db/organization'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { uploadEmissionFactors } from './emissionFactors'

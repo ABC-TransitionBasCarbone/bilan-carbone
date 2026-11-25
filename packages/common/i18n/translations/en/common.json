@@ -48,7 +48,8 @@
       "back": "Back",
       "import": "Import",
       "export": "Export",
-      "continue": "Continue"
+      "continue": "Continue",
+      "actions": "Actions"
     },
     "questions": {
       "glossary": {
@@ -242,6 +243,7 @@
     "loading": "Loading"
   },
   "error": {
+    "invalidForm": "The form contains missing or invalid data. Check the fields. If the problem persists, contact support.",
     "Not authorized": "You are not allowed to do this action",
     "Not found": "The requested resource was not found",
     "Server error": "A server error occurred, please contact support",
@@ -283,7 +285,6 @@
         "content": "Welcome to BC+! You have requested a password reset but your account is not yet activated. If you wish to finalise its activation, please click on"
       },
       "accountActivated": {
-        "content": "You have just activated your account on BC+ for training organisations.",
         "notYou": "If this wasn't you, please contact support: "
       },
       "activationRequest": {

@@ -1,7 +1,6 @@
 {
     "name": "@abc-transitionbascarbone/publicodes-packages",
-    "version": "0.1.0",
-    "private": true,
+    "version": "0.0.0",
     "type": "module",
     "exports": {
         "./package.json": "./package.json",
@@ -39,6 +38,6 @@
     },
     "devDependencies": {
         "@publicodes/tools": "^1.10.6",
-        "vitest": "^5.0.5"
+        "vitest": "^5.1.1"
     }
 }

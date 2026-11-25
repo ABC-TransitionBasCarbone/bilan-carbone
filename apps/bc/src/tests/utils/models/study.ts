@@ -56,6 +56,8 @@ export const TEST_EMAILS = {
 
 export const mockedStudy = {
   id: 'mocked-study-id',
+  courseSessionType: null,
+  sourceTemplateStudyId: null,
   name: 'Mocked Study',
   startDate: new Date('2025-01-01T00:00:00.000Z'),
   endDate: new Date('2025-01-01T00:00:00.000Z'),
@@ -80,6 +82,12 @@ export const mockedDdStudy = {
 
 export const mockedFullStudy = {
   ...mockedDdStudy,
+  receivedCorrectionDelivery: null,
+  createdBy: {
+    environment: Environment.BC,
+    user: { firstName: 'Test', lastName: 'Student' },
+    organizationVersion: null,
+  },
   emissionSources: [],
   contributors: [],
   allowedUsers: [],
@@ -100,6 +108,7 @@ export const mockedFullStudy = {
 
 export const mockedStudySite = {
   id: 'mocked-study-site-id',
+  sourceStudySiteId: null,
   etp: 1,
   ca: 1,
   numberOfSessions: null,
@@ -205,6 +214,9 @@ export const getMockedAllowedUser = (user?: DeepPartial<MinimalStudyForRights['a
 
 const mockMinimalStudy: MinimalStudyForRights = {
   id: 'study-1',
+  receivedCorrectionDelivery: null,
+  courseSessionType: null,
+  createdBy: mockedFullStudy.createdBy,
   name: 'Study 1',
   organizationVersion: {
     id: 'org-1',
@@ -360,6 +372,10 @@ export const getMockedDuplicateStudyCommand = (overrides = {}) => ({
 
 export const getMockeFullStudy = (overrides = {}): FullStudy => ({
   id: TEST_IDS.sourceStudy,
+  receivedCorrectionDelivery: null,
+  createdBy: mockedFullStudy.createdBy,
+  courseSessionType: null,
+  sourceTemplateStudyId: null,
   name: 'Source Study',
   simplified: false,
   subPostsConfigVersion: null,

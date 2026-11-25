@@ -1,0 +1,13 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 4
+    groups:
+      all-dependencies:
+        applies-to: version-updates
+        patterns:
+          - "*"

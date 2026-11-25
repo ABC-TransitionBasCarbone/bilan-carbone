@@ -1,4 +1,10 @@
 {
+  "homeCards": {
+    "search": "Rechercher un client",
+    "noResults": "Aucun résultat ne correspond à votre recherche.",
+    "invalidDate": "Veuillez saisir une date valide.",
+    "invalidDateRange": "La date de début doit être antérieure ou égale à la date de fin."
+  },
   "links": {
     "openCarbonPracticeUrl": "https://www.opencarbonpractice.com/rejoindre-la-communaute",
     "methodologyUrl": "https://www.bilancarbone-methode.com/",
@@ -280,7 +286,7 @@
     }
   },
   "login": {
-    "welcome": "Bienvenue sur le Bilan Carbone® +",
+    "welcome": "<b>Bienvenue sur le Bilan Carbone®+ !</b>",
     "subtext": "",
     "explanation": "L'outil dédié à l'application de la méthode Bilan Carbone®, développé par <abcAssociation>l'Association pour la transition Bas Carbone (ABC)</abcAssociation>, et accessible à l'ensemble de nos membres Conseil et Recherche, Entreprise, Association et Secteur Public",
     "question": "Une question ? Lisez la <faq>FAQ</faq> ou <support>contactez-nous</support> !",
@@ -376,6 +382,35 @@
     "duplicate": "Dupliquer l'étude",
     "duplicateEnvironment": "Dupliquer l'étude dans un autre environnement",
     "deleteStudy": "Supprimer l'étude",
+    "shareCorrection": "Partager le corrigé aux élèves",
+    "correctionSession": "Sélectionner une session",
+    "noCorrectionSessions": "Vous n’avez aucune session en cours ou terminée depuis moins de 14 jours.",
+    "correctionSharing": {
+      "selectCorrection": "Sélectionner un corrigé",
+      "noCorrections": "Aucun corrigé disponible pour cette session.",
+      "sentCorrections": "Corrigés envoyés",
+      "studyWithPlan": "{study} — Avec plan de transition",
+      "studyWithoutPlan": "{study} — Sans plan de transition",
+      "notSent": "Aucun corrigé envoyé",
+      "withoutPlan": "Corrigé envoyé sans plan de transition",
+      "withPlan": "Corrigé envoyé avec plan de transition",
+      "recipients": "Stagiaires",
+      "targeted": "Destinataire de cet envoi",
+      "noTrainees": "Aucun stagiaire émargé dans cette session.",
+      "missingRecipients": "Le corrigé sera envoyé uniquement aux stagiaires qui ne l’ont pas encore reçu.",
+      "upgradeRecipients": "Vous pouvez ajouter le plan de transition pour les stagiaires qui ont déjà reçu le corrigé sans le plan.",
+      "alreadySent": "Tous les stagiaires ont déjà reçu le corrigé avec le plan de transition.",
+      "withPlanChoice": "Envoyer avec le plan de transition",
+      "noTransitionPlan": "Cette étude n’a pas de plan de transition.",
+      "confirmTitle": "Vérifier les destinataires du corrigé",
+      "confirmWithPlan": "Session « {session} » : vous allez partager le corrigé avec le plan de transition avec les {count, plural, one {# stagiaire mis en évidence} other {# stagiaires mis en évidence}} ci-dessus.",
+      "confirmWithoutPlan": "Session « {session} » : vous allez partager le corrigé sans le plan de transition avec les {count, plural, one {# stagiaire mis en évidence} other {# stagiaires mis en évidence}} ci-dessus.",
+      "sharingWarning": "Attention : cette action est irréversible.",
+      "sessionName": "Saisissez le nom de la session pour confirmer",
+      "confirmSharing": "Confirmer l’envoi",
+      "changed": "Les destinataires, la session ou la disponibilité du plan ont changé. Vérifiez l’envoi avant de confirmer à nouveau.",
+      "recorded": "Envoi enregistré."
+    },
     "duplicateCopy": " - Copie",
     "duplicateDialog": {
       "title": "Duplication de l'étude",
@@ -386,6 +421,7 @@
       "confirm": "Dupliquer",
       "selectEnvironment": "Selectionner l'environnement cible"
     },
+    "createdBy": "Créé par : ",
     "myCollaborations": "Mes collaborations",
     "myStudies": "Mes Bilans Carbone®",
     "createFirstStudy": "Créer mon premier Bilan Carbone®",
@@ -508,7 +544,9 @@
       },
       "error": {
         "default": "Une erreur s'est produite ...",
-        "noActiveVersion_BaseEmpreinte": "Aucune version active de Base Empreinte. Veuillez contacter le support."
+        "noActiveVersion_BaseEmpreinte": "Aucune version active de Base Empreinte. Veuillez contacter le support.",
+        "noCourseSession": "Vous devez être inscrit à une session de formation pour créer une étude.",
+        "multipleCourseSessions": "Vous êtes inscrit à plusieurs sessions de formation. Veuillez contacter le support."
       },
       "coming": "à venir"
     },
@@ -1042,7 +1080,8 @@
       "name": "Nom de l'étude",
       "Not authorized": "Vous n'avez pas les droits pour effectuer cette action",
       "title": "Suppression d'une étude",
-      "wrongName": "Le nom de l'étude ne correspond pas"
+      "wrongName": "Le nom de l'étude ne correspond pas",
+      "correctionAlreadySent": "Corrigé déjà envoyé : impossible de le supprimer."
     },
     "transitionPlan": {
       "notInitialized": "Le plan de transition de cette étude n'a pas encore été initialisé.",
@@ -1936,8 +1975,10 @@
       "BaseEmpreinte": "Base Empreinte®",
       "NegaOctet": "NegaOctet",
       "Legifrance": "Légifrance",
+      "ABC": "ABC",
       "AIB": "AIB",
       "GIEC": "GIEC",
+      "ADEME": "Autres études de l'Ademe",
       "displayArchived": "Afficher les facteurs archivés",
       "goTo": "Aller à la page",
       "items": "Élements par page",
@@ -1972,9 +2013,11 @@
       "importedFrom": {
         "baseEmpreinte": "Logo de la Base Empreinte",
         "legifrance": "Logo de Légifrance",
+        "abc": "Logo de l'ABC",
         "negaOctet": "Logo de NegaOctet",
         "aib": "Logo de l'Association of Issuing Bodies",
         "giec": "logo du GIEC",
+        "ademe": "Logo de l'Ademe",
         "manual": "Manuel"
       },
       "post": "Postes",
@@ -2058,7 +2101,7 @@
   "environment": {
     "BC": "BC+ 2.0",
     "CUT": "Count",
-    "TILT": "Tilt",
+    "TILT": "BC+ associatif",
     "CLICKSON": "ClicksOn"
   },
   "source": {
@@ -2152,6 +2195,8 @@
     "KNOTS": "{count, plural, =0 {noeuds} one {noeud} other {noeuds}}",
     "KWH": "kWh",
     "KWH_PCI": "kWh PCI",
+    "KGCO2E": "kgCO₂e",
+    "Night": "nuitée",
     "KWH_PCS": "kWh PCS",
     "KWH_ELEC_TON": "kWh elec / tonne",
     "KWH_PER_KM": "kWh / km",

@@ -1,6 +1,6 @@
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { Command } from 'commander'
-import { prismaClient } from '../../db/client.server'
+import { prismaClient } from '../../db/client'
 
 const program = new Command()
 
