@@ -845,6 +845,47 @@ describe('study', () => {
         )
       })
 
+      it('does not activate a pending organization account for a study invitation', async () => {
+        const study = {
+          id: 'study-id',
+          organizationVersionId: 'target-organization-version-id',
+          organizationVersion: {
+            id: 'target-organization-version-id',
+            environment: Environment.TILT,
+            organization: { name: 'Target organization' },
+          },
+          allowedUsers: [],
+          contributors: [],
+        }
+        mockGetStudyById.mockResolvedValue(study)
+        mockGetOrganizationVersionById.mockResolvedValue(study.organizationVersion)
+        mockGetAccountByEmailAndOrganizationVersionId.mockResolvedValue(null)
+        mockGetUserByEmail.mockResolvedValue({
+          id: 'existing-user-id',
+          accounts: [
+            { environment: Environment.BC, status: UserStatus.ACTIVE },
+            { environment: Environment.TILT, status: UserStatus.PENDING_REQUEST },
+          ],
+        })
+        mockGetAccountByEmailAndEnvironment.mockResolvedValue({
+          id: 'pending-account-id',
+          status: UserStatus.PENDING_REQUEST,
+        })
+        mockCanAddContributorOnStudy.mockReturnValue(true)
+
+        const result = await newStudyContributor({
+          studyId: study.id,
+          email: 'contributor@example.com',
+          firstName: 'Contributor',
+          subPosts: { default: [SubPost.Achats] },
+        })
+
+        expect(result).toEqual({ success: true, data: undefined })
+        expect(userDbModule.updateAccount).not.toHaveBeenCalled()
+        expect(mockCreateContributorOnStudy).toHaveBeenCalled()
+        expect(mockSendInvitation).toHaveBeenCalled()
+      })
+
       it('activates a new environment account for an existing active contributor', async () => {
         setupInvitationMocks()
         mockGetUserByEmail.mockResolvedValue({

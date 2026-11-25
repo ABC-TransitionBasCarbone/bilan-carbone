@@ -921,7 +921,7 @@ const getOrCreateUserAndSendStudyInvite = async (
       activeEnvs = []
     } else if (account.status === UserStatus.SUSPENDED) {
       skipEmail = true
-    } else if (activeEnvs.length) {
+    } else if (account.status !== UserStatus.PENDING_REQUEST && activeEnvs.length) {
       await updateAccount(account.id, { status: UserStatus.ACTIVE })
     }
 
