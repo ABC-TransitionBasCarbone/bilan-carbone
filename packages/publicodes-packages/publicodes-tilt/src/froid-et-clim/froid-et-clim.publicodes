@@ -27,7 +27,7 @@ froid et clim . fuites:
 froid et clim . fuites . locaux partagés:
   titre: Fuites de fluides frigorigènes
   applicable si: nombre > 0
-  formule: puissance frigorifique par surface * quantité de fluide par puissance * 0.1 * construction . bâtiment . locaux . locaux partagés . surface * construction . bâtiment . locaux . locaux partagés . pourcentage * PRG R410A
+  formule: puissance frigorifique par surface * quantité de fluide par puissance * 0.1 * construction . bâtiment . locaux . locaux partagés . surface * construction . bâtiment . locaux . locaux partagés . surface . pourcentage * PRG R410A
   note: méthode du PCG en fonction des m^2 renseignés dans les locaux, 0.1 kW/m^2*0,3 kg de fluide par kW*10%*m^2*PRG R410a.
   unité: kgCO2e
   avec:
