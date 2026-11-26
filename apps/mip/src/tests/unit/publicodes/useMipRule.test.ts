@@ -1,9 +1,11 @@
 import { createMipEngine } from '@/lib/publicodes/mip-engine'
 import { getFormQuestions, getRulesMeta, getStableQuestionOrder } from '@/lib/publicodes/mip-rules'
 import { useMipPublicodes } from '@/lib/publicodes/MipPublicodesProvider'
+import { useMipForm } from '@/lib/publicodes/useMipForm'
 import { useMipRule } from '@/lib/publicodes/useMipRule'
 import { MipSimulationState } from '@/utils/survey'
 import { beforeEach, describe, expect, it } from '@jest/globals'
+import seedModel from '../../../../prisma/seed/co2-model.FR-lang.fr-opti.json'
 
 jest.mock('@/lib/publicodes/MipPublicodesProvider', () => ({
   useMipPublicodes: () => mockPublicodes,
@@ -70,6 +72,51 @@ describe('MIP answer updates', () => {
       'DT',
       'alimentation',
     ])
+  })
+
+  it('navigates to same-car after skipping the professional distance', () => {
+    const engine = createMipEngine(seedModel)
+    const meta = getRulesMeta(engine)
+    engine.setSituation({
+      'DT . voiture . présent': 'oui',
+      'DT . voiture . utilisateur': "'propriétaire'",
+      'transport . voiture . présent': 'oui',
+    })
+    mockPublicodes.engine = engine
+    mockPublicodes.meta = meta
+    mockPublicodes.currentQuestion = 'transport . voiture . km'
+    mockPublicodes.simulation.foldedSteps = ['DT . voiture . km']
+    mockPublicodes.simulation.questionOrder = getFormQuestions(engine, meta, ['DT . voiture . km']).relevantQuestions
+
+    useMipForm().goToNextQuestion()
+
+    expect(mockPublicodes.setCurrentQuestion).toHaveBeenCalledWith('transport . voiture . meme voiture')
+  })
+
+  it('can skip a defaulted car motorization choice', () => {
+    const engine = createMipEngine(seedModel)
+    const meta = getRulesMeta(engine)
+    engine.setSituation({
+      'DT . voiture . présent': 'oui',
+      'DT . voiture . utilisateur': "'propriétaire'",
+      'transport . voiture . présent': 'oui',
+      'transport . voiture . meme voiture': 'non',
+    })
+    mockPublicodes.engine = engine
+    mockPublicodes.meta = meta
+    mockPublicodes.currentQuestion = 'transport . voiture . motorisation'
+    mockPublicodes.simulation.foldedSteps = ['DT . voiture . km', 'transport . voiture . km']
+    mockPublicodes.simulation.questionOrder = getFormQuestions(
+      engine,
+      meta,
+      mockPublicodes.simulation.foldedSteps,
+    ).relevantQuestions
+
+    useMipForm().goToNextQuestion()
+
+    expect(mockPublicodes.updateSimulation).toHaveBeenCalled()
+    expect(mockPublicodes.setCurrentQuestion).toHaveBeenCalled()
+    expect(mockPublicodes.setCurrentQuestion).not.toHaveBeenCalledWith('transport . voiture . motorisation')
   })
 
   it('keeps new mosaic follow-ups together after their parent and before the next category', () => {
