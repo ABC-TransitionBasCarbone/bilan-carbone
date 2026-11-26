@@ -1,0 +1,12 @@
+model MessageBanner {
+  id           String        @id @default(uuid())
+  message      String
+  environments Environment[] @default([])
+  startDate    DateTime      @map("start_at")
+  endDate      DateTime      @map("end_at")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @default(now()) @updatedAt @map("updated_at")
+
+  @@map("message_banners")
+  @@schema("bilan_carbone")
+}

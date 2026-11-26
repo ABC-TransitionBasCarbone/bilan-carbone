@@ -1,4 +1,28 @@
 {
+  "messageBanners": {
+    "title": "Message banners",
+    "message": "Message",
+    "environments": "Environments",
+    "startAt": "Start date",
+    "endAt": "End date",
+    "create": "Create banner",
+    "update": "Update",
+    "cancel": "Cancel",
+    "existing": "Existing banners",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Delete this banner?",
+    "empty": "No banners"
+  },
+  "environment": {
+    "BC": "BC+ 2.0",
+    "CUT": "Count",
+    "TILT": "Tilt",
+    "CLICKSON": "ClicksOn",
+    "MIP": "Mon Impact Pro",
+    "COURSE_BC": "BC+ Training",
+    "COURSE_TILT": "BC+ Training TILT"
+  },
   "common": {
     "colon": ":",
     "error": "An error occurred. If the problem persists, please contact support.",
