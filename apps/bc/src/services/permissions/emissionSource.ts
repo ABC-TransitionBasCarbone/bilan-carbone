@@ -9,7 +9,6 @@ import type { StudyEmissionSource } from '@abc-transitionbascarbone/common/db'
 import { Environment, StudyRole } from '@abc-transitionbascarbone/common/db/enums'
 import { canBeValidated } from '../emissionSource'
 import { canReadStudy } from './study'
-import { isAdminOnStudyOrga } from './study.utils'
 
 export const hasStudyBasicRights = async (account: AccountWithUser, study: FullStudy) => {
   if (!(await canReadStudy(accountWithUserToUserSession(account), study.id))) {
@@ -104,11 +103,7 @@ const canUpdateEmissionSourceBC = async (
   }
 
   if (change.validated !== undefined) {
-    const rights = study.allowedUsers.find((right) => right.account.user.email === account.user.email)
-    if (
-      !isAdminOnStudyOrga(accountWithUserToUserSession(account), study.organizationVersion) &&
-      (!rights || rights.role !== StudyRole.Validator)
-    ) {
+    if (getAccountRoleOnStudy(accountWithUserToUserSession(account), study) !== StudyRole.Validator) {
       return false
     }
 
