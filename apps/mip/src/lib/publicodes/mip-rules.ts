@@ -136,7 +136,7 @@ const getEngineWithFoldedDefaults = (engine: Engine, foldedSteps: string[]): Eng
   const situation = engine.getSituation()
   const rules = getParsedRules(engine)
   const defaults: Situation<string> = {}
-  // Use skipped questions' model defaults to evaluate follow-ups without adding them to the real situation.
+  // Use folded questions' defaults only to discover follow-ups; keep them out of the user's actual situation.
   for (const step of foldedSteps) {
     if (situation[step] !== undefined || !Object.hasOwn(rules[step]?.rawNode ?? {}, 'par défaut')) {
       continue
@@ -195,40 +195,6 @@ export const hasRuleAnswer = (
     const value = situation[name]
     return value !== undefined && value !== null
   })
-}
-
-// The form shows one mosaic parent, so combine missing child scores into it using the highest score.
-const getMissingVariables = (
-  engine: Engine,
-  meta: MipRulesMeta,
-  isQuestionApplicable: (question: string) => boolean,
-): MissingVariables => {
-  const rules = getParsedRules(engine)
-  const missingVariables = Object.fromEntries(
-    Object.entries(getRootMissingVariables(engine, meta.root)).filter(([ruleName]) =>
-      meta.everyQuestions.includes(ruleName),
-    ),
-  )
-
-  // Restore one-option confirmations omitted from missingVariables; mosaic child scores are grouped below.
-  for (const question of meta.everyQuestions) {
-    const choice = getChoiceOption(rules[question]?.rawNode)
-    const possibilities =
-      choice && typeof choice === 'object' && 'possibilités' in choice ? choice.possibilités : choice
-    if (Array.isArray(possibilities) && possibilities.length === 1 && isQuestionApplicable(question)) {
-      missingVariables[question] ??= 1
-    }
-  }
-
-  for (const [parent, children] of Object.entries(meta.mosaicChildrenWithParent)) {
-    const scores = children.map((child) => missingVariables[child]).filter((score) => score !== undefined)
-    if (scores.length > 0) {
-      missingVariables[parent] = Math.max(...scores)
-      children.forEach((child) => delete missingVariables[child])
-    }
-  }
-
-  return missingVariables
 }
 
 const getRuleOrder = (rawNode?: RuleRawNode): number => {
@@ -290,9 +256,33 @@ export const getFormQuestions = (engine: Engine, meta: MipRulesMeta, foldedSteps
     applicability.set(question, result)
     return result
   }
+  // Keep temporary folded defaults out of applicability checks for already answered questions.
   const isAnswerApplicable =
     questionEngine === engine ? isQuestionApplicable : (question: string) => isApplicable(engine, question)
-  const missingVariables = getMissingVariables(questionEngine, meta, isQuestionApplicable)
+  const rules = getParsedRules(questionEngine)
+  const missingVariables = Object.fromEntries(
+    Object.entries(getRootMissingVariables(questionEngine, meta.root)).filter(([ruleName]) =>
+      meta.everyQuestions.includes(ruleName),
+    ),
+  )
+
+  // Keep single-option confirmations visible when evaluation omits them; group mosaic children below.
+  for (const question of meta.everyQuestions) {
+    const choice = getChoiceOption(rules[question]?.rawNode)
+    const possibilities =
+      choice && typeof choice === 'object' && 'possibilités' in choice ? choice.possibilités : choice
+    if (Array.isArray(possibilities) && possibilities.length === 1 && isQuestionApplicable(question)) {
+      missingVariables[question] ??= 1
+    }
+  }
+
+  for (const [parent, children] of Object.entries(meta.mosaicChildrenWithParent)) {
+    const scores = children.map((child) => missingVariables[child]).filter((score) => score !== undefined)
+    if (scores.length > 0) {
+      missingVariables[parent] = Math.max(...scores)
+      children.forEach((child) => delete missingVariables[child])
+    }
+  }
 
   const remainingQuestions = sortQuestions(
     engine,
