@@ -1,7 +1,7 @@
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { z } from 'zod'
 
-export const mipMessageBannerEnvironments: Environment[] = [Environment.MIP]
+export const messageBannerEnvironments: Environment[] = Object.values(Environment)
 
 export const CommonMessageBannerCommandValidation = z
   .object({

@@ -3,12 +3,7 @@ import type { Prisma, PrismaClient } from '../generated/prisma/client'
 
 export const getMessageBannerManagementWhereCondition = (
   environments: Environment[],
-): Prisma.MessageBannerWhereInput => ({
-  environments: { hasSome: environments },
-  NOT: {
-    environments: { hasSome: Object.values(Environment).filter((environment) => !environments.includes(environment)) },
-  },
-})
+): Prisma.MessageBannerWhereInput => ({ environments: { hasSome: environments } })
 
 export const getManagedMessageBanners = (client: PrismaClient, environments: Environment[]) =>
   client.messageBanner.findMany({

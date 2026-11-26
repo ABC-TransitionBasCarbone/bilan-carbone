@@ -8,6 +8,7 @@ import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import MessageBannerManagement from '@abc-transitionbascarbone/common/components/MessageBannerManagement'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { bcEnvironments } from '@abc-transitionbascarbone/common/utils/environments'
+import { messageBannerEnvironments } from '@abc-transitionbascarbone/common/utils/messageBanner.command'
 import { getTranslations } from 'next-intl/server'
 import DeactivableFeatures from '../admin/DeactivableFeatures'
 import SuperAdminImport from '../admin/SuperAdminImport'
@@ -33,7 +34,8 @@ const SuperAdminPage = async ({ environment }: Props) => {
         {messageBanners.success && (
           <MessageBannerManagement
             banners={messageBanners.data}
-            environments={bcEnvironments}
+            environments={messageBannerEnvironments}
+            defaultEnvironments={bcEnvironments}
             saveBanner={saveMessageBannerForManagement}
             deleteBanner={deleteMessageBannerForManagement}
           />

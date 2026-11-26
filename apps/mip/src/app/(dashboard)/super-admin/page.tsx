@@ -9,8 +9,8 @@ import {
 import Block from '@abc-transitionbascarbone/common/components/base/Block'
 import MessageBannerManagement from '@abc-transitionbascarbone/common/components/MessageBannerManagement'
 import NotFound from '@abc-transitionbascarbone/common/components/pages/NotFound'
-import { RoleMip } from '@abc-transitionbascarbone/common/db/enums'
-import { mipMessageBannerEnvironments } from '@abc-transitionbascarbone/common/utils/messageBanner.command'
+import { Environment, RoleMip } from '@abc-transitionbascarbone/common/db/enums'
+import { messageBannerEnvironments } from '@abc-transitionbascarbone/common/utils/messageBanner.command'
 import classNames from 'classnames'
 import styles from './page.module.css'
 
@@ -29,7 +29,8 @@ const SuperAdmin = async ({ user }: UserSessionProps) => {
         {banners.success && (
           <MessageBannerManagement
             banners={banners.data}
-            environments={mipMessageBannerEnvironments}
+            environments={messageBannerEnvironments}
+            defaultEnvironments={[Environment.MIP]}
             saveBanner={saveMessageBannerForManagement}
             deleteBanner={deleteMessageBannerForManagement}
           />

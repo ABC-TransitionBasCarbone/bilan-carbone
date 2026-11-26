@@ -1,9 +1,11 @@
 import {
   getMessageBannerExpirationDelay,
+  getMessageBannerDismissalTimeRemaining,
   readMessageBannerDismissal,
   startMessageBannerRefresh,
   writeMessageBannerDismissal,
 } from '@abc-transitionbascarbone/common/utils/messageBanner'
+import { DAY, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils/time'
 
 beforeEach(() => {
   window.localStorage.clear()
@@ -12,6 +14,14 @@ beforeEach(() => {
 afterEach(() => {
   jest.restoreAllMocks()
   jest.useRealTimers()
+})
+
+it.each([
+  { label: 'less than 24 hours', elapsed: DAY * TIME_IN_MS - 1, expected: 1 },
+  { label: 'exactly 24 hours', elapsed: DAY * TIME_IN_MS, expected: 0 },
+  { label: 'more than 24 hours', elapsed: DAY * TIME_IN_MS + 1, expected: 0 },
+])('returns the remaining dismissal period at $label', ({ elapsed, expected }) => {
+  expect(getMessageBannerDismissalTimeRemaining(0, elapsed)).toBe(expected)
 })
 
 it.each([

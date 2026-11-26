@@ -1,12 +1,13 @@
-import {
-  dbDeleteMessageBanner,
-  dbGetMessageBannersForEnvironment,
-  dbGetMessageBannersForManagement,
-  dbSaveMessageBanner,
-} from '@/db/messageBanner'
 import { dbActualizedAuth } from '@/services/auth'
+import {
+  deleteManagedMessageBanner,
+  getActiveMessageBanners,
+  getManagedMessageBanners,
+  saveManagedMessageBanner,
+} from '@abc-transitionbascarbone/common/db/db'
 import { Environment, RoleMip } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
+import { messageBannerEnvironments } from '@abc-transitionbascarbone/common/utils/messageBanner.command'
 import { expect, it } from '@jest/globals'
 import {
   deleteMessageBannerForManagement,
@@ -15,17 +16,18 @@ import {
   saveMessageBannerForManagement,
 } from './messageBanner'
 
-jest.mock('@/db/messageBanner', () => ({
-  dbDeleteMessageBanner: jest.fn(),
-  dbGetMessageBannersForEnvironment: jest.fn(),
-  dbGetMessageBannersForManagement: jest.fn(),
-  dbSaveMessageBanner: jest.fn(),
+jest.mock('@/db/client', () => ({ prismaClient: {} }))
+jest.mock('@abc-transitionbascarbone/common/db/db', () => ({
+  deleteManagedMessageBanner: jest.fn(),
+  getActiveMessageBanners: jest.fn(),
+  getManagedMessageBanners: jest.fn(),
+  saveManagedMessageBanner: jest.fn(),
 }))
 jest.mock('@/services/auth', () => ({ dbActualizedAuth: jest.fn(), auth: jest.fn() }))
 
 const command = {
   message: ' Maintenance ',
-  environments: [Environment.MIP],
+  environments: [Environment.MIP, Environment.BC],
   startDate: new Date('2026-11-17T10:00:00Z'),
   endDate: new Date('2026-11-18T10:00:00Z'),
 }
@@ -47,9 +49,9 @@ it.each([null, { user: { id: 'user', role: RoleMip.ADMIN } }])('blocks unauthori
   ]) {
     expect(result).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
   }
-  expect(dbGetMessageBannersForManagement).not.toHaveBeenCalled()
-  expect(dbSaveMessageBanner).not.toHaveBeenCalled()
-  expect(dbDeleteMessageBanner).not.toHaveBeenCalled()
+  expect(getManagedMessageBanners).not.toHaveBeenCalled()
+  expect(saveManagedMessageBanner).not.toHaveBeenCalled()
+  expect(deleteManagedMessageBanner).not.toHaveBeenCalled()
   expect(console.error).toHaveBeenCalledTimes(3)
 })
 
@@ -57,42 +59,49 @@ it('allows super admins to list, create, update and delete MIP banners', async (
   jest.mocked(dbActualizedAuth).mockResolvedValue({
     user: { id: 'super-admin', role: RoleMip.SUPER_ADMIN },
   } as Awaited<ReturnType<typeof dbActualizedAuth>>)
-  jest.mocked(dbGetMessageBannersForManagement).mockResolvedValue([])
+  jest.mocked(getManagedMessageBanners).mockResolvedValue([])
   expect(await getMessageBannersForManagement()).toEqual({ success: true, data: [] })
   expect((await saveMessageBannerForManagement(command)).success).toBe(true)
-  expect(dbSaveMessageBanner).toHaveBeenLastCalledWith({ ...command, message: 'Maintenance' })
+  expect(saveManagedMessageBanner.mock.calls[0]?.[1]).toEqual(messageBannerEnvironments)
+  expect(saveManagedMessageBanner.mock.calls[0]?.[2]).toEqual({
+    ...command,
+    message: 'Maintenance',
+  })
   expect((await saveMessageBannerForManagement({ ...command, id })).success).toBe(true)
-  expect(dbSaveMessageBanner).toHaveBeenLastCalledWith({ ...command, id, message: 'Maintenance' })
+  expect(saveManagedMessageBanner.mock.calls[1]?.[1]).toEqual(messageBannerEnvironments)
+  expect(saveManagedMessageBanner.mock.calls[1]?.[2]).toEqual({
+    ...command,
+    id,
+    message: 'Maintenance',
+  })
   expect((await deleteMessageBannerForManagement(id)).success).toBe(true)
-  expect(dbDeleteMessageBanner).toHaveBeenCalledWith(id)
+  expect(deleteManagedMessageBanner.mock.calls[0]?.[1]).toEqual(messageBannerEnvironments)
+  expect(deleteManagedMessageBanner.mock.calls[0]?.[2]).toBe(id)
 })
 
-it.each([[Environment.BC], [Environment.BC, Environment.MIP], [], [Environment.COURSE_TILT]])(
-  'rejects non-MIP or empty targets %j',
-  async (...environments) => {
-    jest.mocked(dbActualizedAuth).mockResolvedValue({
-      user: { id: 'super-admin', role: RoleMip.SUPER_ADMIN },
-    } as Awaited<ReturnType<typeof dbActualizedAuth>>)
-    expect((await saveMessageBannerForManagement({ ...command, environments })).success).toBe(false)
-    expect(dbSaveMessageBanner).not.toHaveBeenCalled()
-  },
-)
+it('rejects commands without an environment target', async () => {
+  jest.mocked(dbActualizedAuth).mockResolvedValue({
+    user: { id: 'super-admin', role: RoleMip.SUPER_ADMIN },
+  } as Awaited<ReturnType<typeof dbActualizedAuth>>)
+  expect((await saveMessageBannerForManagement({ ...command, environments: [] })).success).toBe(false)
+  expect(saveManagedMessageBanner).not.toHaveBeenCalled()
+})
 
 it('reports database failures', async () => {
   jest.mocked(dbActualizedAuth).mockResolvedValue({
     user: { id: 'super-admin', role: RoleMip.SUPER_ADMIN },
   } as Awaited<ReturnType<typeof dbActualizedAuth>>)
-  jest.mocked(dbDeleteMessageBanner).mockRejectedValue(new Error('Record not found'))
+  jest.mocked(deleteManagedMessageBanner).mockRejectedValue(new Error('Record not found'))
   expect(await deleteMessageBannerForManagement(id)).toEqual({ success: false, errorMessage: 'Record not found' })
 })
 
 it('requires authentication and only displays MIP banners', async () => {
   expect(await getCurrentMessageBanners()).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
-  expect(dbGetMessageBannersForEnvironment).not.toHaveBeenCalled()
+  expect(getActiveMessageBanners).not.toHaveBeenCalled()
   jest.mocked(dbActualizedAuth).mockResolvedValue({
     user: { id: 'user', role: RoleMip.ADMIN },
   } as Awaited<ReturnType<typeof dbActualizedAuth>>)
-  jest.mocked(dbGetMessageBannersForEnvironment).mockResolvedValue([])
+  jest.mocked(getActiveMessageBanners).mockResolvedValue([])
   expect(await getCurrentMessageBanners()).toEqual({ success: true, data: [] })
-  expect(dbGetMessageBannersForEnvironment).toHaveBeenCalledWith(Environment.MIP)
+  expect(getActiveMessageBanners.mock.calls[0]?.[1]).toBe(Environment.MIP)
 })

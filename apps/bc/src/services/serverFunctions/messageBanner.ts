@@ -1,17 +1,23 @@
 'use server'
 
-import {
-  dbDeleteMessageBanner,
-  dbGetMessageBannersForEnvironment,
-  dbGetMessageBannersForManagement,
-  dbSaveMessageBanner,
-} from '@/db/messageBanner'
+import { prismaClient } from '@/db/client'
 import { dbActualizedAuth } from '@/services/auth'
 import { withServerResponse } from '@/utils/serverResponse'
+import {
+  deleteManagedMessageBanner,
+  getActiveMessageBanners,
+  getManagedMessageBanners,
+  saveManagedMessageBanner,
+} from '@abc-transitionbascarbone/common/db/db'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import type { MessageBannerCommand } from '@abc-transitionbascarbone/common/utils/messageBanner.command'
+import {
+  makeMessageBannerCommandValidation,
+  messageBannerEnvironments,
+} from '@abc-transitionbascarbone/common/utils/messageBanner.command'
 import { requireSuperAdmin } from '../permissions/superAdmin'
-import { BCMessageBannerCommandValidation } from './messageBanner.command'
+
+const BCMessageBannerCommandValidation = makeMessageBannerCommandValidation(messageBannerEnvironments)
 
 export const getCurrentMessageBanners = async () =>
   withServerResponse('getCurrentMessageBanners', async () => {
@@ -21,24 +27,24 @@ export const getCurrentMessageBanners = async () =>
       throw new Error(NOT_AUTHORIZED)
     }
 
-    return dbGetMessageBannersForEnvironment(session.user.environment)
+    return getActiveMessageBanners(prismaClient, session.user.environment)
   })
 
 export const getMessageBannersForManagement = async () =>
   withServerResponse('getMessageBannersForManagement', async () => {
     await requireSuperAdmin('getMessageBannersForManagement')
-    return dbGetMessageBannersForManagement()
+    return getManagedMessageBanners(prismaClient, messageBannerEnvironments)
   })
 
 export const saveMessageBannerForManagement = async (input: MessageBannerCommand) =>
   withServerResponse('saveMessageBannerForManagement', async () => {
     await requireSuperAdmin('saveMessageBannerForManagement')
     const command = BCMessageBannerCommandValidation.parse(input)
-    return dbSaveMessageBanner(command)
+    return saveManagedMessageBanner(prismaClient, messageBannerEnvironments, command)
   })
 
 export const deleteMessageBannerForManagement = async (id: string) =>
   withServerResponse('deleteMessageBannerForManagement', async () => {
     await requireSuperAdmin('deleteMessageBannerForManagement')
-    return dbDeleteMessageBanner(id)
+    return deleteManagedMessageBanner(prismaClient, messageBannerEnvironments, id)
   })

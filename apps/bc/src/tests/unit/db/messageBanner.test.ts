@@ -1,9 +1,13 @@
 import { prismaClient } from '@/db/client'
-import { dbDeleteMessageBanner, dbGetMessageBannersForManagement, dbSaveMessageBanner } from '@/db/messageBanner'
-import { getMessageBannerManagementWhereCondition } from '@abc-transitionbascarbone/common/db/db'
+import {
+  deleteManagedMessageBanner,
+  getActiveMessageBannerWhere,
+  getManagedMessageBanners,
+  getMessageBannerManagementWhereCondition,
+  saveManagedMessageBanner,
+} from '@abc-transitionbascarbone/common/db/db'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
-import { bcEnvironments } from '@abc-transitionbascarbone/common/utils/environments'
-import { mipMessageBannerEnvironments } from '@abc-transitionbascarbone/common/utils/messageBanner.command'
+import { messageBannerEnvironments } from '@abc-transitionbascarbone/common/utils/messageBanner.command'
 
 jest.mock('@/db/client', () => ({
   prismaClient: { messageBanner: { findMany: jest.fn(), create: jest.fn(), update: jest.fn(), delete: jest.fn() } },
@@ -18,22 +22,28 @@ const command = {
 
 beforeEach(() => jest.clearAllMocks())
 
-it.each([
-  { allowed: bcEnvironments, excluded: [Environment.MIP] },
-  { allowed: mipMessageBannerEnvironments, excluded: bcEnvironments },
-])('excludes foreign and mixed banners from management', ({ allowed, excluded }) => {
-  expect(getMessageBannerManagementWhereCondition(allowed)).toEqual({
-    environments: { hasSome: allowed },
-    NOT: { environments: { hasSome: excluded } },
+it('includes mixed banners in management queries', () => {
+  expect(getMessageBannerManagementWhereCondition(messageBannerEnvironments)).toEqual({
+    environments: { hasSome: messageBannerEnvironments },
   })
 })
 
-it('scopes BC reads, updates and deletes to BC-family records, including ID mutations', async () => {
-  const where = getMessageBannerManagementWhereCondition(bcEnvironments)
-  await dbGetMessageBannersForManagement()
-  await dbSaveMessageBanner(command)
-  await dbSaveMessageBanner({ ...command, id: 'banner-id' })
-  await dbDeleteMessageBanner('banner-id')
+it('filters active banners for the environment and inclusive display window', () => {
+  const now = new Date('2026-11-16T10:00:00.000Z')
+
+  expect(getActiveMessageBannerWhere(Environment.MIP, now)).toEqual({
+    environments: { has: Environment.MIP },
+    startDate: { lte: now },
+    endDate: { gte: now },
+  })
+})
+
+it('reads, updates and deletes mixed banners by ID', async () => {
+  const where = getMessageBannerManagementWhereCondition(messageBannerEnvironments)
+  await getManagedMessageBanners(prismaClient, messageBannerEnvironments)
+  await saveManagedMessageBanner(prismaClient, messageBannerEnvironments, command)
+  await saveManagedMessageBanner(prismaClient, messageBannerEnvironments, { ...command, id: 'banner-id' })
+  await deleteManagedMessageBanner(prismaClient, messageBannerEnvironments, 'banner-id')
 
   expect(prismaClient.messageBanner.findMany).toHaveBeenCalledWith({ where, orderBy: { startDate: 'desc' } })
   expect(prismaClient.messageBanner.create).toHaveBeenCalledWith({ data: command })
@@ -46,5 +56,7 @@ it('scopes BC reads, updates and deletes to BC-family records, including ID muta
 
 it('propagates rejected writes rather than reporting success', async () => {
   jest.mocked(prismaClient.messageBanner.update).mockRejectedValueOnce(new Error('Record not found'))
-  await expect(dbSaveMessageBanner({ ...command, id: 'mip-banner' })).rejects.toThrow('Record not found')
+  await expect(
+    saveManagedMessageBanner(prismaClient, messageBannerEnvironments, { ...command, id: 'mip-banner' }),
+  ).rejects.toThrow('Record not found')
 })

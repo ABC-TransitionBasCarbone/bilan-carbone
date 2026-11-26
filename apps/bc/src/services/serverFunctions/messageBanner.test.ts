@@ -1,12 +1,14 @@
-import {
-  dbDeleteMessageBanner,
-  dbGetMessageBannersForEnvironment,
-  dbGetMessageBannersForManagement,
-  dbSaveMessageBanner,
-} from '@/db/messageBanner'
+import { prismaClient } from '@/db/client'
 import { dbActualizedAuth } from '@/services/auth'
+import {
+  deleteManagedMessageBanner,
+  getActiveMessageBanners,
+  getManagedMessageBanners,
+  saveManagedMessageBanner,
+} from '@abc-transitionbascarbone/common/db/db'
 import { Environment, Role } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
+import { messageBannerEnvironments } from '@abc-transitionbascarbone/common/utils/messageBanner.command'
 import {
   deleteMessageBannerForManagement,
   getCurrentMessageBanners,
@@ -14,11 +16,12 @@ import {
   saveMessageBannerForManagement,
 } from './messageBanner'
 
-jest.mock('@/db/messageBanner', () => ({
-  dbGetMessageBannersForManagement: jest.fn(),
-  dbGetMessageBannersForEnvironment: jest.fn(),
-  dbSaveMessageBanner: jest.fn(),
-  dbDeleteMessageBanner: jest.fn(),
+jest.mock('@/db/client', () => ({ prismaClient: {} }))
+jest.mock('@abc-transitionbascarbone/common/db/db', () => ({
+  deleteManagedMessageBanner: jest.fn(),
+  getActiveMessageBanners: jest.fn(),
+  getManagedMessageBanners: jest.fn(),
+  saveManagedMessageBanner: jest.fn(),
 }))
 jest.mock('@/services/auth', () => ({ dbActualizedAuth: jest.fn(), auth: jest.fn() }))
 
@@ -50,9 +53,9 @@ it.each([null, { user: { id: 'user', role: Role.ADMIN } }])(
     ]) {
       expect(result).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
     }
-    expect(dbGetMessageBannersForManagement).not.toHaveBeenCalled()
-    expect(dbSaveMessageBanner).not.toHaveBeenCalled()
-    expect(dbDeleteMessageBanner).not.toHaveBeenCalled()
+    expect(getManagedMessageBanners).not.toHaveBeenCalled()
+    expect(saveManagedMessageBanner).not.toHaveBeenCalled()
+    expect(deleteManagedMessageBanner).not.toHaveBeenCalled()
     expect(console.error).toHaveBeenCalledTimes(3)
   },
 )
@@ -61,15 +64,22 @@ it('allows super admins to list, create, update and delete banners', async () =>
   jest.mocked(dbActualizedAuth).mockResolvedValue({
     user: { id: 'super-admin', role: Role.SUPER_ADMIN },
   } as Awaited<ReturnType<typeof dbActualizedAuth>>)
-  jest.mocked(dbGetMessageBannersForManagement).mockResolvedValue([])
+  jest.mocked(getManagedMessageBanners).mockResolvedValue([])
 
   expect(await getMessageBannersForManagement()).toEqual({ success: true, data: [] })
   expect((await saveMessageBannerForManagement(command)).success).toBe(true)
-  expect(dbSaveMessageBanner).toHaveBeenLastCalledWith({ ...command, message: 'Maintenance' })
+  expect(saveManagedMessageBanner).toHaveBeenLastCalledWith(prismaClient, messageBannerEnvironments, {
+    ...command,
+    message: 'Maintenance',
+  })
   expect((await saveMessageBannerForManagement({ ...command, id })).success).toBe(true)
-  expect(dbSaveMessageBanner).toHaveBeenLastCalledWith({ ...command, id, message: 'Maintenance' })
+  expect(saveManagedMessageBanner).toHaveBeenLastCalledWith(prismaClient, messageBannerEnvironments, {
+    ...command,
+    id,
+    message: 'Maintenance',
+  })
   expect((await deleteMessageBannerForManagement(id)).success).toBe(true)
-  expect(dbDeleteMessageBanner).toHaveBeenCalledWith(id)
+  expect(deleteManagedMessageBanner).toHaveBeenCalledWith(prismaClient, messageBannerEnvironments, id)
 })
 
 it('rejects invalid input before writing and reports database errors', async () => {
@@ -78,13 +88,20 @@ it('rejects invalid input before writing and reports database errors', async () 
   } as Awaited<ReturnType<typeof dbActualizedAuth>>)
 
   expect((await saveMessageBannerForManagement({ ...command, endDate: command.startDate })).success).toBe(false)
-  expect((await saveMessageBannerForManagement({ ...command, environments: [Environment.MIP] })).success).toBe(false)
+  expect((await saveMessageBannerForManagement({ ...command, environments: [] })).success).toBe(false)
+  expect((await saveMessageBannerForManagement({ ...command, message: '  ' })).success).toBe(false)
+  expect(saveManagedMessageBanner).not.toHaveBeenCalled()
+
   expect(
     (await saveMessageBannerForManagement({ ...command, environments: [Environment.BC, Environment.MIP] })).success,
-  ).toBe(false)
-  expect(dbSaveMessageBanner).not.toHaveBeenCalled()
+  ).toBe(true)
+  expect(saveManagedMessageBanner).toHaveBeenLastCalledWith(prismaClient, messageBannerEnvironments, {
+    ...command,
+    message: 'Maintenance',
+    environments: [Environment.BC, Environment.MIP],
+  })
 
-  jest.mocked(dbSaveMessageBanner).mockRejectedValue(new Error('database unavailable'))
+  jest.mocked(saveManagedMessageBanner).mockRejectedValue(new Error('database unavailable'))
   expect(await saveMessageBannerForManagement(command)).toEqual({
     success: false,
     errorMessage: 'database unavailable',
@@ -93,12 +110,12 @@ it('rejects invalid input before writing and reports database errors', async () 
 
 it('only reads banners for the authenticated environment', async () => {
   expect(await getCurrentMessageBanners()).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
-  expect(dbGetMessageBannersForEnvironment).not.toHaveBeenCalled()
+  expect(getActiveMessageBanners).not.toHaveBeenCalled()
 
   jest.mocked(dbActualizedAuth).mockResolvedValue({
     user: { id: 'user', environment: Environment.TILT },
   } as Awaited<ReturnType<typeof dbActualizedAuth>>)
-  jest.mocked(dbGetMessageBannersForEnvironment).mockResolvedValue([])
+  jest.mocked(getActiveMessageBanners).mockResolvedValue([])
   expect(await getCurrentMessageBanners()).toEqual({ success: true, data: [] })
-  expect(dbGetMessageBannersForEnvironment).toHaveBeenCalledWith(Environment.TILT)
+  expect(getActiveMessageBanners).toHaveBeenCalledWith(prismaClient, Environment.TILT)
 })

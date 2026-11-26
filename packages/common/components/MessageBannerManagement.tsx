@@ -22,12 +22,12 @@ const toDateTimeInputValue = (date: Date) => {
   return localDate.toISOString().slice(0, 16)
 }
 
-const createEmptyBannerForm = (environments: Environment[]): BannerForm => {
+const createEmptyBannerForm = (defaultEnvironments: Environment[]): BannerForm => {
   const startDate = new Date()
   const endDate = new Date(startDate.getTime() + DAY * TIME_IN_MS)
   return {
     message: '',
-    environments,
+    environments: defaultEnvironments,
     startDate: toDateTimeInputValue(startDate),
     endDate: toDateTimeInputValue(endDate),
   }
@@ -36,20 +36,21 @@ const createEmptyBannerForm = (environments: Environment[]): BannerForm => {
 interface Props {
   banners: MessageBanner[]
   environments: Environment[]
+  defaultEnvironments: Environment[]
   saveBanner: (command: MessageBannerCommand) => Promise<ApiResponse<unknown>>
   deleteBanner: (id: string) => Promise<ApiResponse<unknown>>
 }
 
-const MessageBannerManagement = ({ banners, environments, saveBanner, deleteBanner }: Props) => {
+const MessageBannerManagement = ({ banners, environments, defaultEnvironments, saveBanner, deleteBanner }: Props) => {
   const t = useTranslations('messageBanners')
   const tEnvironment = useTranslations('environment')
   const { callServerFunction } = useServerFunction()
   const router = useRouter()
-  const [form, setForm] = useState<BannerForm>(() => createEmptyBannerForm(environments))
+  const [form, setForm] = useState<BannerForm>(() => createEmptyBannerForm(defaultEnvironments))
   const [isSaving, setIsSaving] = useState(false)
   const saving = useRef(false)
 
-  const resetForm = () => setForm(createEmptyBannerForm(environments))
+  const resetForm = () => setForm(createEmptyBannerForm(defaultEnvironments))
 
   const save = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
