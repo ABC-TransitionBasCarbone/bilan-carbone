@@ -1,6 +1,6 @@
 import {
-  getMessageBannerExpirationDelay,
   getMessageBannerDismissalTimeRemaining,
+  getMessageBannerExpirationDelay,
   readMessageBannerDismissal,
   startMessageBannerRefresh,
   writeMessageBannerDismissal,
