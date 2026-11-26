@@ -4,6 +4,7 @@ import { AuthorizedInOrgaUserStatus } from '@/services/users'
 import { getRoleToSetForUntrained } from '@/utils/user'
 import { userSessionToDbUser } from '@/utils/userAccounts'
 import { Prisma } from '@abc-transitionbascarbone/common/db'
+import type { Level } from '@abc-transitionbascarbone/common/db/enums'
 import {
   DeactivatableFeature,
   Environment,
@@ -11,7 +12,6 @@ import {
   UserChecklist,
   UserStatus,
 } from '@abc-transitionbascarbone/common/db/enums'
-import type { Level } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { AddMemberCommand } from '@abc-transitionbascarbone/common/services/serverFunctions/user.command'
 import { signPassword } from '@abc-transitionbascarbone/common/utils/auth'

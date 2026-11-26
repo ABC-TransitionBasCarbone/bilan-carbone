@@ -1,11 +1,11 @@
-import { expect } from '@jest/globals'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import {
-  sendAddedActiveUserEmail,
   sendActiveUserOnStudyInvitationEmail,
+  sendAddedActiveUserEmail,
   sendPendingStudyInvitationApprovalEmail,
 } from '@abc-transitionbascarbone/common/services/email/email'
 import { sendEmail } from '@abc-transitionbascarbone/common/services/email/send'
+import { expect } from '@jest/globals'
 
 jest.mock('next-intl/server', () => ({
   getTranslations: jest.fn(async () => (key: string) => key),

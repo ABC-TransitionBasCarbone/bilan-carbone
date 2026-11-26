@@ -37,15 +37,15 @@ import {
 import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { mockedAccountId } from '@/tests/utils/models/user'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
+import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/common/db/db'
 import {
   sendAccountActivatedEmail,
-  sendActiveUserOnStudyInvitationEmail,
   sendActivationEmail,
   sendActivationRequest,
+  sendActiveUserOnStudyInvitationEmail,
   sendAddedActiveUserEmail,
   sendPendingStudyInvitationApprovalEmail,
 } from '@abc-transitionbascarbone/common/services/email/email'
-import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/common/db/db'
 import { EMAIL_SENT, NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { mockedOrganizationId } from '@abc-transitionbascarbone/common/services/tests/models/organization'
 import { mockedUserId } from '@abc-transitionbascarbone/common/services/tests/models/user'
