@@ -109,6 +109,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
   ],
   EnergieSimplified: [
     input('énergie . connu'),
+    input('énergie . types . chauffage électrique'),
     group(
       'EnergieBooléen.question',
       [
@@ -122,7 +123,6 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ],
       'EnergieBooléen.description',
     ),
-    input('énergie . types . chauffage électrique'),
     mosaic('énergie . emissions', [
       'énergie . emissions . électricité . consommation',
       'énergie . emissions . gaz . consommation',

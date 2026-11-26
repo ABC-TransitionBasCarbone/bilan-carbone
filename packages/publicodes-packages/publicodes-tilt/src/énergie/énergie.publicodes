@@ -6,8 +6,17 @@
       - autoconsommation électricité
 
 énergie . connu:
-  question: Connaissez-vous le mode d'énergie utilisé pour le chauffage de vos locaux ?
+  question: Connaissez-vous les types d'énergies utilisés par vos locaux ?
   description: Par défaut, si vous ne les connaissez pas, une consommation d'électricité et un chauffage au fioul seront renseignés.
+
+énergie . types . chauffage électrique: 
+  question: Le chauffage de vos locaux est-il électrique ? Cette question sert uniquement à adapter les consommations par défaut dans les mosaïques suivantes.
+  applicable si: 
+    toutes ces conditions:
+      - énergie . types . électricité présent
+      - énergie . connu = oui
+  description: Cette information sert à proposer des estimations de consommations pour l'électricité par la suite. Les estimations incluent le chauffage si celui-ci est électrique. 7
+  par défaut: non
 
 énergie . emissions si mode de chauffage inconnu:
   applicable si:
@@ -123,15 +132,6 @@
       form:
         saisie: case à cocher
       par défaut: non
-
-énergie . types . chauffage électrique: 
-  question: Le chauffage de vos locaux est-il électrique ?
-  applicable si: 
-    toutes ces conditions:
-      - énergie . types . électricité présent
-      - énergie . connu = oui
-  description: Cette information sert à proposer des estimations de consommations pour l'électricité par la suite. Les estimations incluent le chauffage si celui-ci est électrique. 7
-  par défaut: non
 
 énergie . emissions:
   ordre: 3
