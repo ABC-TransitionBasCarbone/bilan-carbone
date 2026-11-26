@@ -61,7 +61,7 @@ intrants-services . approche monétaire . tableau détaillé . spectacles-musée
   formule: montant-dépensé * FE
   form:
     à traduire: oui
-  titre: Spectacles, musées et autres services culturels
+  titre: Spectacles, musées et autres services culturels (bibliothèques, sites historiques, création artistique, ...)
   avec:
     montant-dépensé:
       question: Montant dépensé en services de spectacles, musées et autres services culturels
@@ -81,7 +81,7 @@ intrants-services . approche monétaire . tableau détaillé . assurance-reassur
   formule: montant-dépensé * FE
   form:
     à traduire: oui
-  titre: Services d'assurance
+  titre: Services d'assurance (automobile, responsabilité civile, réassurance, ...)
   avec:
     montant-dépensé:
       question: Montant dépensé en services d'assurance et réassurance
@@ -103,7 +103,7 @@ intrants-services . approche monétaire . tableau détaillé . telecom:
   titre: Services de télécommunications
   avec:
     montant-dépensé:
-      question: Montant dépensé en services de télécommunications
+      question: Montant dépensé en services de télécommunications (téléphone, internet, ...)
       par défaut: 0
       unité: k€ HT
     FE:
@@ -118,7 +118,7 @@ intrants-services . approche monétaire . tableau détaillé . sante-humaine:
   formule: montant-dépensé * FE
   form:
     à traduire: oui
-  titre: Services de santé humaine
+  titre: Services de santé humaine (hospitalier, médecine générale et spécialisée, ...)
   avec:
     montant-dépensé:
       question: Montant dépensé en services de santé humaine
@@ -140,7 +140,7 @@ intrants-services . approche monétaire . tableau détaillé . edition:
   titre: Services d'édition
   avec:
     montant-dépensé:
-      question: Montant dépensé en services d'édition
+      question: Montant dépensé en services d'édition (livres, revues, presse, ...)
       par défaut: 0
       unité: k€ HT
 
@@ -194,7 +194,7 @@ intrants-services . approche monétaire . tableau détaillé . formation:
   formule: montant-dépensé * FE
   form:
     à traduire: oui
-  titre: Services de formation
+  titre: Services de formation (éducation, formation professionnelle, ...)
   avec:
     montant-dépensé:
       question: Montant dépensé en services de formation
@@ -232,7 +232,7 @@ intrants-services . approche monétaire . tableau détaillé . juridique-comptab
   formule: montant-dépensé * FE
   form:
     à traduire: oui
-  titre: Services juridiques et comptables
+  titre: Services juridiques et comptables (avocats, notaires, conseil juridique, comptabilité, ...)
   avec:
     montant-dépensé:
       question: Montant dépensé en services juridiques, comptables et assurances
