@@ -1,10 +1,12 @@
 import { getNumericSuggestionEntries } from '@abc-transitionbascarbone/common/publicodes/form/suggestions'
 import { OnFieldChange } from '@abc-transitionbascarbone/common/publicodes/form/utils'
 import { usePublicodesUnitTranslation } from '@abc-transitionbascarbone/common/publicodes/hooks'
+import { isHighlightedUnit } from '@abc-transitionbascarbone/common/utils/unit'
 import { NumberField } from '@base-ui-components/react/number-field'
 import { InputAdornment, OutlinedInput } from '@mui/material'
 import { EvaluatedNumberInput } from '@publicodes/forms'
 import classNames from 'classnames'
+import { useHighlightedUnits } from '../HighlightedUnitsProvider'
 import { SuggestionChipOption, SuggestionChips } from '../SuggestionChips'
 import { useSimpleInputState } from './hooks/useSimpleInputState'
 import styles from './NumberWithUnitInput.module.css'
@@ -25,6 +27,7 @@ const NumberWithUnitInput = <RuleName extends string>({
   defaultAsPlaceholder = false,
 }: NumberWithUnitInputProps<RuleName>) => {
   const unit = usePublicodesUnitTranslation(formElement.unit)
+  const highlightedUnits = useHighlightedUnits()
   const { localValue, handleValueChange, handleValueCommitted, handleFocus } = useSimpleInputState<number>(
     formElement,
     onChange as OnFieldChange,
@@ -62,7 +65,18 @@ const NumberWithUnitInput = <RuleName extends string>({
             render={
               <OutlinedInput
                 placeholder={defaultAsPlaceholder ? String(formElement.defaultValue ?? '') : undefined}
-                endAdornment={unit ? <InputAdornment position="end">{unit}</InputAdornment> : undefined}
+                endAdornment={
+                  unit ? (
+                    <InputAdornment
+                      position="end"
+                      className={classNames({
+                        [styles.highlightedUnit]: isHighlightedUnit(formElement.unit, highlightedUnits),
+                      })}
+                    >
+                      {unit}
+                    </InputAdornment>
+                  ) : undefined
+                }
               />
             }
           />

@@ -1,7 +1,9 @@
+import { getHighlightedUnits } from '@/environments/core/publicodes/highlightedUnits'
 import { useBeforeUnload } from '@/hooks/useBeforeUnload'
 import { useLatestRef } from '@/hooks/utils'
 import { EnvironmentWithSimplifiedStudies } from '@/services/permissions/environment'
 import { loadSituation } from '@/services/serverFunctions/situation'
+import { HighlightedUnitsProvider } from '@abc-transitionbascarbone/common/components/publicodes/form'
 import { getUpdatedSituationWithInputValue, situationsAreEqual } from '@abc-transitionbascarbone/common/publicodes/form'
 import { aggregateSituationValues } from '@abc-transitionbascarbone/common/publicodes/utils'
 import { useToast } from '@abc-transitionbascarbone/common/ui'
@@ -43,7 +45,7 @@ export function PublicodesFormProvider({
       subPostsConfigVersion={subPostsConfigVersion}
     >
       <PublicodesAutoSaveProvider environment={environment} studyId={studyId} syncIntervalMs={syncIntervalMs}>
-        {children}
+        <HighlightedUnitsProvider units={getHighlightedUnits(environment)}>{children}</HighlightedUnitsProvider>
       </PublicodesAutoSaveProvider>
     </PublicodesSituationProvider>
   )

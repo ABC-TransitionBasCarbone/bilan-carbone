@@ -12,3 +12,9 @@
   border-color: var(--grayscale-300);
   border-radius: 0.5rem;
 }
+
+.highlightedUnit,
+.highlightedUnit p {
+  color: var(--error-100);
+  font-weight: 600;
+}

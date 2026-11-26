@@ -1,3 +1,4 @@
+export * from './HighlightedUnitsProvider'
 export * from './InputField'
 export * from './InputQuestion'
 export * from './MosaicQuestion'

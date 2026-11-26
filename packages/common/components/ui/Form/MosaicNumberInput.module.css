@@ -19,6 +19,12 @@
   white-space: nowrap;
 }
 
+.highlightedUnit,
+.highlightedUnit p {
+  color: var(--error-100);
+  font-weight: 600;
+}
+
 .title {
   font-size: 1rem;
   font-weight: 500;

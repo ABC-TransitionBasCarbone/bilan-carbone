@@ -6,8 +6,10 @@ import { getRuleNameParts, getRuleParentName } from '@abc-transitionbascarbone/c
 import { usePublicodesRuleTranslation } from '@abc-transitionbascarbone/common/publicodes/hooks'
 import MosaicBooleanInput from '@abc-transitionbascarbone/common/ui/Form/MosaicBooleanInput'
 import MosaicNumberInput from '@abc-transitionbascarbone/common/ui/Form/MosaicNumberInput'
+import { isHighlightedUnit } from '@abc-transitionbascarbone/common/utils/unit'
 import classNames from 'classnames'
 import Engine from 'publicodes'
+import { useHighlightedUnits } from './HighlightedUnitsProvider'
 import styles from './MosaicQuestion.module.css'
 import { QuestionContainer } from './QuestionContainer'
 import { SuggestionChips } from './SuggestionChips'
@@ -38,6 +40,7 @@ export const MosaicQuestion = <RuleName extends string>({
   const parentRaw = rules[parent]?.rawNode as any
   const mosaicType = parentRaw?.mosaique?.type
   const translation = usePublicodesRuleTranslation(parent)
+  const highlightedUnits = useHighlightedUnits()
   const rawSuggestions = (parentRaw?.mosaique?.suggestions ?? parentRaw?.suggestions) as SuggestionsRecord | undefined
   const suggestionEntries = getMosaicSuggestionEntries(parent, elements, rawSuggestions)
 
@@ -81,6 +84,7 @@ export const MosaicQuestion = <RuleName extends string>({
                 title={title}
                 icons={icons}
                 unit={unit}
+                highlightUnit={isHighlightedUnit(unit, highlightedUnits)}
                 description={description}
                 value={value as number | undefined}
                 placeholder={defaultAsPlaceholder ? String(el.defaultValue ?? '0') : undefined}

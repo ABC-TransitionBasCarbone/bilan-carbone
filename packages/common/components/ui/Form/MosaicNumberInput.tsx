@@ -1,4 +1,5 @@
 import { InputAdornment, OutlinedInput } from '@mui/material'
+import classNames from 'classnames'
 import type { CSSProperties } from 'react'
 import Button from '../Button/Button'
 import styles from './MosaicNumberInput.module.css'
@@ -8,6 +9,7 @@ type Props = {
   icons?: string
   description?: string
   unit?: string
+  highlightUnit?: boolean
   onChange: (value: number) => void
   value?: number
   placeholder?: string
@@ -20,6 +22,7 @@ export default function MosaicNumberInput({
   onChange,
   value,
   unit,
+  highlightUnit = false,
   placeholder = '0',
   ...props
 }: Props) {
@@ -53,7 +56,10 @@ export default function MosaicNumberInput({
               {...props}
               endAdornment={
                 unit ? (
-                  <InputAdornment position="end" className={styles.unit}>
+                  <InputAdornment
+                    position="end"
+                    className={classNames(styles.unit, { [styles.highlightedUnit]: highlightUnit })}
+                  >
                     {unit}
                   </InputAdornment>
                 ) : undefined
