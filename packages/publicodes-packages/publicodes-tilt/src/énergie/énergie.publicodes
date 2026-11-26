@@ -2,12 +2,56 @@
   formule:
     somme:
       - emissions
+      - emissions si mode de chauffage inconnu
       - autoconsommation électricité
 
+énergie . connu:
+  question: Connaissez-vous le mode d'énergie utilisé pour le chauffage de vos locaux ?
+  description: Par défaut, si vous ne les connaissez pas, une consommation d'électricité et un chauffage au fioul seront renseignés.
+
+énergie . emissions si mode de chauffage inconnu:
+  applicable si:
+    énergie . connu = non
+  formule: 
+    construction . bâtiment . surface finale * (donnée statistique élec * FE élec + donnée statistique fioul * FE fioul)
+  avec: 
+    FE élec:
+      valeur: 0.0461
+      unité: kgCO2e/kWh
+      meta:
+        nom: Electricité/2025 - mix moyen/consommation
+        id: 48788
+        source: Base Empreinte®
+    FE fioul:     
+      valeur: 3.24
+      unité: kgCO2e/litre
+      meta:
+        nom: Fioul domestique
+        id: 14087
+        source: Base Carbone®
+    donnée statistique fioul:
+      valeur: 24.88 
+      unité: litre/m².an
+      meta: 
+        nom: Consommation moyenne de fioul domestique pour des bureaux à l'année, statistiques Base Carbone® (la statistique originelle est en kWh PCI/m².an)
+    donnée statistique élec:
+      valeur: 121
+      unité: kWh/m².an
+      meta:
+        nom: Consommation moyenne d'électricité pour des bureaux à l'année, avec chauffage non électrique, statistiques Base Empreinte® (la statistique originelle est en kWh/m².an)
+
 énergie . types:
+  applicable si:
+    toutes ces conditions: 
+      - est défini: énergie . connu
+      - énergie . connu = oui
   titre: Types d'énergie
   avec:
     électricité présent:
+      applicable si:
+        toutes ces conditions: 
+          - est défini: énergie . connu
+          - énergie . connu = oui
       type: booléen
       question: Électricité
       form:
@@ -15,6 +59,10 @@
       par défaut: oui
 
     gaz présent:
+      applicable si:
+        toutes ces conditions: 
+          - est défini: énergie . connu
+          - énergie . connu = oui
       type: booléen
       question: Gaz
       form:
@@ -22,6 +70,10 @@
       par défaut: non
 
     fioul présent:
+      applicable si:
+        toutes ces conditions: 
+          - est défini: énergie . connu
+          - énergie . connu = oui
       type: booléen
       question: Fioul domestique
       form:
@@ -29,6 +81,10 @@
       par défaut: non
 
     bois présent:
+      applicable si:
+        toutes ces conditions: 
+          - est défini: énergie . connu
+          - énergie . connu = oui
       type: booléen
       question: Bois-bûches
       form:
@@ -36,6 +92,10 @@
       par défaut: non
 
     granulés présent:
+      applicable si:
+        toutes ces conditions: 
+          - est défini: énergie . connu
+          - énergie . connu = oui
       type: booléen
       question: Granulés de bois
       form:
@@ -43,6 +103,10 @@
       par défaut: non
 
     réseaux de chaleur présent:
+      applicable si:
+        toutes ces conditions: 
+          - est défini: énergie . connu
+          - énergie . connu = oui
       type: booléen
       question: Réseau de chaleur
       form:
@@ -50,6 +114,10 @@
       par défaut: non
 
     réseaux de froid présent:
+      applicable si:
+        toutes ces conditions: 
+          - est défini: énergie . connu
+          - énergie . connu = oui
       type: booléen
       question: Réseau de froid
       form:
@@ -58,13 +126,16 @@
 
 énergie . types . chauffage électrique: 
   question: Le chauffage de vos locaux est-il électrique ?
-  applicable si: énergie . types . électricité présent
-  description: Cette information sert à proposer des estimations de consommations pour l'électricité par la suite. Les estimations incluent le chauffage si celui-ci est électrique. 
+  applicable si: 
+    toutes ces conditions:
+      - énergie . types . électricité présent
+      - énergie . connu = oui
+  description: Cette information sert à proposer des estimations de consommations pour l'électricité par la suite. Les estimations incluent le chauffage si celui-ci est électrique. 7
+  par défaut: non
 
 énergie . emissions:
   ordre: 3
   icônes:
-  applicable si: énergie . types . électricité présent
   mosaique:
     type: nombre
     options:
@@ -153,7 +224,7 @@
   par défaut: construction . bâtiment . surface finale * donnée statistique
   avec: 
     donnée statistique:
-      valeur: 164
+      valeur: 19
       unité: m³/m².an
       meta: 
         nom: Consommation moyenne de gaz naturel pour des bureaux à l'année, statistiques Base Carbone® (la statistique originelle est en kWh PCI/m².an)

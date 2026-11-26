@@ -108,6 +108,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('construction . infrastructure . nombre de places'),
   ],
   EnergieSimplified: [
+    input('énergie . connu'),
     group(
       'EnergieBooléen.question',
       [
