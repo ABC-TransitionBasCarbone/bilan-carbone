@@ -169,14 +169,13 @@ intrants-biens-et-matières . ratios monétaires . tableau détaillé:
   formule:
     somme:
       - petites-fournitures
-      - meubles
+      - meubles et autres produits manufacturés
       - machines-équipements
       - textiles
       - produits-pharmaceutiques
       - produits-chimiques
       - papier-carton
       - produits-métalliques
-      - autres-produits-manufacturés
   unité: kgCO2e
 
 intrants-biens-et-matières . ratios monétaires . tableau détaillé . petites-fournitures:
@@ -198,11 +197,11 @@ intrants-biens-et-matières . ratios monétaires . tableau détaillé . petites-
         id: 20556
   unité: kgCO2e
 
-intrants-biens-et-matières . ratios monétaires . tableau détaillé . meubles:
+intrants-biens-et-matières . ratios monétaires . tableau détaillé . meubles et autres produits manufacturés:
   formule: nombre * FE
   form:
     à traduire: oui
-  titre: Meubles (Tables, chaises, ...)
+  titre: Meubles et autres produits manufacturés (bijouterie, articles de sport, intruments de musiques, jeux, parapluies, bougies, ...)
   avec:
     nombre:
       question: Montant dépensé (k€) en meubles
@@ -221,7 +220,7 @@ intrants-biens-et-matières . ratios monétaires . tableau détaillé . machines
   formule: nombre * FE
   form:
     à traduire: oui
-  titre: Machines et équipements (Chariots élévateurs, diables, ...)
+  titre: Machines et équipements (pompes, robinetterie, fours, ...)
   avec:
     nombre:
       question: Montant dépensé (k€) en machines et équipements
@@ -240,7 +239,7 @@ intrants-biens-et-matières . ratios monétaires . tableau détaillé . textiles
   formule: nombre * FE
   form:
     à traduire: oui
-  titre: Textiles (T-shirts, shorts, baskets, ...)
+  titre: Textiles (matières premières, vêtements hors sport, accessoires, ...)
   avec:
     nombre:
       question: Montant dépensé (k€) en textiles
@@ -259,7 +258,7 @@ intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits
   formule: nombre * FE
   form:
     à traduire: oui
-  titre: Produits pharmaceutiques (Médicamments, désinfectant, ...)
+  titre: Produits pharmaceutiques (Médicaments, désinfectant, ...)
   avec:
     nombre:
       question: Montant dépensé (k€) en produits pharmaceutiques
@@ -278,7 +277,7 @@ intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits
   formule: nombre * FE
   form:
     à traduire: oui
-  titre: Produits chimiques (Produits ménagers, produits phytosanitaires, ...)
+  titre: Produits chimiques (Produits ménagers, phytosanitaires, peintures, colles, ...)
   avec:
     nombre:
       question: Montant dépensé (k€) en produits chimiques
@@ -297,7 +296,7 @@ intrants-biens-et-matières . ratios monétaires . tableau détaillé . papier-c
   formule: nombre * FE
   form:
     à traduire: oui
-  titre: Papier et carton
+  titre: Papier et carton (emballages, assiettes, gobelets, papeterie, ...)
   avec:
     nombre:
       question: Montant dépensé (k€) en papier et carton
@@ -329,23 +328,4 @@ intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits
       meta:
         nom: Produits métalliques, à l'exclusion des machines et équipements - 2023
         id: 43425
-  unité: kgCO2e
-
-intrants-biens-et-matières . ratios monétaires . tableau détaillé . autres-produits-manufacturés:
-  formule: nombre * FE
-  form:
-    à traduire: oui
-  titre: Autres produits manufacturés 
-  avec:
-    nombre:
-      question: Montant dépensé (k€) en autres produits manufacturés
-      par défaut: 0
-      unité: k€ HT
-
-    FE:
-      valeur: 231
-      unité: kgCO2e/k€ HT
-      meta:
-        nom: Autres produits manufacturés
-        id: 43365
   unité: kgCO2e

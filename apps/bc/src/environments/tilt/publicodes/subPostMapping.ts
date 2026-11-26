@@ -92,9 +92,9 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
     input('construction . bâtiment . locaux'),
     input('construction . bâtiment . locaux . locaux seuls . surface'),
     input('construction . bâtiment . locaux . locaux partagés . choix'),
-    input('construction . bâtiment . locaux . locaux partagés . surface connue'),
-    input('construction . bâtiment . locaux . locaux partagés . pourcentage'),
-    input('construction . bâtiment . locaux . locaux partagés . nombre de postes'),
+    input('construction . bâtiment . locaux . locaux partagés . surface . surface connue'),
+    input('construction . bâtiment . locaux . locaux partagés . surface . pourcentage'),
+    input('construction . bâtiment . locaux . locaux partagés . surface . nombre de postes'),
     input('construction . bâtiment . locaux ponctuels existants'),
     list('construction . bâtiment . locaux ponctuels', [
       'construction . bâtiment . locaux ponctuels . nom',
@@ -353,8 +353,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
           'intrants-biens-et-matières . ratios monétaires . tableau détaillé . petites-fournitures . nombre',
         ],
         [
-          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . meubles',
-          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . meubles . nombre',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . meubles et autres produits manufacturés',
+          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . meubles et autres produits manufacturés . nombre',
         ],
         [
           'intrants-biens-et-matières . ratios monétaires . tableau détaillé . machines-équipements',
@@ -379,10 +379,6 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
         [
           'intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits-métalliques',
           'intrants-biens-et-matières . ratios monétaires . tableau détaillé . produits-métalliques . nombre',
-        ],
-        [
-          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . autres-produits-manufacturés',
-          'intrants-biens-et-matières . ratios monétaires . tableau détaillé . autres-produits-manufacturés . nombre',
         ],
       ],
       'IntrantsBiensEtMatieresTilt.description',
