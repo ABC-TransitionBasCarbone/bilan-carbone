@@ -37,7 +37,7 @@ interface NextButtonProps {
 const NextButton = ({ control, onClick, error, hasNoSites }: NextButtonProps) => {
   const tCommon = useTranslations('common')
   const sites = useWatch({ control, name: 'sites' })
-  const hasNoSelectedSites = !sites.some((site) => site.selected || (hasNoSites && site.name))
+  const hasNoSelectedSites = !sites.some((site) => site.name.trim() && (site.selected || hasNoSites))
 
   return (
     <div className="mt2">
@@ -143,31 +143,12 @@ const SelectOrganization = ({
   }
 
   const next = async () => {
-    const currentSites = form.getValues('sites').map((site) => (hasNoSites ? { ...site, selected: true } : site))
+    const currentSites = form
+      .getValues('sites')
+      .filter((site) => site.name.trim())
+      .map((site) => (hasNoSites ? { ...site, selected: true } : site))
 
-    if (hasNoSites) {
-      form.setValue('sites', currentSites)
-      await callServerFunction(
-        () =>
-          updateOrganizationCommand({
-            organizationVersionId: organizationVersionId!,
-            name: organizationVersion?.organization.name || '',
-            sites: currentSites,
-            siret: organizationVersion?.organization.siret || '',
-          }),
-        {
-          onSuccess: () => {
-            selectOrganizationVersion({
-              ...organizationVersion,
-              organization: {
-                ...organizationVersion!.organization,
-                currentSites,
-              },
-            } as OrganizationWithSites)
-          },
-        },
-      )
-    } else if (!currentSites.some((site) => site.selected)) {
+    if (!currentSites.some((site) => site.selected)) {
       setError(t('validation.sites'))
       return
     }
@@ -187,6 +168,22 @@ const SelectOrganization = ({
       setError(t('validation.etpCa'))
       return
     }
+
+    if (hasNoSites) {
+      const result = await callServerFunction(() =>
+        updateOrganizationCommand({
+          organizationVersionId: organizationVersionId!,
+          name: organizationVersion?.organization.name || '',
+          sites: currentSites,
+          siret: organizationVersion?.organization.siret || '',
+        }),
+      )
+      if (!result.success) {
+        return
+      }
+    }
+
+    form.setValue('sites', currentSites)
 
     // Check for deselected sites with emission sources when duplicating
     if (duplicateStudyId) {
