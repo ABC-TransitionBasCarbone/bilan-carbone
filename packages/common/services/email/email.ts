@@ -20,6 +20,12 @@ type TrainingSessionSummary = Pick<CourseSession, 'name' | 'environment' | 'star
   professor: Pick<User, 'email' | 'firstName' | 'lastName'> | null
 }
 
+type StudyInvitationEmail = {
+  studyName: string
+  organizationName: string
+  roleOnStudy: string
+}
+
 export type TrainingSessionUpdate = Pick<TrainingSessionSummary, 'name' | 'environment' | 'startDate'> & {
   courseOrganismId: string
   dates: { label: string; before: Date; after: Date }[]
@@ -101,6 +107,19 @@ const getEnvInfo = async (env: Environment) => {
   }
 }
 
+const getStudyInvitationEmailContent = async (
+  creatorName: string,
+  { studyName, organizationName, roleOnStudy }: StudyInvitationEmail,
+) => {
+  const translationKey = roleOnStudy ? 'userOnStudyInvitation' : 'contributorInvitation'
+  const translationValues = { creatorName, role: roleOnStudy, studyName, organizationName }
+
+  return {
+    subject: await tSubject(translationKey, { studyName }),
+    added: await tBody(`${translationKey}.added`, translationValues),
+  }
+}
+
 export const sendAddedActiveUserEmail = async (
   toEmail: string,
   creatorName: string,
@@ -108,7 +127,7 @@ export const sendAddedActiveUserEmail = async (
   newEnv: Environment,
   oldEnvs: Environment[],
   orga: string,
-  studyInvitation?: { studyName: string; organizationName: string; roleOnStudy: string },
+  studyInvitation?: StudyInvitationEmail,
 ) => {
   const envInfo = await getEnvInfo(newEnv)
   const oldEnvsText =
@@ -117,19 +136,13 @@ export const sendAddedActiveUserEmail = async (
           envNames: oldEnvs.map((env) => EnvironmentNames[env]).join(', '),
         })
       : await tBody('addedActiveUser.oldEnvsSingle', { envName: EnvironmentNames[oldEnvs[0]] })
-  const subject = studyInvitation
-    ? await tSubject(studyInvitation.roleOnStudy ? 'userOnStudyInvitation' : 'contributorInvitation', {
-        studyName: studyInvitation.studyName,
-      })
-    : await tSubject('addedActiveUser')
-  const t_added = studyInvitation
-    ? await tBody(studyInvitation.roleOnStudy ? 'userOnStudyInvitation.added' : 'contributorInvitation.added', {
-        creatorName,
-        role: studyInvitation.roleOnStudy,
-        studyName: studyInvitation.studyName,
-        organizationName: studyInvitation.organizationName,
-      })
-    : await tBody('addedActiveUser.added', { creatorName, orga, newEnv: EnvironmentNames[newEnv], envInfo })
+  const studyInvitationContent = studyInvitation
+    ? await getStudyInvitationEmailContent(creatorName, studyInvitation)
+    : undefined
+  const subject = studyInvitationContent?.subject ?? (await tSubject('addedActiveUser'))
+  const t_added =
+    studyInvitationContent?.added ??
+    (await tBody('addedActiveUser.added', { creatorName, orga, newEnv: EnvironmentNames[newEnv], envInfo }))
 
   return sendEmail(newEnv, [toEmail], subject, 'added-active-user', {
     link: `${BASE_URL}/login`,
@@ -145,6 +158,45 @@ export const sendAddedActiveUserEmail = async (
     t_loginInfo: await tBody('addedActiveUser.loginInfo'),
   })
 }
+
+export const sendActiveUserOnStudyInvitationEmail = async (
+  toEmail: string,
+  token: string,
+  studyName: string,
+  organizationName: string,
+  creatorName: string,
+  roleOnStudy: string,
+  env: Environment,
+) => {
+  const { subject, added } = await getStudyInvitationEmailContent(creatorName, {
+    studyName,
+    organizationName,
+    roleOnStudy,
+  })
+
+  return sendEmail(env, [toEmail], subject, 'active-user-study-invitation', {
+    link: getEnvResetLink('reset-password', token, env),
+    t_hello: await tBody('hello'),
+    t_added: added,
+    t_access: await tBody('activeUserOnStudyInvitation.access'),
+    t_thisLink: await tBody('thisLink'),
+  })
+}
+
+export const sendPendingStudyInvitationApprovalEmail = async (
+  toEmail: string,
+  userName: string,
+  studyName: string,
+  organizationName: string,
+  env: Environment,
+) =>
+  sendEmail(env, [toEmail], await tSubject('pendingStudyInvitationApproval'), 'pending-study-invitation', {
+    t_helloName: await tBody('helloName', { name: userName }),
+    t_content: await tBody('pendingStudyInvitationApproval.content', {
+      studyName,
+      organizationName,
+    }),
+  })
 
 export const sendActivationEmail = async (toEmail: string, token: string, fromReset: boolean, env: Environment) => {
   return sendEmail(

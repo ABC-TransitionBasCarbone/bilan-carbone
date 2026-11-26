@@ -908,12 +908,12 @@ const getOrCreateUserAndSendStudyInvite = async (
         user: { connect: { id: existingUser.id } },
         role: Role.COLLABORATOR,
         environment: organizationVersion.environment,
-        status: activeEnvs.length ? UserStatus.ACTIVE : UserStatus.VALIDATED,
+        status: UserStatus.VALIDATED,
       })) as AccountWithUser
     } else if (account.status === UserStatus.IMPORTED) {
       await updateAccount(account.id, {
         organizationVersion: { disconnect: true },
-        status: activeEnvs.length ? UserStatus.ACTIVE : UserStatus.VALIDATED,
+        status: UserStatus.VALIDATED,
         role: Role.COLLABORATOR,
       })
       account = (await getAccountByEmailAndEnvironment(email, organizationVersion.environment)) as AccountWithUser
@@ -921,8 +921,6 @@ const getOrCreateUserAndSendStudyInvite = async (
       activeEnvs = []
     } else if (account.status === UserStatus.SUSPENDED) {
       skipEmail = true
-    } else if (account.status !== UserStatus.PENDING_REQUEST && activeEnvs.length) {
-      await updateAccount(account.id, { status: UserStatus.ACTIVE })
     }
 
     if (!skipEmail) {

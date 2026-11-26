@@ -11,6 +11,7 @@ import {
   UserChecklist,
   UserStatus,
 } from '@abc-transitionbascarbone/common/db/enums'
+import type { Level } from '@abc-transitionbascarbone/common/db/enums'
 import { NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { AddMemberCommand } from '@abc-transitionbascarbone/common/services/serverFunctions/user.command'
 import { signPassword } from '@abc-transitionbascarbone/common/utils/auth'
@@ -83,6 +84,53 @@ export const getAccountByIdWithAllowedStudies = (id: string) =>
 
 export type UserWithAllowedStudies = AsyncReturnType<typeof getAccountByIdWithAllowedStudies>
 
+const getFirstActivationRole = async (
+  transaction: Prisma.TransactionClient,
+  account: { status: UserStatus; role: Role; organizationVersionId: string | null },
+  level: Level | null,
+  env: Environment,
+) => {
+  if (env !== Environment.BC && env !== Environment.TILT) {
+    return
+  }
+
+  if (account.status !== UserStatus.VALIDATED || account.role !== Role.DEFAULT) {
+    return
+  }
+
+  if (!account.organizationVersionId) {
+    return
+  }
+
+  const activeAccountsCount = await transaction.account.count({
+    where: { organizationVersionId: account.organizationVersionId, status: UserStatus.ACTIVE },
+  })
+
+  if (activeAccountsCount > 0) {
+    return
+  }
+
+  return level ? Role.ADMIN : Role.GESTIONNAIRE
+}
+
+const createActivationChecklistSteps = async (transaction: Prisma.TransactionClient, userId: string) => {
+  const accounts = await transaction.account.findMany({
+    where: { userId, status: { in: AuthorizedInOrgaUserStatus } },
+  })
+
+  await Promise.all(
+    accounts
+      .filter((account) => environmentsWithChecklist.includes(account.environment))
+      .map((account) =>
+        transaction.userCheckedStep.upsert({
+          where: { accountId_step: { accountId: account.id, step: UserChecklist.CreateAccount } },
+          update: {},
+          create: { accountId: account.id, step: UserChecklist.CreateAccount },
+        }),
+      ),
+  )
+}
+
 const updatePassword = async (
   transaction: Prisma.TransactionClient,
   email: string,
@@ -105,50 +153,83 @@ const updatePassword = async (
     throw new Error(`Account with email ${email} for environment ${env} not found or has a wrong status`)
   }
 
-  const isFirstBCOrTiltActivation =
-    (env === Environment.BC || env === Environment.TILT) &&
-    account.status === UserStatus.VALIDATED &&
-    account.role === Role.DEFAULT &&
-    !!account.organizationVersionId &&
-    (await transaction.account.count({
-      where: {
-        organizationVersionId: account.organizationVersionId,
-        status: UserStatus.ACTIVE,
-      },
-    })) === 0
+  const firstActivationRole = await getFirstActivationRole(transaction, account, user.level, env)
 
   const updatedUser = await transaction.user.update({
     where: { email },
     data: { resetToken: null, password: signedPassword },
   })
-  const accounts = await transaction.account.findMany({
-    where: {
-      userId: user.id,
-      status: { in: AuthorizedInOrgaUserStatus },
-    },
-  })
   await Promise.all([
-    ...accounts
-      .filter((account) => environmentsWithChecklist.includes(account.environment))
-      .map((account) =>
-        transaction.userCheckedStep.upsert({
-          where: { accountId_step: { accountId: account.id, step: UserChecklist.CreateAccount } },
-          update: {},
-          create: { accountId: account.id, step: UserChecklist.CreateAccount },
-        }),
-      ),
+    createActivationChecklistSteps(transaction, user.id),
     transaction.account.update({
       where: { userId_environment: { userId: user.id, environment: env } },
       data: {
         activationRequestedAt: null,
         status: UserStatus.ACTIVE,
-        ...(isFirstBCOrTiltActivation && { role: user.level ? Role.ADMIN : Role.GESTIONNAIRE }),
+        ...(firstActivationRole && { role: firstActivationRole }),
       },
     }),
   ])
 
   return updatedUser
 }
+
+export const activateStudyInvitationAccount = async (
+  email: string,
+  accountId: string,
+  environment: Environment,
+  resetTokenHash: string,
+) =>
+  prismaClient.$transaction(
+    async (transaction) => {
+      const user = await transaction.user.findUnique({
+        where: { email },
+        select: { id: true, level: true, resetToken: true },
+      })
+
+      if (!user || user.resetToken !== resetTokenHash) {
+        console.error('activateStudyInvitationAccount: invitation token mismatch', {
+          accountId,
+          environment,
+          userId: user?.id,
+        })
+        throw new Error(NOT_AUTHORIZED)
+      }
+
+      const account = await transaction.account.findFirst({
+        where: { id: accountId, userId: user.id, environment },
+        select: { id: true, organizationVersionId: true, role: true, status: true },
+      })
+
+      if (!account || account.status !== UserStatus.VALIDATED) {
+        console.error('activateStudyInvitationAccount: account is not awaiting invitation activation', {
+          accountId,
+          environment,
+          userId: user.id,
+        })
+        throw new Error(NOT_AUTHORIZED)
+      }
+
+      const firstActivationRole = await getFirstActivationRole(transaction, account, user.level, environment)
+
+      await Promise.all([
+        createActivationChecklistSteps(transaction, user.id),
+        transaction.account.update({
+          where: { id: account.id },
+          data: {
+            activationRequestedAt: null,
+            status: UserStatus.ACTIVE,
+            ...(firstActivationRole && { role: firstActivationRole }),
+          },
+        }),
+        transaction.user.update({
+          where: { id: user.id },
+          data: { resetToken: null },
+        }),
+      ])
+    },
+    { isolationLevel: 'Serializable' },
+  )
 
 export const updateUserPasswordForEmail = async (
   email: string,
