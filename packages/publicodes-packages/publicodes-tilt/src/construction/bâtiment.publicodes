@@ -50,14 +50,33 @@ construction . bâtiment . locaux:
     pas de locaux:
       titre: Mes activités associatives ne nécessitent pas de locaux (télétravail à 100%, extérieur, ...)
 
-construction . bâtiment . locaux . locaux seuls . surface:
+construction . bâtiment . locaux . locaux seuls . age:
   applicable si: locaux = 'locaux seuls'
+  question: Vos locaux ont-ils été construits il y a plus de 50 ans ?
+  une possibilité:
+    - ancien
+    - neuf
+    - ne sait pas
+  avec:
+    ancien:
+      titre: Oui, ils ont plus de 50 ans
+    neuf:
+      titre: Non, ils ont moins de 50 ans
+    ne sait pas:
+      titre: Je ne sais pas
+  description: Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), ils sont déjà considérés comme complètement amortis, et ne sont associés à aucune émission. 
+
+construction . bâtiment . locaux . locaux seuls . surface:
+  applicable si: 
+    une de ces conditions:
+      - age = 'neuf'
+      - age = 'ne sait pas'
   question: Quelle est la surface de ces locaux ? 
   unité: m²
   par défaut: 0
   form:
     à traduire: oui 
-  description: Vous devez renseigner la surface totale de vos locaux (bâtiments uniquement). Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. <br></br><br></br>La donnée renseignée ici sert également à calculer des consommations énergétiques par défaut, il est donc normal que des émissions apparaissent dans le poste Énergie. Vous pourrez évidemment modifier ces valeurs par défaut par la suite.
+  description: Vous devez renseigner la surface totale de vos locaux (bâtiments uniquement). Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. <br></br><br></br>La donnée renseignée ici sert également à calculer des consommations énergétiques par défaut, il est donc normal que des émissions apparaissent dans le poste Énergie. Vous pourrez évidemment modifier ces valeurs par défaut par la suite.
 
 construction . bâtiment . locaux . locaux partagés . surface:
   formule: surface connue * pourcentage + nombre de postes * 15

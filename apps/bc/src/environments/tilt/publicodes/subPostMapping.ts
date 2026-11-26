@@ -90,6 +90,7 @@ const list = (targetRule: TiltRuleName, rules: TiltRuleName[]): FormLayout<TiltR
 export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRuleName>[]>> = {
   Batiments: [
     input('construction . bâtiment . locaux'),
+    input('construction . bâtiment . locaux . locaux seuls . age'),
     input('construction . bâtiment . locaux . locaux seuls . surface'),
     input('construction . bâtiment . locaux . locaux partagés . choix'),
     input('construction . bâtiment . locaux . locaux partagés . surface . surface connue'),
