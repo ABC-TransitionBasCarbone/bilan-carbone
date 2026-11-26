@@ -91,8 +91,10 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
   Batiments: [
     input('construction . bâtiment . locaux'),
     input('construction . bâtiment . locaux . locaux seuls . surface'),
-    input('construction . bâtiment . locaux . locaux partagés . surface'),
+    input('construction . bâtiment . locaux . locaux partagés . choix'),
+    input('construction . bâtiment . locaux . locaux partagés . surface connue'),
     input('construction . bâtiment . locaux . locaux partagés . pourcentage'),
+    input('construction . bâtiment . locaux . locaux partagés . nombre de postes'),
     input('construction . bâtiment . locaux ponctuels existants'),
     list('construction . bâtiment . locaux ponctuels', [
       'construction . bâtiment . locaux ponctuels . nom',
@@ -411,7 +413,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ['DeplacementsDesBeneficiaires.ModeTransport', 'DeplacementsDesBeneficiaires.TauxTransport'],
       [
         ['déplacements . bénéficiaires . part voiture', 'déplacements . bénéficiaires . part voiture'],
-        ['déplacements . bénéficiaires . part train', 'déplacements . bénéficiaires . part train'],
+        ['déplacements . bénéficiaires . part TER', 'déplacements . bénéficiaires . part TER'],
+        ['déplacements . bénéficiaires . part TGV', 'déplacements . bénéficiaires . part TGV'],
         ['déplacements . bénéficiaires . part bus', 'déplacements . bénéficiaires . part bus'],
         ['déplacements . bénéficiaires . part deux roues', 'déplacements . bénéficiaires . part deux roues'],
         [
@@ -427,7 +430,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ['DeplacementsDesBeneficiaires.ModeTransport2', 'DeplacementsDesBeneficiaires.DistanceMoyenne'],
       [
         ['déplacements . bénéficiaires . voiture', 'déplacements . bénéficiaires . voiture'],
-        ['déplacements . bénéficiaires . train', 'déplacements . bénéficiaires . train'],
+        ['déplacements . bénéficiaires . TER', 'déplacements . bénéficiaires . TER'],
+        ['déplacements . bénéficiaires . TGV', 'déplacements . bénéficiaires . TGV'],       
         ['déplacements . bénéficiaires . bus', 'déplacements . bénéficiaires . bus'],
         ['déplacements . bénéficiaires . deux roues', 'déplacements . bénéficiaires . deux roues'],
         ['déplacements . bénéficiaires . transport en commun', 'déplacements . bénéficiaires . transport en commun'],
@@ -447,7 +451,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ['DomicileTravailSalaries.ModeTransport', 'DomicileTravailSalaries.TauxTransport'],
       [
         ['déplacements . DT-salariés . sans . part voiture', 'déplacements . DT-salariés . sans . part voiture'],
-        ['déplacements . DT-salariés . sans . part train', 'déplacements . DT-salariés . sans . part train'],
+        ['déplacements . DT-salariés . sans . part TER', 'déplacements . DT-salariés . sans . part TER'],
+        ['déplacements . DT-salariés . sans . part TGV', 'déplacements . DT-salariés . sans . part TGV'],
         ['déplacements . DT-salariés . sans . part bus', 'déplacements . DT-salariés . sans . part bus'],
         [
           'déplacements . DT-salariés . sans . part transport en commun',
@@ -461,7 +466,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ['DomicileTravailSalaries.ModeTransport2', 'DomicileTravailSalaries.DistanceMoyenne'],
       [
         ['déplacements . DT-salariés . sans . voiture', 'déplacements . DT-salariés . sans . voiture . distance'],
-        ['déplacements . DT-salariés . sans . train', 'déplacements . DT-salariés . sans . train . distance'],
+        ['déplacements . DT-salariés . sans . TER', 'déplacements . DT-salariés . sans . TER . distance'],
+        ['déplacements . DT-salariés . sans . TGV', 'déplacements . DT-salariés . sans . TGV . distance'],
         ['déplacements . DT-salariés . sans . bus', 'déplacements . DT-salariés . sans . bus . distance'],
         [
           'déplacements . DT-salariés . sans . transports en commun',
@@ -480,7 +486,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ['DeplacementsDomicileTravailBenevoles.ModeTransport', 'DeplacementsDomicileTravailBenevoles.TauxTransport'],
       [
         ['déplacements . DT-bénévoles . sans . part voiture', 'déplacements . DT-bénévoles . sans . part voiture'],
-        ['déplacements . DT-bénévoles . sans . part train', 'déplacements . DT-bénévoles . sans . part train'],
+        ['déplacements . DT-bénévoles . sans . part TER', 'déplacements . DT-bénévoles . sans . part TER'],
+        ['déplacements . DT-bénévoles . sans . part TGV', 'déplacements . DT-bénévoles . sans . part TGV'],
         ['déplacements . DT-bénévoles . sans . part bus', 'déplacements . DT-bénévoles . sans . part bus'],
         [
           'déplacements . DT-bénévoles . sans . part transport en commun',
@@ -497,7 +504,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ['DeplacementsDomicileTravailBenevoles.ModeTransport2', 'DeplacementsDomicileTravailBenevoles.DistanceMoyenne'],
       [
         ['déplacements . DT-bénévoles . sans . voiture', 'déplacements . DT-bénévoles . sans . voiture . distance'],
-        ['déplacements . DT-bénévoles . sans . train', 'déplacements . DT-bénévoles . sans . train . distance'],
+        ['déplacements . DT-bénévoles . sans . TER', 'déplacements . DT-bénévoles . sans . TER . distance'],
+        ['déplacements . DT-bénévoles . sans . TGV', 'déplacements . DT-bénévoles . sans . TGV . distance'],
         ['déplacements . DT-bénévoles . sans . bus', 'déplacements . DT-bénévoles . sans . bus . distance'],
         [
           'déplacements . DT-bénévoles . sans . transports en commun',
@@ -525,7 +533,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ],
       [
         ['déplacements . DM-salariés . sans . voiture', 'déplacements . DM-salariés . sans . voiture . distance'],
-        ['déplacements . DM-salariés . sans . train', 'déplacements . DM-salariés . sans . train . distance'],
+        ['déplacements . DM-salariés . sans . TER', 'déplacements . DM-salariés . sans . TER . distance'],
+        ['déplacements . DM-salariés . sans . TGV', 'déplacements . DM-salariés . sans . TGV . distance'],
         ['déplacements . DM-salariés . sans . bus', 'déplacements . DM-salariés . sans . bus . distance'],
         [
           'déplacements . DM-salariés . sans . transports en commun',
@@ -533,16 +542,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
         ],
         ['déplacements . DM-salariés . sans . deux roues', 'déplacements . DM-salariés . sans . deux roues . distance'],
         [
-          'déplacements . DM-salariés . sans . avion . court courrier',
-          'déplacements . DM-salariés . sans . avion . court courrier . distance',
-        ],
-        [
-          'déplacements . DM-salariés . sans . avion . moyen courrier',
-          'déplacements . DM-salariés . sans . avion . moyen courrier . distance',
-        ],
-        [
-          'déplacements . DM-salariés . sans . avion . long courrier',
-          'déplacements . DM-salariés . sans . avion . long courrier . distance',
+          'déplacements . DM-salariés . sans . avion',
+          'déplacements . DM-salariés . sans . avion . distance',
         ],
       ],
       'DeplacementsDansLeCadreDUneMissionAssociativeSalaries.description',
@@ -550,8 +551,8 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
   ],
   DeplacementsFabricationDesVehicules: [input('déplacements . fabrication . voitures . nombre')],
   TeletravailSalariesBenevoles: [
-    input('travail . bénévoles . h'),
     input('télétravail . salariés . j'),
+    input('travail . bénévoles . h'),
     input('télétravail . bénévoles . h'),
   ],
   Evenement: [
@@ -569,7 +570,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
       ['Evenement.ModeTransport', 'Evenement.DistanceParcourue'],
       [
         ['événement . déplacements . voiture', 'événement . déplacements . voiture'],
-        ['événement . déplacements . train', 'événement . déplacements . train'],
+        ['événement . déplacements . TER', 'événement . déplacements . TER'],
         ['événement . déplacements . TGV', 'événement . déplacements . TGV'],
         ['événement . déplacements . bus', 'événement . déplacements . bus'],
         ['événement . déplacements . deux roues', 'événement . déplacements . deux roues'],

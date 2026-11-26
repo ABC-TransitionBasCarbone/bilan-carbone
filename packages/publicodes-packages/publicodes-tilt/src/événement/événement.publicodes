@@ -189,7 +189,8 @@
       ## on néglige l'impact des modes actifs (vélo, marche, trottinette...)
       - deux roues * FE deux roues
       - transport en commun * commun . FE . moyen de transport . transports en commun moyenne France
-      - train * FE train
+      - TER * FE TER
+      - TGV * FE TGV
       - bus * commun . FE . moyen de transport . bus
       - TGV * commun . FE . moyen de transport . TGV
       - avion * commun . FE . moyen de transport . avion ## On utilise le FE moyen courrier avec traînées
@@ -200,12 +201,19 @@
         meta:
           id: 43775
           nom: Cyclomoteur/Mixte/2023
-      FE train:
+      FE TER:
         valeur: 0.0277
         unité: kgCO2e/km
         meta:
           id: 43255
           nom: TER/2022/Traction moyenne
+      FE TGV:
+        valeur: 0.00293
+        unité: kgCO2e/km
+        meta:
+        id: 43255
+        nom: TER/2022/Traction moyenne
+        note: On sépare les déplacements en TER et TGV.
   unité: kgCO2e
   par défaut: 0
 
@@ -217,8 +225,8 @@
   unité: km
   par défaut: 0
 
-événement . déplacements . train:
-  titre: Train (TER)
+événement . déplacements . TER:
+  titre: TER
   form:
     à traduire: oui
   question: Combien de km (AR) ont étés parcourus en TER pour accéder à l'événement ?
