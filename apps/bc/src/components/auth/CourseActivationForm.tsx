@@ -7,7 +7,7 @@ import Form from '@abc-transitionbascarbone/common/components/base/Form'
 import LoadingButton from '@abc-transitionbascarbone/common/components/base/LoadingButton'
 import { FormTextField } from '@abc-transitionbascarbone/common/components/form/TextField'
 import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
-import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { Environment, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { customRich } from '@abc-transitionbascarbone/common/utils/customRich'
 import { getEnvVarClient } from '@abc-transitionbascarbone/common/utils/environmentClient'
 import { CourseEnvironment, getEnvRoute } from '@abc-transitionbascarbone/common/utils/environments'
@@ -70,6 +70,15 @@ const CourseActivationForm = ({ environment = Environment.COURSE_BC }: Props) =>
     setSubmitting(false)
 
     if (courseValidation.success) {
+      const activeInAnotherEnvironment = courseValidation.data.user.accounts.some(
+        (account) => account.status === UserStatus.ACTIVE && account.environment !== environment,
+      )
+      if (activeInAnotherEnvironment) {
+        setSubmitting(true)
+        await activateCourseAccount(values.email, values.sessionCode)
+        return
+      }
+
       setActivatedCredentials({
         email: values.email,
         sessionCode: values.sessionCode,
@@ -79,25 +88,26 @@ const CourseActivationForm = ({ environment = Environment.COURSE_BC }: Props) =>
     }
   }
 
+  const activateCourseAccount = async (email: string, sessionCode: string, password?: string) => {
+    await callServerFunction(() => activateEmailForCourse(email, sessionCode, password, environment), {
+      getSuccessMessage: () => tLogin('validated'),
+      getErrorMessage: () => tLogin('resetError'),
+      onSuccess: () => {
+        setSubmitting(false)
+        router.push(getEnvRoute('login', environment))
+      },
+      onError: () => {
+        setSubmitting(false)
+      },
+    })
+  }
+
   const initPassword = async (password: string) => {
     if (!activatedCredentials) {
       return
     }
 
-    await callServerFunction(
-      () => activateEmailForCourse(activatedCredentials.email, activatedCredentials.sessionCode, password, environment),
-      {
-        getSuccessMessage: () => tLogin('validated'),
-        getErrorMessage: () => tLogin('resetError'),
-        onSuccess: () => {
-          setSubmitting(false)
-          router.push(getEnvRoute('login', environment))
-        },
-        onError: () => {
-          setSubmitting(false)
-        },
-      },
-    )
+    await activateCourseAccount(activatedCredentials.email, activatedCredentials.sessionCode, password)
   }
 
   if (activatedCredentials) {

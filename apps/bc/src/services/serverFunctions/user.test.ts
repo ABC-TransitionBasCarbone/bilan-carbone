@@ -37,10 +37,14 @@ import {
 import { mockedOrganizationVersionId } from '@/tests/utils/models/organization'
 import { mockedAccountId } from '@/tests/utils/models/user'
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
+import { updateUserResetTokenForEmail } from '@abc-transitionbascarbone/common/db/db'
 import {
   sendAccountActivatedEmail,
   sendActivationEmail,
   sendActivationRequest,
+  sendActiveUserOnStudyInvitationEmail,
+  sendAddedActiveUserEmail,
+  sendPendingStudyInvitationApprovalEmail,
 } from '@abc-transitionbascarbone/common/services/email/email'
 import { EMAIL_SENT, NOT_AUTHORIZED } from '@abc-transitionbascarbone/common/services/permissions/check'
 import { mockedOrganizationId } from '@abc-transitionbascarbone/common/services/tests/models/organization'
@@ -49,7 +53,13 @@ import { DAY, TIME_IN_MS } from '@abc-transitionbascarbone/common/utils'
 import jwt from 'jsonwebtoken'
 import { getCompanyName, getValidAssociationNameBySiret } from '../associationApi'
 import { getDeactivableFeatureRestrictions } from './deactivableFeatures'
-import { activateEmail, activateEmailForCourse, checkCourseActivation, signUpWithSiretOrCNC } from './user'
+import {
+  activateEmail,
+  activateEmailForCourse,
+  checkCourseActivation,
+  sendInvitation,
+  signUpWithSiretOrCNC,
+} from './user'
 
 // TODO: ESM module issue with Jest. Remove these mocks when moving to Vitest
 jest.mock('../file', () => ({ download: jest.fn() }))
@@ -69,7 +79,13 @@ jest.mock('@/db/cnc')
 jest.mock('@/db/deactivableFeatures')
 jest.mock('@/db/client', () => ({
   prismaClient: {
-    $transaction: jest.fn((callback) => callback({})),
+    $transaction: jest.fn((callback) =>
+      callback({
+        account: {
+          findUnique: jest.fn().mockResolvedValue({ organizationVersionId: 'mocked-organization-version-id' }),
+        },
+      }),
+    ),
     courseSession: { findFirst: jest.fn() },
   },
 }))
@@ -81,8 +97,11 @@ jest.mock('@/services/associationApi')
 jest.mock('@abc-transitionbascarbone/common/db/db')
 jest.mock('@abc-transitionbascarbone/common/services/email/email', () => ({
   sendAccountActivatedEmail: jest.fn(),
+  sendActiveUserOnStudyInvitationEmail: jest.fn(),
+  sendAddedActiveUserEmail: jest.fn(),
   sendActivationEmail: jest.fn(),
   sendActivationRequest: jest.fn(),
+  sendPendingStudyInvitationApprovalEmail: jest.fn(),
 }))
 jest.mock('./deactivableFeatures')
 
@@ -116,8 +135,11 @@ const mockGetRawOrganizationBySiret = getRawOrganizationBySiret as jest.Mock
 const mockGetValidAssociationNameBySiret = getValidAssociationNameBySiret as jest.Mock
 const mockGetCompanyName = getCompanyName as jest.Mock
 const mockSendActivationEmail = sendActivationEmail as jest.Mock
+const mockSendActiveUserOnStudyInvitationEmail = sendActiveUserOnStudyInvitationEmail as jest.Mock
 const mockSendActivationRequest = sendActivationRequest as jest.Mock
 const mockSendAccountActivatedEmail = sendAccountActivatedEmail as jest.Mock
+const mockSendAddedActiveUserEmail = sendAddedActiveUserEmail as jest.Mock
+const mockSendPendingStudyInvitationApprovalEmail = sendPendingStudyInvitationApprovalEmail as jest.Mock
 const mockGetOrganizationVersionForRightsCheck = getOrganizationVersionForRightsCheck as jest.Mock
 const mockOrganizationVersionActiveAccountsCount = organizationVersionActiveAccountsCount as jest.Mock
 const mockActivateEmail = activateEmail as jest.Mock
@@ -175,6 +197,82 @@ describe('signUpWithSiretOrCNC', () => {
     mockGetAccountsFromOrganizationForActivation.mockResolvedValue([])
     mockRemoveOtherAccountActivation.mockResolvedValue(true)
     mockActivateEmail.mockResolvedValue({ success: true, data: EMAIL_SENT })
+  })
+
+  describe('sendInvitation', () => {
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    it('sends an activation link to an active user invited to a new environment', async () => {
+      process.env.NEXTAUTH_SECRET = 'test-secret'
+      const existingAccount = {
+        id: 'target-account-id',
+        status: UserStatus.VALIDATED,
+        user: { email: testEmail, firstName: 'Contributor' },
+      } as NonNullable<Parameters<typeof sendInvitation>[6]>
+      const creator = { firstName: 'Study', lastName: 'Owner' } as Parameters<typeof sendInvitation>[3]
+
+      const result = await sendInvitation(
+        testEmail,
+        { name: 'Study name' } as Parameters<typeof sendInvitation>[1],
+        { name: 'Organization' } as Parameters<typeof sendInvitation>[2],
+        creator,
+        '',
+        Environment.CUT,
+        existingAccount,
+        [Environment.BC],
+      )
+
+      expect(result.success).toBe(true)
+      const activationToken = mockSendActiveUserOnStudyInvitationEmail.mock.calls[0][1]
+      expect(mockSendActiveUserOnStudyInvitationEmail).toHaveBeenCalledWith(
+        testEmail,
+        expect.any(String),
+        'Study name',
+        'Organization',
+        'Study Owner',
+        '',
+        Environment.CUT,
+      )
+      expect(jwt.verify(activationToken, process.env.NEXTAUTH_SECRET as string)).toMatchObject({
+        accountId: 'target-account-id',
+        email: testEmail,
+        environment: Environment.CUT,
+        purpose: 'study-invitation-activation',
+      })
+      expect(updateUserResetTokenForEmail).toHaveBeenCalledWith(testEmail, expect.any(String))
+      expect(mockSendAddedActiveUserEmail).not.toHaveBeenCalled()
+    })
+
+    it('notifies a pending user that study access is waiting for approval', async () => {
+      const existingAccount = {
+        status: UserStatus.PENDING_REQUEST,
+        user: { firstName: 'Contributor' },
+      } as NonNullable<Parameters<typeof sendInvitation>[6]>
+      const creator = { firstName: 'Study', lastName: 'Owner' } as Parameters<typeof sendInvitation>[3]
+
+      const result = await sendInvitation(
+        testEmail,
+        { name: 'Study name' } as Parameters<typeof sendInvitation>[1],
+        { name: 'Organization' } as Parameters<typeof sendInvitation>[2],
+        creator,
+        '',
+        Environment.CUT,
+        existingAccount,
+        [Environment.BC],
+      )
+
+      expect(result.success).toBe(true)
+      expect(mockSendPendingStudyInvitationApprovalEmail).toHaveBeenCalledWith(
+        testEmail,
+        'Contributor',
+        'Study name',
+        'Organization',
+        Environment.CUT,
+      )
+      expect(mockSendActiveUserOnStudyInvitationEmail).not.toHaveBeenCalled()
+    })
   })
 
   describe('Feature deactivation checks', () => {
@@ -361,6 +459,44 @@ describe('signUpWithSiretOrCNC', () => {
       expect(mockSendAccountActivatedEmail).toHaveBeenCalledWith(testEmail, Environment.COURSE_BC)
     })
 
+    it('activates a course account for an existing user without changing their password', async () => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [
+          { id: mockedAccountId, environment: Environment.COURSE_BC, status: UserStatus.IMPORTED },
+          { id: 'bc-account-id', environment: Environment.BC, status: UserStatus.ACTIVE },
+        ],
+      })
+
+      const result = await actualActivateEmailForCourse(testEmail, '123456', undefined, Environment.COURSE_BC)
+
+      expect(result.success).toBe(true)
+      expect(mockValidateUser).toHaveBeenCalledWith(mockedAccountId, expect.anything())
+      expect(mockUpdateUserPasswordForEmail).not.toHaveBeenCalled()
+      expect(mockUpdateAccount).toHaveBeenCalledWith(
+        mockedAccountId,
+        { role: Role.ADMIN, status: UserStatus.ACTIVE },
+        {},
+        expect.anything(),
+      )
+      expect(mockSendAccountActivatedEmail).toHaveBeenCalledWith(testEmail, Environment.COURSE_BC, {
+        environments: [Environment.BC],
+        userName: 'Test User',
+      })
+    })
+
+    it('requires a password when the user has no active account in another environment', async () => {
+      const result = await actualActivateEmailForCourse(testEmail, '123456', undefined, Environment.COURSE_BC)
+
+      expect(result).toEqual({ success: false, errorMessage: 'Password invalid' })
+      expect(mockValidateUser).not.toHaveBeenCalled()
+      expect(mockUpdateUserPasswordForEmail).not.toHaveBeenCalled()
+      expect(mockSendAccountActivatedEmail).not.toHaveBeenCalled()
+    })
+
     it('succeeds and logs the error when the confirmation email cannot be sent', async () => {
       const error = new Error('Email delivery failed')
       mockSendAccountActivatedEmail.mockRejectedValueOnce(error)
@@ -420,6 +556,46 @@ describe('signUpWithSiretOrCNC', () => {
 
     afterEach(() => {
       jest.useRealTimers()
+    })
+
+    it('rejects activation if the account is detached before the transaction', async () => {
+      mockGetUserByEmail.mockResolvedValue({
+        id: mockedUserId,
+        email: testEmail,
+        firstName: 'Test',
+        lastName: 'User',
+        accounts: [{ id: mockedAccountId, environment: Environment.CUT, status: UserStatus.IMPORTED }],
+      })
+      mockGetAccountById.mockResolvedValue({
+        id: mockedAccountId,
+        organizationVersionId: mockedOrganizationVersionId,
+        status: UserStatus.IMPORTED,
+        role: Role.COLLABORATOR,
+        user: { id: mockedUserId, email: testEmail, firstName: 'Test', lastName: 'User' },
+      })
+      mockGetOrganizationVersionForRightsCheck.mockResolvedValue({
+        id: mockedOrganizationVersionId,
+        activatedLicence: [1],
+      })
+      mockOrganizationVersionActiveAccountsCount.mockResolvedValue(0)
+      const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
+      const transactionAccountFindUnique = jest.fn().mockResolvedValue({ organizationVersionId: null })
+      const mockTransaction = prismaClient.$transaction as jest.Mock
+      mockTransaction.mockImplementationOnce((callback) =>
+        callback({ account: { findUnique: transactionAccountFindUnique } }),
+      )
+
+      const result = await actualActivateEmail(testEmail, Environment.CUT)
+
+      expect(result).toEqual({ success: false, errorMessage: NOT_AUTHORIZED })
+      expect(mockValidateUser).not.toHaveBeenCalled()
+      expect(mockUpdateAccount).not.toHaveBeenCalled()
+      expect(consoleError).toHaveBeenCalledWith('activateEmail: account has no organization version in transaction', {
+        accountId: mockedAccountId,
+        environment: Environment.CUT,
+        userId: mockedUserId,
+      })
+      consoleError.mockRestore()
     })
 
     it.each([
@@ -559,9 +735,12 @@ describe('signUpWithSiretOrCNC', () => {
       })
       mockOrganizationVersionActiveAccountsCount.mockResolvedValue(1)
       mockGetAccountFromUserOrganization.mockResolvedValue([
-        { role: Role.GESTIONNAIRE, status: UserStatus.ACTIVE, user: { email: 'manager@example.com' } },
+        {
+          role: Role.GESTIONNAIRE,
+          status: UserStatus.ACTIVE,
+          user: { email: 'manager@example.com' },
+        },
       ])
-
       const result = await actualActivateEmail(testEmail, Environment.BC)
 
       expect(result.success).toBe(true)
@@ -831,6 +1010,13 @@ describe('signUpWithSiretOrCNC', () => {
       })
       mockOrganizationVersionActiveAccountsCount.mockResolvedValue(true)
       mockGetAccountFromUserOrganization.mockResolvedValue([
+        {
+          role: Role.ADMIN,
+          status: UserStatus.ACTIVE,
+          user: { email: 'admin@example.com' },
+        },
+      ])
+      mockGetAccountsFromOrganization.mockResolvedValue([
         {
           role: Role.ADMIN,
           status: UserStatus.ACTIVE,

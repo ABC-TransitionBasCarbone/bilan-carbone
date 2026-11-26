@@ -206,6 +206,8 @@
     "welcome": "Bienvenue",
     "form": {
       "activate": "Activer mon compte",
+      "activateStudyInvitation": "Activer mon accès à l'étude",
+      "studyInvitationActivation": "Confirmez l'activation de votre accès à l'étude. Votre mot de passe habituel sera conservé.",
       "firstConnection": "Première connexion ?",
       "alreadyRegistered": "Déjà un compte ?",
       "resetTitle": "Vous avez demandé de créer ou réinitialiser votre mot de passe. Rentrez les informations demandées ci-dessous pour confirmer votre création de compte ou réinitialisation de mot de passe.",
@@ -259,6 +261,7 @@
       "addedActiveUser": "Vous avez été invité sur un nouvel environnement du BC+",
       "activation": "Vous avez activé votre compte sur le BC+",
       "activationRequest": "Demande d'accès à votre organisation BC+",
+      "pendingStudyInvitationApproval": "Votre accès à l'étude est en attente de validation",
       "userOnStudyInvitation": "Ajout sur l'étude {studyName}",
       "contributorInvitation": "Demande de contribution sur l'étude {studyName}",
       "addedUsersByFile": "Autorisation pour l'ajout d'utilisateurs",
@@ -323,6 +326,12 @@
       "userOnStudyInvitation": {
         "added": "Vous avez été ajouté par {creatorName} en tant que {role} sur l'étude {studyName} pour l'organisation {organizationName}.",
         "access": "Pour avoir accès à l'étude, vous pouvez vous connecter sur le BC+ comme habituellement sur"
+      },
+      "activeUserOnStudyInvitation": {
+        "access": "Pour accepter cette invitation et activer votre accès à l'étude, cliquez sur"
+      },
+      "pendingStudyInvitationApproval": {
+        "content": "Votre invitation à l'étude {studyName} pour l'organisation {organizationName} ne peut pas encore être utilisée, car l'accès à cet environnement est en attente de validation de votre organisation. Vous recevrez un message lorsque cet accès sera disponible. Votre mot de passe habituel reste inchangé."
       },
       "campaignCreatedByCollaborator": {
         "intro": "{creatorName} a lancé une nouvelle campagne sur Mon Impact Pro pour l'organisation {organizationName} :",

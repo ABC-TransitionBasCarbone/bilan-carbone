@@ -1,7 +1,7 @@
 import type { Prisma } from '@abc-transitionbascarbone/common/db'
 import { Environment, Level, Role, UserChecklist, UserStatus } from '@abc-transitionbascarbone/common/db/enums'
 import { prismaClient } from './client'
-import { createUsersWithAccount, updateUserPasswordForEmail } from './user'
+import { activateStudyInvitationAccount, createUsersWithAccount, updateUserPasswordForEmail } from './user'
 
 let mockBlockedEnvironments: Environment[] = []
 
@@ -46,6 +46,7 @@ describe('updateUserPasswordForEmail', () => {
       role: Role.DEFAULT,
       organizationVersionId: 'organization-version-id',
     })
+
     mockTransaction.account.findMany.mockResolvedValue([])
     mockTransaction.account.count.mockResolvedValue(0)
   })
@@ -185,6 +186,64 @@ describe('updateUserPasswordForEmail', () => {
     await expect(updateUserPasswordForEmail('user@example.com', 'password', Environment.TILT)).rejects.toThrow(
       'Activation failed',
     )
+  })
+})
+
+describe('activateStudyInvitationAccount', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    mockTransaction.account.update.mockReset()
+    mockTransaction.user.findUnique.mockResolvedValue({
+      id: 'user-id',
+      level: null,
+      resetToken: 'stored-token-hash',
+    })
+    mockTransaction.account.findFirst.mockResolvedValue({
+      id: 'account-id',
+      status: UserStatus.VALIDATED,
+      role: Role.DEFAULT,
+      organizationVersionId: 'organization-version-id',
+    })
+    mockTransaction.account.findMany.mockResolvedValue([{ id: 'bc-account-id', environment: Environment.BC }])
+    mockTransaction.account.count.mockResolvedValue(0)
+  })
+
+  it('activates the validated account, clears its token, and promotes the first BC member', async () => {
+    await activateStudyInvitationAccount('user@example.com', 'account-id', Environment.BC, 'stored-token-hash')
+
+    expect(mockTransaction.account.update).toHaveBeenCalledWith({
+      where: { id: 'account-id' },
+      data: {
+        activationRequestedAt: null,
+        status: UserStatus.ACTIVE,
+        role: Role.GESTIONNAIRE,
+      },
+    })
+    expect(mockTransaction.user.update).toHaveBeenCalledWith({
+      where: { id: 'user-id' },
+      data: { resetToken: null },
+    })
+    expect(mockTransaction.userCheckedStep.upsert).toHaveBeenCalledWith({
+      where: { accountId_step: { accountId: 'bc-account-id', step: UserChecklist.CreateAccount } },
+      update: {},
+      create: { accountId: 'bc-account-id', step: UserChecklist.CreateAccount },
+    })
+  })
+
+  it('does not activate an account when the invitation token no longer matches', async () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
+
+    await expect(
+      activateStudyInvitationAccount('user@example.com', 'account-id', Environment.BC, 'stale-token-hash'),
+    ).rejects.toThrow()
+
+    expect(mockTransaction.account.update).not.toHaveBeenCalled()
+    expect(consoleError).toHaveBeenCalledWith('activateStudyInvitationAccount: invitation token mismatch', {
+      accountId: 'account-id',
+      environment: Environment.BC,
+      userId: 'user-id',
+    })
+    consoleError.mockRestore()
   })
 })
 

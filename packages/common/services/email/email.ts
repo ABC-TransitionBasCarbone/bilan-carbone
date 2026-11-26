@@ -1,11 +1,11 @@
 import type { CourseSession, User } from '@abc-transitionbascarbone/common/db'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
+import { formatDateFr } from '@abc-transitionbascarbone/common/utils'
 import { getEnvVar } from '@abc-transitionbascarbone/common/utils/environment'
 import { EnvironmentNames } from '@abc-transitionbascarbone/common/utils/environments'
 import { getTranslations } from 'next-intl/server'
 import { sendEmail } from './send'
 import { getEnvResetLink } from './utils'
-import { formatDateFr } from '@abc-transitionbascarbone/common/utils'
 
 const BASE_URL = process.env.NEXTAUTH_URL
 
@@ -15,12 +15,15 @@ const tSubject = async (keys: string, object?: Record<string, string | number | 
 const tBody = async (keys: string, object?: Record<string, string | number | Date>) =>
   (await getTranslations('email.body'))(keys, object)
 
-type TrainingSessionSummary = Pick<
-  CourseSession,
-  'name' | 'environment' | 'startDate' | 'endDate' | 'code'
-> & {
+type TrainingSessionSummary = Pick<CourseSession, 'name' | 'environment' | 'startDate' | 'endDate' | 'code'> & {
   trainees: Pick<User, 'email' | 'firstName' | 'lastName'>[]
   professor: Pick<User, 'email' | 'firstName' | 'lastName'> | null
+}
+
+type StudyInvitationEmail = {
+  studyName: string
+  organizationName: string
+  roleOnStudy: string
 }
 
 export type TrainingSessionUpdate = Pick<TrainingSessionSummary, 'name' | 'environment' | 'startDate'> & {
@@ -104,6 +107,19 @@ const getEnvInfo = async (env: Environment) => {
   }
 }
 
+const getStudyInvitationEmailContent = async (
+  creatorName: string,
+  { studyName, organizationName, roleOnStudy }: StudyInvitationEmail,
+) => {
+  const translationKey = roleOnStudy ? 'userOnStudyInvitation' : 'contributorInvitation'
+  const translationValues = { creatorName, role: roleOnStudy, studyName, organizationName }
+
+  return {
+    subject: await tSubject(translationKey, { studyName }),
+    added: await tBody(`${translationKey}.added`, translationValues),
+  }
+}
+
 export const sendAddedActiveUserEmail = async (
   toEmail: string,
   creatorName: string,
@@ -111,6 +127,7 @@ export const sendAddedActiveUserEmail = async (
   newEnv: Environment,
   oldEnvs: Environment[],
   orga: string,
+  studyInvitation?: StudyInvitationEmail,
 ) => {
   const envInfo = await getEnvInfo(newEnv)
   const oldEnvsText =
@@ -119,7 +136,15 @@ export const sendAddedActiveUserEmail = async (
           envNames: oldEnvs.map((env) => EnvironmentNames[env]).join(', '),
         })
       : await tBody('addedActiveUser.oldEnvsSingle', { envName: EnvironmentNames[oldEnvs[0]] })
-  return sendEmail(newEnv, [toEmail], await tSubject('addedActiveUser'), 'added-active-user', {
+  const studyInvitationContent = studyInvitation
+    ? await getStudyInvitationEmailContent(creatorName, studyInvitation)
+    : undefined
+  const subject = studyInvitationContent?.subject ?? (await tSubject('addedActiveUser'))
+  const t_added =
+    studyInvitationContent?.added ??
+    (await tBody('addedActiveUser.added', { creatorName, orga, newEnv: EnvironmentNames[newEnv], envInfo }))
+
+  return sendEmail(newEnv, [toEmail], subject, 'added-active-user', {
     link: `${BASE_URL}/login`,
     userName,
     creatorName,
@@ -128,11 +153,50 @@ export const sendAddedActiveUserEmail = async (
     envInfo,
     orga,
     t_helloName: await tBody('helloName', { name: userName }),
-    t_added: await tBody('addedActiveUser.added', { creatorName, orga, newEnv: EnvironmentNames[newEnv], envInfo }),
+    t_added,
     t_alreadyHadAccess: await tBody('addedActiveUser.alreadyHadAccess', { oldEnvs: oldEnvsText }),
     t_loginInfo: await tBody('addedActiveUser.loginInfo'),
   })
 }
+
+export const sendActiveUserOnStudyInvitationEmail = async (
+  toEmail: string,
+  token: string,
+  studyName: string,
+  organizationName: string,
+  creatorName: string,
+  roleOnStudy: string,
+  env: Environment,
+) => {
+  const { subject, added } = await getStudyInvitationEmailContent(creatorName, {
+    studyName,
+    organizationName,
+    roleOnStudy,
+  })
+
+  return sendEmail(env, [toEmail], subject, 'active-user-study-invitation', {
+    link: getEnvResetLink('reset-password', token, env),
+    t_hello: await tBody('hello'),
+    t_added: added,
+    t_access: await tBody('activeUserOnStudyInvitation.access'),
+    t_thisLink: await tBody('thisLink'),
+  })
+}
+
+export const sendPendingStudyInvitationApprovalEmail = async (
+  toEmail: string,
+  userName: string,
+  studyName: string,
+  organizationName: string,
+  env: Environment,
+) =>
+  sendEmail(env, [toEmail], await tSubject('pendingStudyInvitationApproval'), 'pending-study-invitation', {
+    t_helloName: await tBody('helloName', { name: userName }),
+    t_content: await tBody('pendingStudyInvitationApproval.content', {
+      studyName,
+      organizationName,
+    }),
+  })
 
 export const sendActivationEmail = async (toEmail: string, token: string, fromReset: boolean, env: Environment) => {
   return sendEmail(
@@ -147,11 +211,33 @@ export const sendActivationEmail = async (toEmail: string, token: string, fromRe
   )
 }
 
-export const sendAccountActivatedEmail = async (toEmail: string, env: Environment) =>
-  sendEmail(env, [toEmail], await tSubject('activation'), 'account-activated', {
+export const sendAccountActivatedEmail = async (
+  toEmail: string,
+  env: Environment,
+  existingAccess?: { userName: string; environments: Environment[] },
+) => {
+  if (existingAccess) {
+    const oldEnvsText =
+      existingAccess.environments.length > 1
+        ? await tBody('addedActiveUser.oldEnvsMultiple', {
+            envNames: existingAccess.environments.map((oldEnv) => EnvironmentNames[oldEnv]).join(', '),
+          })
+        : await tBody('addedActiveUser.oldEnvsSingle', { envName: EnvironmentNames[existingAccess.environments[0]] })
+
+    return sendEmail(env, [toEmail], await tSubject('addedActiveUser'), 'added-active-user', {
+      link: `${BASE_URL}/login`,
+      t_helloName: await tBody('helloName', { name: existingAccess.userName }),
+      t_added: await tBody('accountActivated.content'),
+      t_alreadyHadAccess: await tBody('addedActiveUser.alreadyHadAccess', { oldEnvs: oldEnvsText }),
+      t_loginInfo: await tBody('addedActiveUser.loginInfo'),
+    })
+  }
+
+  return sendEmail(env, [toEmail], await tSubject('activation'), 'account-activated', {
     t_accountActivated: await tBody('accountActivated.content'),
     t_notYou: await tBody('accountActivated.notYou'),
   })
+}
 
 export const sendActivationRequest = async (
   toEmailList: string[],

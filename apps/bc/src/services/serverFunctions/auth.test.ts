@@ -1,11 +1,16 @@
-import { getUserByEmailWithSensibleInformations, updateUserPasswordForEmail } from '@/db/user'
+import {
+  activateStudyInvitationAccount,
+  getUserByEmailWithSensibleInformations,
+  updateUserPasswordForEmail,
+} from '@/db/user'
 import { Environment } from '@abc-transitionbascarbone/common/db/enums'
 import { hashResetToken } from '@abc-transitionbascarbone/common/utils/userTokens'
 import { expect } from '@jest/globals'
 import jwt from 'jsonwebtoken'
-import { checkToken, reset } from './auth'
+import { activateStudyInvitation, checkStudyInvitationActivationToken, checkToken, reset } from './auth'
 
 jest.mock('@/db/user', () => ({
+  activateStudyInvitationAccount: jest.fn(),
   getUserByEmailWithSensibleInformations: jest.fn(),
   updateUserPasswordForEmail: jest.fn(),
 }))
@@ -25,6 +30,7 @@ jest.mock('@/utils/serverResponse', () => ({
 }))
 
 const mockGetUserByEmailWithSensibleInformations = getUserByEmailWithSensibleInformations as jest.Mock
+const mockActivateStudyInvitationAccount = activateStudyInvitationAccount as jest.Mock
 const mockUpdateUserPasswordForEmail = updateUserPasswordForEmail as jest.Mock
 
 const email = 'user@example.com'
@@ -33,12 +39,24 @@ const password = 'Password-1'
 
 const getToken = (payloadResetToken = resetToken) =>
   jwt.sign({ email, resetToken: payloadResetToken }, process.env.NEXTAUTH_SECRET as string)
+const getStudyInvitationToken = () =>
+  jwt.sign(
+    {
+      email,
+      resetToken,
+      accountId: 'invited-account-id',
+      environment: Environment.TILT,
+      purpose: 'study-invitation-activation',
+    },
+    process.env.NEXTAUTH_SECRET as string,
+  )
 
 describe('password reset server functions', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     process.env.NEXTAUTH_SECRET = 'test-secret'
     mockGetUserByEmailWithSensibleInformations.mockResolvedValue({ email, resetToken: hashResetToken(resetToken) })
+    mockActivateStudyInvitationAccount.mockResolvedValue(undefined)
     mockUpdateUserPasswordForEmail.mockResolvedValue({ email })
   })
 
@@ -65,6 +83,30 @@ describe('password reset server functions', () => {
     mockGetUserByEmailWithSensibleInformations.mockResolvedValue({ email, resetToken: hashResetToken('new-token') })
 
     const result = await reset(password, getToken(), Environment.TILT)
+
+    expect(result).toEqual({ success: false, errorMessage: 'Email or token is invalid' })
+    expect(mockUpdateUserPasswordForEmail).not.toHaveBeenCalled()
+  })
+
+  it('recognizes a valid study-invitation activation token', async () => {
+    await expect(checkStudyInvitationActivationToken(getStudyInvitationToken())).resolves.toBe(true)
+  })
+
+  it('activates the invited account without updating the password', async () => {
+    const result = await activateStudyInvitation(getStudyInvitationToken())
+
+    expect(result).toEqual({ success: true, data: undefined })
+    expect(mockActivateStudyInvitationAccount).toHaveBeenCalledWith(
+      email,
+      'invited-account-id',
+      Environment.TILT,
+      hashResetToken(resetToken),
+    )
+    expect(mockUpdateUserPasswordForEmail).not.toHaveBeenCalled()
+  })
+
+  it('does not treat a study-invitation token as a password-reset token', async () => {
+    const result = await reset(password, getStudyInvitationToken(), Environment.TILT)
 
     expect(result).toEqual({ success: false, errorMessage: 'Email or token is invalid' })
     expect(mockUpdateUserPasswordForEmail).not.toHaveBeenCalled()

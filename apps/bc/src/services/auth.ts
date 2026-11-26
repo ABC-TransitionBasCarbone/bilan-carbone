@@ -88,7 +88,7 @@ export const authOptions: NextAuthOptions = {
             lastName: dbAccount.user.lastName,
             role: dbAccount?.role,
             organizationVersionId: dbAccount?.organizationVersionId,
-            organizationId: '',
+            organizationId: dbAccount.organizationVersion?.organizationId ?? null,
             level: dbAccount.user.level,
             environment: dbAccount?.organizationVersion?.environment,
             needsAccountSelection: false,
@@ -250,6 +250,7 @@ export async function dbActualizedAuth(
       ...session.user,
       role: account.role,
       organizationVersionId: account.organizationVersionId,
+      organizationId: account.organizationVersion?.organizationId ?? null,
       level: account.user.level,
     },
   }

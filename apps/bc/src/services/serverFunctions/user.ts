@@ -71,12 +71,14 @@ import {
   sendAccountActivatedEmail,
   sendActivationEmail,
   sendActivationRequest,
+  sendActiveUserOnStudyInvitationEmail,
   sendAddedActiveUserEmail,
   sendAddedUsersByFile,
   sendContributorInvitationEmail,
   sendNewContributorInvitationEmail,
   sendNewUserEmail,
   sendNewUserOnStudyInvitationEmail,
+  sendPendingStudyInvitationApprovalEmail,
   sendResetPassword,
   sendUserOnStudyInvitationEmail,
 } from '@abc-transitionbascarbone/common/services/email/email'
@@ -132,7 +134,25 @@ export const sendEmailToAddedUser = async (
     return sendNewUserEmail(email, token, `${user.firstName} ${user.lastName}`, newUserName, env)
   })
 
+const STUDY_INVITATION_ACTIVATION_PURPOSE = 'study-invitation-activation'
 const ACTIVATION_RESERVATION_WINDOW_IN_MS = DAY * TIME_IN_MS
+
+const createStudyInvitationActivationToken = async (email: string, accountId: string, environment: Environment) => {
+  const resetToken = generateResetToken()
+  await updateUserResetTokenForEmail(email, hashResetToken(resetToken))
+
+  return jwt.sign(
+    {
+      email,
+      resetToken,
+      accountId,
+      environment,
+      purpose: STUDY_INVITATION_ACTIVATION_PURPOSE,
+      exp: Math.round(Date.now() / TIME_IN_MS) + DAY,
+    },
+    process.env.NEXTAUTH_SECRET as string,
+  )
+}
 
 const getOrganizationActivationReservation = async (
   organizationVersionId: string,
@@ -187,8 +207,36 @@ export const sendInvitation = async (
   roleOnStudy: string,
   env: Environment,
   existingAccount?: AccountWithUser,
+  activeEnvs: Environment[] = [],
 ) =>
   withServerResponse('sendInvitation', async () => {
+    if (existingAccount?.status === UserStatus.PENDING_REQUEST) {
+      return sendPendingStudyInvitationApprovalEmail(
+        email,
+        existingAccount.user.firstName,
+        study.name,
+        organization.name,
+        env,
+      )
+    }
+
+    if (activeEnvs.length) {
+      if (!existingAccount) {
+        throw new Error('An existing account is required for an active user invitation')
+      }
+
+      const token = await createStudyInvitationActivationToken(existingAccount.user.email, existingAccount.id, env)
+      return sendActiveUserOnStudyInvitationEmail(
+        email,
+        token,
+        study.name,
+        organization.name,
+        `${creator.firstName} ${creator.lastName}`,
+        roleOnStudy,
+        env,
+      )
+    }
+
     if (existingAccount && existingAccount.status === UserStatus.ACTIVE) {
       return roleOnStudy
         ? sendUserOnStudyInvitationEmail(
@@ -400,7 +448,7 @@ export const resetPassword = async (email: string, userEnv: Environment | undefi
     }
   })
 
-const isActivationAutorhizedCommon = async (
+const getUserAndAccountForActivation = async (
   email: string,
   environment: Environment,
 ): Promise<{
@@ -409,7 +457,6 @@ const isActivationAutorhizedCommon = async (
 }> => {
   const user = await getUserByEmail(email.toLowerCase())
   const account = await getAccountById(user?.accounts.find((a) => a.environment === environment)?.id || '')
-
   if (
     !user ||
     !account ||
@@ -417,11 +464,23 @@ const isActivationAutorhizedCommon = async (
     account.status === UserStatus.ACTIVE ||
     account.status === UserStatus.SUSPENDED
   ) {
+    console.error('getUserAndAccountForActivation: account cannot be activated', {
+      environment,
+      accountId: account?.id,
+      userId: user?.id,
+      status: account?.status,
+    })
     throw new Error(NOT_AUTHORIZED)
   }
 
   const accountOrgaVersion = await getOrganizationVersionForRightsCheck(account.organizationVersionId)
   if (!accountOrgaVersion || (!accountOrgaVersion.activatedLicence && environment === Environment.BC)) {
+    console.error('getUserAndAccountForActivation: organization version is not available for activation', {
+      environment,
+      accountId: account.id,
+      organizationVersionId: account.organizationVersionId,
+      userId: user.id,
+    })
     throw new Error(NOT_AUTHORIZED)
   }
 
@@ -436,7 +495,7 @@ export const checkCourseActivation = async (email: string, sessionCode: string, 
     if (!isCourseEnvironment(environment)) {
       throw Error(NOT_AUTHORIZED)
     }
-    const { user, account } = await isActivationAutorhizedCommon(email.trim().toLowerCase(), environment)
+    const { user, account } = await getUserAndAccountForActivation(email.trim().toLowerCase(), environment)
     const activationCount = await organizationVersionActiveAccountsCount(account.organizationVersionId)
     if (activationCount) {
       throw Error(NOT_AUTHORIZED)
@@ -472,7 +531,7 @@ export const checkCourseActivation = async (email: string, sessionCode: string, 
 export const activateEmailForCourse = async (
   email: string,
   sessionCode: string,
-  password: string,
+  password: string | undefined,
   environment: Environment,
 ) =>
   withServerResponse('activateEmailForCourse', async () => {
@@ -482,23 +541,48 @@ export const activateEmailForCourse = async (
     }
 
     const { user, account } = checkCourseActivationResponse.data
-    const passwordValidation = computePasswordValidation(password)
-    if (!Object.values(passwordValidation).every((value) => value)) {
-      throw new Error('Password invalid')
-    }
+    const activeEnvs = user.accounts
+      .filter((userAccount) => userAccount.status === UserStatus.ACTIVE && userAccount.environment !== environment)
+      .map((userAccount) => userAccount.environment)
 
     await prismaClient.$transaction(
       async (transaction) => {
+        const passwordToSet = activeEnvs.length ? undefined : password
+        if (
+          !activeEnvs.length &&
+          (!passwordToSet || !Object.values(computePasswordValidation(passwordToSet)).every(Boolean))
+        ) {
+          throw new Error('Password invalid')
+        }
+
         await validateUser(account.id, transaction)
-        await updateUserPasswordForEmail(user.email, password, environment, transaction)
-        await updateAccount(account.id, { role: Role.ADMIN }, {}, transaction)
+        if (passwordToSet) {
+          await updateUserPasswordForEmail(user.email, passwordToSet, environment, transaction)
+        }
+
+        await updateAccount(
+          account.id,
+          {
+            role: Role.ADMIN,
+            ...(activeEnvs.length ? { status: UserStatus.ACTIVE } : {}),
+          },
+          {},
+          transaction,
+        )
       },
       {
         isolationLevel: 'Serializable',
       },
     )
     try {
-      await sendAccountActivatedEmail(user.email, environment)
+      if (activeEnvs.length) {
+        await sendAccountActivatedEmail(user.email, environment, {
+          environments: activeEnvs,
+          userName: `${user.firstName} ${user.lastName}`,
+        })
+      } else {
+        await sendAccountActivatedEmail(user.email, environment)
+      }
     } catch (error) {
       console.error('activateEmailForCourse: failed to send account activation email', {
         userId: user.id,
@@ -515,8 +599,7 @@ export const activateEmail = async (email: string, userEnv: Environment, fromRes
       throw new Error(NOT_AUTHORIZED)
     }
 
-    const { user, account } = await isActivationAutorhizedCommon(email, userEnv)
-
+    const { user, account } = await getUserAndAccountForActivation(email, userEnv)
     if (
       (await organizationVersionActiveAccountsCount(account.organizationVersionId)) &&
       account.status !== UserStatus.VALIDATED
@@ -542,21 +625,38 @@ export const activateEmail = async (email: string, userEnv: Environment, fromRes
 
       return REQUEST_SENT
     } else {
-      await prismaClient.$transaction(async (transaction) => {
-        if (!account.organizationVersionId) {
-          throw new Error(NOT_AUTHORIZED)
-        }
-        await checkIfOtherAccountHasReservationActivation(account.id, account.organizationVersionId, transaction)
-        await validateUser(account.id, transaction)
-        await updateAccount(
-          account.id,
-          {
-            activationRequestedAt: new Date(),
-          },
-          undefined,
-          transaction,
-        )
-      })
+      await prismaClient.$transaction(
+        async (transaction) => {
+          const currentAccount = await transaction.account.findUnique({
+            where: { id: account.id },
+            select: { organizationVersionId: true },
+          })
+          if (!currentAccount?.organizationVersionId) {
+            console.error('activateEmail: account has no organization version in transaction', {
+              accountId: account.id,
+              environment: userEnv,
+              userId: user.id,
+            })
+            throw new Error(NOT_AUTHORIZED)
+          }
+
+          await checkIfOtherAccountHasReservationActivation(
+            account.id,
+            currentAccount.organizationVersionId,
+            transaction,
+          )
+          await validateUser(account.id, transaction)
+          await updateAccount(
+            account.id,
+            {
+              activationRequestedAt: new Date(),
+            },
+            undefined,
+            transaction,
+          )
+        },
+        { isolationLevel: 'Serializable' },
+      )
       await sendActivation(email, fromReset, userEnv)
 
       return EMAIL_SENT

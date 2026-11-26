@@ -1,5 +1,6 @@
 'use client'
-import { checkToken, reset } from '@/services/serverFunctions/auth'
+import StudyInvitationActivationForm from '@/components/auth/StudyInvitationActivationForm'
+import { checkStudyInvitationActivationToken, checkToken, reset } from '@/services/serverFunctions/auth'
 import ResetFormCommon from '@abc-transitionbascarbone/common/components/auth/ResetFormCommon'
 import { useServerFunction } from '@abc-transitionbascarbone/common/components/hooks/useServerFunction'
 import ResetLinkAlreadyUsed from '@abc-transitionbascarbone/common/components/pages/ResetLinkAlreadyUsed'
@@ -19,9 +20,22 @@ interface Props {
 
 const ResetForm = ({ user, token, environment = Environment.BC }: Props) => {
   useEffect(() => {
-    checkToken(token).then((invalidtoken) => {
-      setInvalidResetLink(invalidtoken)
-    })
+    let isCurrentToken = true
+    setInvalidResetLink(undefined)
+    setStudyInvitationActivation(false)
+
+    Promise.all([checkToken(token), checkStudyInvitationActivationToken(token)]).then(
+      ([invalidToken, isStudyInvitationActivation]) => {
+        if (isCurrentToken) {
+          setInvalidResetLink(invalidToken)
+          setStudyInvitationActivation(isStudyInvitationActivation)
+        }
+      },
+    )
+
+    return () => {
+      isCurrentToken = false
+    }
   }, [token])
 
   useEffect(() => {
@@ -32,12 +46,21 @@ const ResetForm = ({ user, token, environment = Environment.BC }: Props) => {
 
   const router = useRouter()
   const t = useTranslations('login.form')
-  const [invalidResetLink, setInvalidResetLink] = useState(false)
+  const [invalidResetLink, setInvalidResetLink] = useState<boolean>()
+  const [studyInvitationActivation, setStudyInvitationActivation] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const { callServerFunction } = useServerFunction()
 
+  if (invalidResetLink === undefined) {
+    return null
+  }
+
   if (invalidResetLink) {
     return <ResetLinkAlreadyUsed environment={environment} />
+  }
+
+  if (studyInvitationActivation) {
+    return <StudyInvitationActivationForm token={token} environment={environment} />
   }
 
   const loginLink = getEnvRoute('login', environment)

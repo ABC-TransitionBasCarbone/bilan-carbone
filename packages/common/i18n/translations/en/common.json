@@ -206,6 +206,8 @@
     "welcome": "Welcome",
     "form": {
       "activate": "Activate my account",
+      "activateStudyInvitation": "Activate my study access",
+      "studyInvitationActivation": "Confirm activation of your study access. Your existing password will remain unchanged.",
       "firstConnection": "First login ?",
       "alreadyRegistered": "Already Registered?",
       "resetTitle": "You have requested to create or reset your password. Enter the requested information below to confirm your account creation or password reset.",
@@ -259,6 +261,7 @@
       "addedActiveUser": "You have been invited to a new environment on BC+",
       "activation": "You have activated your account on BC+",
       "activationRequest": "Access request to your BC+ organisation",
+      "pendingStudyInvitationApproval": "Your study access is waiting for approval",
       "userOnStudyInvitation": "Added to the study {studyName}",
       "contributorInvitation": "Contribution request on the study {studyName}",
       "addedUsersByFile": "Authorization for user import",
@@ -323,6 +326,12 @@
       "userOnStudyInvitation": {
         "added": "You have been added by {creatorName} as {role} on the study {studyName} for the organisation {organizationName}.",
         "access": "To access the study, you can log in to BC+ as usual via"
+      },
+      "activeUserOnStudyInvitation": {
+        "access": "To accept this invitation and activate your access to the study, click"
+      },
+      "pendingStudyInvitationApproval": {
+        "content": "Your invitation to the study {studyName} for the organisation {organizationName} cannot be used yet because your access to this environment is waiting for approval from your organisation. You will be notified when access becomes available. Your existing password will remain unchanged."
       },
       "campaignCreatedByCollaborator": {
         "intro": "{creatorName} has launched a new campaign on Mon Impact Pro for the organisation {organizationName}:",

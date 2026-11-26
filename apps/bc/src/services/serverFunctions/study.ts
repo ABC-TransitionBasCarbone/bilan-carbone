@@ -854,6 +854,7 @@ const getOrCreateUserAndSendStudyInvite = async (
   lastName?: string,
 ) => {
   let accountId = ''
+  let activeEnvs: Environment[] = []
   const t = await getTranslations('study.role')
   const creatorDBUser = await getUserSourceById(creator.id)
 
@@ -890,6 +891,12 @@ const getOrCreateUserAndSendStudyInvite = async (
 
     accountId = newAccountId
   } else {
+    activeEnvs = existingUser.accounts
+      .filter(
+        (account) => account.status === UserStatus.ACTIVE && account.environment !== organizationVersion.environment,
+      )
+      .map((account) => account.environment)
+
     let account = (await getAccountByEmailAndEnvironment(email, organizationVersion.environment)) as AccountWithUser
     let skipEmail = skipInviteEmail
     if (!account) {
@@ -906,6 +913,8 @@ const getOrCreateUserAndSendStudyInvite = async (
         role: Role.COLLABORATOR,
       })
       account = (await getAccountByEmailAndEnvironment(email, organizationVersion.environment)) as AccountWithUser
+    } else if (account.status === UserStatus.ACTIVE) {
+      activeEnvs = []
     } else if (account.status === UserStatus.SUSPENDED) {
       skipEmail = true
     }
@@ -919,6 +928,7 @@ const getOrCreateUserAndSendStudyInvite = async (
         newRoleOnStudy ? t(newRoleOnStudy).toLowerCase() : '',
         organizationVersion.environment,
         account,
+        activeEnvs,
       )
     }
     accountId = account.id
