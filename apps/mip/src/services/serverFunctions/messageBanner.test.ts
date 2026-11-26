@@ -62,21 +62,21 @@ it('allows super admins to list, create, update and delete MIP banners', async (
   jest.mocked(getManagedMessageBanners).mockResolvedValue([])
   expect(await getMessageBannersForManagement()).toEqual({ success: true, data: [] })
   expect((await saveMessageBannerForManagement(command)).success).toBe(true)
-  expect(saveManagedMessageBanner.mock.calls[0]?.[1]).toEqual(messageBannerEnvironments)
-  expect(saveManagedMessageBanner.mock.calls[0]?.[2]).toEqual({
+  expect(jest.mocked(saveManagedMessageBanner).mock.calls[0]?.[1]).toEqual(messageBannerEnvironments)
+  expect(jest.mocked(saveManagedMessageBanner).mock.calls[0]?.[2]).toEqual({
     ...command,
     message: 'Maintenance',
   })
   expect((await saveMessageBannerForManagement({ ...command, id })).success).toBe(true)
-  expect(saveManagedMessageBanner.mock.calls[1]?.[1]).toEqual(messageBannerEnvironments)
-  expect(saveManagedMessageBanner.mock.calls[1]?.[2]).toEqual({
+  expect(jest.mocked(saveManagedMessageBanner).mock.calls[1]?.[1]).toEqual(messageBannerEnvironments)
+  expect(jest.mocked(saveManagedMessageBanner).mock.calls[1]?.[2]).toEqual({
     ...command,
     id,
     message: 'Maintenance',
   })
   expect((await deleteMessageBannerForManagement(id)).success).toBe(true)
-  expect(deleteManagedMessageBanner.mock.calls[0]?.[1]).toEqual(messageBannerEnvironments)
-  expect(deleteManagedMessageBanner.mock.calls[0]?.[2]).toBe(id)
+  expect(jest.mocked(deleteManagedMessageBanner).mock.calls[0]?.[1]).toEqual(messageBannerEnvironments)
+  expect(jest.mocked(deleteManagedMessageBanner).mock.calls[0]?.[2]).toBe(id)
 })
 
 it('rejects commands without an environment target', async () => {
@@ -103,5 +103,5 @@ it('requires authentication and only displays MIP banners', async () => {
   } as Awaited<ReturnType<typeof dbActualizedAuth>>)
   jest.mocked(getActiveMessageBanners).mockResolvedValue([])
   expect(await getCurrentMessageBanners()).toEqual({ success: true, data: [] })
-  expect(getActiveMessageBanners.mock.calls[0]?.[1]).toBe(Environment.MIP)
+  expect(jest.mocked(getActiveMessageBanners).mock.calls[0]?.[1]).toBe(Environment.MIP)
 })
