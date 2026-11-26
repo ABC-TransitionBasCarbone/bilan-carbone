@@ -576,6 +576,7 @@ export const SUBPOST_TO_FORM_LAYOUTS: Partial<Record<SubPost, FormLayout<TiltRul
         ['événement . déplacements . avion', 'événement . déplacements . avion'],
       ],
     ),
+    input('événement . énergie présente'),
     group(
       'EvenementBooléen.question',
       [

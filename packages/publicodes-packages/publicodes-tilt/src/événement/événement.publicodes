@@ -22,7 +22,7 @@
       - poisson gras . nombre
       - poisson blanc . nombre
       - repas moyen . nombre
-  question: Combien de ces différents types de repas ont étés consommés au cours de l'événement ?
+  question: Combien de ces différents types de repas ont étés consommés au cours des événements ?
   titre: Empreinte des repas
   description: L'option "Repas moyen" sert uniquement si vous n'avez aucune idée des types de repas consommés.
   formule:
@@ -221,7 +221,7 @@
   titre: Voiture
   form:
     à traduire: oui
-  question: Combien de km (AR) ont étés parcourus en voiture pour accéder à l'événement ?
+  question: Combien de km (AR) ont étés parcourus en voiture pour accéder aux événements ?
   unité: km
   par défaut: 0
 
@@ -229,7 +229,7 @@
   titre: TER
   form:
     à traduire: oui
-  question: Combien de km (AR) ont étés parcourus en TER pour accéder à l'événement ?
+  question: Combien de km (AR) ont étés parcourus en TER pour accéder aux événements ?
   unité: km
   par défaut: 0
 
@@ -237,7 +237,7 @@
   titre: TGV
   form:
     à traduire: oui
-  question: Combien de km (AR) ont étés parcourus en TGV pour accéder à l'événement ?
+  question: Combien de km (AR) ont étés parcourus en TGV pour accéder aux événements ?
   unité: km
   par défaut: 0
 
@@ -245,7 +245,7 @@
   titre: Bus
   form:
     à traduire: oui
-  question: Combien de km (AR) ont étés parcourus en bus pour accéder à l'événement ?
+  question: Combien de km (AR) ont étés parcourus en bus pour accéder aux événements ?
   unité: km
   par défaut: 0
 
@@ -253,7 +253,7 @@
   titre: Deux roues (moto, scooter, ...)
   form:
     à traduire: oui
-  question: Combien de km (AR) ont étés parcourus en deux roues (moto, scooter, ...) pour accéder à l'événement ?
+  question: Combien de km (AR) ont étés parcourus en deux roues (moto, scooter, ...) pour accéder aux événements ?
   unité: km
   par défaut: 0
 
@@ -261,7 +261,7 @@
   titre: Transport en commun (Métro, tramway, RER, bus, ...)
   form:
     à traduire: oui
-  question: Combien de km (AR) ont étés parcourus en transport en commun (métro, tramway, ...) pour accéder à l'événement ?
+  question: Combien de km (AR) ont étés parcourus en transport en commun (métro, tramway, ...) pour accéder aux événements ?
   unité: km
   par défaut: 0
 
@@ -269,11 +269,19 @@
   titre: Avion
   form:
     à traduire: oui
-  question: Combien de km (AR) ont étés parcourus en avion pour accéder à l'événement ?
+  question: Combien de km (AR) ont étés parcourus en avion pour accéder aux événements ?
   unité: km
   par défaut: 0
 
+événement . énergie présente:
+  question: Est-ce que certains des événements organisés consomment des quantités d'énergie non négligeables (concerts, ...)
+  par défaut: non
+
 événement . énergie:
+  applicable si :
+    toutes ces conditions:
+      - est défini: événement . énergie présente
+      - événement . énergie présente = oui
   formule:
     somme:
       - électricité
@@ -310,13 +318,13 @@
     toutes ces conditions:
       - est défini: types . électricité présent
       - types . électricité présent = oui
-  titre: Quelle a été la consommation d'électricité au cours de l'événement ?
+  titre: Quelle a été la consommation d'électricité au cours des événements ?
   formule: consommation * FE
   unité: kgCO2e
   par défaut: 0 
   avec: 
     consommation:
-      question: Quelle a été la consommation d'électricité au cours de l'événement ?
+      question: Quelle a été la consommation d'électricité au cours des événements ?
       unité: kWh
     FE:
       valeur: 0.0461
@@ -331,13 +339,13 @@
     toutes ces conditions:
       - est défini: types . gaz présent
       - types . gaz présent = oui
-  titre: Quelle a été la consommation de gaz au cours de l'événement ? 
+  titre: Quelle a été la consommation de gaz au cours des événements ? 
   formule: consommation * FE
   unité: kgCO2e
   par défaut: 0 
   avec: 
     consommation:
-      question: Quelle a été la consommation de gaz au cours de l'événement ?
+      question: Quelle a été la consommation de gaz au cours des événements ?
       unité: m³
     FE:
       valeur: 2.32
@@ -352,13 +360,13 @@
     toutes ces conditions:
       - est défini: types . fioul présent
       - types . fioul présent = oui
-  titre: Quelle a été la consommation de fioul domestique au cours de l'événement ?
+  titre: Quelle a été la consommation de fioul domestique au cours des événements ?
   formule: consommation * FE
   unité: kgCO2e
   par défaut: 0 
   avec: 
     consommation:
-      question: Quelle a été la consommation de fioul au cours de l'événement ?
+      question: Quelle a été la consommation de fioul au cours des événements ?
       unité: litre
     FE:
       valeur: 3.19
@@ -376,7 +384,7 @@
   par défaut: 0
 
 événement . hébergement . existant:
-  question: Est-ce que les participant.es campent ou dorment à l'hôtel au cours de l'événement ? 
+  question: Est-ce que les participant.es campent ou dorment à l'hôtel au cours des événements ? 
 
 événement . hébergement . camping:
   applicable si:
