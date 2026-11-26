@@ -60,7 +60,7 @@ construction . bâtiment . locaux . locaux seuls . surface:
   description: Vous devez renseigner la surface totale de vos locaux (bâtiments uniquement). Si vous êtes implantés sur différents sites, vous pouvez soit sommer l'ensemble des surfaces ici, soit créer plusieurs sites dans votre organisation et renseigner les données sur chaque site indépendemment. Si vos locaux datent de plus de 50 ans (on parle bien de leur construction), vous ne devez pas renseigner leur surface ici, car ils sont déjà considérés comme complètement amortis ! Que les locaux soient possédés ou loués ne fait aucune différence ici, tant que les locaux sont utilisés à l'année. <br></br><br></br>La donnée renseignée ici sert également à calculer des consommations énergétiques par défaut, il est donc normal que des émissions apparaissent dans le poste Énergie. Vous pourrez évidemment modifier ces valeurs par défaut par la suite.
 
 construction . bâtiment . locaux . locaux partagés . surface:
-  formule: surface connue * pourcentage + locaux partagés . nombre de postes * 15
+  formule: surface connue * pourcentage + nombre de postes * 15
   unité: m²
   par défaut: 0
 
